@@ -1,0 +1,8 @@
+{
+  "source": {
+    "item": "minecraft:stone"
+  },
+  "elements": [
+    { "element":  "wizcraft:earth", "amount": 1 }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "wizcraft",
+	"version": "${version}",
+	"name": "WizCraft",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "All rights reserved",
+	"icon": "assets/wizcraft/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"ru.falseresync.wizcraft.Wizcraft"
+		],
+		"client": [
+			"ru.falseresync.wizcraft.WizcraftClient"
+		],
+		"fabric-datagen": [
+			"ru.falseresync.wizcraft.WizcraftDatagen"
+		]
+	},
+	"mixins": [
+		"wizcraft.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.12",
+		"minecraft": "~1.19.3",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}

@@ -4,10 +4,12 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import ru.falseresync.wizcraft.Wizcraft;
-import ru.falseresync.wizcraft.api.element.ElementalComposition;
+import ru.falseresync.wizcraft.element.ElementalComposition;
 import ru.falseresync.wizcraft.util.IdUtil;
 
-public class ElementalCompositionsResourceReloadListener implements SimpleSynchronousResourceReloadListener {
+public class WizDataReloadListener implements SimpleSynchronousResourceReloadListener {
+    private ResourceManager manager;
+
     @Override
     public Identifier getFabricId() {
         return IdUtil.id("data");
@@ -15,11 +17,17 @@ public class ElementalCompositionsResourceReloadListener implements SimpleSynchr
 
     @Override
     public void reload(ResourceManager manager) {
-        for (var entry : manager.findResources("elemental_compositions", id -> id.getPath().endsWith(".json")).entrySet()) {
+        this.manager = manager;
+        reloadElementalCompositions();
+        this.manager = null;
+    }
+
+    private void reloadElementalCompositions() {
+        for (var entry : manager.findResources(WizJsonConstants.ELEMENTAL_COMPOSITIONS, id -> id.getPath().endsWith(WizJsonConstants.JSON_SUFFIX)).entrySet()) {
             try (var reader = entry.getValue().getReader()) {
                 ElementalComposition.Manager.compositions.add(Wizcraft.GSON.fromJson(reader, ElementalComposition.class));
             } catch (Exception e) {
-                Wizcraft.LOGGER.error("Error occurred while loading resource json " + entry.getKey(), e);
+                Wizcraft.LOGGER.error("Error occurred while loading data json " + entry.getKey(), e);
             }
         }
     }

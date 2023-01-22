@@ -27,7 +27,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import ru.falseresync.wizcraft.Wizcraft;
-import ru.falseresync.wizcraft.data.WizNbtKeys;
+import ru.falseresync.wizcraft.data.WizNbtConstants;
 import ru.falseresync.wizcraft.registry.WizBlockEntities;
 
 import java.util.ArrayList;
@@ -54,27 +54,27 @@ public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorag
         super.writeNbt(nbt);
         var fluidStorageNbt = new NbtCompound();
         fluidStorage.writeNbt(fluidStorageNbt);
-        nbt.put(WizNbtKeys.FLUID_STORAGE, fluidStorageNbt);
+        nbt.put(WizNbtConstants.FLUID_STORAGE, fluidStorageNbt);
 
         var itemStorageNbt = new NbtList();
         for (var part : itemParts) {
             var partNbt = new NbtCompound();
-            partNbt.put(WizNbtKeys.VARIANT, part.resource().toNbt());
-            partNbt.putLong(WizNbtKeys.AMOUNT, part.amount());
+            partNbt.put(WizNbtConstants.VARIANT, part.resource().toNbt());
+            partNbt.putLong(WizNbtConstants.AMOUNT, part.amount());
             itemStorageNbt.add(partNbt);
         }
-        nbt.put(WizNbtKeys.ITEM_STORAGE, itemStorageNbt);
+        nbt.put(WizNbtConstants.ITEM_STORAGE, itemStorageNbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        fluidStorage.readNbt(nbt.getCompound(WizNbtKeys.FLUID_STORAGE));
+        fluidStorage.readNbt(nbt.getCompound(WizNbtConstants.FLUID_STORAGE));
 
-        var itemStorageNbt = nbt.getList(WizNbtKeys.ITEM_STORAGE, NbtElement.COMPOUND_TYPE);
+        var itemStorageNbt = nbt.getList(WizNbtConstants.ITEM_STORAGE, NbtElement.COMPOUND_TYPE);
         for (var partNbt : itemStorageNbt)
             if (partNbt instanceof NbtCompound partNbtCompound) {
-                itemParts.add(new ResourceAmount<>(ItemVariant.fromNbt(partNbtCompound.getCompound(WizNbtKeys.VARIANT)), partNbtCompound.getLong(WizNbtKeys.AMOUNT)));
+                itemParts.add(new ResourceAmount<>(ItemVariant.fromNbt(partNbtCompound.getCompound(WizNbtConstants.VARIANT)), partNbtCompound.getLong(WizNbtConstants.AMOUNT)));
             } else
                 Wizcraft.LOGGER.debug("Tried to load an invalid item storage from NBT: {}", partNbt);
     }

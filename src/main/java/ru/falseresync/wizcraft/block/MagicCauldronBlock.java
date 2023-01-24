@@ -23,10 +23,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 import ru.falseresync.wizcraft.block.entity.MagicCauldronBlockEntity;
-import ru.falseresync.wizcraft.registry.WizBlockEntities;
+import ru.falseresync.wizcraft.block.entity.WizBlockEntities;
 import ru.falseresync.wizcraft.util.WizStorageUtil;
 
-public class MagicCauldronBlock extends BlockWithEntity implements InventoryProvider {
+public class MagicCauldronBlock extends BlockWithEntity {
     private static final VoxelShape INSIDE_SHAPE;
     private static final VoxelShape OUTLINE_SHAPE;
 
@@ -78,7 +78,7 @@ public class MagicCauldronBlock extends BlockWithEntity implements InventoryProv
         if (entity instanceof ItemEntity item
                 && VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox()), INSIDE_SHAPE.offset(pos.getX(), pos.getY(), pos.getZ()), BooleanBiFunction.AND)) {
             if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity)
-                WizStorageUtil.insertStack(item.getStack(), blockEntity);
+                WizStorageUtil.insertStack(item.getStack(), blockEntity.getItemStorage(null));
             entity.discard();
         }
     }
@@ -89,13 +89,5 @@ public class MagicCauldronBlock extends BlockWithEntity implements InventoryProv
         return storage != null && FluidStorageUtil.interactWithFluidStorage(storage, player, hand)
                 ? ActionResult.SUCCESS
                 : super.onUse(state, world, pos, player, hand, hit);
-    }
-
-    // InventoryProvider
-    @Override
-    public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
-        return world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity entity
-                ? entity
-                : null;
     }
 }

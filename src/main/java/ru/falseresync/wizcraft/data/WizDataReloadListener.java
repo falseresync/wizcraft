@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import ru.falseresync.wizcraft.Wizcraft;
+import ru.falseresync.wizcraft.api.data.WizJsonConstants;
 import ru.falseresync.wizcraft.element.ElementalComposition;
 import ru.falseresync.wizcraft.util.IdUtil;
 

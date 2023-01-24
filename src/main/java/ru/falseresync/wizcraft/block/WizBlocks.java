@@ -1,4 +1,4 @@
-package ru.falseresync.wizcraft.registry;
+package ru.falseresync.wizcraft.block;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;

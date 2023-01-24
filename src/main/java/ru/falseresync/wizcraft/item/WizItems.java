@@ -1,10 +1,11 @@
-package ru.falseresync.wizcraft.registry;
+package ru.falseresync.wizcraft.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import ru.falseresync.wizcraft.block.WizBlocks;
 import ru.falseresync.wizcraft.item.WandItem;
 
 import static ru.falseresync.wizcraft.util.IdUtil.id;

@@ -1,4 +1,4 @@
-package ru.falseresync.wizcraft.data;
+package ru.falseresync.wizcraft.api.data;
 
 public class WizNbtConstants {
     public static final String FLUID_STORAGE = "WizFluidStorage";

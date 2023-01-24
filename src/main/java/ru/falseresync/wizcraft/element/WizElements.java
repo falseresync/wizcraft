@@ -1,4 +1,4 @@
-package ru.falseresync.wizcraft.registry;
+package ru.falseresync.wizcraft.element;
 
 import net.minecraft.registry.Registry;
 import ru.falseresync.wizcraft.api.WizRegistries;

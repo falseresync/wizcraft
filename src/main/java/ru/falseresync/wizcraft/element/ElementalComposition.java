@@ -1,10 +1,11 @@
 package ru.falseresync.wizcraft.element;
 
 import com.google.gson.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.JsonHelper;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
-import ru.falseresync.wizcraft.data.WizJsonConstants;
+import ru.falseresync.wizcraft.api.data.WizJsonConstants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -25,12 +26,19 @@ public record ElementalComposition(Ingredient ingredient, List<ElementAmount> el
         @Override
         public ElementalComposition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             var compositionJsonObject = JsonHelper.asObject(json, WizJsonConstants.ELEMENTAL_COMPOSITION);
+
             var ingredient = Ingredient.fromJson(compositionJsonObject.get(WizJsonConstants.SOURCE));
+            for (var matchingStack : ingredient.getCustomIngredient().getMatchingStacks()) {
+                if (matchingStack.getCount() > 1)
+                    throw new JsonSyntaxException("Element source can only have a count (amount) of 1");
+            }
+
             var elements = new ArrayList<ElementAmount>();
             for (var elementJsonElement : JsonHelper.getArray(compositionJsonObject, WizJsonConstants.ELEMENTS))
                 elements.add(context.deserialize(elementJsonElement, ElementAmount.class));
             if (elements.isEmpty())
                 throw new JsonSyntaxException("Elements cannot be empty");
+
             return new ElementalComposition(ingredient, elements);
         }
     }

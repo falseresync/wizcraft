@@ -1,10 +1,10 @@
-package ru.falseresync.wizcraft.registry;
+package ru.falseresync.wizcraft.block.entity;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import ru.falseresync.wizcraft.block.entity.MagicCauldronBlockEntity;
+import ru.falseresync.wizcraft.block.WizBlocks;
 
 import static ru.falseresync.wizcraft.util.IdUtil.id;
 

@@ -8,10 +8,16 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resource.ResourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.falseresync.wizcraft.api.element.Element;
+import ru.falseresync.wizcraft.api.element.ElementAmount;
+import ru.falseresync.wizcraft.block.WizBlocks;
+import ru.falseresync.wizcraft.block.entity.WizBlockEntities;
+import ru.falseresync.wizcraft.element.ElementAmountDeserializer;
 import ru.falseresync.wizcraft.element.ElementalComposition;
 import ru.falseresync.wizcraft.data.WizDataReloadListener;
-import ru.falseresync.wizcraft.registry.*;
+import ru.falseresync.wizcraft.element.WizElements;
+import ru.falseresync.wizcraft.item.WizItemGroups;
+import ru.falseresync.wizcraft.item.WizItems;
+import ru.falseresync.wizcraft.recipe.WizRecipes;
 
 public class Wizcraft implements ModInitializer {
 	public static final Gson GSON;
@@ -20,7 +26,7 @@ public class Wizcraft implements ModInitializer {
 
 	static {
 		GSON = new GsonBuilder()
-				.registerTypeAdapter(Element.class, new Element.Deserializer())
+				.registerTypeAdapter(ElementAmount.class, new ElementAmountDeserializer())
 				.registerTypeAdapter(ElementalComposition.class, new ElementalComposition.Deserializer())
 				.create();
 		LOGGER = LoggerFactory.getLogger("wizcraft");
@@ -28,11 +34,13 @@ public class Wizcraft implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		// Alphabetically (mostly):
 		WizBlocks.register();
-		WizItems.register();
 		WizBlockEntities.register();
 		WizElements.register();
+		WizItems.register();
 		WizItemGroups.init();
+		WizRecipes.register();
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new WizDataReloadListener());
 	}
 }

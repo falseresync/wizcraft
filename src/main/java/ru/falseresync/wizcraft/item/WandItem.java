@@ -1,13 +1,12 @@
 package ru.falseresync.wizcraft.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Rarity;
-import ru.falseresync.wizcraft.registry.WizBlocks;
+import ru.falseresync.wizcraft.block.WizBlocks;
 
 public class WandItem extends Item {
     public WandItem() {

@@ -2,10 +2,10 @@
 	"schemaVersion": 1,
 	"id": "wizcraft",
 	"version": "${version}",
-	"name": "WizCraft",
+	"name": "Wizcraft",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"Me!"
+		"falseresync"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
@@ -16,22 +16,22 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"ru.falseresync.wizcraft.Wizcraft"
+			"ru.falseresync.wizcraft.common.Wizcraft"
 		],
 		"client": [
-			"ru.falseresync.wizcraft.WizcraftClient"
+          "ru.falseresync.wizcraft.client.WizcraftClient"
 		],
 		"fabric-datagen": [
-			"ru.falseresync.wizcraft.WizcraftDatagen"
+			"ru.falseresync.wizcraft.datagen.WizcraftDatagen"
 		]
 	},
-	"mixins": [
-		"wizcraft.mixins.json"
-	],
 	"depends": {
 		"fabricloader": ">=0.14.12",
 		"minecraft": "~1.19.3",
 		"java": ">=17",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"libblockattributes_core": ">=0.12.0",
+		"libblockattributes_items": ">=0.12.0",
+		"libblockattributes_fluids": ">=0.12.0"
 	}
 }

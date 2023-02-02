@@ -1,8 +1,13 @@
 package ru.falseresync.wizcraft.common.block;
 
+import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.AttributeProvider;
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.FluidInvUtil;
+import alexiil.mc.lib.attributes.item.ItemAttributes;
+import alexiil.mc.lib.attributes.item.ItemInvUtil;
+import alexiil.mc.lib.attributes.item.entity.ItemTransferableItemEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorageUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -22,9 +27,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import ru.falseresync.wizcraft.common.block.entity.MagicCauldronBlockEntity;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
-import ru.falseresync.wizcraft.lib.WizStorageUtil;
 
-public class MagicCauldronBlock extends BlockWithEntity {
+public class MagicCauldronBlock extends BlockWithEntity implements AttributeProvider {
     private static final VoxelShape INSIDE_SHAPE;
     private static final VoxelShape OUTLINE_SHAPE;
 
@@ -73,20 +77,25 @@ public class MagicCauldronBlock extends BlockWithEntity {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (entity instanceof ItemEntity item
+        if (entity instanceof ItemEntity itemEntity
                 && VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox()), INSIDE_SHAPE.offset(pos.getX(), pos.getY(), pos.getZ()), BooleanBiFunction.AND)) {
             if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
-                WizStorageUtil.insertStack(item.getStack(), blockEntity.getItemStorage(null));
-                entity.discard();
+                ItemInvUtil.move(new ItemTransferableItemEntity(itemEntity), blockEntity.itemInv, itemEntity.getStack().getMaxCount());
             }
         }
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var storage = FluidStorage.SIDED.find(world, pos, hit.getSide());
-        return storage != null && FluidStorageUtil.interactWithFluidStorage(storage, player, hand)
-                ? ActionResult.SUCCESS
-                : super.onUse(state, world, pos, player, hand, hit);
+        if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
+            return FluidInvUtil.interactHandWithTank(blockEntity.fluidInv.getTransferable(), player, hand).asActionResult();
+        }
+        return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    // AttributeProvider
+    @Override
+    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
+        to.offer(FluidAttributes.INSERTABLE);
     }
 }

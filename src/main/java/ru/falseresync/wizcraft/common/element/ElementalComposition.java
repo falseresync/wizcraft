@@ -1,23 +1,26 @@
 package ru.falseresync.wizcraft.common.element;
 
 import com.google.gson.*;
+import net.minecraft.item.Item;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.JsonHelper;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
 import ru.falseresync.wizcraft.lib.names.WizJsonNames;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public record ElementalComposition(Ingredient ingredient, List<ElementAmount> elements) {
     public static class Manager {
-        public static final Set<ElementalComposition> COMPOSITIONS;
+        public static final Set<ElementalComposition> COMPOSITIONS = new HashSet<>();
 
-        static {
-            COMPOSITIONS = new HashSet<>();
+        public static Optional<ElementalComposition> forItem(Item item) {
+            for (var composition : COMPOSITIONS) {
+                if (composition.ingredient.test(item.getDefaultStack())) {
+                    return Optional.of(composition);
+                }
+            }
+            return Optional.empty();
         }
     }
 

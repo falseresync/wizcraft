@@ -10,6 +10,6 @@ public class WizRegistries {
     public static final Registry<Element> ELEMENT;
 
     static {
-        ELEMENT = FabricRegistryBuilder.createDefaulted(Element.class, IdUtil.id("element"), IdUtil.id("empty")).attribute(RegistryAttribute.SYNCED).buildAndRegister();
+        ELEMENT = FabricRegistryBuilder.createDefaulted(Element.class, IdUtil.wizId("element"), IdUtil.wizId("empty")).attribute(RegistryAttribute.SYNCED).buildAndRegister();
     }
 }

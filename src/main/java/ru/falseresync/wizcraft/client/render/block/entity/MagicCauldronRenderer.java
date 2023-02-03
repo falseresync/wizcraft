@@ -6,7 +6,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
-import ru.falseresync.wizcraft.common.Wizcraft;
 import ru.falseresync.wizcraft.common.block.entity.MagicCauldronBlockEntity;
 
 import java.util.Collections;

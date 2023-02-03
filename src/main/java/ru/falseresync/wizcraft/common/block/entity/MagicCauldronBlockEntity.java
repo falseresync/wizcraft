@@ -12,10 +12,9 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import ru.falseresync.wizcraft.api.WizcraftApi;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
 import ru.falseresync.wizcraft.common.Wizcraft;
-import ru.falseresync.wizcraft.common.element.ElementalComposition;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
 import ru.falseresync.wizcraft.lib.names.WizNbtNames;
 
@@ -48,7 +47,7 @@ public class MagicCauldronBlockEntity extends BlockEntity {
             return;
         }
 
-        var composition = ElementalComposition.Manager.forItem(stack.getItem());
+        var composition = WizcraftApi.getInstance().getCompositionsManager().forItem(stack.getItem());
         if (composition.isPresent()) {
             var count = stack.getCount();
             var elementAmounts = composition.get().elements().stream().map(elementAmount -> new ElementAmount(elementAmount.element(), elementAmount.amount() * count)).toList();

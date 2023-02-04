@@ -18,15 +18,23 @@ import java.util.List;
  *
  * <p>In your ModInitializer:
  * <pre>{@code
- * AutoRegistry.create(MODID)
- *      .run(Registries.BLOCK, MyBlocks.class)
- *      .run(Registries.ITEM, MyItems.class);
+ * AutoRegistry.create(MODID, LOGGER)
+ *      .addRegistrar(MY_CUSTOM_REGISTRY, Custom.class, "custom") // Don't try to override vanilla ones. Yours will be discarded
+ *      .addHolderClass(MyBlocks.class)
+ *      .addHolderClass(MyItems.class)
+ *      .run();
  * }</pre>
  *
  * <p>In your MyBlocks/Items/etc classes:
  * <pre>{@code
  * public class MyBlocks {
  *     public static final @RegistryObject MagicCauldronBlock MAGIC_CAULDRON = new MagicCauldronBlock();
+ *     // Here the ID will be "super_duper"
+ *     public static final @RegistryObject SuperDuperBlock SUPER_DUPER_BLOCK = new SuperDuperBlock();
+ *     // Here the ID will be "mysterious_lamp". Useful if you keep multiple types of objects in the same class
+ *     public static final @RegistryObject(id="mysterious_lamp") MysteriousLanternBlock MYSTERIOUS_LANTERN = new MysteriousLanternBlock();
+ *     // This works too
+ *     public static final @RegistryObject BetterSwordItem BETTER_SWORD_ITEM = new BetterSwordItem();
  * }
  * }</pre>
  *
@@ -76,9 +84,11 @@ public class AutoRegistry {
     /**
      * Registers all the objects in the provided class into the provided registry by the following rules:
      * <ul>
-     *     <li>Only the public static fields marked with @RegistryObject are scanned</li>
-     *     <li>The ID is formed by lower-casing the field name unless it's overridden through @RegistryObject.id()</li>
+     *     <li>Only the public static fields marked with {@link RegistryObject} are scanned</li>
+     *     <li>The ID is formed by lower-casing the field name and truncating its suffix,
+     *     unless it's overridden through {@link RegistryObject#id()}</li>
      *     <li>Null fields are discarded with a warning message</li>
+     *     <li>Fields with no {@link Registrar} are silently discarded</li>
      * </ul>
      */
     public void run() {

@@ -1,7 +1,7 @@
 package ru.falseresync.wizcraft.common.init;
 
 import ru.falseresync.wizcraft.api.element.Element;
-import ru.falseresync.wizcraft.lib.registry.RegistryObject;
+import ru.falseresync.wizcraft.lib.autoregistry.RegistryObject;
 
 public class WizElements {
     public static final @RegistryObject Element EMPTY = new Element();

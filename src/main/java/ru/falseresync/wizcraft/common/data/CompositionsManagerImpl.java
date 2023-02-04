@@ -4,13 +4,12 @@ import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Unit;
 import net.minecraft.util.profiler.Profiler;
 import ru.falseresync.wizcraft.api.element.Composition;
 import ru.falseresync.wizcraft.api.element.CompositionsManager;
 import ru.falseresync.wizcraft.common.Wizcraft;
-import ru.falseresync.wizcraft.lib.IdUtil;
-import ru.falseresync.wizcraft.lib.names.WizJsonNames;
+import ru.falseresync.wizcraft.common.IdUtil;
+import ru.falseresync.wizcraft.common.names.WizJsonNames;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class CompositionsManagerImpl implements CompositionsManager, SimpleResou
 
     @Override
     public Identifier getFabricId() {
-        return IdUtil.wizId(WizJsonNames.COMPOSITIONS);
+        return IdUtil.id(WizJsonNames.COMPOSITIONS);
     }
 
     @Override

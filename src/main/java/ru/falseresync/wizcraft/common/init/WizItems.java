@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import ru.falseresync.wizcraft.common.item.WandItem;
-import ru.falseresync.wizcraft.lib.registry.RegistryObject;
+import ru.falseresync.wizcraft.lib.autoregistry.RegistryObject;
 
 public class WizItems {
     public static final @RegistryObject Item MAGIC_CAULDRON = new BlockItem(WizBlocks.MAGIC_CAULDRON, new FabricItemSettings());

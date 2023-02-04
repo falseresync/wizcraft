@@ -3,7 +3,7 @@ package ru.falseresync.wizcraft.api.element;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import ru.falseresync.wizcraft.api.WizRegistries;
-import ru.falseresync.wizcraft.lib.names.WizCodecNames;
+import ru.falseresync.wizcraft.common.names.WizCodecNames;
 
 import java.util.Objects;
 

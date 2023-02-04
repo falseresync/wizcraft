@@ -16,7 +16,7 @@ import ru.falseresync.wizcraft.api.WizcraftApi;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
 import ru.falseresync.wizcraft.common.Wizcraft;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
-import ru.falseresync.wizcraft.lib.names.WizNbtNames;
+import ru.falseresync.wizcraft.common.names.WizNbtNames;
 
 public class MagicCauldronBlockEntity extends BlockEntity {
     public final DirectFixedItemInv itemInv;

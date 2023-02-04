@@ -4,12 +4,11 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.registry.Registry;
 import ru.falseresync.wizcraft.api.element.Element;
-import ru.falseresync.wizcraft.lib.IdUtil;
+import ru.falseresync.wizcraft.common.IdUtil;
 
 public class WizRegistries {
-    public static final Registry<Element> ELEMENT;
-
-    static {
-        ELEMENT = FabricRegistryBuilder.createDefaulted(Element.class, IdUtil.wizId("element"), IdUtil.wizId("empty")).attribute(RegistryAttribute.SYNCED).buildAndRegister();
-    }
+    public static final Registry<Element> ELEMENT = FabricRegistryBuilder
+            .createDefaulted(Element.class, IdUtil.id("element"), IdUtil.id("empty"))
+            .attribute(RegistryAttribute.SYNCED)
+            .buildAndRegister();
 }

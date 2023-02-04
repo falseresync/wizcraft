@@ -1,13 +1,12 @@
-package ru.falseresync.wizcraft.lib;
+package ru.falseresync.wizcraft.common;
 
 import net.minecraft.util.Identifier;
-import ru.falseresync.wizcraft.common.Wizcraft;
 
 public final class IdUtil {
     private IdUtil() {
     }
 
-    public static Identifier wizId(String id) {
+    public static Identifier id(String id) {
         return new Identifier(Wizcraft.MODID, id);
     }
 }

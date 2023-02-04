@@ -1,4 +1,4 @@
-package ru.falseresync.wizcraft.lib.names;
+package ru.falseresync.wizcraft.common.names;
 
 public class WizJsonNames {
     public static final String COMPOSITIONS = "compositions";

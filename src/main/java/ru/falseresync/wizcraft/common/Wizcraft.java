@@ -1,6 +1,5 @@
 package ru.falseresync.wizcraft.common;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
@@ -17,6 +16,8 @@ import ru.falseresync.wizcraft.common.init.*;
 import ru.falseresync.wizcraft.lib.CodecUtil;
 import ru.falseresync.wizcraft.lib.autoregistry.AutoRegistry;
 
+import java.util.List;
+
 public class Wizcraft implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("wizcraft");
     public static final Gson GSON = new GsonBuilder()
@@ -28,8 +29,8 @@ public class Wizcraft implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        AutoRegistry.addRegistrar(WizRegistries.ELEMENT, Element.class, List.of("element"));
         AutoRegistry.create(MODID, LOGGER)
-                .addRegistrar(WizRegistries.ELEMENT, Element.class, "element")
                 .addHolderClass(WizBlocks.class)
                 .addHolderClass(WizBlockEntities.class)
                 .addHolderClass(WizItems.class)

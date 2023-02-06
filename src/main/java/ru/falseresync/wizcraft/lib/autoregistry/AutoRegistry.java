@@ -1,25 +1,21 @@
 package ru.falseresync.wizcraft.lib.autoregistry;
 
 import com.google.common.reflect.TypeToken;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import org.slf4j.Logger;
+import ru.falseresync.wizcraft.lib.autoregistry.impl.AutoRegistryImpl;
+import ru.falseresync.wizcraft.lib.autoregistry.impl.Registrar;
 
-import java.lang.reflect.InaccessibleObjectException;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <h2>USAGE EXAMPLE</h2>
  *
  * <p>In your ModInitializer:
  * <pre>{@code
+ * // Don't try to override vanilla ones. You'll be a dick to everyone else using the lib
+ * AutoRegistry.addRegistrar(MY_CUSTOM_REGISTRY, Custom.class, List.of("custom", "field_suffix"));
  * AutoRegistry.create(MODID, LOGGER)
- *      .addRegistrar(MY_CUSTOM_REGISTRY, Custom.class, "custom") // Don't try to override vanilla ones. Yours will be discarded
  *      .addHolderClass(MyBlocks.class)
  *      .addHolderClass(MyItems.class)
  *      .run();
@@ -29,57 +25,41 @@ import java.util.List;
  * <pre>{@code
  * public class MyBlocks {
  *     public static final @RegistryObject MagicCauldronBlock MAGIC_CAULDRON = new MagicCauldronBlock();
- *     // Here the ID will be "super_duper"
+ *     // Here the ID will be "super_duper". Useful if you keep multiple types of objects in the same class
  *     public static final @RegistryObject SuperDuperBlock SUPER_DUPER_BLOCK = new SuperDuperBlock();
- *     // Here the ID will be "mysterious_lamp". Useful if you keep multiple types of objects in the same class
+ *     // Here the ID will be "mysterious_lamp". Useful if you want to keep the "_block" suffix for example
  *     public static final @RegistryObject(id="mysterious_lamp") MysteriousLanternBlock MYSTERIOUS_LANTERN = new MysteriousLanternBlock();
- *     // This works too
+ *     // This works too, and just as above the ID will be "better_sword", without the "_item" suffix
  *     public static final @RegistryObject BetterSwordItem BETTER_SWORD_ITEM = new BetterSwordItem();
  * }
  * }</pre>
  *
  * @implNote help me pls
  */
-public class AutoRegistry {
-    private final List<Registrar<?>> registrars = new ArrayList<>();
-    private final List<Class<?>> holderClasses = new ArrayList<>();
-    private final String modid;
-    private final Logger logger;
-
-    @SuppressWarnings("Convert2Diamond")
-    protected AutoRegistry(String modid, Logger logger) {
-        this.modid = modid;
-        this.logger = logger;
-        addRegistrar(Registries.BLOCK, Block.class, "block");
-        addRegistrar(Registries.BLOCK_ENTITY_TYPE, new TypeToken<BlockEntityType<?>>() {}, "block_entity");
-        addRegistrar(Registries.ITEM, Item.class, "item");
-    }
-
-    public static AutoRegistry create(String modid, Logger logger) {
-        return new AutoRegistry(modid, logger);
+public interface AutoRegistry {
+    static AutoRegistry create(String modid, Logger logger) {
+        return new AutoRegistryImpl(modid, logger);
     }
 
     /**
+     * Use this for parametrized types
+     *
      * <p>Example call:
      * <pre>{@code
-     * addRegistrar(Registries.BLOCK, new TypeToken<Block>() {}, "block");
+     * AutoRegistry.addRegistrar(Registries.BLOCK, new TypeToken<Block>() {}, "block");
      * }</pre>
      *
      * <p><strong>Types in TypeToken&lt;here&gt; are NECESSARY.</strong>
      */
-    public <T> AutoRegistry addRegistrar(Registry<T> registry, TypeToken<T> objectType, String objectSuffix) {
-        registrars.add(new Registrar<>(registry, objectType, objectSuffix, modid));
-        return this;
+    static <T> void addRegistrar(Registry<T> registry, TypeToken<T> entryType, Collection<String> suffixes) {
+        AutoRegistryImpl.addRegistrar(registry, entryType, suffixes);
     }
 
-    public <T> AutoRegistry addRegistrar(Registry<T> registry, Class<T> objectType, String objectSuffix) {
-        return addRegistrar(registry, TypeToken.of(objectType), objectSuffix);
+    static <T> void addRegistrar(Registry<T> registry, Class<T> entryType, Collection<String> suffixes) {
+        addRegistrar(registry, TypeToken.of(entryType), suffixes);
     }
 
-    public AutoRegistry addHolderClass(Class<?> holderClass) {
-        holderClasses.add(holderClass);
-        return this;
-    }
+    AutoRegistry addHolderClass(Class<?> holderClass);
 
     /**
      * Registers all the objects in the provided class into the provided registry by the following rules:
@@ -91,40 +71,5 @@ public class AutoRegistry {
      *     <li>Fields with no {@link Registrar} are silently discarded</li>
      * </ul>
      */
-    public void run() {
-        for (var holderClass : holderClasses) {
-            fields_iterator: for (var field : holderClass.getDeclaredFields()) {
-                var modifiers = field.getModifiers();
-                var annotations = field.getAnnotationsByType(RegistryObject.class);
-                if (!Modifier.isStatic(modifiers)
-                        || !Modifier.isPublic(modifiers)
-                        || annotations.length == 0) {
-                    continue;
-                }
-
-                try {
-                    var registryObject = field.get(holderClass);
-                    if (registryObject == null) {
-                        logger.warn("Found a null @RegistryObject field, discarding: %s at %s".formatted(field.getName(), holderClass.getCanonicalName()));
-                        continue;
-                    }
-
-                    var rawId = annotations[0].id();
-                    if (rawId.isBlank()) {
-                        rawId = field.getName();
-                    }
-                    for (var registrar : registrars) {
-                        if (registrar.addIfMatches(rawId, registryObject)) {
-                            continue fields_iterator;
-                        }
-                    }
-                } catch (IllegalAccessException e) {
-                    throw new InaccessibleObjectException("Couldn't read a @RegistryObject field: %s at %s".formatted(field.getName(), holderClass.getCanonicalName()));
-                }
-            }
-        }
-        for (var registrar : registrars) {
-            registrar.run();
-        }
-    }
+    void run();
 }

@@ -20,6 +20,7 @@ import java.util.List;
 @ApiStatus.Internal
 public class AutoRegistryImpl implements AutoRegistry {
     private static final List<Registrar<?>> REGISTRARS = new ArrayList<>();
+    private static boolean hasAddedVanillaRegistrars = false;
     private final List<Registrar<?>.Executor> executors = new ArrayList<>();
     private final List<Class<?>> holderClasses = new ArrayList<>();
     private final String modid;
@@ -29,8 +30,9 @@ public class AutoRegistryImpl implements AutoRegistry {
         this.modid = modid;
         this.logger = logger;
 
-        if (REGISTRARS.isEmpty()) {
+        if (!hasAddedVanillaRegistrars) {
             addVanillaRegistrars();
+            hasAddedVanillaRegistrars = true;
         }
     }
 

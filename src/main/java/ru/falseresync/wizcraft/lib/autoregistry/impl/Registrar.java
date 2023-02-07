@@ -53,7 +53,7 @@ public final class Registrar<T> {
         }
 
         private Identifier makeIdWithoutSuffix(String fieldName) {
-            var nameWithoutSuffix = suffixes.stream().reduce(fieldName.toLowerCase(), (name, suffix) -> StringUtils.removeEndIgnoreCase(name, suffix));
+            var nameWithoutSuffix = suffixes.stream().reduce(fieldName.toLowerCase(), StringUtils::removeEndIgnoreCase);
             return new Identifier(modid, StringUtils.removeEndIgnoreCase(nameWithoutSuffix, "_"));
         }
     }

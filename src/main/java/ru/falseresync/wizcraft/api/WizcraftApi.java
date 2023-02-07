@@ -1,5 +1,6 @@
 package ru.falseresync.wizcraft.api;
 
+import com.google.gson.Gson;
 import ru.falseresync.wizcraft.api.element.CompositionsManager;
 import ru.falseresync.wizcraft.common.Wizcraft;
 
@@ -12,5 +13,7 @@ public interface WizcraftApi {
         return impl;
     }
 
-    CompositionsManager getCompositionsManager();
+    CompositionsManager compositionsManager();
+
+    Gson getGson();
 }

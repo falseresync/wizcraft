@@ -29,9 +29,6 @@
 		"fabricloader": ">=0.14.12",
 		"minecraft": "~1.19.3",
 		"java": ">=17",
-		"fabric-api": "*",
-		"libblockattributes_core": ">=0.12.0",
-		"libblockattributes_items": ">=0.12.0",
-		"libblockattributes_fluids": ">=0.12.0"
+		"fabric-api": "*"
 	}
 }

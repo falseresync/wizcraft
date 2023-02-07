@@ -1,17 +1,12 @@
 package ru.falseresync.wizcraft.common;
 
+import com.google.gson.Gson;
 import ru.falseresync.wizcraft.api.WizcraftApi;
 import ru.falseresync.wizcraft.api.element.CompositionsManager;
 
-public class WizcraftApiImpl implements WizcraftApi {
-    private final CompositionsManager compositionsManager;
-
-    public WizcraftApiImpl(CompositionsManager compositionsManager) {
-        this.compositionsManager = compositionsManager;
-    }
-
+public record WizcraftApiImpl(CompositionsManager compositionsManager) implements WizcraftApi {
     @Override
-    public CompositionsManager getCompositionsManager() {
-        return compositionsManager;
+    public Gson getGson() {
+        return Wizcraft.GSON;
     }
 }

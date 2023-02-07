@@ -1,13 +1,9 @@
 package ru.falseresync.wizcraft.common.block;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProvider;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidInvUtil;
-import alexiil.mc.lib.attributes.item.ItemAttributes;
-import alexiil.mc.lib.attributes.item.ItemInvUtil;
-import alexiil.mc.lib.attributes.item.entity.ItemTransferableItemEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -28,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.falseresync.wizcraft.common.block.entity.MagicCauldronBlockEntity;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
 
-public class MagicCauldronBlock extends BlockWithEntity implements AttributeProvider {
+public class MagicCauldronBlock extends BlockWithEntity {
     private static final VoxelShape INSIDE_SHAPE;
     private static final VoxelShape OUTLINE_SHAPE;
 
@@ -80,7 +76,15 @@ public class MagicCauldronBlock extends BlockWithEntity implements AttributeProv
         if (entity instanceof ItemEntity itemEntity
                 && VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox()), INSIDE_SHAPE.offset(pos.getX(), pos.getY(), pos.getZ()), BooleanBiFunction.AND)) {
             if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
-                ItemInvUtil.move(new ItemTransferableItemEntity(itemEntity), blockEntity.itemInv, itemEntity.getStack().getMaxCount());
+                try (var tx = Transaction.openOuter()) {
+                    var stack = itemEntity.getStack();
+                    var insertedAmount = blockEntity.itemStorage.insert(ItemVariant.of(stack), stack.getCount(), tx);
+
+                    if (insertedAmount == stack.getCount()) {
+                        itemEntity.discard();
+                        tx.commit();
+                    }
+                }
             }
         }
     }
@@ -88,14 +92,9 @@ public class MagicCauldronBlock extends BlockWithEntity implements AttributeProv
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
-            return FluidInvUtil.interactHandWithTank(blockEntity.fluidInv.getTransferable(), player, hand).asActionResult();
+            var success = FluidStorageUtil.interactWithFluidStorage(blockEntity.fluidStorage, player, hand);
+            return success ? ActionResult.SUCCESS : ActionResult.PASS;
         }
         return super.onUse(state, world, pos, player, hand, hit);
-    }
-
-    // AttributeProvider
-    @Override
-    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
-        to.offer(FluidAttributes.INSERTABLE);
     }
 }

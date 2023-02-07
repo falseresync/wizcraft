@@ -16,7 +16,7 @@ public final class CodecUtil {
     private CodecUtil() {
     }
 
-    public static <T> JsonDeserializer<T> makeDeserializer(Codec<T> codec, Logger logger) {
+    public static <T> JsonDeserializer<T> toDeserializer(Codec<T> codec, Logger logger) {
         return (json, typeOfT, context) -> codec
                 .parse(JsonOps.INSTANCE, json)
                 .getOrThrow(false, message -> logger.error("Unable to deserialize %s: %s".formatted(typeOfT.getTypeName(), message)));

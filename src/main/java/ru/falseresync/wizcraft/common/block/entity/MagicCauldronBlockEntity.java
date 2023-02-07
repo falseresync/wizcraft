@@ -1,35 +1,38 @@
 package ru.falseresync.wizcraft.common.block.entity;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import alexiil.mc.lib.attributes.item.impl.DirectFixedItemInv;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import ru.falseresync.wizcraft.api.WizcraftApi;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
-import ru.falseresync.wizcraft.common.Wizcraft;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
 import ru.falseresync.wizcraft.common.names.WizNbtNames;
+import ru.falseresync.wizcraft.lib.storage.SimpleSingleVariantStorage;
+import ru.falseresync.wizcraft.lib.storage.SimpleSingleVariantStorageBuilder;
 
-public class MagicCauldronBlockEntity extends BlockEntity {
-    public final DirectFixedItemInv itemInv;
-    public final SimpleFixedFluidInv fluidInv;
+public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorageBlockEntity {
+    public final SimpleSingleVariantStorage<FluidVariant> fluidStorage = SimpleSingleVariantStorageBuilder.fluid()
+            .supportsExtraction(false)
+            .build(fluidVariant -> FluidConstants.BUCKET, () -> markDirty());
+    public final SimpleSingleVariantStorage<ItemVariant> itemStorage = SimpleSingleVariantStorageBuilder.item()
+            .supportsExtraction(false)
+            .build(itemVariant -> (long) itemVariant.getItem().getMaxCount(), () -> markDirty());
 
     public MagicCauldronBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.MAGIC_CAULDRON, pos, state);
-
-        itemInv = new DirectFixedItemInv(1);
-        itemInv.addListener(inv -> markDirty(), () -> {});
-
-        fluidInv = new SimpleFixedFluidInv(1, FluidAmount.BUCKET);
-        fluidInv.addListener((inv, tank, previous, current) -> markDirty(), () -> {});
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, MagicCauldronBlockEntity entity) {
@@ -37,22 +40,29 @@ public class MagicCauldronBlockEntity extends BlockEntity {
             return;
         }
 
-        var volume = entity.fluidInv.getInvFluid(0);
-        if (volume.isEmpty()) {
+        var fluidVariant = entity.fluidStorage.getResource();
+        if (fluidVariant.isBlank()) {
             return;
         }
 
-        var stack = entity.itemInv.getInvStack(0);
-        if (stack.isEmpty()) {
+        var itemVariant = entity.itemStorage.getResource();
+        if (itemVariant.isBlank()) {
             return;
         }
 
-        var composition = WizcraftApi.getInstance().getCompositionsManager().forItem(stack.getItem());
+        var composition = WizcraftApi.getInstance().compositionsManager().forItem(itemVariant.getItem());
         if (composition.isPresent()) {
-            var count = stack.getCount();
-            var elementAmounts = composition.get().elements().stream().map(elementAmount -> new ElementAmount(elementAmount.element(), elementAmount.amount() * count)).toList();
-            Wizcraft.LOGGER.info(elementAmounts.toString());
-            entity.itemInv.forceSetInvStack(0, ItemStack.EMPTY);
+            var itemAmount = entity.itemStorage.getAmount();
+            try (var tx = Transaction.openOuter()) {
+                var removableAmount = entity.itemStorage.extract(itemVariant, itemAmount, tx);
+                if (removableAmount == itemAmount) {
+                    var elementAmounts = composition.get().elements().stream()
+                            .map(elementAmount -> new ElementAmount(elementAmount.element(), elementAmount.amount() * itemAmount))
+                            .toList();
+
+                    tx.commit();
+                }
+            }
         }
     }
 
@@ -60,8 +70,8 @@ public class MagicCauldronBlockEntity extends BlockEntity {
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         var customNbt = new NbtCompound();
-        fluidInv.toTag(customNbt);
-        itemInv.toTag(customNbt);
+        fluidStorage.writeNbt(customNbt);
+        itemStorage.writeNbt(customNbt);
         nbt.put(WizNbtNames.CUSTOM_NBT, customNbt);
     }
 
@@ -69,8 +79,8 @@ public class MagicCauldronBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         var customNbt = nbt.getCompound(WizNbtNames.CUSTOM_NBT);
-        fluidInv.fromTag(customNbt);
-        itemInv.fromTag(customNbt);
+        fluidStorage.readNbt(customNbt);
+        itemStorage.readNbt(customNbt);
     }
 
     @Override
@@ -81,5 +91,15 @@ public class MagicCauldronBlockEntity extends BlockEntity {
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public Storage<FluidVariant> getFluidStorage(Direction side) {
+        return fluidStorage;
+    }
+
+    @Override
+    public Storage<ItemVariant> getItemStorage(Direction side) {
+        return itemStorage;
     }
 }

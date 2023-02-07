@@ -9,27 +9,22 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import ru.falseresync.wizcraft.api.WizcraftApi;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
 import ru.falseresync.wizcraft.common.names.WizNbtNames;
 import ru.falseresync.wizcraft.lib.storage.SimpleSingleVariantStorage;
-import ru.falseresync.wizcraft.lib.storage.SimpleSingleVariantStorageBuilder;
 
 public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorageBlockEntity {
-    public final SimpleSingleVariantStorage<FluidVariant> fluidStorage = SimpleSingleVariantStorageBuilder.fluid()
+    public final SimpleSingleVariantStorage<FluidVariant> fluidStorage = SimpleSingleVariantStorage.Builder.fluid()
             .supportsExtraction(false)
-            .build(fluidVariant -> FluidConstants.BUCKET, () -> markDirty());
-    public final SimpleSingleVariantStorage<ItemVariant> itemStorage = SimpleSingleVariantStorageBuilder.item()
+            .build(fluidVariant -> FluidConstants.BUCKET, this::markDirty);
+    public final SimpleSingleVariantStorage<ItemVariant> itemStorage = SimpleSingleVariantStorage.Builder.item()
             .supportsExtraction(false)
-            .build(itemVariant -> (long) itemVariant.getItem().getMaxCount(), () -> markDirty());
+            .build(itemVariant -> (long) itemVariant.getItem().getMaxCount(), this::markDirty);
 
     public MagicCauldronBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.MAGIC_CAULDRON, pos, state);
@@ -81,16 +76,6 @@ public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorag
         var customNbt = nbt.getCompound(WizNbtNames.CUSTOM_NBT);
         fluidStorage.readNbt(customNbt);
         itemStorage.readNbt(customNbt);
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
-    }
-
-    @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override

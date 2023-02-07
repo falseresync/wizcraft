@@ -19,15 +19,15 @@ public class MagicCauldronRenderer implements BlockEntityRenderer<MagicCauldronB
 
     @Override
     public void render(MagicCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        var fluid = entity.fluidStorage.variant;
-        if (fluid.isBlank()) {
+        var fluidVariant = entity.fluidStorage.getResource();
+        if (fluidVariant.isBlank()) {
             return;
         }
 
         matrices.push();
 
-        var sprite = FluidVariantRendering.getSprite(fluid);
-        var color = Color.fromArgb(FluidVariantRendering.getColor(fluid));
+        var sprite = FluidVariantRendering.getSprite(fluidVariant);
+        var color = Color.fromArgb(FluidVariantRendering.getColor(fluidVariant));
         var emitter = RendererAccess.INSTANCE.getRenderer().meshBuilder().getEmitter();
 
         emitter.square(Direction.UP, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 2 / 16f);

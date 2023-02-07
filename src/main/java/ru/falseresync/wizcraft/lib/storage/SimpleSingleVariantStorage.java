@@ -1,25 +1,28 @@
 package ru.falseresync.wizcraft.lib.storage;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-public abstract class SimpleSingleVariantStorage<T extends TransferVariant<?>> extends SingleVariantStorage<T> {
-    protected final Supplier<T> blankVariant;
+public class SimpleSingleVariantStorage<T extends TransferVariant<?>> extends SingleVariantStorage<T> {
+    protected final T blankVariant;
     protected final boolean supportsExtraction;
     protected final boolean supportsInsertion;
+    protected final VariantNbtDeserializer<T> nbtDeserializer;
     protected final Function<T, Long> capacityForVariant;
     protected final Runnable onChange;
 
-    public SimpleSingleVariantStorage(Supplier<T> blankVariant, boolean supportsExtraction, boolean supportsInsertion, Function<T, Long> capacityForVariant, Runnable onChange) {
-        this.blankVariant = blankVariant;
+    public SimpleSingleVariantStorage(T blankVariant, boolean supportsExtraction, boolean supportsInsertion, VariantNbtDeserializer<T> nbtDeserializer, Function<T, Long> capacityForVariant, Runnable onChange) {
+        this.blankVariant = Objects.requireNonNull(blankVariant, "blankVariant may not be null");
         this.supportsExtraction = supportsExtraction;
         this.supportsInsertion = supportsInsertion;
-        this.capacityForVariant = capacityForVariant;
+        this.nbtDeserializer = Objects.requireNonNull(nbtDeserializer, "nbtDeserializer may not be null");
+        this.capacityForVariant = Objects.requireNonNull(capacityForVariant, "capacityForVariant may not be null");
         this.onChange = Objects.requireNonNull(onChange, "onChange may not be null");
     }
 
@@ -44,8 +47,8 @@ public abstract class SimpleSingleVariantStorage<T extends TransferVariant<?>> e
     }
 
     @Override
-    protected T getBlankVariant() {
-        return blankVariant.get();
+    protected final T getBlankVariant() {
+        return blankVariant;
     }
 
     @Override
@@ -58,5 +61,53 @@ public abstract class SimpleSingleVariantStorage<T extends TransferVariant<?>> e
         onChange.run();
     }
 
-    public abstract void readNbt(NbtCompound nbt);
+    public void readNbt(NbtCompound nbt) {
+        variant = nbtDeserializer.fromNbt(nbt.getCompound("variant"));
+        amount = nbt.getLong("amount");
+    }
+
+    @FunctionalInterface
+    public interface VariantNbtDeserializer<T extends TransferVariant<?>> {
+        T fromNbt(NbtCompound compound);
+    }
+
+    public static class Builder<T extends TransferVariant<?>> {
+        protected final T blankVariant;
+        protected final VariantNbtDeserializer<T> nbtDeserializer;
+        protected boolean supportsExtraction = true;
+        protected boolean supportsInsertion = true;
+
+        public Builder(T blankVariant, VariantNbtDeserializer<T> nbtDeserializer) {
+            this.blankVariant = blankVariant;
+            this.nbtDeserializer = nbtDeserializer;
+        }
+
+        public static Builder<ItemVariant> item() {
+            return new Builder<>(ItemVariant.blank(), ItemVariant::fromNbt);
+        }
+
+        public static Builder<FluidVariant> fluid() {
+            return new Builder<>(FluidVariant.blank(), FluidVariant::fromNbt);
+        }
+
+        public Builder<T> supportsExtraction(boolean supportsExtraction) {
+            this.supportsExtraction = supportsExtraction;
+            return this;
+        }
+
+        public Builder<T> supportsInsertion(boolean supportsInsertion) {
+            this.supportsInsertion = supportsInsertion;
+            return this;
+        }
+
+        public Builder<T> readOnly() {
+            this.supportsExtraction = false;
+            this.supportsInsertion = false;
+            return this;
+        }
+
+        public SimpleSingleVariantStorage<T> build(Function<T, Long> capacityForVariant, Runnable onChange) {
+            return new SimpleSingleVariantStorage<>(blankVariant, supportsExtraction, supportsInsertion, nbtDeserializer, capacityForVariant, onChange);
+        }
+    }
 }

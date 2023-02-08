@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.base.SingleItemStorage;
 public abstract class SimpleSingleItemStorage extends SingleItemStorage {
     private final Runnable onChange;
 
-    public SimpleSingleItemStorage(Runnable onChange) {
+    protected SimpleSingleItemStorage(Runnable onChange) {
         this.onChange = onChange;
     }
 

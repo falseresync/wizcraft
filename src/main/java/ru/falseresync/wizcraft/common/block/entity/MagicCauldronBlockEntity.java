@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BrewingStandBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
@@ -18,12 +19,17 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.WorldEvents;
 import ru.falseresync.wizcraft.api.WizcraftApi;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
+import ru.falseresync.wizcraft.api.storage.ElementVariant;
+import ru.falseresync.wizcraft.api.storage.SingleElementStorage;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
 import ru.falseresync.wizcraft.common.names.WizNbtNames;
 import ru.falseresync.wizcraft.lib.storage.SimpleSingleItemStorage;
@@ -31,6 +37,7 @@ import ru.falseresync.wizcraft.lib.storage.SimpleSingleItemStorage;
 public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorageBlockEntity {
     protected final SingleFluidStorage fluidStorage = SingleFluidStorage.withFixedCapacity(FluidConstants.BUCKET, this::markDirty);
     protected final SimpleSingleItemStorage itemStorage = SimpleSingleItemStorage.withDefaultCapacity(this::markDirty);
+    protected final SingleElementStorage elementStorage = SingleElementStorage.withDefaultCapacity(this::markDirty);
 
     public MagicCauldronBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.MAGIC_CAULDRON, pos, state);
@@ -41,7 +48,7 @@ public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorag
             return;
         }
 
-        if (!entity.fluidStorage.getResource().isOf(Fluids.WATER)) {
+        if (entity.fluidStorage.getResource().isOf(Fluids.WATER)) {
             entity.processWithWater();
         }
     }
@@ -52,13 +59,21 @@ public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorag
         if (composition.isPresent()) {
             try (var tx = Transaction.openOuter()) {
                 var itemAmount = itemStorage.getAmount();
-                System.out.println(itemAmount);
                 if (itemStorage.extract(itemVariant, itemAmount, tx) == itemAmount) {
                     var elementAmounts = composition.get().elements().stream()
                             .map(elementAmount -> new ElementAmount(elementAmount.element(), elementAmount.amount() * itemAmount))
                             .toList();
 
-                    System.out.println(elementAmounts);
+                    var elementVariant = ElementVariant.of(elementAmounts.get(0).element());
+                    var elementAmount = elementAmounts.get(0).amount();
+                    try (var elementTx = tx.openNested()) {
+                        if (elementStorage.insert(elementVariant, elementAmount, elementTx) == elementAmount) {
+                            world.syncWorldEvent(WorldEvents.BREWING_STAND_BREWS, pos, 0);
+                            elementTx.commit();
+                        }
+                    }
+
+                    System.out.println(elementVariant + " " + elementAmount);
                     tx.commit();
                 }
             }
@@ -78,6 +93,10 @@ public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorag
         var itemStorageNbt = new NbtCompound();
         itemStorage.writeNbt(itemStorageNbt);
         customNbt.put(WizNbtNames.ITEM_STORAGE, itemStorageNbt);
+
+        var elementStorageNbt = new NbtCompound();
+        elementStorage.writeNbt(elementStorageNbt);
+        customNbt.put(WizNbtNames.ELEMENT_STORAGE, elementStorageNbt);
 
         nbt.put(WizNbtNames.CUSTOM_NBT, customNbt);
     }
@@ -110,8 +129,12 @@ public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorag
 
         if (nbt.contains(WizNbtNames.CUSTOM_NBT)) {
             var customNbt = nbt.getCompound(WizNbtNames.CUSTOM_NBT);
+
             var itemStorageNbt = customNbt.getCompound(WizNbtNames.ITEM_STORAGE);
             itemStorage.readNbt(itemStorageNbt);
+
+            var elementStorageNbt = customNbt.getCompound(WizNbtNames.ELEMENT_STORAGE);
+            elementStorage.readNbt(elementStorageNbt);
         }
 
         if (nbt.contains(WizNbtNames.CUSTOM_SYNCABLE_NBT)) {

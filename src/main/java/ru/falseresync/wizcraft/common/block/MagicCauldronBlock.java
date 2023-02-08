@@ -2,8 +2,6 @@ package ru.falseresync.wizcraft.common.block;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorageUtil;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -11,6 +9,9 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
@@ -20,11 +21,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 import ru.falseresync.wizcraft.common.block.entity.MagicCauldronBlockEntity;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
 
-public class MagicCauldronBlock extends BlockWithEntity {
+public class MagicCauldronBlock extends BlockWithEntity implements FluidFillable {
     private static final VoxelShape INSIDE_SHAPE;
     private static final VoxelShape OUTLINE_SHAPE;
 
@@ -73,14 +75,18 @@ public class MagicCauldronBlock extends BlockWithEntity {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (entity instanceof ItemEntity itemEntity
+        if (entity instanceof ItemEntity itemEntity && world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity
                 && VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox()), INSIDE_SHAPE.offset(pos.getX(), pos.getY(), pos.getZ()), BooleanBiFunction.AND)) {
-            if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
-                blockEntity.interactWithItemEntity(itemEntity);
+            if (blockEntity.interactWithItemEntity(itemEntity)) {
+
+                itemEntity.discard();
             }
         }
     }
 
+    // This method is technically redundant because FluidFillable.tryFillWithFluid does the same
+    // However many modders probably don't know or won't bother with supporting that
+    // Hence this additional layer of supporting the things the Transfer-API-way is required
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
@@ -88,5 +94,20 @@ public class MagicCauldronBlock extends BlockWithEntity {
             return success ? ActionResult.SUCCESS : ActionResult.PASS;
         }
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
+        return world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity && blockEntity.getFluidVariant().isBlank();
+    }
+
+    @Override
+    public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (!world.isClient() && world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
+            if (blockEntity.interactWithFluidState(fluidState)) {
+                ((ServerWorld) world).getChunkManager().markForUpdate(pos);
+            }
+        }
+        return true;
     }
 }

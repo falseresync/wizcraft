@@ -76,15 +76,7 @@ public class MagicCauldronBlock extends BlockWithEntity {
         if (entity instanceof ItemEntity itemEntity
                 && VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox()), INSIDE_SHAPE.offset(pos.getX(), pos.getY(), pos.getZ()), BooleanBiFunction.AND)) {
             if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
-                try (var tx = Transaction.openOuter()) {
-                    var stack = itemEntity.getStack();
-                    var insertedAmount = blockEntity.itemStorage.insert(ItemVariant.of(stack), stack.getCount(), tx);
-
-                    if (insertedAmount == stack.getCount()) {
-                        itemEntity.discard();
-                        tx.commit();
-                    }
-                }
+                blockEntity.interactWithItemEntity(itemEntity);
             }
         }
     }
@@ -92,7 +84,7 @@ public class MagicCauldronBlock extends BlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof MagicCauldronBlockEntity blockEntity) {
-            var success = FluidStorageUtil.interactWithFluidStorage(blockEntity.fluidStorage, player, hand);
+            var success = FluidStorageUtil.interactWithFluidStorage(blockEntity.getFluidStorage(hit.getSide()), player, hand);
             return success ? ActionResult.SUCCESS : ActionResult.PASS;
         }
         return super.onUse(state, world, pos, player, hand, hit);

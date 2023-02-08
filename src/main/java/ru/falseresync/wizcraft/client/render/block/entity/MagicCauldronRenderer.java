@@ -19,7 +19,7 @@ public class MagicCauldronRenderer implements BlockEntityRenderer<MagicCauldronB
 
     @Override
     public void render(MagicCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        var fluidVariant = entity.fluidStorage.getResource();
+        var fluidVariant = entity.getFluidVariant();
         if (fluidVariant.isBlank()) {
             return;
         }

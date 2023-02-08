@@ -11,43 +11,23 @@ import java.util.function.Function;
 
 public class SimpleSingleVariantStorage<T extends TransferVariant<?>> extends SingleVariantStorage<T> {
     protected final T blankVariant;
-    protected final boolean supportsExtraction;
-    protected final boolean supportsInsertion;
     protected final VariantNbtDeserializer<T> nbtDeserializer;
     protected final Function<T, Long> capacityForVariant;
     protected final Runnable onChange;
 
-    public SimpleSingleVariantStorage(T blankVariant, boolean supportsExtraction, boolean supportsInsertion, VariantNbtDeserializer<T> nbtDeserializer, Function<T, Long> capacityForVariant, Runnable onChange) {
+    public SimpleSingleVariantStorage(T blankVariant, VariantNbtDeserializer<T> nbtDeserializer, Function<T, Long> capacityForVariant, Runnable onChange) {
         this.blankVariant = Objects.requireNonNull(blankVariant, "blankVariant may not be null");
-        this.supportsExtraction = supportsExtraction;
-        this.supportsInsertion = supportsInsertion;
         this.nbtDeserializer = Objects.requireNonNull(nbtDeserializer, "nbtDeserializer may not be null");
         this.capacityForVariant = Objects.requireNonNull(capacityForVariant, "capacityForVariant may not be null");
         this.onChange = Objects.requireNonNull(onChange, "onChange may not be null");
+
+        // in the parent class this field gets initialized before this constructor
+        // which means it's a null and leads to cryptic NPEs
+        variant = blankVariant;
     }
 
     @Override
-    public boolean supportsExtraction() {
-        return supportsExtraction;
-    }
-
-    @Override
-    public boolean supportsInsertion() {
-        return supportsInsertion;
-    }
-
-    @Override
-    protected boolean canExtract(T variant) {
-        return supportsExtraction;
-    }
-
-    @Override
-    protected boolean canInsert(T variant) {
-        return supportsInsertion;
-    }
-
-    @Override
-    protected final T getBlankVariant() {
+    protected T getBlankVariant() {
         return blankVariant;
     }
 
@@ -74,8 +54,6 @@ public class SimpleSingleVariantStorage<T extends TransferVariant<?>> extends Si
     public static class Builder<T extends TransferVariant<?>> {
         protected final T blankVariant;
         protected final VariantNbtDeserializer<T> nbtDeserializer;
-        protected boolean supportsExtraction = true;
-        protected boolean supportsInsertion = true;
 
         public Builder(T blankVariant, VariantNbtDeserializer<T> nbtDeserializer) {
             this.blankVariant = blankVariant;
@@ -90,24 +68,8 @@ public class SimpleSingleVariantStorage<T extends TransferVariant<?>> extends Si
             return new Builder<>(FluidVariant.blank(), FluidVariant::fromNbt);
         }
 
-        public Builder<T> supportsExtraction(boolean supportsExtraction) {
-            this.supportsExtraction = supportsExtraction;
-            return this;
-        }
-
-        public Builder<T> supportsInsertion(boolean supportsInsertion) {
-            this.supportsInsertion = supportsInsertion;
-            return this;
-        }
-
-        public Builder<T> readOnly() {
-            this.supportsExtraction = false;
-            this.supportsInsertion = false;
-            return this;
-        }
-
         public SimpleSingleVariantStorage<T> build(Function<T, Long> capacityForVariant, Runnable onChange) {
-            return new SimpleSingleVariantStorage<>(blankVariant, supportsExtraction, supportsInsertion, nbtDeserializer, capacityForVariant, onChange);
+            return new SimpleSingleVariantStorage<>(blankVariant, nbtDeserializer, capacityForVariant, onChange);
         }
     }
 }

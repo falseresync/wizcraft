@@ -6,12 +6,10 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.falseresync.wizcraft.api.WizRegistries;
@@ -35,7 +33,6 @@ public class Wizcraft implements ModInitializer {
             .create();
     public static final String MODID = "wizcraft";
     public static WizcraftApiImpl API;
-    public static int MAGIC_CAULDRON_DISSOLVE;
 
     @Override
     public void onInitialize() {
@@ -49,27 +46,15 @@ public class Wizcraft implements ModInitializer {
                 .addHolderClass(WizBlockEntities.class)
                 .addHolderClass(WizElements.class)
                 .addHolderClass(WizItems.class)
+                .addHolderClass(WizParticles.class)
                 .addHolderClass(WizRecipes.class)
                 .run();
 
         WizItemGroups.init();
+        WizWorldEvents.init();
 
         var compositionsManager = new CompositionsManagerImpl();
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(compositionsManager);
-
-        MAGIC_CAULDRON_DISSOLVE = WorldEventUtil.registerLocal((client, world, renderer, pos, data) -> {
-
-            world.addParticle(
-                    ParticleTypes.ASH,
-                    pos.getX() + Doubles.constrainToRange(world.random.nextGaussian() / 2, -1, 1),
-                    pos.getY() + 1,
-                    pos.getZ() + Doubles.constrainToRange(world.random.nextGaussian() / 2, -1, 1),
-                    Doubles.constrainToRange(world.random.nextGaussian() / 2, -1, 1),
-                    Doubles.constrainToRange(world.random.nextGaussian(), -1, 1),
-                    Doubles.constrainToRange(world.random.nextGaussian() / 2, -1, 1));
-
-            world.playSoundAtBlockCenter(pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-        });
 
         API = new WizcraftApiImpl(compositionsManager);
 

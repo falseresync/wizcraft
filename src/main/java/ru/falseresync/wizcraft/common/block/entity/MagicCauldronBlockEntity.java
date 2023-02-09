@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BrewingStandBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
@@ -19,23 +18,17 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
 import ru.falseresync.wizcraft.api.WizcraftApi;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
 import ru.falseresync.wizcraft.api.storage.ElementVariant;
 import ru.falseresync.wizcraft.api.storage.SingleElementStorage;
-import ru.falseresync.wizcraft.common.Wizcraft;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
+import ru.falseresync.wizcraft.common.init.WizWorldEvents;
 import ru.falseresync.wizcraft.common.names.WizNbtNames;
 import ru.falseresync.wizcraft.lib.storage.SimpleSingleItemStorage;
-import ru.falseresync.wizcraft.lib.worldevents.WorldEventUtil;
 
 public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorageBlockEntity {
     protected final SingleFluidStorage fluidStorage = SingleFluidStorage.withFixedCapacity(FluidConstants.BUCKET, this::markDirty);
@@ -71,7 +64,7 @@ public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorag
                     var elementAmount = elementAmounts.get(0).amount();
                     try (var elementTx = tx.openNested()) {
                         if (elementStorage.insert(elementVariant, elementAmount, elementTx) == elementAmount) {
-                            world.syncWorldEvent(Wizcraft.MAGIC_CAULDRON_DISSOLVE, pos, 0);
+                            world.syncWorldEvent(WizWorldEvents.MAGIC_CAULDRON_DISSOLVE, pos, 0);
                             elementTx.commit();
                         }
                     }

@@ -22,6 +22,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -30,9 +31,11 @@ import ru.falseresync.wizcraft.api.WizcraftApi;
 import ru.falseresync.wizcraft.api.element.ElementAmount;
 import ru.falseresync.wizcraft.api.storage.ElementVariant;
 import ru.falseresync.wizcraft.api.storage.SingleElementStorage;
+import ru.falseresync.wizcraft.common.Wizcraft;
 import ru.falseresync.wizcraft.common.init.WizBlockEntities;
 import ru.falseresync.wizcraft.common.names.WizNbtNames;
 import ru.falseresync.wizcraft.lib.storage.SimpleSingleItemStorage;
+import ru.falseresync.wizcraft.lib.worldevents.WorldEventUtil;
 
 public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorageBlockEntity {
     protected final SingleFluidStorage fluidStorage = SingleFluidStorage.withFixedCapacity(FluidConstants.BUCKET, this::markDirty);
@@ -68,7 +71,7 @@ public class MagicCauldronBlockEntity extends BlockEntity implements SidedStorag
                     var elementAmount = elementAmounts.get(0).amount();
                     try (var elementTx = tx.openNested()) {
                         if (elementStorage.insert(elementVariant, elementAmount, elementTx) == elementAmount) {
-                            world.syncWorldEvent(WorldEvents.BREWING_STAND_BREWS, pos, 0);
+                            world.syncWorldEvent(Wizcraft.MAGIC_CAULDRON_DISSOLVE, pos, 0);
                             elementTx.commit();
                         }
                     }

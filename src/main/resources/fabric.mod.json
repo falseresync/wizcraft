@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "wizcraft",
+	"version": "${version}",
+	"name": "Wizcraft",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"falseresync"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/wizcraft",
+		"sources": "https://github.com/falseresync/wizcraft"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/wizcraft/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.falseresync.Wizcraft"
+		],
+		"client": [
+			"dev.falseresync.WizcraftClient"
+		],
+		"fabric-datagen": [
+			"dev.falseresync.WizcraftDataGenerator"
+		]
+	},
+	"mixins": [
+		"wizcraft.mixins.json",
+		{
+			"config": "wizcraft.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.2",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}

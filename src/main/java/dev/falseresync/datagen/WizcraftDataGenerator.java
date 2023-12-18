@@ -1,4 +1,4 @@
-package dev.falseresync;
+package dev.falseresync.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;

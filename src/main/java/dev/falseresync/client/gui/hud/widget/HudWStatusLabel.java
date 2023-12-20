@@ -4,6 +4,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.data.Color;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -20,6 +21,7 @@ public class HudWStatusLabel extends WLabel implements RemovableHudWidget {
         super(text, color);
         ticksToRemoval = calculateTicksToRemoval();
         darkmodeColor = color;
+        horizontalAlignment = HorizontalAlignment.CENTER;
     }
 
     public HudWStatusLabel(Text text) {

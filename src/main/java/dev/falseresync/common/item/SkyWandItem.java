@@ -57,7 +57,7 @@ public class SkyWandItem extends Item {
     protected static TypedActionResult<ItemStack> fail(World world, ItemStack stack, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-            WizcraftHud.addOrReplaceStatusLabel(Text.literal("test"));
+            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("test"));
         }
         return TypedActionResult.fail(stack);
     }
@@ -65,7 +65,7 @@ public class SkyWandItem extends Item {
     protected static TypedActionResult<ItemStack> pass(World world, ItemStack stack, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_AMETHYST_BLOCK_HIT);
-            WizcraftHud.addOrReplaceStatusLabel(Text.literal("test other"));
+            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("test other"));
         }
         return TypedActionResult.pass(stack);
     }
@@ -109,7 +109,7 @@ public class SkyWandItem extends Item {
                 user.playSoundIfNotSilent(SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE);
             }
 
-            WizcraftHud.addOrReplaceStatusLabel(Text.literal("Charged!"));
+            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("Charged!"), false);
         }
 
         var wand = new SkyWand(stack);

@@ -100,16 +100,10 @@ public class SkyWandItem extends Item {
             wand.expendCharge(10);
             wand.saveData();
             var pos = user.getPos().add(user.getHandPosOffset(this));
-            var userVelocity = user.getVelocity();
             var yaw = user.getYaw();
             var pitch = user.getPitch();
             var projectile = Util.make(new SnowballEntity(world, pos.getX(), pos.getY(), pos.getZ()), (entity) -> {
-                float f = -MathHelper.sin(yaw * (float) (Math.PI / 180.0)) * MathHelper.cos(pitch * (float) (Math.PI / 180.0));
-                float g = -MathHelper.sin((pitch + 0) * (float) (Math.PI / 180.0));
-                float h = MathHelper.cos(yaw * (float) (Math.PI / 180.0)) * MathHelper.cos(pitch * (float) (Math.PI / 180.0));
-                entity.setVelocity(f, g, h, 3, 1);
-                entity.setVelocity(entity.getVelocity()
-                        .add(userVelocity.x, user.isOnGround() ? 0.0 : userVelocity.y, userVelocity.z));
+                entity.setVelocity(user, pitch, yaw, 0, 2, 1);
             });
             world.spawnEntity(projectile);
         }

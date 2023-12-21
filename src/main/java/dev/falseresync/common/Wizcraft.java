@@ -1,5 +1,6 @@
 package dev.falseresync.common;
 
+import dev.falseresync.common.entity.WizEntityTypes;
 import dev.falseresync.common.item.WizItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -15,11 +16,8 @@ public class Wizcraft implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Hello Fabric world!");
-
-//        var wand = new SkyWandItem(new FabricItemSettings().maxCount(1));
-//        Registry.register(Registries.ITEM, new Identifier("wizcraft:sky_wand"), wand);
         WizItems.registerItems((id, item) -> Registry.register(Registries.ITEM, id, item));
         WizItems.registerItemGroups((id, item) -> Registry.register(Registries.ITEM_GROUP, id, item));
+        WizEntityTypes.register((id, entityType) -> Registry.register(Registries.ENTITY_TYPE, id, entityType));
     }
 }

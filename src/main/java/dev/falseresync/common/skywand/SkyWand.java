@@ -1,4 +1,4 @@
-package dev.falseresync.common.item;
+package dev.falseresync.common.skywand;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -9,6 +9,7 @@ public class SkyWand {
     protected final NbtCompound data;
     protected int maxCharge = 100;
     protected int charge = 0;
+    protected String activeFocus = "wizcraft:charging";
 
     public SkyWand(ItemStack underlyingStack) {
         this.underlyingStack = underlyingStack;
@@ -19,6 +20,9 @@ public class SkyWand {
         }
         if (data.contains("charge", NbtElement.INT_TYPE)) {
             charge = data.getInt("charge");
+        }
+        if (data.contains("activeFocus", NbtElement.STRING_TYPE)) {
+            activeFocus = data.getString("activeFocus");
         }
     }
 
@@ -46,6 +50,18 @@ public class SkyWand {
         setCharge(charge - amount);
     }
 
+    public boolean isChargingFocusActive() {
+        return activeFocus.equals("wizcraft:charging");
+    }
+
+    public String getActiveFocus() {
+        return activeFocus;
+    }
+
+    public void switchFocus(String focus) {
+        this.activeFocus = focus;
+    }
+
     /**
      * Save the wand data to underlying stack NBT and return the named stack
      *
@@ -59,6 +75,7 @@ public class SkyWand {
     protected void saveData() {
         data.putInt("maxCharge", maxCharge);
         data.putInt("charge", charge);
+        data.putString("activeFocus", activeFocus);
         underlyingStack.setNbt(data);
     }
 }

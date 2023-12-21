@@ -15,13 +15,10 @@ import java.util.function.BiConsumer;
 public final class WizItems {
     public static final SkyWandItem SKY_WAND;
     public static final ItemGroup GROUP_WIZCRAFT;
-    private static final Map<Identifier, Item> ITEMS_TO_REGISTER;
-    private static final Map<Identifier, ItemGroup> ITEM_GROUPS_TO_REGISTER;
+    private static final Map<Identifier, Item> ITEMS_TO_REGISTER = new HashMap<>();
+    private static final Map<Identifier, ItemGroup> ITEM_GROUPS_TO_REGISTER = new HashMap<>();
 
     static {
-        ITEMS_TO_REGISTER = new HashMap<>();
-        ITEM_GROUPS_TO_REGISTER = new HashMap<>();
-
         SKY_WAND = r("sky_wand", new SkyWandItem(new FabricItemSettings().maxCount(1)));
 
         GROUP_WIZCRAFT = r("wizcraft", FabricItemGroup.builder()

@@ -8,7 +8,7 @@ import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class WizcraftHud {
-    public static final TrackableHudItem<HudWStatusLabel, Text> STATUS_LABEL = new TrackableHudItem<>() {
+    public static final TrackedHudWidget<HudWStatusLabel, Text> STATUS_LABEL = new TrackedHudWidget<>() {
         @Override
         protected boolean compareByArgument(HudWStatusLabel widget, Text status) {
             return widget.getText().equals(status);

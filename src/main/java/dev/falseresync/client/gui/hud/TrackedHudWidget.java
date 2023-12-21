@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public abstract class TrackableHudItem<TrackedWidget extends WWidget & RemovableHudWidget, WidgetCreationArgument> {
+public abstract class TrackedHudWidget<TrackedWidget extends WWidget & RemovableHudWidget, WidgetCreationArgument> {
     protected final Tracker<TrackedWidget> tracker = new Tracker<>();
 
     protected abstract boolean compareByArgument(TrackedWidget widget, WidgetCreationArgument argument);

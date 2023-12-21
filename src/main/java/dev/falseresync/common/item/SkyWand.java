@@ -42,6 +42,10 @@ public class SkyWand {
         setCharge(charge + 60);
     }
 
+    public void expendCharge(int amount) {
+        setCharge(charge - amount);
+    }
+
     /**
      * Save the wand data to underlying stack NBT and return the named stack
      *
@@ -52,7 +56,7 @@ public class SkyWand {
         return underlyingStack;
     }
 
-    public void saveData() {
+    protected void saveData() {
         data.putInt("maxCharge", maxCharge);
         data.putInt("charge", charge);
         underlyingStack.setNbt(data);

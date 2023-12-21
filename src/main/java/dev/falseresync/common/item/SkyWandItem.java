@@ -5,15 +5,20 @@ import dev.falseresync.common.Wizcraft;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.Util;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
@@ -26,12 +31,14 @@ public class SkyWandItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         Wizcraft.LOGGER.trace(user.getName() + " started using a wand");
         var stack = user.getStackInHand(hand);
+        var wand = new SkyWand(stack);
 
         world.calculateAmbientDarkness();
-        if (!world.isNight() || world.isRaining() || world.getLightLevel(LightType.SKY, user.getBlockPos()) < world.getMaxLightLevel() * 0.5) {
+        Integer lightLevel = null;
+        if (!world.isNight() || world.isRaining() || (lightLevel = world.getLightLevel(LightType.SKY, user.getBlockPos())) < world.getMaxLightLevel() * 0.5) {
             Wizcraft.LOGGER.trace("It's not night (%s) or it's raining (%s) or it's not lighty (%s)"
-                    .formatted(!world.isNight(), world.isRaining(), world.getLightLevel(LightType.SKY, user.getBlockPos())));
-            return fail(world, stack, user);
+                    .formatted(!world.isNight(), world.isRaining(), lightLevel));
+            return reportCannotCharge(world, stack, user);
         }
 
         var viewDistance = world.isClient()
@@ -41,31 +48,29 @@ public class SkyWandItem extends Item {
         if ((hitType = user.raycast(viewDistance * 16, 0, true).getType()) != HitResult.Type.MISS) {
             Wizcraft.LOGGER.trace("View distance (%s) is wack or raycast failed (%s)"
                     .formatted(viewDistance, hitType));
-            return fail(world, stack, user);
+            return reportCannotCharge(world, stack, user);
         }
 
-        var wand = new SkyWand(stack);
         if (wand.isFullyCharged()) {
-            return pass(world, stack, user);
+            return reportFullyCharged(world, stack, user);
         }
 
-        // TODO(Charging mechanics):
         user.setCurrentHand(hand);
-        return TypedActionResult.consume(stack);
+        return TypedActionResult.success(stack);
     }
 
-    protected static TypedActionResult<ItemStack> fail(World world, ItemStack stack, LivingEntity user) {
+    protected static TypedActionResult<ItemStack> reportCannotCharge(World world, ItemStack stack, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("test"));
+            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("Look up at the surface"));
         }
         return TypedActionResult.fail(stack);
     }
 
-    protected static TypedActionResult<ItemStack> pass(World world, ItemStack stack, LivingEntity user) {
+    protected static TypedActionResult<ItemStack> reportFullyCharged(World world, ItemStack stack, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_AMETHYST_BLOCK_HIT);
-            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("test other"));
+            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("Already fully charged"));
         }
         return TypedActionResult.pass(stack);
     }
@@ -85,9 +90,28 @@ public class SkyWandItem extends Item {
         if (remainingUseTicks % 10 != 0) {
             return;
         }
+    }
 
-        if (world.isClient()) {
-            user.swingHand(user.getActiveHand());
+    @Override
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        var wand = new SkyWand(stack);
+        var charge = wand.getCharge();
+        if (charge >= 10) {
+            wand.expendCharge(10);
+            wand.saveData();
+            var pos = user.getPos().add(user.getHandPosOffset(this));
+            var userVelocity = user.getVelocity();
+            var yaw = user.getYaw();
+            var pitch = user.getPitch();
+            var projectile = Util.make(new SnowballEntity(world, pos.getX(), pos.getY(), pos.getZ()), (entity) -> {
+                float f = -MathHelper.sin(yaw * (float) (Math.PI / 180.0)) * MathHelper.cos(pitch * (float) (Math.PI / 180.0));
+                float g = -MathHelper.sin((pitch + 0) * (float) (Math.PI / 180.0));
+                float h = MathHelper.cos(yaw * (float) (Math.PI / 180.0)) * MathHelper.cos(pitch * (float) (Math.PI / 180.0));
+                entity.setVelocity(f, g, h, 3, 1);
+                entity.setVelocity(entity.getVelocity()
+                        .add(userVelocity.x, user.isOnGround() ? 0.0 : userVelocity.y, userVelocity.z));
+            });
+            world.spawnEntity(projectile);
         }
     }
 
@@ -106,11 +130,13 @@ public class SkyWandItem extends Item {
                         (random.nextFloat() - 0.5) / 2,
                         random.nextFloat() / 2,
                         (random.nextFloat() - 0.5) / 2);
-                user.playSoundIfNotSilent(SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE);
             }
-
-            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("Charged!"), false);
+            WizcraftHud.STATUS_LABEL.setOrReplace(
+                    Text.literal("Charged!").styled(style -> style.withColor(Formatting.GOLD)),
+                    false);
         }
+
+        user.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE, 0.5F, 1.25F);
 
         var wand = new SkyWand(stack);
         wand.incrementCharge();

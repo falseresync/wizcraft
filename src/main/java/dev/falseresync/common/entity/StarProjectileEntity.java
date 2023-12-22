@@ -1,9 +1,10 @@
 package dev.falseresync.common.entity;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.world.World;
 
 public class StarProjectileEntity extends ExplosiveProjectileEntity {
@@ -18,5 +19,9 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
     @Override
     protected boolean isBurning() {
         return false;
+    }
+
+    protected ParticleEffect getParticleType() {
+        return ParticleTypes.ELECTRIC_SPARK;
     }
 }

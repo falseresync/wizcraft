@@ -94,20 +94,7 @@ public class SkyWandItem extends Item {
     }
 
     protected TypedActionResult<ItemStack> attemptFire(World world, ItemStack stack, SkyWand wand, LivingEntity user, Hand hand) {
-        Wizcraft.LOGGER.trace("Attempting to fire with a wand");
-        var charge = wand.getCharge();
-        if (charge >= 10) {
-            wand.expendCharge(10);
-            stack = wand.toStack();
-//            var yaw = user.getYaw();
-//            var pitch = user.getPitch();
-//            var roll = user.getRoll();
-            var projectile = Util.make(new StarProjectileEntity(user, yaw, pitch, roll, world), (entity) -> {
-//                entity.setVelocity(user, pitch, yaw, 0, 2, 1);
-            });
-            world.spawnEntity(projectile);
-        }
-        return TypedActionResult.pass(stack);
+
     }
 
     @Override

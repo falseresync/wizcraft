@@ -1,28 +1,42 @@
 package dev.falseresync.common.skywand;
 
+import dev.falseresync.common.WizRegistries;
+import dev.falseresync.common.item.FocusItem;
+import dev.falseresync.common.skywand.focus.Focus;
+import dev.falseresync.common.skywand.focus.WizFocuses;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.Identifier;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class SkyWand {
     protected final ItemStack underlyingStack;
     protected final NbtCompound data;
     protected int maxCharge = 100;
     protected int charge = 0;
-    protected String activeFocus = "wizcraft:charging";
+    protected Focus activeFocus = WizFocuses.CHARGING;
+    protected final Set<Focus> focuses = new HashSet<>();
+
+    protected static final String KEY_MAX_CHARGE = "MaxCharge";
+    protected static final String KEY_CHARGE = "Charge";
+    protected static final String KEY_ACTIVE_FOCUS = "ActiveFocus";
+    protected static final String KEY_FOCUSES = "Focuses";
 
     public SkyWand(ItemStack underlyingStack) {
         this.underlyingStack = underlyingStack;
         this.data = underlyingStack.getOrCreateNbt();
 
-        if (data.contains("maxCharge", NbtElement.INT_TYPE)) {
-            maxCharge = data.getInt("maxCharge");
+        if (data.contains("MaxCharge", NbtElement.INT_TYPE)) {
+            maxCharge = data.getInt("MaxCharge");
         }
-        if (data.contains("charge", NbtElement.INT_TYPE)) {
-            charge = data.getInt("charge");
+        if (data.contains("Charge", NbtElement.INT_TYPE)) {
+            charge = data.getInt("Charge");
         }
-        if (data.contains("activeFocus", NbtElement.STRING_TYPE)) {
-            activeFocus = data.getString("activeFocus");
+        if (data.contains("ActiveFocus", NbtElement.STRING_TYPE)) {
+            activeFocus = WizRegistries.FOCUSES.get(new Identifier(data.getString("ActiveFocus")));
         }
     }
 
@@ -50,16 +64,20 @@ public class SkyWand {
         setCharge(charge - amount);
     }
 
-    public boolean isChargingFocusActive() {
-        return activeFocus.equals("wizcraft:charging");
+    public boolean shouldCharge() {
+        return activeFocus.equals(WizFocuses.CHARGING);
     }
 
-    public String getActiveFocus() {
+    public Focus getActiveFocus() {
         return activeFocus;
     }
 
-    public void switchFocus(String focus) {
-        this.activeFocus = focus;
+    public void switchFocus(FocusItem focusItem) {
+        activeFocus = focusItem.getFocus();
+    }
+
+    public void switchFocus(Focus focus) {
+        activeFocus = focus;
     }
 
     /**
@@ -67,15 +85,16 @@ public class SkyWand {
      *
      * @return modified underlying stack
      */
-    public ItemStack toStack() {
-        saveData();
+    public ItemStack asStack() {
+        saveDataToUnderlyingStack();
         return underlyingStack;
     }
 
-    protected void saveData() {
-        data.putInt("maxCharge", maxCharge);
-        data.putInt("charge", charge);
-        data.putString("activeFocus", activeFocus);
+    public void saveDataToUnderlyingStack() {
+        data.putInt(KEY_MAX_CHARGE, maxCharge);
+        data.putInt(KEY_CHARGE, charge);
+        data.putString(KEY_ACTIVE_FOCUS, activeFocus.getId().toString());
+
         underlyingStack.setNbt(data);
     }
 }

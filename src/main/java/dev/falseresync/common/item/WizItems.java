@@ -1,7 +1,7 @@
 package dev.falseresync.common.item;
 
 import dev.falseresync.common.Wizcraft;
-import dev.falseresync.common.skywand.focus.StarshooterFocus;
+import dev.falseresync.common.skywand.focus.WizFocuses;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
@@ -24,7 +24,7 @@ public final class WizItems {
         SKY_WAND = r("sky_wand", new SkyWandItem(new FabricItemSettings().maxCount(1)));
         STARSHOOTER_FOCUS = r("starshooter_focus", new SimpleFocusItem(
                 new FabricItemSettings().maxCount(1),
-                StarshooterFocus::new));
+                WizFocuses.STARSHOOTER));
 
         GROUP_WIZCRAFT = r("wizcraft", FabricItemGroup.builder()
                 .icon(SKY_WAND::getDefaultStack)

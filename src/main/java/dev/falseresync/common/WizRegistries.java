@@ -1,4 +1,4 @@
-package dev.falseresync.api;
+package dev.falseresync.common;
 
 import dev.falseresync.common.Wizcraft;
 import dev.falseresync.common.skywand.focus.Focus;

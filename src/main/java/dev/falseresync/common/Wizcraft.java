@@ -1,13 +1,11 @@
 package dev.falseresync.common;
 
-import dev.falseresync.api.WizRegistries;
 import dev.falseresync.common.entity.WizEntityTypes;
 import dev.falseresync.common.item.WizItems;
+import dev.falseresync.common.skywand.focus.WizFocuses;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,5 +19,6 @@ public class Wizcraft implements ModInitializer {
         WizItems.registerItems((id, item) -> Registry.register(Registries.ITEM, id, item));
         WizItems.registerItemGroups((id, item) -> Registry.register(Registries.ITEM_GROUP, id, item));
         WizEntityTypes.register((id, entityType) -> Registry.register(Registries.ENTITY_TYPE, id, entityType));
+        WizFocuses.register((id, focus) -> Registry.register(WizRegistries.FOCUSES, id, focus));
     }
 }

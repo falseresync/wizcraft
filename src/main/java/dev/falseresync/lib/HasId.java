@@ -1,4 +1,4 @@
-package dev.falseresync.api;
+package dev.falseresync.lib;
 
 import net.minecraft.util.Identifier;
 

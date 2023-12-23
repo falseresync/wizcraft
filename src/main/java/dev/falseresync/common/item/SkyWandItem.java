@@ -25,14 +25,11 @@ public class SkyWandItem extends Item {
         var wand = SkyWand.fromStack(stack);
 
         if (user.isSneaking()) {
-            var inventory = user.getInventory().main;
-            var focusItemStacks =inventory.stream().filter(inventoryStack -> inventoryStack.getItem() instanceof FocusItem).toList();
-//            user.openHandledScreen();
-//            if (wand.shouldCharge()) {
-//                wand.switchFocus(WizItems.STARSHOOTER_FOCUS);
-//            } else {
-//                wand.switchFocus(WizFocuses.CHARGING);
-//            }
+            if (wand.shouldCharge()) {
+                wand.switchFocus(WizItems.STARSHOOTER_FOCUS);
+            } else {
+                wand.switchFocus(WizFocuses.CHARGING);
+            }
             return TypedActionResult.pass(wand.saveToStack(stack));
         }
 

@@ -42,7 +42,7 @@ public class StarshooterFocus extends Focus {
 
     @Override
     public StarshooterFocus getType() {
-        return this;
+        return WizFocuses.STARSHOOTER;
     }
 
     @Override

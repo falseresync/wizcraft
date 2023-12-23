@@ -17,6 +17,9 @@ public abstract class Focus implements HasId {
 
     public abstract Codec<? extends Focus> getCodec();
 
+    /**
+     * @implNote This must return the same *static* instance, that's been registered. It's a tradeoff for not having a FocusType class
+     */
     public abstract Focus getType();
 
     public ActionResult use(World world, SkyWand wand, LivingEntity user) {

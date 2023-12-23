@@ -1,5 +1,6 @@
 package dev.falseresync.common.skywand.focus;
 
+import com.mojang.serialization.Codec;
 import dev.falseresync.client.gui.hud.WizcraftHud;
 import dev.falseresync.common.Wizcraft;
 import dev.falseresync.common.item.WizItems;
@@ -16,11 +17,22 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 public class ChargingFocus extends Focus {
-    private static final Identifier ID = new Identifier(Wizcraft.MODID, "charging");
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "charging");
+    public static final Codec<ChargingFocus> CODEC = Codec.unit(WizFocuses.CHARGING);
 
     @Override
     public Identifier getId() {
         return ID;
+    }
+
+    @Override
+    public Codec<? extends Focus> getCodec() {
+        return CODEC;
+    }
+
+    @Override
+    public ChargingFocus getType() {
+        return this;
     }
 
     @Override

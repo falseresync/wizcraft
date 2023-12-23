@@ -31,6 +31,7 @@ public final class WizItems {
                 .displayName(Text.translatable("itemGroup.wizcraft"))
                 .entries((displayContext, entries) -> {
                     entries.add(SKY_WAND);
+                    entries.add(STARSHOOTER_FOCUS);
                 })
                 .build());
     }

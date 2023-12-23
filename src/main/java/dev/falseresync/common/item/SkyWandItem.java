@@ -11,6 +11,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.stream.Stream;
+
 public class SkyWandItem extends Item {
     public SkyWandItem(Settings settings) {
         super(settings);
@@ -20,19 +22,22 @@ public class SkyWandItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         Wizcraft.LOGGER.trace(user.getName() + " started using a wand");
         var stack = user.getStackInHand(hand);
-        var wand = new SkyWand(stack);
+        var wand = SkyWand.fromStack(stack);
 
         if (user.isSneaking()) {
-            if (wand.shouldCharge()) {
-                wand.switchFocus(WizItems.STARSHOOTER_FOCUS);
-            } else {
-                wand.switchFocus(WizFocuses.CHARGING);
-            }
-            return TypedActionResult.pass(wand.asStack());
+            var inventory = user.getInventory().main;
+            var focusItemStacks =inventory.stream().filter(inventoryStack -> inventoryStack.getItem() instanceof FocusItem).toList();
+//            user.openHandledScreen();
+//            if (wand.shouldCharge()) {
+//                wand.switchFocus(WizItems.STARSHOOTER_FOCUS);
+//            } else {
+//                wand.switchFocus(WizFocuses.CHARGING);
+//            }
+            return TypedActionResult.pass(wand.saveToStack(stack));
         }
 
         var result = wand.getActiveFocus().use(world, wand, user);
-        return new TypedActionResult<>(result, wand.asStack());
+        return new TypedActionResult<>(result, wand.saveToStack(stack));
     }
 
     @Override
@@ -43,24 +48,24 @@ public class SkyWandItem extends Item {
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         super.usageTick(world, user, stack, remainingUseTicks);
-        var wand = new SkyWand(stack);
+        var wand = SkyWand.fromStack(stack);
         wand.getActiveFocus().tick(world, wand, user, remainingUseTicks);
-        wand.saveDataToUnderlyingStack();
+        wand.saveToStack(stack);
     }
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         Wizcraft.LOGGER.trace(user.getName() + " interrupted a wand usage");
-        var wand = new SkyWand(stack);
+        var wand = SkyWand.fromStack(stack);
         wand.getActiveFocus().interrupt(world, wand, user, remainingUseTicks);
-        wand.saveDataToUnderlyingStack();
+        wand.saveToStack(stack);
     }
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " finished using a wand");
-        var wand = new SkyWand(stack);
+        var wand = SkyWand.fromStack(stack);
         wand.getActiveFocus().finish(world, wand, user);
-        return wand.asStack();
+        return wand.saveToStack(stack);
     }
 }

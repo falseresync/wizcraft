@@ -1,22 +1,48 @@
 package dev.falseresync.common.skywand.focus;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.falseresync.common.Wizcraft;
 import dev.falseresync.common.entity.StarProjectileEntity;
 import dev.falseresync.common.skywand.SkyWand;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 public class StarshooterFocus extends Focus {
-    private static final Identifier ID = new Identifier(Wizcraft.MODID, "starshooter");
+    public static final Codec<StarshooterFocus> CODEC;
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "starshooter");
+
+    static {
+        CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.optionalFieldOf("TimesShot", 0).forGetter(StarshooterFocus::getTimesShot)
+        ).apply(instance, StarshooterFocus::new));
+    }
+
+    protected int timesShot = 0;
+
+    public StarshooterFocus() {
+    }
+
+    private StarshooterFocus(int timesShot) {
+        this.timesShot = timesShot;
+    }
 
     @Override
     public Identifier getId() {
         return ID;
+    }
+
+    @Override
+    public Codec<StarshooterFocus> getCodec() {
+        return CODEC;
+    }
+
+    @Override
+    public StarshooterFocus getType() {
+        return this;
     }
 
     @Override
@@ -28,9 +54,14 @@ public class StarshooterFocus extends Focus {
             wand.expendCharge(cost);
             var projectile = new StarProjectileEntity(user, world);
             world.spawnEntity(projectile);
+            timesShot += 1;
             return ActionResult.SUCCESS;
         }
 
         return ActionResult.FAIL;
+    }
+
+    public int getTimesShot() {
+        return timesShot;
     }
 }

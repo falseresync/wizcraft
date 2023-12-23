@@ -16,18 +16,10 @@ public class StarshooterFocus extends Focus {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "starshooter");
 
     static {
-        CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.INT.optionalFieldOf("TimesShot", 0).forGetter(StarshooterFocus::getTimesShot)
-        ).apply(instance, StarshooterFocus::new));
+        CODEC = Codec.unit(WizFocuses.STARSHOOTER);
     }
-
-    protected int timesShot = 0;
 
     public StarshooterFocus() {
-    }
-
-    private StarshooterFocus(int timesShot) {
-        this.timesShot = timesShot;
     }
 
     @Override
@@ -54,14 +46,9 @@ public class StarshooterFocus extends Focus {
             wand.expendCharge(cost);
             var projectile = new StarProjectileEntity(user, world);
             world.spawnEntity(projectile);
-            timesShot += 1;
             return ActionResult.SUCCESS;
         }
 
         return ActionResult.FAIL;
-    }
-
-    public int getTimesShot() {
-        return timesShot;
     }
 }

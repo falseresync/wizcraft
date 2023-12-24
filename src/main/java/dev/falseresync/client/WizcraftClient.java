@@ -7,9 +7,9 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class WizcraftClient implements ClientModInitializer {
-
     @Override
     public void onInitializeClient() {
+        WizKeybindings.register();
         WizRenderers.register();
     }
 

@@ -10,9 +10,11 @@ import java.util.Optional;
 public abstract class TrackedHudWidget<TrackedWidget extends WWidget & RemovableHudWidget, WidgetCreationArgument> {
     protected final Tracker<TrackedWidget> tracker = new Tracker<>();
 
-    protected abstract boolean compareByArgument(TrackedWidget widget, WidgetCreationArgument argument);
+    protected abstract boolean compare(TrackedWidget widget, WidgetCreationArgument argument);
 
-    protected abstract TrackedWidget createWidget(WidgetCreationArgument argument);
+    protected abstract TrackedWidget create(WidgetCreationArgument argument);
+
+    protected abstract CottonHud.Positioner getPositionerFor(TrackedWidget widget);
 
     public boolean setOrReplace(WidgetCreationArgument argument) {
         return setOrReplace(argument, true);
@@ -30,15 +32,15 @@ public abstract class TrackedHudWidget<TrackedWidget extends WWidget & Removable
             return true;
         }
 
-        var widget = tracker.getWidget().get();
-        if (compareByArgument(widget, argument)) {
-            widget.resetTicksToRemoval();
+        var currentWidget = tracker.getWidget().get();
+        if (compare(currentWidget, argument)) {
+            currentWidget.resetTicksToRemoval();
             tracker.setReplaceable(replaceable);
             return true;
         }
 
         if (tracker.isReplaceable()) {
-            remove(widget);
+            removeAndClear(currentWidget);
             createAndTrack(argument, replaceable);
             return true;
         }
@@ -46,22 +48,26 @@ public abstract class TrackedHudWidget<TrackedWidget extends WWidget & Removable
         return false;
     }
 
-    protected void remove(TrackedWidget widget) {
+    public void clear() {
+        tracker.getWidget().ifPresent(this::removeAndClear);
+    }
+
+    protected void removeAndClear(TrackedWidget widget) {
         tracker.clear();
         CottonHud.remove(widget);
     }
 
     protected void createAndTrack(WidgetCreationArgument argument, boolean replaceable) {
-        var widget = createWidget(argument);
+        var widget = create(argument);
         tracker.setWidget(widget).setReplaceable(replaceable);
-        CottonHud.add(widget, CottonHud.Positioner.horizontallyCentered(20));
+        CottonHud.add(widget, getPositionerFor(widget));
     }
 
     public void tick() {
         tracker.getWidget().ifPresent(widget -> {
             widget.tick();
             if (widget.shouldBeRemoved()) {
-                remove(widget);
+                removeAndClear(widget);
             }
         });
     }

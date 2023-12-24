@@ -14,7 +14,6 @@ import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class HudWStatusLabel extends WLabel implements RemovableHudWidget {
-    protected boolean shouldBeRemoved = false;
     protected int ticksToRemoval = 0;
 
     public HudWStatusLabel(Text text, int color) {
@@ -74,13 +73,9 @@ public class HudWStatusLabel extends WLabel implements RemovableHudWidget {
         return this;
     }
 
-    protected int calculateTicksToRemoval() {
-        return (int) (40 * MinecraftClient.getInstance().options.getNotificationDisplayTime().getValue());
-    }
-
     @Override
     public boolean shouldBeRemoved() {
-        return shouldBeRemoved;
+        return ticksToRemoval == 0;
     }
 
     @Override
@@ -91,9 +86,8 @@ public class HudWStatusLabel extends WLabel implements RemovableHudWidget {
     @Override
     public void tick() {
         super.tick();
-        ticksToRemoval -= 1;
-        if (ticksToRemoval <= 0) {
-            shouldBeRemoved = true;
+        if (ticksToRemoval > 0) {
+            ticksToRemoval -= 1;
         }
     }
 }

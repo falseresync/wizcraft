@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class ChargingFocus extends Focus {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "charging");
-    public static final Codec<ChargingFocus> CODEC = Codec.unit(WizFocuses.CHARGING);
+    public static final Codec<ChargingFocus> CODEC = Codec.unit(() -> WizFocuses.CHARGING);
 
     @Override
     public Identifier getId() {
@@ -26,12 +26,12 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
-    public Codec<? extends Focus> getCodec() {
+    public Codec<ChargingFocus> getCodec() {
         return CODEC;
     }
 
     @Override
-    public ChargingFocus getType() {
+    public Focus getType() {
         return WizFocuses.CHARGING;
     }
 

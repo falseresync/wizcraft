@@ -16,7 +16,7 @@ public class StarshooterFocus extends Focus {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "starshooter");
 
     static {
-        CODEC = Codec.unit(WizFocuses.STARSHOOTER);
+        CODEC = Codec.unit(() -> WizFocuses.STARSHOOTER);
     }
 
     public StarshooterFocus() {

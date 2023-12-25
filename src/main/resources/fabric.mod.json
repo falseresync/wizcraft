@@ -17,13 +17,13 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"dev.falseresync.common.Wizcraft"
+			"dev.falseresync.wizcraft.common.Wizcraft"
 		],
 		"client": [
-			"dev.falseresync.client.WizcraftClient"
+			"dev.falseresync.wizcraft.client.WizcraftClient"
 		],
 		"fabric-datagen": [
-			"dev.falseresync.datagen.WizcraftDataGenerator"
+			"dev.falseresync.wizcraft.datagen.WizcraftDataGenerator"
 		]
 	},
 	"mixins": [

@@ -3,7 +3,7 @@
 	"id": "wizcraft",
 	"version": "${version}",
 	"name": "Wizcraft",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Credits for some of the textures go to: ElvGames @itch.io, Devillas @itch.io",
 	"authors": [
 		"falseresync"
 	],
@@ -23,7 +23,7 @@
 			"dev.falseresync.wizcraft.client.WizcraftClient"
 		],
 		"fabric-datagen": [
-			"dev.falseresync.wizcraft.datagen.WizcraftDataGenerator"
+			"dev.falseresync.wizcraft.datagen.WizcraftDatagen"
 		]
 	},
 	"mixins": [

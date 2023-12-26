@@ -20,12 +20,12 @@ public final class WizKeybindings {
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-//            while (TOOL_CONTROL.isPressed()) {
-//                WizcraftHud.FOCUS_PICKER.setOrReplace(WizItems.STARSHOOTER_FOCUS.getDefaultStack());
-//            }
             while (TOOL_CONTROL.wasPressed()) {
-                WizcraftHud.FOCUS_PICKER.setOrReplace(WizItems.STARSHOOTER_FOCUS.getDefaultStack());
-//                WizcraftHud.FOCUS_PICKER.clear();
+                if (TOOL_CONTROL.isPressed()) {
+                    WizcraftHud.FOCUS_PICKER.setOrReplace(WizItems.STARSHOOTER_FOCUS.getDefaultStack());
+                } else {
+                    WizcraftHud.FOCUS_PICKER.clear();
+                }
             }
         });
     }

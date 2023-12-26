@@ -12,5 +12,4 @@ public class WizcraftClient implements ClientModInitializer {
         WizKeybindings.register();
         WizRenderers.register();
     }
-
 }

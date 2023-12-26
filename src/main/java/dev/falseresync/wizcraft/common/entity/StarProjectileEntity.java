@@ -51,7 +51,7 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
             discard();
         }
         super.tick();
-        if (getVelocity().lengthSquared() < 0.25) {
+        if (getVelocity().lengthSquared() < 0.25 && getOwner() != null) {
             pop();
         }
     }

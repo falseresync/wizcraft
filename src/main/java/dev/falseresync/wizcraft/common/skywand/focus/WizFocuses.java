@@ -10,11 +10,13 @@ import java.util.function.BiConsumer;
 public class WizFocuses {
     public static final ChargingFocus CHARGING;
     public static final StarshooterFocus STARSHOOTER;
+    public static final LightningFocus LIGHTNING;
     private static final Map<Identifier, Focus> TO_REGISTER = new HashMap<>();
 
     static {
         CHARGING = r(new ChargingFocus());
         STARSHOOTER = r(new StarshooterFocus());
+        LIGHTNING = r(new LightningFocus());
     }
 
 

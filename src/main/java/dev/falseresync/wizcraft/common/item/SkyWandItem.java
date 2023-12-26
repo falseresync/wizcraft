@@ -3,15 +3,19 @@ package dev.falseresync.wizcraft.common.item;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
+import dev.falseresync.wizcraft.lib.HasId;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class SkyWandItem extends Item {
+public class SkyWandItem extends Item implements HasId {
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "sky_wand");
+
     public SkyWandItem(Settings settings) {
         super(settings);
     }
@@ -62,5 +66,10 @@ public class SkyWandItem extends Item {
         var wand = SkyWand.fromStack(stack);
         wand.getActiveFocus().finish(world, wand, user);
         return wand.saveToStack(stack);
+    }
+
+    @Override
+    public Identifier getId() {
+        return ID;
     }
 }

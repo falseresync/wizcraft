@@ -11,15 +11,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 public class StarshooterFocus extends Focus {
-    public static final Codec<StarshooterFocus> CODEC;
+    public static final Codec<StarshooterFocus> CODEC = Codec.unit(() -> WizFocuses.STARSHOOTER);
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "starshooter");
-
-    static {
-        CODEC = Codec.unit(() -> WizFocuses.STARSHOOTER);
-    }
-
-    public StarshooterFocus() {
-    }
 
     @Override
     public Identifier getId() {

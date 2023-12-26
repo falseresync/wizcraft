@@ -1,11 +1,13 @@
 package dev.falseresync.wizcraft.client;
 
 import dev.falseresync.wizcraft.client.gui.hud.WizcraftHud;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.item.FocusItem;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import org.apache.commons.lang3.stream.Streams;
 import org.lwjgl.glfw.GLFW;
 
 public final class WizKeybindings {
@@ -13,16 +15,30 @@ public final class WizKeybindings {
 
     static {
         TOOL_CONTROL = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.wizcraft.tool_control", // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-                GLFW.GLFW_KEY_LEFT_CONTROL, // The keycode of the key
-                "category.wizcraft" // The translation key of the keybinding's category.
+                "key.wizcraft.tool_control",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_LEFT_ALT,
+                "keyCategory.wizcraft"
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player == null) {
+                return;
+            }
+
             while (TOOL_CONTROL.wasPressed()) {
+                var storage = PlayerInventoryStorage.of(client.player);
+                var focusStacks = Streams.of(storage.nonEmptyViews())
+                        .filter(view -> view.getResource().getItem() instanceof FocusItem)
+                        .map(view -> view.getResource().toStack())
+                        .toList();
+
+                if (focusStacks.isEmpty()) {
+                    return;
+                }
+
                 if (TOOL_CONTROL.isPressed()) {
-                    WizcraftHud.FOCUS_PICKER.setOrReplace(WizItems.STARSHOOTER_FOCUS.getDefaultStack());
+                    WizcraftHud.FOCUS_PICKER.setOrReplace(focusStacks.get(0));
                 } else {
                     WizcraftHud.FOCUS_PICKER.clear();
                 }

@@ -5,6 +5,7 @@ import dev.falseresync.wizcraft.client.gui.hud.WizcraftHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
+import dev.falseresync.wizcraft.lib.WizUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.ParticleTypes;
@@ -47,9 +48,7 @@ public class ChargingFocus extends Focus {
             return ActionResult.FAIL;
         }
 
-        var viewDistance = world.isClient()
-                ? MinecraftClient.getInstance().options.getClampedViewDistance()
-                : ((ServerWorld) world).getChunkManager().threadedAnvilChunkStorage.watchDistance;
+        var viewDistance = WizUtils.findViewDistance(world);
         HitResult.Type hitType = null;
         if ((hitType = user.raycast(viewDistance * 16, 0, true).getType()) != HitResult.Type.MISS) {
             Wizcraft.LOGGER.trace("View distance (%s) is wack or raycast failed (%s)"
@@ -59,7 +58,7 @@ public class ChargingFocus extends Focus {
         }
 
         if (wand.isFullyCharged()) {
-            reportFullyCharged(world, user);
+            reportAlreadyCharged(world, user);
             return ActionResult.PASS;
         }
 
@@ -76,14 +75,14 @@ public class ChargingFocus extends Focus {
     protected void reportCannotCharge(World world, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("Look up at the surface"));
+            WizcraftHud.STATUS_LABEL.setOrReplace(Text.translatable("hud.wizcraft.sky_wand.cannot_charge"));
         }
     }
 
-    protected void reportFullyCharged(World world, LivingEntity user) {
+    protected void reportAlreadyCharged(World world, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_AMETHYST_BLOCK_HIT);
-            WizcraftHud.STATUS_LABEL.setOrReplace(Text.literal("Already fully charged"));
+            WizcraftHud.STATUS_LABEL.setOrReplace(Text.translatable("hud.wizcraft.sky_wand.already_charged"));
         }
     }
 
@@ -103,7 +102,8 @@ public class ChargingFocus extends Focus {
                         (random.nextFloat() - 0.5) / 2);
             }
             WizcraftHud.STATUS_LABEL.setOrReplace(
-                    Text.literal("Charged!").styled(style -> style.withColor(Formatting.GOLD)),
+                    Text.translatable("hud.wizcraft.sky_wand.successfully_charged")
+                            .styled(style -> style.withColor(Formatting.GOLD)),
                     false);
         }
     }

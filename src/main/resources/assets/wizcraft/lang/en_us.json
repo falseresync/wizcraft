@@ -1,4 +1,11 @@
 {
   "itemGroup.wizcraft": "Wizcraft",
-  "item.wizcraft.sky_wand": "Sky wand"
+  "item.wizcraft.sky_wand": "Sky wand",
+  "item.wizcraft.starshooter_focus": "Starshooter focus",
+  "item.wizcraft.lightning_focus": "Lightning focus",
+  "hud.wizcraft.sky_wand.cannot_charge": "Can only charge from starry skies",
+  "hud.wizcraft.sky_wand.already_charged": "Already fully charged",
+  "hud.wizcraft.sky_wand.successfully_charged": "Charged!",
+  "keyCategory.wizcraft": "Wizcraft",
+  "key.wizcraft.tool_control": "Tool control"
 }

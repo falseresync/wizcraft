@@ -38,35 +38,34 @@ public class StarProjectileRenderer extends EntityRenderer<StarProjectileEntity>
         var nm = entry.getNormalMatrix();
         var buffer = vertexConsumers.getBuffer(renderLayer);
 
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getYaw(tickDelta) - 90));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(entity.getPitch(tickDelta)));
+        matrices.multiply(dispatcher.getRotation());
         matrices.translate(-0.5f, 0, 0);
         matrices.scale(0.75f, 0.75f, 0.75f);
-        vertices(buffer, pm, nm, light);
+        vertices(buffer, pm, nm);
 
         matrices.pop();
 
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
-    protected void vertices(VertexConsumer buffer, Matrix4f pm, Matrix3f nm, int light) {
-        vertex(buffer, pm, nm, 0, 1, 0, 0, light, -1);
-        vertex(buffer, pm, nm, 0, 0, 0, 1, light, -1);
-        vertex(buffer, pm, nm, 1, 0, 1, 1, light, -1);
-        vertex(buffer, pm, nm, 1, 1, 1, 0, light, -1);
+    protected static void vertices(VertexConsumer buffer, Matrix4f pm, Matrix3f nm) {
+        vertex(buffer, pm, nm, 1, 1, 0, 0, -1);
+        vertex(buffer, pm, nm, 1, 0, 0, 1, -1);
+        vertex(buffer, pm, nm, 0, 0, 1, 1, -1);
+        vertex(buffer, pm, nm, 0, 1, 1, 0, -1);
 
-        vertex(buffer, pm, nm, 1, 1, 0, 0, light, 1);
-        vertex(buffer, pm, nm, 1, 0, 0, 1, light, 1);
-        vertex(buffer, pm, nm, 0, 0, 1, 1, light, 1);
-        vertex(buffer, pm, nm, 0, 1, 1, 0, light, 1);
+        vertex(buffer, pm, nm, 0, 1, 0, 0, 1);
+        vertex(buffer, pm, nm, 0, 0, 0, 1, 1);
+        vertex(buffer, pm, nm, 1, 0, 1, 1, 1);
+        vertex(buffer, pm, nm, 1, 1, 1, 0, 1);
     }
 
-    protected void vertex(VertexConsumer buffer, Matrix4f positionMatrix, Matrix3f normalMatrix, int x, int y, float u, float v, int light, int normal) {
+    protected static void vertex(VertexConsumer buffer, Matrix4f positionMatrix, Matrix3f normalMatrix, int x, int y, float u, float v, int normal) {
         buffer.vertex(positionMatrix, x, y, 0)
                 .color(255, 255, 255, 255)
                 .texture(u, v)
                 .overlay(OverlayTexture.DEFAULT_UV)
-                .light(light)
+                .light(LightmapTextureManager.MAX_LIGHT_COORDINATE)
                 .normal(normalMatrix, 0, 0, normal)
                 .next();
     }

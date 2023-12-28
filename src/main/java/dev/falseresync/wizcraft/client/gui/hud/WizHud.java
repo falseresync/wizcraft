@@ -19,21 +19,21 @@ import java.util.Deque;
 @Environment(EnvType.CLIENT)
 public class WizHud {
     protected static final WidgetSlot UNDER_BOSS_BAR = new WidgetSlot(CottonHud.Positioner.horizontallyCentered(20));
-    protected static final WidgetSlot TOP_LEFT = new WidgetSlot(CottonHud.Positioner.of(5, 5));
-    public static final WidgetState<WFocusPicker, Deque<ItemStack>> FOCUS_PICKER;
-    public static final WidgetState<WLabelWithSFX, Text> STATUS_MESSAGE;
-    public static final WidgetState<WWandChargeBar, SkyWand> WAND_CHARGE_BAR;
+    protected static final WidgetSlot TOP_LEFT = new WidgetSlot(CottonHud.Positioner.of(4, 4));
+    public static final WidgetController<WFocusPicker, Deque<ItemStack>> FOCUS_PICKER;
+    public static final WidgetController<WLabelWithSFX, Text> STATUS_MESSAGE;
+    public static final WidgetController<WWandChargeBar, SkyWand> WAND_CHARGE_BAR;
 
     static {
-        FOCUS_PICKER = new WidgetState.ForStateful<>(UNDER_BOSS_BAR, WFocusPicker::new);
-        STATUS_MESSAGE = new WidgetState.ForStateful<>(UNDER_BOSS_BAR, text -> {
+        FOCUS_PICKER = new WidgetController.Aware<>(UNDER_BOSS_BAR, WFocusPicker::new);
+        STATUS_MESSAGE = new WidgetController.Aware<>(UNDER_BOSS_BAR, text -> {
             var widget = new WLabelWithSFX(text);
             widget.enableFade();
             widget.enableShadow();
             widget.setHorizontalAlignment(HorizontalAlignment.CENTER);
             return widget;
         });
-        WAND_CHARGE_BAR = new WidgetState.ForStateful<>(TOP_LEFT, WWandChargeBar::new, 0.5f);
+        WAND_CHARGE_BAR = new WidgetController.Aware<>(TOP_LEFT, WWandChargeBar::new);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
             FOCUS_PICKER.tick();
@@ -57,9 +57,9 @@ public class WizHud {
         }
 
         var wand = SkyWand.fromStack(mainHandStack);
-        var chargeBar = WAND_CHARGE_BAR.getOrCreate(wand, WidgetState.Priority.HIGH);
-        if (chargeBar.status() == WidgetState.Status.EXISTS && chargeBar.widget() != null) {
-            WAND_CHARGE_BAR.resetTicksToRemoval();
+        var chargeBar = WAND_CHARGE_BAR.getOrCreate(wand, WidgetInstancePriority.HIGH);
+        if (chargeBar.status() == WidgetQueryResponse.Status.EXISTS && chargeBar.widget() != null) {
+            WAND_CHARGE_BAR.resetDisplayTicks();
             chargeBar.widget().updateValue(wand.getCharge());
         }
     }

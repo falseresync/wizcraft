@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
-import dev.falseresync.wizcraft.client.gui.hud.WidgetState;
+import dev.falseresync.wizcraft.client.gui.hud.WidgetInstancePriority;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
@@ -111,7 +111,7 @@ public class ChargingFocus extends Focus {
             WizHud.STATUS_MESSAGE.getOrCreate(
                     Text.translatable("hud.wizcraft.sky_wand.successfully_charged")
                             .styled(style -> style.withColor(Formatting.GOLD)),
-                    WidgetState.Priority.HIGH);
+                    WidgetInstancePriority.HIGH);
         }
     }
 }

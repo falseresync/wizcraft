@@ -10,10 +10,10 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
-public class WLabelWithSFX extends WLabel implements WStateful {
+public class WLabelWithSFX extends WLabel implements WControllerAware {
     protected boolean hasShadow = false;
     protected boolean hasFade = false;
-    protected int ticksToRemoval = 0;
+    protected int remainingDisplayTicks = 0;
 
     public WLabelWithSFX(Text text, int color) {
         super(text, color);
@@ -26,17 +26,21 @@ public class WLabelWithSFX extends WLabel implements WStateful {
     @Environment(EnvType.CLIENT)
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        if (remainingDisplayTicks == 0) {
+            return;
+        }
+
         int yOffset = TextAlignment.getTextOffsetY(verticalAlignment, height, 1);
 
         var fade = 0;
         if (hasFade) {
-            fade = Math.min(255, (int) (ticksToRemoval * 256F / 10F)) << 24;
+            fade = Math.min(255, (int) (remainingDisplayTicks * 256F / 10F)) << 24;
         }
 
         if (hasShadow) {
-            ScreenDrawing.drawStringWithShadow(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor + fade : color + fade);
+            ScreenDrawing.drawStringWithShadow(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), (shouldRenderInDarkMode() ? darkmodeColor : color) + fade);
         } else {
-            ScreenDrawing.drawString(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor + fade : color + fade);
+            ScreenDrawing.drawString(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), (shouldRenderInDarkMode() ? darkmodeColor : color) + fade);
         }
 
         Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
@@ -45,9 +49,9 @@ public class WLabelWithSFX extends WLabel implements WStateful {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void statefulTick(int ticksToRemoval) {
-        if (hasFade && ticksToRemoval > 0) {
-            this.ticksToRemoval = ticksToRemoval;
+    public void controllerTick(int remainingDisplayTicks) {
+        if (hasFade) {
+            this.remainingDisplayTicks = remainingDisplayTicks;
         }
     }
 

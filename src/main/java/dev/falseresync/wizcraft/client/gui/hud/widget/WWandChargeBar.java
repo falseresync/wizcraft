@@ -16,13 +16,13 @@ import net.minecraft.util.math.MathHelper;
  * @author Algo copied almost wholesale from LibGui
  */
 @Environment(EnvType.CLIENT)
-public class WWandChargeBar extends WWidget implements WStateful {
+public class WWandChargeBar extends WWidget implements WControllerAware {
     public static final Identifier BAR = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/charge_bar.png");
     public static final Identifier OVERLAY = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/charge_bar_overlay.png");
     protected final Texture barTex;
     protected final Texture overlayTex;
     protected final int max;
-    protected int ticksToRemoval = 0;
+    protected int remainingDisplayTicks = 0;
     protected int value;
 
     public WWandChargeBar(SkyWand wand) {
@@ -34,12 +34,12 @@ public class WWandChargeBar extends WWidget implements WStateful {
 
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        if (ticksToRemoval == 0) {
+        if (remainingDisplayTicks == 0) {
             return;
         }
-        var fade = Math.min(256, (int) (ticksToRemoval * 256F / 10F)) << 24;
+        var opacity = Math.min(1, remainingDisplayTicks / 10F);
 
-        ScreenDrawing.texturedRect(context, x, y, 64, 16, barTex, Color.WHITE.toRgb() + fade);
+        ScreenDrawing.texturedRect(context, x, y, 64, 16, barTex, Color.WHITE.toRgb(), opacity);
 
         float percent = MathHelper.clamp((float) value / max, 0, 1);
         int barMax = 32;
@@ -48,12 +48,12 @@ public class WWandChargeBar extends WWidget implements WStateful {
         if (barSize <= 0) return;
 
         var clippedTex = overlayTex.withUv(overlayTex.u1(), overlayTex.v1(), MathHelper.lerp(percent, overlayTex.u1(), overlayTex.u2()), overlayTex.v2());
-        ScreenDrawing.texturedRect(context, x + 16, y, barSize, 16, clippedTex, Color.WHITE.toRgb() + fade);
+        ScreenDrawing.texturedRect(context, x + 16, y, barSize, 16, clippedTex, Color.WHITE.toRgb(), opacity);
     }
 
     @Override
-    public void statefulTick(int ticksToRemoval) {
-        this.ticksToRemoval = ticksToRemoval;
+    public void controllerTick(int remainingDisplayTicks) {
+        this.remainingDisplayTicks = remainingDisplayTicks;
     }
 
     public void updateValue(int value) {

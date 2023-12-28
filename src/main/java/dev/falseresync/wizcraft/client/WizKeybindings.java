@@ -1,6 +1,7 @@
 package dev.falseresync.wizcraft.client;
 
-import dev.falseresync.wizcraft.client.gui.hud.WidgetState;
+import dev.falseresync.wizcraft.client.gui.hud.WidgetInstancePriority;
+import dev.falseresync.wizcraft.client.gui.hud.WidgetQueryResponse;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
@@ -54,7 +55,7 @@ public final class WizKeybindings {
                 if (activeFocus.getType() == WizFocuses.CHARGING && focuses.isEmpty()) {
                     WizHud.STATUS_MESSAGE.getOrCreate(
                             Text.translatable("hud.wizcraft.sky_wand.no_focuses"),
-                            WidgetState.Priority.HIGH);
+                            WidgetInstancePriority.HIGH);
                     return;
                 }
 
@@ -64,8 +65,8 @@ public final class WizKeybindings {
                 focuses.offerFirst(activeFocus.asStack());
 
                 var focusPicker = WizHud.FOCUS_PICKER.getOrCreate(focuses);
-                if (focusPicker.status() == WidgetState.Status.EXISTS && focusPicker.widget() != null) {
-                    WizHud.FOCUS_PICKER.resetTicksToRemoval();
+                if (focusPicker.status() == WidgetQueryResponse.Status.EXISTS && focusPicker.widget() != null) {
+                    WizHud.FOCUS_PICKER.resetDisplayTicks();
                     focusPicker.widget().pickNext();
                     var pickedFocus = focusPicker.widget().getPicked();
 

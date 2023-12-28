@@ -1,5 +1,6 @@
 package dev.falseresync.wizcraft.client;
 
+import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.client.render.WizRenderers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -11,5 +12,7 @@ public class WizcraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         WizKeybindings.register();
         WizRenderers.register();
+
+        WizHud.init();
     }
 }

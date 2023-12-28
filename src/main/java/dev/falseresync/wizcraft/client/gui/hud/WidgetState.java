@@ -12,13 +12,19 @@ import java.util.function.Function;
 public class WidgetState<T extends WWidget, WidgetCreationArgument> {
     protected final WidgetSlot slot;
     protected final Function<WidgetCreationArgument, T> factory;
+    private final float ticksToRemovalMultiplier;
     protected T widget;
     protected Priority priority = Priority.NORMAL;
     protected int ticksToRemoval = 0;
 
     public WidgetState(WidgetSlot slot, Function<WidgetCreationArgument, T> factory) {
+        this(slot, factory, 1);
+    }
+
+    public WidgetState(WidgetSlot slot, Function<WidgetCreationArgument, T> factory, float ticksToRemovalMultiplier) {
         this.slot = slot;
         this.factory = factory;
+        this.ticksToRemovalMultiplier = ticksToRemovalMultiplier;
     }
 
     public void tick() {
@@ -65,12 +71,16 @@ public class WidgetState<T extends WWidget, WidgetCreationArgument> {
     }
 
     protected int calculateTicksToRemoval() {
-        return (int) (40 * MinecraftClient.getInstance().options.getNotificationDisplayTime().getValue());
+        return (int) (ticksToRemovalMultiplier * 40 * MinecraftClient.getInstance().options.getNotificationDisplayTime().getValue());
     }
 
     public static class ForStateful<ST extends WWidget & WStateful, A> extends WidgetState<ST, A> {
         public ForStateful(WidgetSlot slot, Function<A, ST> factory) {
             super(slot, factory);
+        }
+
+        public ForStateful(WidgetSlot slot, Function<A, ST> factory, float ticksToRemovalMultiplier) {
+            super(slot, factory, ticksToRemovalMultiplier);
         }
 
         @Override

@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.client.gui.hud.widget;
+package dev.falseresync.wizcraft.client.gui.oldhud.widget;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
@@ -12,7 +12,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
-public class HudWStatusLabel extends WLabel implements TrackableHudWidget {
+public class HudWStatusLabel extends WLabel implements WRemovable {
     protected int ticksToRemoval = 0;
 
     public HudWStatusLabel(Text text, int color) {

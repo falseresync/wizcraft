@@ -1,11 +1,11 @@
-package dev.falseresync.wizcraft.client.gui.hud.widget;
+package dev.falseresync.wizcraft.client.gui.oldhud.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
-public interface TrackableHudWidget {
+public interface WRemovable {
     boolean shouldBeRemoved();
 
     void resetTicksToRemoval();

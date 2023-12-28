@@ -1,17 +1,16 @@
-package dev.falseresync.wizcraft.client.gui.hud;
+package dev.falseresync.wizcraft.client.gui.oldhud;
 
-import dev.falseresync.wizcraft.client.gui.hud.widget.TrackableHudWidget;
+import dev.falseresync.wizcraft.client.gui.oldhud.widget.WRemovable;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public abstract class TrackedHudWidget<TrackedWidget extends WWidget & TrackableHudWidget, WidgetCreationArgument> {
+public abstract class TrackedHudWidget<TrackedWidget extends WWidget & WRemovable, WidgetCreationArgument> {
     protected final Tracker<TrackedWidget> tracker = new Tracker<>();
 
     protected abstract boolean compare(TrackedWidget widget, WidgetCreationArgument argument);
@@ -20,42 +19,34 @@ public abstract class TrackedHudWidget<TrackedWidget extends WWidget & Trackable
 
     protected abstract CottonHud.Positioner getPositionerFor(TrackedWidget widget);
 
-    public TrackedWidget getOrCreateWidget(@Nullable WidgetCreationArgument argument) {
-        if (tracker.getWidget().isEmpty()) {
-            Objects.requireNonNull(argument, "There's neither an available widget, nor an argument passed");
-            setOrReplace(argument);
-        }
-
-        return tracker.getWidget().get();
+    public Optional<TrackedWidget> get() {
+        return tracker.getWidget();
     }
 
-    public boolean setOrReplace(WidgetCreationArgument argument) {
+    public Optional<TrackedWidget> setOrReplace(WidgetCreationArgument argument) {
         return setOrReplace(argument, true);
     }
 
-    /**
-     * @return whether the status label has been set or replaced successfully
-     */
-    public boolean setOrReplace(WidgetCreationArgument argument, boolean replaceable) {
+    public Optional<TrackedWidget> setOrReplace(WidgetCreationArgument argument, boolean replaceable) {
         if (tracker.getWidget().isEmpty()) {
             createAndTrack(argument, replaceable);
-            return true;
+            return tracker.getWidget();
         }
 
         var currentWidget = tracker.getWidget().get();
         if (compare(currentWidget, argument)) {
             currentWidget.resetTicksToRemoval();
             tracker.setReplaceable(replaceable);
-            return true;
+            return tracker.getWidget();
         }
 
         if (tracker.isReplaceable()) {
             removeAndClear(currentWidget);
             createAndTrack(argument, replaceable);
-            return true;
+            return tracker.getWidget();
         }
 
-        return false;
+        return Optional.empty();
     }
 
     public void clear() {
@@ -75,7 +66,6 @@ public abstract class TrackedHudWidget<TrackedWidget extends WWidget & Trackable
 
     public void tick() {
         tracker.getWidget().ifPresent(widget -> {
-            widget.tick();
             if (widget.shouldBeRemoved()) {
                 removeAndClear(widget);
             }

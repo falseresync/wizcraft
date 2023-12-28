@@ -1,11 +1,10 @@
-package dev.falseresync.wizcraft.client.gui.hud.widget;
+package dev.falseresync.wizcraft.client.gui.oldhud.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -13,15 +12,13 @@ import net.minecraft.util.Identifier;
 import java.util.Deque;
 
 @Environment(EnvType.CLIENT)
-public class HudWFocusPicker extends WWidget implements TrackableHudWidget {
+public class WFocusPicker extends WWidget {
     protected static final int OFFSET = 20;
     protected static final Identifier SELECTION_BOX_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_selection_box.png");
     protected final Deque<ItemStack> focuses;
-    protected int ticksToRemoval = 0;
 
-    public HudWFocusPicker(Data data) {
+    public WFocusPicker(Data data) {
         focuses = data.focuses;
-        ticksToRemoval = calculateTicksToRemoval();
     }
 
     @Override
@@ -60,29 +57,6 @@ public class HudWFocusPicker extends WWidget implements TrackableHudWidget {
         context.drawItemWithoutEntity(last, x + getWidth() / 2 - 8 - OFFSET, y + getHeight() / 2 - 8);
 
         paint2(context, x, y);
-    }
-
-
-    @Override
-    public void tick() {
-        if (ticksToRemoval > 0) {
-            ticksToRemoval -= 1;
-        }
-    }
-
-    @Override
-    public boolean shouldBeRemoved() {
-        return ticksToRemoval == 0;
-    }
-
-    @Override
-    public void resetTicksToRemoval() {
-
-    }
-
-    @Override
-    public int calculateTicksToRemoval() {
-        return TrackableHudWidget.super.calculateTicksToRemoval() * 2;
     }
 
     public void pickNext() {

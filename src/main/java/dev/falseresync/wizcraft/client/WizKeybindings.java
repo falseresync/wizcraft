@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.client;
 
-import dev.falseresync.wizcraft.client.gui.hud.WizcraftHud;
-import dev.falseresync.wizcraft.client.gui.hud.widget.HudWFocusPicker;
+import dev.falseresync.wizcraft.client.gui.hud.WizHud;
+import dev.falseresync.wizcraft.client.gui.oldhud.WizcraftHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
@@ -13,13 +13,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.stream.Streams;
 import org.lwjgl.glfw.GLFW;
@@ -50,31 +45,33 @@ public final class WizKeybindings {
                     return;
                 }
 
-                var wand = SkyWand.fromStack(mainHandStack);
-                var activeFocus = wand.getActiveFocus();
-
                 var focuses = Streams.of(client.player.getInventory().main)
                         .filter(stack -> stack.getItem() instanceof FocusItem)
                         .collect(Collectors.toCollection(ArrayDeque::new));
 
+                var wand = SkyWand.fromStack(mainHandStack);
+                var activeFocus = wand.getActiveFocus();
                 if (activeFocus.getType() == WizFocuses.CHARGING && focuses.isEmpty()) {
                     WizcraftHud.STATUS_LABEL.setOrReplace(Text.translatable("hud.wizcraft.sky_wand.no_focuses"));
                     return;
                 }
 
                 if (activeFocus.getType() != WizFocuses.CHARGING) {
-                    focuses.offer(WizFocuses.CHARGING.asStack());
+                    focuses.offerFirst(WizFocuses.CHARGING.asStack());
                 }
-                focuses.offer(activeFocus.asStack());
+                focuses.offerFirst(activeFocus.asStack());
 
-                var focusPicker = WizcraftHud.FOCUS_PICKER.getOrCreateWidget(new HudWFocusPicker.Data(focuses));
-                var pickedFocus = focusPicker.getPicked();
-                focusPicker.pickNext();
+                var focusPicker = WizHud.getOrCreateFocusPicker(focuses);
+                if (focusPicker.status() == WizHud.WidgetStatus.EXISTS) {
+                    focusPicker.widget().pickNext();
+                    var pickedFocus = focusPicker.widget().getPicked();
 
-                ClientPlayNetworking.send(new UpdateSkyWandC2SPacket(ItemVariant.of(pickedFocus)));
+                    ClientPlayNetworking.send(new UpdateSkyWandC2SPacket(ItemVariant.of(pickedFocus)));
+                }
             }
         });
     }
 
-    public static void register() {}
+    public static void register() {
+    }
 }

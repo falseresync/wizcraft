@@ -12,7 +12,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
-public class HudWStatusLabel extends WLabel implements RemovableHudWidget {
+public class HudWStatusLabel extends WLabel implements TrackableHudWidget {
     protected int ticksToRemoval = 0;
 
     public HudWStatusLabel(Text text, int color) {

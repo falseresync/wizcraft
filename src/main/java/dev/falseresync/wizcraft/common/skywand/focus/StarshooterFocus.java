@@ -3,9 +3,12 @@ package dev.falseresync.wizcraft.common.skywand.focus;
 import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.entity.StarProjectileEntity;
+import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -27,6 +30,11 @@ public class StarshooterFocus extends Focus {
     @Override
     public StarshooterFocus getType() {
         return WizFocuses.STARSHOOTER;
+    }
+
+    @Override
+    public Item getItem() {
+        return WizItems.STARSHOOTER_FOCUS;
     }
 
     @Override

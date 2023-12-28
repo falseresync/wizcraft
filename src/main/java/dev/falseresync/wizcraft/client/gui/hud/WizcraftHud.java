@@ -6,8 +6,12 @@ import io.github.cottonmc.cotton.gui.client.CottonHud;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class WizcraftHud {
@@ -28,15 +32,15 @@ public class WizcraftHud {
         }
     };
 
-    public static final TrackedHudWidget<HudWFocusPicker, ItemStack> FOCUS_PICKER = new TrackedHudWidget<>() {
+    public static final TrackedHudWidget<HudWFocusPicker, HudWFocusPicker.Data> FOCUS_PICKER = new TrackedHudWidget<>() {
         @Override
-        protected boolean compare(HudWFocusPicker widget, ItemStack stack) {
-            return ItemStack.areEqual(widget.getStack(), stack);
+        protected boolean compare(HudWFocusPicker widget, HudWFocusPicker.Data data) {
+            return false;
         }
 
         @Override
-        protected HudWFocusPicker create(ItemStack stack) {
-            return new HudWFocusPicker(stack);
+        protected HudWFocusPicker create(HudWFocusPicker.Data data) {
+            return new HudWFocusPicker(data);
         }
 
         @Override

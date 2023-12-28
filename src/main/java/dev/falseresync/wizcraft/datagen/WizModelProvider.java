@@ -20,6 +20,7 @@ public class WizModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(WizItems.SKY_WAND, Models.GENERATED);
+        itemModelGenerator.register(WizItems.CHARGING_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizItems.STARSHOOTER_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizItems.LIGHTNING_FOCUS, Models.GENERATED);
     }

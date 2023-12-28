@@ -1,15 +1,33 @@
 package dev.falseresync.wizcraft.client;
 
 import dev.falseresync.wizcraft.client.gui.hud.WizcraftHud;
+import dev.falseresync.wizcraft.client.gui.hud.widget.HudWFocusPicker;
 import dev.falseresync.wizcraft.common.item.FocusItem;
+import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.skywand.SkyWand;
+import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
+import dev.falseresync.wizcraft.network.UpdateSkyWandC2SPacket;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import org.apache.commons.lang3.stream.Streams;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayDeque;
+import java.util.stream.Collectors;
+
+@Environment(EnvType.CLIENT)
 public final class WizKeybindings {
     public static final KeyBinding TOOL_CONTROL;
 
@@ -27,21 +45,33 @@ public final class WizKeybindings {
             }
 
             while (TOOL_CONTROL.wasPressed()) {
-                var storage = PlayerInventoryStorage.of(client.player);
-                var focusStacks = Streams.of(storage.nonEmptyViews())
-                        .filter(view -> view.getResource().getItem() instanceof FocusItem)
-                        .map(view -> view.getResource().toStack())
-                        .toList();
-
-                if (focusStacks.isEmpty()) {
+                var mainHandStack = client.player.getInventory().getMainHandStack();
+                if (!mainHandStack.isOf(WizItems.SKY_WAND)) {
                     return;
                 }
 
-                if (TOOL_CONTROL.isPressed()) {
-                    WizcraftHud.FOCUS_PICKER.setOrReplace(focusStacks.get(0));
-                } else {
-                    WizcraftHud.FOCUS_PICKER.clear();
+                var wand = SkyWand.fromStack(mainHandStack);
+                var activeFocus = wand.getActiveFocus();
+
+                var focuses = Streams.of(client.player.getInventory().main)
+                        .filter(stack -> stack.getItem() instanceof FocusItem)
+                        .collect(Collectors.toCollection(ArrayDeque::new));
+
+                if (activeFocus.getType() == WizFocuses.CHARGING && focuses.isEmpty()) {
+                    WizcraftHud.STATUS_LABEL.setOrReplace(Text.translatable("hud.wizcraft.sky_wand.no_focuses"));
+                    return;
                 }
+
+                if (activeFocus.getType() != WizFocuses.CHARGING) {
+                    focuses.offer(WizFocuses.CHARGING.asStack());
+                }
+                focuses.offer(activeFocus.asStack());
+
+                var focusPicker = WizcraftHud.FOCUS_PICKER.getOrCreateWidget(new HudWFocusPicker.Data(focuses));
+                var pickedFocus = focusPicker.getPicked();
+                focusPicker.pickNext();
+
+                ClientPlayNetworking.send(new UpdateSkyWandC2SPacket(ItemVariant.of(pickedFocus)));
             }
         });
     }

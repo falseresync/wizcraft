@@ -17,6 +17,7 @@ import java.util.function.BiConsumer;
 
 public final class WizItems {
     public static final SkyWandItem SKY_WAND;
+    public static final SimpleFocusItem CHARGING_FOCUS;
     public static final SimpleFocusItem STARSHOOTER_FOCUS;
     public static final SimpleFocusItem LIGHTNING_FOCUS;
     public static final ItemGroup GROUP_WIZCRAFT;
@@ -28,6 +29,7 @@ public final class WizItems {
         SKY_WAND = r(new SkyWandItem(new FabricItemSettings().maxCount(1)));
 
         SIMPLE_FOCUS_SETTINGS = new FabricItemSettings().maxCount(1);
+        CHARGING_FOCUS = rSimpleFocus(WizFocuses.CHARGING);
         STARSHOOTER_FOCUS = rSimpleFocus(WizFocuses.STARSHOOTER);
         LIGHTNING_FOCUS = rSimpleFocus(WizFocuses.LIGHTNING);
 

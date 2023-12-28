@@ -3,11 +3,14 @@ package dev.falseresync.wizcraft.common.skywand.focus;
 import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.client.gui.hud.WizcraftHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
+import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import dev.falseresync.wizcraft.lib.WizUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -34,6 +37,11 @@ public class ChargingFocus extends Focus {
     @Override
     public Focus getType() {
         return WizFocuses.CHARGING;
+    }
+
+    @Override
+    public Item getItem() {
+        return WizItems.CHARGING_FOCUS;
     }
 
     @Override

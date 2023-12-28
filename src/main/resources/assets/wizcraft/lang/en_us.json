@@ -6,6 +6,7 @@
   "hud.wizcraft.sky_wand.cannot_charge": "Can only charge from starry skies",
   "hud.wizcraft.sky_wand.already_charged": "Already fully charged",
   "hud.wizcraft.sky_wand.successfully_charged": "Charged!",
+  "hud.wizcraft.sky_wand.no_focuses": "No other focus to pick",
   "keyCategory.wizcraft": "Wizcraft",
   "key.wizcraft.tool_control": "Tool control"
 }

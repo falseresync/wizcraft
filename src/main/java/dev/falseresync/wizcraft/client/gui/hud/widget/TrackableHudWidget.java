@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
-public interface RemovableHudWidget {
+public interface TrackableHudWidget {
     boolean shouldBeRemoved();
 
     void resetTicksToRemoval();

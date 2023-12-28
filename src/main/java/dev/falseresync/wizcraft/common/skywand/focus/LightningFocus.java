@@ -2,11 +2,14 @@ package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.common.Wizcraft;
+import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import dev.falseresync.wizcraft.lib.WizUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
@@ -28,6 +31,11 @@ public class LightningFocus extends Focus {
     @Override
     public LightningFocus getType() {
         return WizFocuses.LIGHTNING;
+    }
+
+    @Override
+    public Item getItem() {
+        return WizItems.LIGHTNING_FOCUS;
     }
 
     @Override

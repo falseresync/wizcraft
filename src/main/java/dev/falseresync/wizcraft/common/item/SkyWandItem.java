@@ -25,16 +25,6 @@ public class SkyWandItem extends Item implements HasId {
         Wizcraft.LOGGER.trace(user.getName() + " started using a wand");
         var stack = user.getStackInHand(hand);
         var wand = SkyWand.fromStack(stack);
-
-        if (user.isSneaking()) {
-            if (wand.shouldCharge()) {
-                wand.switchFocus(WizItems.STARSHOOTER_FOCUS);
-            } else {
-                wand.switchFocus(WizFocuses.CHARGING);
-            }
-            return TypedActionResult.pass(wand.saveToStack(stack));
-        }
-
         var result = wand.getActiveFocus().use(world, wand, user);
         return new TypedActionResult<>(result, wand.saveToStack(stack));
     }

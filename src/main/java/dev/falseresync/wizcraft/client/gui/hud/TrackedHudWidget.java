@@ -1,13 +1,17 @@
 package dev.falseresync.wizcraft.client.gui.hud;
 
-import dev.falseresync.wizcraft.client.gui.hud.widget.RemovableHudWidget;
+import dev.falseresync.wizcraft.client.gui.hud.widget.TrackableHudWidget;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
 
-public abstract class TrackedHudWidget<TrackedWidget extends WWidget & RemovableHudWidget, WidgetCreationArgument> {
+@Environment(EnvType.CLIENT)
+public abstract class TrackedHudWidget<TrackedWidget extends WWidget & TrackableHudWidget, WidgetCreationArgument> {
     protected final Tracker<TrackedWidget> tracker = new Tracker<>();
 
     protected abstract boolean compare(TrackedWidget widget, WidgetCreationArgument argument);
@@ -16,14 +20,20 @@ public abstract class TrackedHudWidget<TrackedWidget extends WWidget & Removable
 
     protected abstract CottonHud.Positioner getPositionerFor(TrackedWidget widget);
 
+    public TrackedWidget getOrCreateWidget(@Nullable WidgetCreationArgument argument) {
+        if (tracker.getWidget().isEmpty()) {
+            Objects.requireNonNull(argument, "There's neither an available widget, nor an argument passed");
+            setOrReplace(argument);
+        }
+
+        return tracker.getWidget().get();
+    }
+
     public boolean setOrReplace(WidgetCreationArgument argument) {
         return setOrReplace(argument, true);
     }
 
     /**
-     *
-     * @param argument
-     * @param replaceable
      * @return whether the status label has been set or replaced successfully
      */
     public boolean setOrReplace(WidgetCreationArgument argument, boolean replaceable) {

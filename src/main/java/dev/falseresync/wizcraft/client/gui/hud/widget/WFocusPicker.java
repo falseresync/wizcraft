@@ -23,7 +23,7 @@ public class WFocusPicker extends WWidget {
     protected static final Identifier HINT_LEFT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_left.png");
     protected static final Identifier HINT_RIGHT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_right.png");
     protected final Deque<ItemStack> focuses;
-    protected final WLabelWithShadow pickedFocusName;
+    protected final WLabelWithSFX pickedFocusName;
 
     public WFocusPicker(Deque<ItemStack> focuses) {
         if (focuses.isEmpty()) {
@@ -33,7 +33,8 @@ public class WFocusPicker extends WWidget {
             throw new IllegalArgumentException("Focus picker only accepts FocusItem stacks");
         }
         this.focuses = focuses;
-        pickedFocusName = new WLabelWithShadow(getPicked().getName());
+        pickedFocusName = new WLabelWithSFX(getPicked().getName());
+        pickedFocusName.enableShadow();
         pickedFocusName.setHorizontalAlignment(HorizontalAlignment.CENTER);
     }
 

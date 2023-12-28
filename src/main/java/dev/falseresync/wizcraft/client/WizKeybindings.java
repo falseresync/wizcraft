@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.client;
 
+import dev.falseresync.wizcraft.client.gui.hud.WidgetState;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
-import dev.falseresync.wizcraft.client.gui.oldhud.WizcraftHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
@@ -52,7 +52,9 @@ public final class WizKeybindings {
                 var wand = SkyWand.fromStack(mainHandStack);
                 var activeFocus = wand.getActiveFocus();
                 if (activeFocus.getType() == WizFocuses.CHARGING && focuses.isEmpty()) {
-                    WizcraftHud.STATUS_LABEL.setOrReplace(Text.translatable("hud.wizcraft.sky_wand.no_focuses"));
+                    WizHud.STATUS_MESSAGE.getOrCreate(
+                            Text.translatable("hud.wizcraft.sky_wand.no_focuses"),
+                            WidgetState.Priority.HIGH);
                     return;
                 }
 
@@ -61,8 +63,9 @@ public final class WizKeybindings {
                 }
                 focuses.offerFirst(activeFocus.asStack());
 
-                var focusPicker = WizHud.getOrCreateFocusPicker(focuses);
-                if (focusPicker.status() == WizHud.WidgetStatus.EXISTS) {
+                var focusPicker = WizHud.FOCUS_PICKER.getOrCreate(focuses);
+                if (focusPicker.status() == WidgetState.Status.EXISTS && focusPicker.widget() != null) {
+                    WizHud.FOCUS_PICKER.resetTicksToRemoval();
                     focusPicker.widget().pickNext();
                     var pickedFocus = focusPicker.widget().getPicked();
 

@@ -1,7 +1,8 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
-import dev.falseresync.wizcraft.client.gui.oldhud.WizcraftHud;
+import dev.falseresync.wizcraft.client.gui.hud.WidgetState;
+import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
@@ -11,7 +12,9 @@ import net.minecraft.item.Item;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -79,14 +82,14 @@ public class ChargingFocus extends Focus {
     protected void reportCannotCharge(World world, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-            WizcraftHud.STATUS_LABEL.setOrReplace(Text.translatable("hud.wizcraft.sky_wand.cannot_charge"));
+            WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.cannot_charge"));
         }
     }
 
     protected void reportAlreadyCharged(World world, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_AMETHYST_BLOCK_HIT);
-            WizcraftHud.STATUS_LABEL.setOrReplace(Text.translatable("hud.wizcraft.sky_wand.already_charged"));
+            WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.already_charged"));
         }
     }
 
@@ -105,10 +108,10 @@ public class ChargingFocus extends Focus {
                         random.nextFloat() / 2,
                         (random.nextFloat() - 0.5) / 2);
             }
-            WizcraftHud.STATUS_LABEL.setOrReplace(
+            WizHud.STATUS_MESSAGE.getOrCreate(
                     Text.translatable("hud.wizcraft.sky_wand.successfully_charged")
                             .styled(style -> style.withColor(Formatting.GOLD)),
-                    false);
+                    WidgetState.Priority.HIGH);
         }
     }
 }

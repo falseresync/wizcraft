@@ -32,13 +32,7 @@ public class WizServerNetworking {
         var pickedFocus = ((FocusItem) packet.pickedFocus().getItem()).getFocus();
         var activeFocus = wand.getActiveFocus();
 
-        var tx = Transaction.openOuter();
-        tx.addOuterCloseCallback(result -> {
-            if (result.wasAborted()) {
-                throw new IllegalStateException("Unable to update sky wand");
-            }
-        });
-        try (tx) {
+        try (var tx = Transaction.openOuter()) {
             var extracted = pickedFocus.getType() == WizFocuses.CHARGING
                     || storage.extract(packet.pickedFocus(), 1, tx) == 1;
 

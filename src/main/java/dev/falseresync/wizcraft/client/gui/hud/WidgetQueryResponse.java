@@ -9,6 +9,7 @@ public record WidgetQueryResponse<T>(
     public enum Status {
         EXISTS,
         CREATED,
-        SLOT_OCCUPIED
+        SLOT_OCCUPIED,
+        INSUFFICIENT_PRIORITY
     }
 }

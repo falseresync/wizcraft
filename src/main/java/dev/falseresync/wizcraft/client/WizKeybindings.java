@@ -53,7 +53,7 @@ public final class WizKeybindings {
                 var wand = SkyWand.fromStack(mainHandStack);
                 var activeFocus = wand.getActiveFocus();
                 if (activeFocus.getType() == WizFocuses.CHARGING && focuses.isEmpty()) {
-                    WizHud.STATUS_MESSAGE.getOrCreate(
+                    WizHud.STATUS_MESSAGE.override(
                             Text.translatable("hud.wizcraft.sky_wand.no_focuses"),
                             WidgetInstancePriority.HIGH);
                     return;

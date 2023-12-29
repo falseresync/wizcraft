@@ -108,7 +108,7 @@ public class ChargingFocus extends Focus {
                         random.nextFloat() / 2,
                         (random.nextFloat() - 0.5) / 2);
             }
-            WizHud.STATUS_MESSAGE.getOrCreate(
+            WizHud.STATUS_MESSAGE.override(
                     Text.translatable("hud.wizcraft.sky_wand.successfully_charged")
                             .styled(style -> style.withColor(Formatting.GOLD)),
                     WidgetInstancePriority.HIGH);

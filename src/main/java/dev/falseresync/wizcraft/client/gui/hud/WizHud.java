@@ -15,38 +15,59 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 import java.util.Deque;
+import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class WizHud {
-    protected static final WidgetSlot UNDER_BOSS_BAR = new WidgetSlot(CottonHud.Positioner.horizontallyCentered(20));
-    protected static final WidgetSlot TOP_LEFT = new WidgetSlot(CottonHud.Positioner.of(4, 4));
+    protected static final WidgetSlot UNDER_BOSS_BAR = new WidgetSlot() {
+        private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.horizontallyCentered(8);
+        private static final Function<Integer, CottonHud.Positioner> SHIFTED_POSITIONER =
+                (numberOfBossBars) -> CottonHud.Positioner.horizontallyCentered(4 + 20 * numberOfBossBars);
+
+        @Override
+        public CottonHud.Positioner getPositioner() {
+            var bossBars = MinecraftClient.getInstance().inGameHud.getBossBarHud().bossBars;
+            return bossBars.isEmpty()
+                    ? DEFAULT_POSITIONER
+                    : SHIFTED_POSITIONER.apply(bossBars.size());
+        }
+    };
+
+    protected static final WidgetSlot TOP_LEFT = new WidgetSlot() {
+        private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.of(4, 4);
+
+        @Override
+        public CottonHud.Positioner getPositioner() {
+            return DEFAULT_POSITIONER;
+        }
+    };
+
     public static final WidgetController<WFocusPicker, Deque<ItemStack>> FOCUS_PICKER;
     public static final WidgetController<WLabelWithSFX, Text> STATUS_MESSAGE;
     public static final WidgetController<WWandChargeBar, SkyWand> WAND_CHARGE_BAR;
 
     static {
-        FOCUS_PICKER = new WidgetController.Aware<>(UNDER_BOSS_BAR, WFocusPicker::new);
-        STATUS_MESSAGE = new WidgetController.Aware<>(UNDER_BOSS_BAR, text -> {
+        FOCUS_PICKER = new WidgetController.Aware<>(UNDER_BOSS_BAR, WidgetTypePriority.HIGH, WFocusPicker::new);
+        STATUS_MESSAGE = new WidgetController.Aware<>(UNDER_BOSS_BAR, WidgetTypePriority.NORMAL, text -> {
             var widget = new WLabelWithSFX(text);
             widget.enableFade();
             widget.enableShadow();
             widget.setHorizontalAlignment(HorizontalAlignment.CENTER);
             return widget;
         });
-        WAND_CHARGE_BAR = new WidgetController.Aware<>(TOP_LEFT, WWandChargeBar::new);
+        WAND_CHARGE_BAR = new WidgetController.Aware<>(TOP_LEFT, WidgetTypePriority.NORMAL, WWandChargeBar::new);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            FOCUS_PICKER.tick();
-            STATUS_MESSAGE.tick();
-            WAND_CHARGE_BAR.tick();
+            UNDER_BOSS_BAR.tick();
+            TOP_LEFT.tick();
 
-            handleWandChargeBar(client);
+            updateWandChargeBar(client);
         });
     }
 
     public static void init() {}
 
-    protected static void handleWandChargeBar(MinecraftClient client) {
+    protected static void updateWandChargeBar(MinecraftClient client) {
         if (client.player == null) {
             return;
         }

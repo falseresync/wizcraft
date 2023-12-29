@@ -1,5 +1,6 @@
 package dev.falseresync.wizcraft.client.gui.hud.widget;
 
+import dev.falseresync.wizcraft.client.gui.hud.WidgetController;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
@@ -13,7 +14,7 @@ import net.minecraft.text.Text;
 public class WLabelWithSFX extends WLabel implements WControllerAware {
     protected boolean hasShadow = false;
     protected boolean hasFade = false;
-    protected int remainingDisplayTicks = 0;
+    protected WidgetController<?, ?> controller = null;
 
     public WLabelWithSFX(Text text, int color) {
         super(text, color);
@@ -26,40 +27,52 @@ public class WLabelWithSFX extends WLabel implements WControllerAware {
     @Environment(EnvType.CLIENT)
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        if (remainingDisplayTicks == 0) {
-            return;
-        }
-
-        int yOffset = TextAlignment.getTextOffsetY(verticalAlignment, height, 1);
-
         var fade = 0;
-        if (hasFade) {
-            fade = Math.min(255, (int) (remainingDisplayTicks * 256F / 10F)) << 24;
+        if (this.hasFade) {
+            if (this.controller == null || this.controller.getRemainingDisplayTicks() == 0) {
+                return;
+            }
+            fade = Math.min(255, (int) (this.controller.getRemainingDisplayTicks() * 256F / 10F)) << 24;
         }
 
-        if (hasShadow) {
-            ScreenDrawing.drawStringWithShadow(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), (shouldRenderInDarkMode() ? darkmodeColor : color) + fade);
+        int yOffset = TextAlignment.getTextOffsetY(this.verticalAlignment, this.height, 1);
+
+        if (this.hasShadow) {
+            ScreenDrawing.drawStringWithShadow(
+                    context,
+                    this.text.asOrderedText(),
+                    this.horizontalAlignment,
+                    x,
+                    y + yOffset,
+                    this.getWidth(),
+                    (shouldRenderInDarkMode() ? this.darkmodeColor : this.color) + fade);
         } else {
-            ScreenDrawing.drawString(context, text.asOrderedText(), horizontalAlignment, x, y + yOffset, this.getWidth(), (shouldRenderInDarkMode() ? darkmodeColor : color) + fade);
+            ScreenDrawing.drawString(
+                    context,
+                    this.text.asOrderedText(),
+                    this.horizontalAlignment,
+                    x,
+                    y + yOffset,
+                    this.getWidth(),
+                    (shouldRenderInDarkMode() ? this.darkmodeColor : this.color) + fade);
         }
 
         Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
         ScreenDrawing.drawTextHover(context, hoveredTextStyle, x + mouseX, y + mouseY);
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public void controllerTick(int remainingDisplayTicks) {
-        if (hasFade) {
-            this.remainingDisplayTicks = remainingDisplayTicks;
+    public void setController(WidgetController<?, ?> controller) {
+        if (this.hasFade) {
+            this.controller = controller;
         }
     }
 
     public void enableShadow() {
-        hasShadow = true;
+        this.hasShadow = true;
     }
 
     public void enableFade() {
-        hasFade = true;
+        this.hasFade = true;
     }
 }

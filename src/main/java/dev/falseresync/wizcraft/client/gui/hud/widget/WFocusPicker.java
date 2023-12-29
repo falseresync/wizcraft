@@ -1,6 +1,8 @@
 package dev.falseresync.wizcraft.client.gui.hud.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.falseresync.wizcraft.client.gui.DrawingExt;
+import dev.falseresync.wizcraft.client.gui.hud.WidgetController;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -15,16 +17,22 @@ import net.minecraft.util.Identifier;
 
 import java.util.Deque;
 
-@SuppressWarnings("DataFlowIssue") // The focuses deque is validated to have at least one item
+/**
+ * @implNote The focuses deque is validated to have at least one stack, therefore using {@link Deque#getFirst()} is okay
+ */
 public class WFocusPicker extends WWidget implements WControllerAware {
-    protected static final int OFFSET = 20;
+    protected static final int ITEM_OFFSET = 20;
+    protected static final int ITEM_SIZE = 16;
     protected static final int HINT_OFFSET = 32;
-    protected static final Identifier SELECTION_BOX_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_selection_box.png");
+    protected static final int HINT_SIZE = 16;
+    protected static final int SELECTION_SIZE = 22;
+    protected static final int LABEL_OFFSET = 4;
+    protected static final Identifier SELECTION_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_selection.png");
     protected static final Identifier HINT_LEFT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_left.png");
     protected static final Identifier HINT_RIGHT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_right.png");
     protected final Deque<ItemStack> focuses;
-    protected final WLabelWithSFX pickedFocusName;
-    protected int remainingDisplayTicks = 0;
+    protected final WLabelWithSFX label;
+    protected WidgetController<?, ?> controller = null;
 
     public WFocusPicker(Deque<ItemStack> focuses) {
         if (focuses.isEmpty()) {
@@ -34,29 +42,29 @@ public class WFocusPicker extends WWidget implements WControllerAware {
             throw new IllegalArgumentException("Focus picker only accepts FocusItem stacks");
         }
         this.focuses = focuses;
-        pickedFocusName = new WLabelWithSFX(getPicked().getName());
-        pickedFocusName.enableShadow();
-        pickedFocusName.enableFade();
-        pickedFocusName.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        this.label = new WLabelWithSFX(getPicked().getName());
+        this.label.enableShadow();
+        this.label.enableFade();
+        this.label.setHorizontalAlignment(HorizontalAlignment.CENTER);
     }
 
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        if (remainingDisplayTicks == 0) {
+        if (this.controller == null || this.controller.getRemainingDisplayTicks() == 0) {
             return;
         }
 
-        float opacity = Math.min(1, remainingDisplayTicks / 10f);
+        float opacity = Math.min(1, this.controller.getRemainingDisplayTicks() / 10f);
 
         RenderSystem.enableDepthTest();
 
-        ScreenDrawing.texturedRect(context, x + getWidth() / 2 - 11, y + getHeight() / 2 - 11, 22, 22, SELECTION_BOX_TEX, Color.WHITE.toRgb(), opacity);
-        pickedFocusName.paint(context, x, y + getHeight() + 4, mouseX, mouseY);
+        DrawingExt.square(context, calcX(x, SELECTION_SIZE), calcY(y, SELECTION_SIZE), SELECTION_SIZE, SELECTION_TEX, opacity);
+        this.label.paint(context, x, y + getHeight() + LABEL_OFFSET, mouseX, mouseY);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1, 1, 1, opacity);
 
-        switch (focuses.size()) {
+        switch (this.focuses.size()) {
             case 1 -> paint1(context, x, y);
             case 2 -> paint2(context, x, y);
             case 3 -> paint3(context, x, y);
@@ -66,53 +74,61 @@ public class WFocusPicker extends WWidget implements WControllerAware {
         RenderSystem.disableBlend();
     }
 
+    protected int calcX(int x, int width) {
+        return x + getWidth() / 2 - (width / 2);
+    }
+
+    protected int calcY(int y, int height) {
+        return y + getHeight() / 2 - (height / 2);
+    }
+
     protected void paint1(DrawContext context, int x, int y) {
-        var selected = focuses.peekFirst();
-        context.drawItemWithoutEntity(selected, x + getWidth() / 2 - 8 - OFFSET, y + getHeight() / 2 - 8);
+        var selected = this.focuses.peekFirst();
+        context.drawItemWithoutEntity(selected, calcX(x, ITEM_SIZE) - ITEM_OFFSET, calcY(y, ITEM_SIZE));
     }
 
     protected void paint2(DrawContext context, int x, int y) {
         // Polling here allows to peek the next focus
-        var selected = focuses.pollFirst();
-        context.drawItemWithoutEntity(selected, x + getWidth() / 2 - 8, y + getHeight() / 2 - 8);
+        var selected = this.focuses.pollFirst();
+        context.drawItemWithoutEntity(selected, calcX(x, ITEM_SIZE), calcY(y, ITEM_SIZE));
 
-        var next = focuses.peekFirst();
-        context.drawItemWithoutEntity(next, x + getWidth() / 2 - 8 + OFFSET, y + getHeight() / 2 - 8);
+        var next = this.focuses.peekFirst();
+        context.drawItemWithoutEntity(next, calcX(x, ITEM_SIZE) + ITEM_OFFSET, calcY(y, ITEM_SIZE));
 
         // Reset the deque
-        focuses.offerFirst(selected);
+        this.focuses.offerFirst(selected);
     }
 
     protected void paint3(DrawContext context, int x, int y) {
-        var last = focuses.peekLast();
-        context.drawItemWithoutEntity(last, x + getWidth() / 2 - 8 - OFFSET, y + getHeight() / 2 - 8);
+        var last = this.focuses.peekLast();
+        context.drawItemWithoutEntity(last, calcX(x, ITEM_SIZE) - ITEM_OFFSET, calcY(y, ITEM_SIZE));
 
         paint2(context, x, y);
     }
 
     protected void paintMany(DrawContext context, int x, int y) {
-        ScreenDrawing.texturedRect(context, x + getWidth() / 2 - 8 - HINT_OFFSET, y + getHeight() / 2 - 8, 16, 16, HINT_LEFT_TEX, Color.WHITE.toRgb());
-        ScreenDrawing.texturedRect(context, x + getWidth() / 2 - 8 + HINT_OFFSET, y + getHeight() / 2 - 8, 16, 16, HINT_RIGHT_TEX, Color.WHITE.toRgb());
+        DrawingExt.square(context, calcX(x, HINT_SIZE) - HINT_OFFSET, calcY(y, HINT_SIZE), HINT_SIZE, HINT_LEFT_TEX);
+        DrawingExt.square(context, calcX(x, HINT_SIZE) + HINT_OFFSET, calcY(y, HINT_SIZE), HINT_SIZE, HINT_RIGHT_TEX);
         paint3(context, x, y);
     }
 
     public void pickNext() {
-        focuses.offerLast(focuses.pollFirst());
-        pickedFocusName.setText(getPicked().getName());
+        this.focuses.offerLast(this.focuses.pollFirst());
+        this.label.setText(getPicked().getName());
     }
 
     public ItemStack getPicked() {
-        return focuses.peekFirst();
+        return this.focuses.peekFirst();
     }
 
     @Override
     public void addNarrations(NarrationMessageBuilder builder) {
-        builder.put(NarrationPart.TITLE, focuses.peekFirst().getName());
+        builder.put(NarrationPart.TITLE, this.focuses.getFirst().getName());
     }
 
     @Override
-    public void controllerTick(int remainingDisplayTicks) {
-        this.remainingDisplayTicks = remainingDisplayTicks;
-        pickedFocusName.controllerTick(remainingDisplayTicks);
+    public void setController(WidgetController<?, ?> controller) {
+        this.controller = controller;
+        this.label.setController(controller);
     }
 }

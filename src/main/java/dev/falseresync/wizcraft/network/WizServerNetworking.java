@@ -1,9 +1,9 @@
 package dev.falseresync.wizcraft.network;
 
-import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
+import dev.falseresync.wizcraft.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -29,7 +29,7 @@ public class WizServerNetworking {
 
         // Hopefully this *should* be guaranteed to be a FocusItem
         // Otherwise liquid shit's hitting the fan
-        var pickedFocus = ((FocusItem) packet.pickedFocus().getItem()).getFocus();
+        var pickedFocus = ((FocusItem) packet.pickedFocus().getItem()).getFocus(packet.pickedFocus().toStack());
         var activeFocus = wand.getActiveFocus();
 
         try (var tx = Transaction.openOuter()) {

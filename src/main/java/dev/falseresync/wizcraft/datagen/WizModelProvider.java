@@ -23,5 +23,6 @@ public class WizModelProvider extends FabricModelProvider {
         itemModelGenerator.register(WizItems.CHARGING_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizItems.STARSHOOTER_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizItems.LIGHTNING_FOCUS, Models.GENERATED);
+        itemModelGenerator.register(WizItems.COMET_WARP_FOCUS, Models.GENERATED);
     }
 }

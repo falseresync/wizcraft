@@ -23,7 +23,7 @@ import java.util.Deque;
 public class WFocusPicker extends WWidget implements WControllerAware {
     protected static final int ITEM_OFFSET = 20;
     protected static final int ITEM_SIZE = 16;
-    protected static final int HINT_OFFSET = 32;
+    protected static final int HINT_OFFSET = 36;
     protected static final int HINT_SIZE = 16;
     protected static final int SELECTION_SIZE = 22;
     protected static final int LABEL_OFFSET = 4;

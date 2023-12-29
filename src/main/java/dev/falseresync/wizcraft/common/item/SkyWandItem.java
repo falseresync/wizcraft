@@ -1,17 +1,26 @@
 package dev.falseresync.wizcraft.common.item;
 
+import dev.falseresync.wizcraft.client.WizKeybindings;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
 import dev.falseresync.wizcraft.lib.HasId;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SkyWandItem extends Item implements HasId {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "sky_wand");
@@ -61,5 +70,26 @@ public class SkyWandItem extends Item implements HasId {
     @Override
     public Identifier getId() {
         return ID;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        var wand = SkyWand.fromStack(stack);
+        var activeFocus = wand.getActiveFocus();
+        tooltip.add(Text.translatable("tooltip.wizcraft.sky_wand.active_focus", activeFocus.getName().getString())
+                .styled(style -> style.withColor(Formatting.GRAY)));
+        activeFocus.appendTooltip(stack, world, tooltip, context);
+        if (world != null && world.isClient()) {
+            appendClientTooltip(wand, tooltip, context);
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void appendClientTooltip(SkyWand wand, List<Text> tooltip, TooltipContext context) {
+        tooltip.add(Text.translatable(
+                "tooltip.wizcraft.sky_wand.change_focus",
+                    KeyBindingHelper.getBoundKeyOf(WizKeybindings.TOOL_CONTROL).getLocalizedText().getString()
+                ).styled(style -> style.withColor(Formatting.GRAY).withItalic(true)));
     }
 }

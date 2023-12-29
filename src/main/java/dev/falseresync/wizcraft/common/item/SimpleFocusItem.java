@@ -2,10 +2,15 @@ package dev.falseresync.wizcraft.common.item;
 
 import dev.falseresync.wizcraft.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.lib.HasId;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SimpleFocusItem extends Item implements FocusItem, HasId {
     protected final Identifier id;
@@ -19,16 +24,37 @@ public class SimpleFocusItem extends Item implements FocusItem, HasId {
 
     @Override
     public ItemStack getDefaultStack() {
-        return focus.asStack();
+        return this.focus.asStack();
     }
 
     @Override
-    public Focus getFocus() {
-        return focus;
+    public Focus getDefaultFocus() {
+        return this.focus;
     }
 
     @Override
     public Identifier getId() {
-        return id;
+        return this.id;
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return "item.wizcraft.generic_simple_focus";
+    }
+
+    @Override
+    public Text getName(ItemStack stack) {
+        return getName();
+    }
+
+    @Override
+    public Text getName() {
+        return Text.translatable(getTranslationKey(), this.focus.getName().getString());
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        Focus.fromStack(stack, this.focus).appendTooltip(stack, world, tooltip, context);
     }
 }

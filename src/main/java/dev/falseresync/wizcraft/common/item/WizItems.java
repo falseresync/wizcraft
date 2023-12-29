@@ -20,6 +20,7 @@ public final class WizItems {
     public static final SimpleFocusItem CHARGING_FOCUS;
     public static final SimpleFocusItem STARSHOOTER_FOCUS;
     public static final SimpleFocusItem LIGHTNING_FOCUS;
+    public static final SimpleFocusItem COMET_WARP_FOCUS;
     public static final ItemGroup GROUP_WIZCRAFT;
     private static final FabricItemSettings SIMPLE_FOCUS_SETTINGS;
     private static final Map<Identifier, Item> ITEMS_TO_REGISTER = new HashMap<>();
@@ -32,6 +33,7 @@ public final class WizItems {
         CHARGING_FOCUS = rSimpleFocus(WizFocuses.CHARGING);
         STARSHOOTER_FOCUS = rSimpleFocus(WizFocuses.STARSHOOTER);
         LIGHTNING_FOCUS = rSimpleFocus(WizFocuses.LIGHTNING);
+        COMET_WARP_FOCUS = rSimpleFocus(WizFocuses.COMET_WARP);
 
         GROUP_WIZCRAFT = r("wizcraft", FabricItemGroup.builder()
                 .icon(SKY_WAND::getDefaultStack)
@@ -40,6 +42,7 @@ public final class WizItems {
                     entries.add(SKY_WAND);
                     entries.add(STARSHOOTER_FOCUS);
                     entries.add(LIGHTNING_FOCUS);
+                    entries.add(COMET_WARP_FOCUS);
                 })
                 .build());
     }

@@ -4,11 +4,13 @@ import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.entity.StarProjectileEntity;
 import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.skywand.CommonReports;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -40,15 +42,17 @@ public class StarshooterFocus extends Focus {
     @Override
     public ActionResult use(World world, SkyWand wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a starshooter focus");
+
         var charge = wand.getCharge();
         var cost = user instanceof PlayerEntity player && player.isCreative() ? 0 : 10;
-        if (charge >= cost) {
-            wand.expendCharge(cost);
-            var projectile = new StarProjectileEntity(user, world);
-            world.spawnEntity(projectile);
-            return ActionResult.SUCCESS;
+        if (charge < cost) {
+            CommonReports.insufficientCharge(world, user);
+            return ActionResult.PASS;
         }
 
-        return ActionResult.FAIL;
+        wand.expendCharge(cost);
+        var projectile = new StarProjectileEntity(user, world);
+        world.spawnEntity(projectile);
+        return ActionResult.SUCCESS;
     }
 }

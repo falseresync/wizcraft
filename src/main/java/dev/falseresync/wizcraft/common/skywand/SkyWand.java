@@ -18,13 +18,11 @@ public class SkyWand {
     protected int maxCharge;
     protected int charge;
     protected Focus activeFocus;
-    protected final Set<ItemStack> focuses = new HashSet<>();
 
     protected static final String KEY_SKY_WAND = "SkyWand";
     protected static final String KEY_MAX_CHARGE = "MaxCharge";
     protected static final String KEY_CHARGE = "Charge";
     protected static final String KEY_ACTIVE_FOCUS = "ActiveFocus";
-    protected static final String KEY_FOCUSES = "Focuses";
 
     static {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -65,15 +63,15 @@ public class SkyWand {
     }
 
     public int getMaxCharge() {
-        return maxCharge;
+        return this.maxCharge;
     }
 
     public boolean isFullyCharged() {
-        return charge >= getMaxCharge();
+        return this.charge >= getMaxCharge();
     }
 
     public int getCharge() {
-        return charge;
+        return this.charge;
     }
 
     protected void setCharge(int charge) {
@@ -81,26 +79,18 @@ public class SkyWand {
     }
 
     public void incrementCharge() {
-        setCharge(charge + 60);
+        setCharge(this.charge + 60);
     }
 
     public void expendCharge(int amount) {
-        setCharge(charge - amount);
-    }
-
-    public boolean shouldCharge() {
-        return activeFocus.equals(WizFocuses.CHARGING);
+        setCharge(this.charge - amount);
     }
 
     public Focus getActiveFocus() {
-        return activeFocus;
-    }
-
-    public void switchFocus(FocusItem focusItem) {
-        activeFocus = focusItem.getFocus();
+        return this.activeFocus;
     }
 
     public void switchFocus(Focus focus) {
-        activeFocus = focus;
+        this.activeFocus = focus;
     }
 }

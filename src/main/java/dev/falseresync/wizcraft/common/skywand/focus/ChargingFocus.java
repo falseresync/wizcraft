@@ -9,6 +9,7 @@ import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import dev.falseresync.wizcraft.lib.WizUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;

@@ -1,6 +1,8 @@
 package dev.falseresync.wizcraft.common;
 
-import dev.falseresync.wizcraft.common.entity.WizEntityTypes;
+import dev.falseresync.wizcraft.common.block.WizBlocks;
+import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
+import dev.falseresync.wizcraft.common.entity.WizEntities;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
 import dev.falseresync.wizcraft.network.WizServerNetworking;
@@ -17,11 +19,12 @@ public class Wizcraft implements ModInitializer {
     @Override
     public void onInitialize() {
         WizRegistries.register();
+        WizBlocks.register((id, block) -> Registry.register(Registries.BLOCK, id, block));
+        WizBlockEntities.register((id, type) -> Registry.register(Registries.BLOCK_ENTITY_TYPE, id, type));
         WizItems.registerItems((id, item) -> Registry.register(Registries.ITEM, id, item));
         WizItems.registerItemGroups((id, item) -> Registry.register(Registries.ITEM_GROUP, id, item));
-        WizEntityTypes.register((id, entityType) -> Registry.register(Registries.ENTITY_TYPE, id, entityType));
+        WizEntities.register((id, type) -> Registry.register(Registries.ENTITY_TYPE, id, type));
         WizFocuses.register((id, focus) -> Registry.register(WizRegistries.FOCUSES, id, focus));
-
         WizServerNetworking.registerReceivers();
     }
 }

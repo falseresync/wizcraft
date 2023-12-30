@@ -27,7 +27,7 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
     }
 
     public StarProjectileEntity(LivingEntity owner, World world) {
-        this(WizEntityTypes.STAR_PROJECTILE, world);
+        this(WizEntities.STAR_PROJECTILE, world);
         setOwner(owner);
         var rotation = owner.getRotationVec(1);
         var orthogonalDistance = 1;

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class WizEntityTypes {
+public class WizEntities {
     public static final EntityType<StarProjectileEntity> STAR_PROJECTILE;
     private static final Map<Identifier, EntityType<?>> TO_REGISTER = new HashMap<>();
 

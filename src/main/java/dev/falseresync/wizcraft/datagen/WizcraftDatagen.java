@@ -8,5 +8,6 @@ public class WizcraftDatagen implements DataGeneratorEntrypoint {
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		var pack = fabricDataGenerator.createPack();
 		pack.addProvider(WizModelProvider::new);
+		pack.addProvider(WizRecipeProvider::new);
 	}
 }

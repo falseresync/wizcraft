@@ -18,7 +18,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.ArrayDeque;
-import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,7 +32,7 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
         this.result = result;
         this.worktableInput = worktableInput;
         this.pedestalInputs = pedestalInputs;
-        this.allIngredients = DefaultedList.ofSize(pedestalInputs.size() + 1, Ingredient.EMPTY);
+        this.allIngredients = DefaultedList.ofSize(pedestalInputs.size() + 1);
         this.allIngredients.add(worktableInput);
     }
 
@@ -133,7 +132,7 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
             var result = buf.readItemStack();
             var worktableInput = Ingredient.fromPacket(buf);
             var numberOfPedestalInputs = buf.readVarInt();
-            var pedestalInputs = DefaultedList.ofSize(numberOfPedestalInputs, Ingredient.EMPTY);
+            var pedestalInputs = DefaultedList.<Ingredient>ofSize(numberOfPedestalInputs);
             for (int i = 0; i < numberOfPedestalInputs; i++) {
                 pedestalInputs.add(Ingredient.fromPacket(buf));
             }

@@ -13,13 +13,13 @@ import java.util.function.BiConsumer;
 
 public class WizBlocks {
     public static final Block LENS;
-//    public static final EnergizedWorktableBlock ENERGIZED_WORKTABLE;
+    public static final EnergizedWorktableBlock ENERGIZED_WORKTABLE;
     public static final LensingPedestalBlock LENSING_PEDESTAL;
     private static final Map<Identifier, Block> TO_REGISTER = new HashMap<>();
 
     static {
         LENS = r("lens", new Block(FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
-//        ENERGIZED_WORKTABLE = r(new EnergizedWorktableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE)));
+        ENERGIZED_WORKTABLE = r(new EnergizedWorktableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE)));
         LENSING_PEDESTAL = r(new LensingPedestalBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE)));
     }
 

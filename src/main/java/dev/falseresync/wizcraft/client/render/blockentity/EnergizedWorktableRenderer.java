@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.client.render.blockentity;
 
 import dev.falseresync.wizcraft.client.render.CommonRenders;
-import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
+import dev.falseresync.wizcraft.common.block.entity.EnergizedWorktableBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
@@ -16,15 +16,15 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
 @Environment(EnvType.CLIENT)
-public class LensingPedestalRenderer implements BlockEntityRenderer<LensingPedestalBlockEntity> {
+public class EnergizedWorktableRenderer implements BlockEntityRenderer<EnergizedWorktableBlockEntity> {
     protected final ItemRenderer itemRenderer;
 
-    public LensingPedestalRenderer(BlockEntityRendererFactory.Context ctx) {
+    public EnergizedWorktableRenderer(BlockEntityRendererFactory.Context ctx) {
         this.itemRenderer = ctx.getItemRenderer();
     }
 
     @Override
-    public void render(LensingPedestalBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(EnergizedWorktableBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var slot = entity.storage.getSlot(0);
         var world = entity.getWorld();
         if (slot.isResourceBlank() || world == null) {

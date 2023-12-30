@@ -4,9 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
 import dev.falseresync.wizcraft.lib.HasId;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import dev.falseresync.wizcraft.lib.WizUtils;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -47,18 +45,9 @@ public class LensingPedestalBlock extends BlockWithEntity implements HasId {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof LensingPedestalBlockEntity pedestal) {
-            var stack = player.getStackInHand(hand);
-            var resource = ItemVariant.of(stack);
-            var tx = Transaction.openOuter();
-            if (!resource.isBlank()) {
-                try (tx) {
-                    var inserted = pedestal.storage.insert(resource, 1, tx) == 1;
-                    var extracted = PlayerInventoryStorage.of(player).extract(resource, 1, tx) == 1;
-                    if (inserted & extracted) {
-                        tx.commit();
-                        return ActionResult.SUCCESS;
-                    }
-                }
+            var exchanged = WizUtils.exchangeStackInSlotWithHand(player, hand, pedestal.storage, 0, 1, null);
+            if (exchanged == 1) {
+                return ActionResult.SUCCESS;
             }
         }
 

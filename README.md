@@ -1,4 +1,5 @@
 # Wizcraft
+![Wizcraft Banner](https://cdn.modrinth.com/data/F9eqqJxr/images/f5548ac2b96dca43a57a28c5c18dacd17dfb6a67.png)
 
 ## Sky Wand and Focuses
 

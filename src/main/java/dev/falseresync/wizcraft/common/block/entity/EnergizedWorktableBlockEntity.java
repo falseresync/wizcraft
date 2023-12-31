@@ -1,13 +1,10 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
-import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -16,11 +13,9 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -28,23 +23,19 @@ import java.util.List;
 
 public class EnergizedWorktableBlockEntity extends BlockEntity {
     public static final int PEDESTAL_SEARCH_COOLDOWN = 5;
-    protected int ticksBeforePedestalSearch = 0;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
     protected final SimpleInventory inventory = new SimpleInventory(1) {
         @Override
         public int getMaxCountPerStack() {
             return 1;
         }
-
-        @Override
-        public void markDirty() {
-            EnergizedWorktableBlockEntity.this.markDirty();
-        }
     };
     public final InventoryStorage storage = InventoryStorage.of(this.inventory, null);
+    protected int ticksBeforePedestalSearch = 0;
 
     public EnergizedWorktableBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.ENERGIZED_WORKTABLE, pos, state);
+        this.inventory.addListener(sender -> markDirty());
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, EnergizedWorktableBlockEntity worktable) {
@@ -57,6 +48,10 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
             return;
         }
         worktable.ticksBeforePedestalSearch = PEDESTAL_SEARCH_COOLDOWN;
+        searchPedestals(world, pos, worktable);
+    }
+
+    protected static void searchPedestals(World world, BlockPos pos, EnergizedWorktableBlockEntity worktable) {
         worktable.pedestals.clear();
 
         var pedestalPositions = List.of(pos.north(2), pos.west(2), pos.south(2), pos.east(2));
@@ -72,36 +67,38 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
             return;
         }
 
+        searchPedestals(getWorld(), getPos(), this);
         if (this.pedestals.size() < 4) {
             return;
         }
-//        this.pedestals.forEach(pedestal -> pedestal.inventory.getStack(0));
 
         var combinedInventory = new SimpleInventory(this.pedestals.size() + 1);
         combinedInventory.setStack(0, this.inventory.getStack(0));
         for (int i = 0; i < this.pedestals.size(); i++) {
             combinedInventory.setStack(i + 1, this.pedestals.get(i).inventory.getStack(0));
         }
-//        System.out.println(combinedInventory);
 
         var result = getWorld().getRecipeManager()
                 .getFirstMatch(WizRecipes.LENSED_WORKTABLE, combinedInventory, getWorld())
                 .map(RecipeEntry::value)
-                .map(recipe -> recipe.getResult(getWorld().getRegistryManager()))
+                .map(recipe -> recipe.craft(combinedInventory, getWorld().getRegistryManager()))
                 .orElse(ItemStack.EMPTY);
-//        System.out.println(result);
 
         if (result.isEmpty()) {
             return;
         }
 
-        this.inventory.clear();
-        this.pedestals.forEach(pedestal -> {
-            pedestal.inventory.clear();
-            pedestal.markDirty();
-        });
+        this.pedestals.forEach(LensingPedestalBlockEntity::onCrafted);
         this.inventory.setStack(0, result);
-        markDirty();
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        if (getWorld() != null) {
+            getWorld().emitGameEvent(GameEvent.BLOCK_ACTIVATE, getPos(), GameEvent.Emitter.of(getCachedState()));
+            getWorld().updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+        }
     }
 
     @Override

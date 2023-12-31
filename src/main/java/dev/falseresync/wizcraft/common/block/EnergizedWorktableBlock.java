@@ -10,6 +10,7 @@ import dev.falseresync.wizcraft.lib.HasId;
 import dev.falseresync.wizcraft.lib.WizUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;

@@ -68,7 +68,6 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
                 }
             }
             if (stacksMatchPedestals) {
-                System.out.println(craft(inventory, null).isEmpty());
                 return true;
             }
         }

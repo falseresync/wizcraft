@@ -1,6 +1,7 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -12,6 +13,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class LensingPedestalBlockEntity extends BlockEntity {
@@ -20,16 +22,25 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         public int getMaxCountPerStack() {
             return 1;
         }
-
-        @Override
-        public void markDirty() {
-            LensingPedestalBlockEntity.this.markDirty();
-        }
     };
     public final InventoryStorage storage = InventoryStorage.of(this.inventory, null);
 
     public LensingPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.LENSING_PEDESTAL, pos, state);
+        this.inventory.addListener(sender -> markDirty());
+    }
+
+    public void onCrafted() {
+        this.inventory.clear();
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        if (getWorld() != null) {
+            getWorld().emitGameEvent(GameEvent.BLOCK_ACTIVATE, getPos(), GameEvent.Emitter.of(getCachedState()));
+            getWorld().updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL_AND_REDRAW);
+        }
     }
 
     @Override

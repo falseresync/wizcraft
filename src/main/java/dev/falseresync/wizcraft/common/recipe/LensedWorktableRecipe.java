@@ -18,7 +18,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -100,12 +99,22 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
         return WizRecipes.LENSED_WORKTABLE;
     }
 
+    public ItemStack getResult() {
+        return this.result;
+    }
+
+    public Ingredient getWorktableInput() {
+        return this.worktableInput;
+    }
+
+    public DefaultedList<Ingredient> getPedestalInputs() {
+        return this.pedestalInputs;
+    }
+
     public static class Serializer implements RecipeSerializer<LensedWorktableRecipe>, HasId {
         public static final Codec<LensedWorktableRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ItemStack.RECIPE_RESULT_CODEC.fieldOf("result")
-                        .forGetter(recipe -> recipe.result),
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("worktable")
-                        .forGetter(recipe -> recipe.worktableInput),
+                ItemStack.RECIPE_RESULT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("worktable").forGetter(recipe -> recipe.worktableInput),
                 Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("pedestals")
                         .flatXmap(
                                 ingredients -> {

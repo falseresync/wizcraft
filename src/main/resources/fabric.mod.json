@@ -24,6 +24,9 @@
 		],
 		"fabric-datagen": [
 			"dev.falseresync.wizcraft.datagen.WizcraftDatagen"
+		],
+		"emi": [
+			"dev.falseresync.wizcraft.compat.emi.WizcraftEmiPlugin"
 		]
 	},
 	"mixins": [

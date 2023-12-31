@@ -20,5 +20,6 @@
   "hud.wizcraft.sky_wand.no_anchor": "Setup an anchor first",
   "hud.wizcraft.sky_wand.not_enough_pedestals": "You need 4 pedestals to craft",
   "keyCategory.wizcraft": "Wizcraft",
-  "key.wizcraft.tool_control": "Tool control"
+  "key.wizcraft.tool_control": "Tool control",
+  "emi.category.wizcraft.lensed_worktable": "Lensed worktable"
 }

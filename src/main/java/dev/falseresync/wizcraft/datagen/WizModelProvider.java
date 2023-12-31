@@ -1,11 +1,10 @@
 package dev.falseresync.wizcraft.datagen;
 
+import dev.falseresync.wizcraft.common.block.WizBlocks;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Models;
+import net.minecraft.data.client.*;
 
 public class WizModelProvider extends FabricModelProvider {
     public WizModelProvider(FabricDataOutput output) {
@@ -14,7 +13,30 @@ public class WizModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-
+        blockStateModelGenerator.blockStateCollector.accept(
+                VariantsBlockStateSupplier.create(
+                        WizBlocks.ENERGIZED_WORKTABLE,
+                        BlockStateVariant.create().put(
+                                VariantSettings.MODEL,
+                                TexturedModel.CUBE_BOTTOM_TOP.upload(
+                                        WizBlocks.ENERGIZED_WORKTABLE,
+                                        blockStateModelGenerator.modelCollector))));
+        var lensingPedestalTextures = TextureMap.of(TextureKey.WALL, TextureMap.getId(WizBlocks.LENSING_PEDESTAL));
+        blockStateModelGenerator.blockStateCollector.accept(
+                VariantsBlockStateSupplier.create(
+                        WizBlocks.LENSING_PEDESTAL,
+                        BlockStateVariant.create().put(
+                                VariantSettings.MODEL,
+                                Models.TEMPLATE_WALL_POST.upload(
+                                        WizBlocks.LENSING_PEDESTAL,
+                                        lensingPedestalTextures,
+                                        blockStateModelGenerator.modelCollector))));
+        blockStateModelGenerator.registerParentedItemModel(
+                WizBlocks.LENSING_PEDESTAL,
+                Models.WALL_INVENTORY.upload(
+                        WizBlocks.LENSING_PEDESTAL,
+                        lensingPedestalTextures,
+                        blockStateModelGenerator.modelCollector));
     }
 
     @Override

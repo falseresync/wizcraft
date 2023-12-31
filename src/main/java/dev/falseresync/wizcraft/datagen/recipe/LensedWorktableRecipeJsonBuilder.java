@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.datagen;
+package dev.falseresync.wizcraft.datagen.recipe;
 
 import dev.falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
 import net.minecraft.data.server.recipe.RecipeExporter;

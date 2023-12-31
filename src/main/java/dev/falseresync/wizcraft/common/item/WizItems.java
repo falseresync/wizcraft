@@ -1,11 +1,14 @@
 package dev.falseresync.wizcraft.common.item;
 
 import dev.falseresync.wizcraft.common.Wizcraft;
+import dev.falseresync.wizcraft.common.block.WizBlocks;
 import dev.falseresync.wizcraft.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
 import dev.falseresync.wizcraft.lib.HasId;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.text.Text;
@@ -21,8 +24,11 @@ public final class WizItems {
     public static final SimpleFocusItem STARSHOOTER_FOCUS;
     public static final SimpleFocusItem LIGHTNING_FOCUS;
     public static final SimpleFocusItem COMET_WARP_FOCUS;
+    public static final BlockItem ENERGIZED_WORKTABLE;
+    public static final BlockItem LENSING_PEDESTAL;
     public static final ItemGroup GROUP_WIZCRAFT;
     private static final FabricItemSettings SIMPLE_FOCUS_SETTINGS;
+    private static final FabricItemSettings SIMPLE_BLOCK_ITEM_SETTINGS;
     private static final Map<Identifier, Item> ITEMS_TO_REGISTER = new HashMap<>();
     private static final Map<Identifier, ItemGroup> ITEM_GROUPS_TO_REGISTER = new HashMap<>();
 
@@ -35,6 +41,10 @@ public final class WizItems {
         LIGHTNING_FOCUS = rSimpleFocus(WizFocuses.LIGHTNING);
         COMET_WARP_FOCUS = rSimpleFocus(WizFocuses.COMET_WARP);
 
+        SIMPLE_BLOCK_ITEM_SETTINGS = new FabricItemSettings();
+        ENERGIZED_WORKTABLE = rBlockItem(WizBlocks.ENERGIZED_WORKTABLE);
+        LENSING_PEDESTAL = rBlockItem(WizBlocks.LENSING_PEDESTAL);
+
         GROUP_WIZCRAFT = r("wizcraft", FabricItemGroup.builder()
                 .icon(SKY_WAND::getDefaultStack)
                 .displayName(Text.translatable("itemGroup.wizcraft"))
@@ -43,8 +53,14 @@ public final class WizItems {
                     entries.add(STARSHOOTER_FOCUS);
                     entries.add(LIGHTNING_FOCUS);
                     entries.add(COMET_WARP_FOCUS);
+                    entries.add(ENERGIZED_WORKTABLE);
+                    entries.add(LENSING_PEDESTAL);
                 })
                 .build());
+    }
+
+    private static <T extends Block & HasId> BlockItem rBlockItem(T block) {
+        return r(block.getId(), new BlockItem(block, SIMPLE_BLOCK_ITEM_SETTINGS));
     }
 
     private static <T extends Focus> SimpleFocusItem rSimpleFocus(T focus) {
@@ -57,7 +73,11 @@ public final class WizItems {
     }
 
     private static <T extends Item> T r(String id, T item) {
-        ITEMS_TO_REGISTER.put(new Identifier(Wizcraft.MODID, id), item);
+        return r(new Identifier(Wizcraft.MODID, id), item);
+    }
+
+    private static <T extends Item> T r(Identifier id, T item) {
+        ITEMS_TO_REGISTER.put(id, item);
         return item;
     }
 

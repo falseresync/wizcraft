@@ -3,24 +3,32 @@ package dev.falseresync.wizcraft.common.block;
 import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
+import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
 import dev.falseresync.wizcraft.lib.HasId;
 import dev.falseresync.wizcraft.lib.WizUtils;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class LensingPedestalBlock extends BlockWithEntity implements HasId {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "lensing_pedestal");
     public static final MapCodec<LensingPedestalBlock> CODEC = createCodec(LensingPedestalBlock::new);
+    public static final VoxelShape SHAPE = createCuboidShape(4, 0, 4, 12, 16, 12);
 
     protected LensingPedestalBlock(Settings settings) {
         super(settings);
@@ -40,6 +48,11 @@ public class LensingPedestalBlock extends BlockWithEntity implements HasId {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
     }
 
     @Override

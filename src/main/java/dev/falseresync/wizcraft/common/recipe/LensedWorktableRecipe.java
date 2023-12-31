@@ -18,6 +18,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -59,7 +60,7 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
         for (int i = 0; i < stacksInSlots.size(); i++) {
             var stacksMatchPedestals = true;
             for (var pedestalInput : this.pedestalInputs) {
-                var currentStack = stacksInSlots.getFirst();
+                var currentStack = stacksInSlots.removeFirst();
                 stacksInSlots.offerLast(currentStack);
                 if (!pedestalInput.test(currentStack)) {
                     stacksMatchPedestals = false;
@@ -67,6 +68,7 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
                 }
             }
             if (stacksMatchPedestals) {
+                System.out.println(craft(inventory, null).isEmpty());
                 return true;
             }
         }

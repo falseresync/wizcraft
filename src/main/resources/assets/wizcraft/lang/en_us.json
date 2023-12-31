@@ -6,6 +6,8 @@
   "focus.wizcraft.starshooter": "Starshooter",
   "focus.wizcraft.lightning": "Lightning",
   "focus.wizcraft.comet_warp": "Comet Warp",
+  "block.wizcraft.energized_worktable": "Energized worktable",
+  "block.wizcraft.lensing_pedestal": "Lensing pedestal",
   "tooltip.wizcraft.sky_wand.active_focus": "Active focus: %s",
   "tooltip.wizcraft.sky_wand.change_focus": "Press [%s] to change focus",
   "tooltip.wizcraft.sky_wand.setup_anchor": "Use while sneaking to setup an anchor",
@@ -16,6 +18,7 @@
   "hud.wizcraft.sky_wand.no_focuses": "No other focus to pick",
   "hud.wizcraft.sky_wand.insufficient_charge": "Not enough charge",
   "hud.wizcraft.sky_wand.no_anchor": "Setup an anchor first",
+  "hud.wizcraft.sky_wand.not_enough_pedestals": "You need 4 pedestals to craft",
   "keyCategory.wizcraft": "Wizcraft",
   "key.wizcraft.tool_control": "Tool control"
 }

@@ -63,7 +63,7 @@ public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
         if (world.getBlockEntity(pos) instanceof EnergizedWorktableBlockEntity worktable) {
             var playerStack = player.getMainHandStack();
             if (playerStack.isOf(WizItems.SKY_WAND)) {
-                worktable.craft();
+                worktable.craft(player);
                 return ActionResult.SUCCESS;
             }
 
@@ -74,18 +74,6 @@ public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
         }
 
         return super.onUse(state, world, pos, player, hand, hit);
-    }
-
-
-    @Environment(EnvType.CLIENT)
-    protected void reportNotEnoughPedestals(World world, PlayerEntity user) {
-        user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.not_enough_pedestals"));
-    }
-
-    @Environment(EnvType.CLIENT)
-    protected void reportSuccess(PlayerEntity user) {
-        user.playSoundIfNotSilent(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
     }
 
     @Override

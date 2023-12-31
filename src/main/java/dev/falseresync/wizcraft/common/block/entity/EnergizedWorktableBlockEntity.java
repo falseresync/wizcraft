@@ -1,10 +1,17 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
+import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -13,6 +20,8 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -62,20 +71,23 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
         }
     }
 
-    public void craft() {
-        if (getWorld() == null || getWorld().isClient()) {
+    public void craft(@Nullable PlayerEntity player) {
+        if (getWorld() == null) {
             return;
         }
 
         searchPedestals(getWorld(), getPos(), this);
         if (this.pedestals.size() < 4) {
+            if (player != null) {
+                reportNotEnoughPedestals(getWorld(), player);
+            }
             return;
         }
 
         var combinedInventory = new SimpleInventory(this.pedestals.size() + 1);
         combinedInventory.setStack(0, this.inventory.getStack(0));
         for (int i = 0; i < this.pedestals.size(); i++) {
-            combinedInventory.setStack(i + 1, this.pedestals.get(i).inventory.getStack(0));
+            combinedInventory.setStack(i + 1, this.pedestals.get(i).storage.getSlot(0).getResource().toStack());
         }
 
         var result = getWorld().getRecipeManager()
@@ -90,7 +102,24 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
 
         this.pedestals.forEach(LensingPedestalBlockEntity::onCrafted);
         this.inventory.setStack(0, result);
+        if (player != null) {
+            reportSuccess(getWorld(), player);
+        }
     }
+
+    protected static void reportNotEnoughPedestals(World world, PlayerEntity user) {
+        if (world.isClient()) {
+            user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
+            WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.not_enough_pedestals"));
+        }
+    }
+
+    protected static void reportSuccess(World world, PlayerEntity user) {
+        if (world.isClient()) {
+            user.playSoundIfNotSilent(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
+        }
+    }
+
 
     @Override
     public void markDirty() {

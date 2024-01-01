@@ -38,8 +38,9 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     @Override
     public void markDirty() {
         super.markDirty();
-        if (world != null && !world.isClient()) {
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.REDRAW_ON_MAIN_THREAD);
+        if (world != null) {
+            world.emitGameEvent(GameEvent.BLOCK_CHANGE, getPos(), GameEvent.Emitter.of(getCachedState()));
+            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
         }
     }
 

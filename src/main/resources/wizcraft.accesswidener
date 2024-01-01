@@ -2,3 +2,5 @@ accessWidener v2 named
 
 accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage watchDistance I
 accessible field net/minecraft/client/gui/hud/BossBarHud bossBars Ljava/util/Map;
+
+accessible method net/minecraft/server/world/ServerChunkManager getChunkHolder (J)Lnet/minecraft/server/world/ChunkHolder;

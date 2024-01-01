@@ -19,6 +19,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
@@ -63,7 +65,6 @@ public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
             }
 
             var exchanged = WizUtils.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
-            worktable.markDirty();
             if (exchanged == 1) {
                 return ActionResult.SUCCESS;
             }
@@ -75,10 +76,5 @@ public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
     @Override
     public Identifier getId() {
         return ID;
-    }
-
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return super.canPlaceAt(state, world, pos);
     }
 }

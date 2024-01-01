@@ -7,7 +7,7 @@ import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
-import dev.falseresync.wizcraft.network.UpdateSkyWandC2SPacket;
+import dev.falseresync.wizcraft.network.server.UpdateSkyWandC2SPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

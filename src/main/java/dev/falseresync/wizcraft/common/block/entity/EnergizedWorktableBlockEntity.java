@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.render.block.entity.CampfireBlockEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
@@ -21,6 +20,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ import java.util.List;
 public class EnergizedWorktableBlockEntity extends BlockEntity {
     public static final int PEDESTALS_SEARCH_COOLDOWN = 5;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
+    protected boolean updateScheduled = false;
     protected final SimpleInventory inventory = new SimpleInventory(1) {
         @Override
         public int getMaxCountPerStack() {
@@ -40,10 +41,21 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
 
     public EnergizedWorktableBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.ENERGIZED_WORKTABLE, pos, state);
-        inventory.addListener(sender -> markDirty());
+        inventory.addListener(sender -> {
+            markDirty();
+            updateScheduled = true;
+        });
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, EnergizedWorktableBlockEntity worktable) {
+        if (worktable.updateScheduled) {
+            worktable.markDirty();
+            for (LensingPedestalBlockEntity pedestal : worktable.pedestals) {
+                pedestal.markDirty();
+            }
+            worktable.updateScheduled = false;
+        }
+
         if (world.isClient()) {
             return;
         }
@@ -118,8 +130,9 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     @Override
     public void markDirty() {
         super.markDirty();
-        if (world != null && !world.isClient()) {
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.REDRAW_ON_MAIN_THREAD);
+        if (world != null) {
+            world.emitGameEvent(GameEvent.BLOCK_CHANGE, getPos(), GameEvent.Emitter.of(getCachedState()));
+            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
         }
     }
 

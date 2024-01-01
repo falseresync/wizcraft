@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.network;
+package dev.falseresync.wizcraft.network.server;
 
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.lib.HasId;
@@ -9,7 +9,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public record UpdateSkyWandC2SPacket(ItemVariant pickedFocus) implements FabricPacket, HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "update_sky_wand_resource");
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "update_sky_wand_focus");
     public static final PacketType<UpdateSkyWandC2SPacket> TYPE = PacketType.create(ID, UpdateSkyWandC2SPacket::new);
 
     public UpdateSkyWandC2SPacket(PacketByteBuf buf) {

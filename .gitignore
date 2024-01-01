@@ -31,6 +31,8 @@ bin/
 # fabric
 
 run/
+runSecondary/
+runServer/
 src/main/generated/
 
 # java

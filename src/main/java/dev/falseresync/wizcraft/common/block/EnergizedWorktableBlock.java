@@ -58,15 +58,19 @@ public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof EnergizedWorktableBlockEntity worktable) {
+            if (world.isClient()) {
+                return ActionResult.SUCCESS;
+            }
+
             var playerStack = player.getMainHandStack();
             if (playerStack.isOf(WizItems.SKY_WAND)) {
                 worktable.craft(player);
-                return ActionResult.SUCCESS;
+                return ActionResult.PASS;
             }
 
             var exchanged = WizUtils.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
             if (exchanged == 1) {
-                return ActionResult.SUCCESS;
+                return ActionResult.PASS;
             }
         }
 

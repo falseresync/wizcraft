@@ -1,18 +1,15 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class LensingPedestalBlockEntity extends BlockEntity {
@@ -23,6 +20,7 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         }
     };
     protected final InventoryStorage storage = InventoryStorage.of(inventory, null);
+
     public LensingPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.LENSING_PEDESTAL, pos, state);
         inventory.addListener(sender -> markDirty());
@@ -35,10 +33,7 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     @Override
     public void markDirty() {
         super.markDirty();
-//        if (world != null) {
-//            world.emitGameEvent(GameEvent.BLOCK_CHANGE, getPos(), GameEvent.Emitter.of(getCachedState()));
-//            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-//        }
+        System.out.printf("L %s %s%n", pos, inventory);
     }
 
     @Override

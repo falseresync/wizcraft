@@ -54,9 +54,13 @@ public class LensingPedestalBlock extends BlockWithEntity implements HasId {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof LensingPedestalBlockEntity pedestal) {
+            if (world.isClient()) {
+                return ActionResult.SUCCESS;
+            }
+
             var exchanged = WizUtils.exchangeStackInSlotWithHand(player, hand, pedestal.getStorage(), 0, 1, null);
             if (exchanged == 1) {
-                return ActionResult.SUCCESS;
+                return ActionResult.PASS;
             }
         }
 

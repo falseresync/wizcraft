@@ -3,7 +3,6 @@ package dev.falseresync.wizcraft.common.block.entity;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,12 +14,12 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ import java.util.List;
 public class EnergizedWorktableBlockEntity extends BlockEntity {
     public static final int PEDESTALS_SEARCH_COOLDOWN = 5;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
-    protected boolean updateScheduled = false;
     protected final SimpleInventory inventory = new SimpleInventory(1) {
         @Override
         public int getMaxCountPerStack() {
@@ -75,7 +73,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     }
 
     public void craft(@Nullable PlayerEntity player) {
-        if (world == null || world.isClient()) {
+        if (world == null) {
             return;
         }
 
@@ -119,10 +117,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     @Override
     public void markDirty() {
         super.markDirty();
-//        if (world != null) {
-//            world.emitGameEvent(GameEvent.BLOCK_CHANGE, getPos(), GameEvent.Emitter.of(getCachedState()));
-//            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-//        }
+        System.out.printf("W %s %s%n", pos, inventory);
     }
 
     @Override

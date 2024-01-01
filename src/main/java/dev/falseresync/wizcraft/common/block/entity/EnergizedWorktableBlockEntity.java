@@ -119,10 +119,10 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     @Override
     public void markDirty() {
         super.markDirty();
-        if (world != null) {
-            world.emitGameEvent(GameEvent.BLOCK_CHANGE, getPos(), GameEvent.Emitter.of(getCachedState()));
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-        }
+//        if (world != null) {
+//            world.emitGameEvent(GameEvent.BLOCK_CHANGE, getPos(), GameEvent.Emitter.of(getCachedState()));
+//            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+//        }
     }
 
     @Override

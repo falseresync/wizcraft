@@ -65,12 +65,12 @@ public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
             var playerStack = player.getMainHandStack();
             if (playerStack.isOf(WizItems.SKY_WAND)) {
                 worktable.craft(player);
-                return ActionResult.PASS;
+                return ActionResult.SUCCESS;
             }
 
             var exchanged = WizUtils.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
             if (exchanged == 1) {
-                return ActionResult.PASS;
+                return ActionResult.CONSUME;
             }
         }
 

@@ -3,6 +3,7 @@ package dev.falseresync.wizcraft.common.block.entity;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -117,6 +118,9 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     @Override
     public void markDirty() {
         super.markDirty();
+        if (world != null) {
+            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+        }
         System.out.printf("W %s %s%n", pos, inventory);
     }
 

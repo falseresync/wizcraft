@@ -60,7 +60,7 @@ public class LensingPedestalBlock extends BlockWithEntity implements HasId {
 
             var exchanged = WizUtils.exchangeStackInSlotWithHand(player, hand, pedestal.getStorage(), 0, 1, null);
             if (exchanged == 1) {
-                return ActionResult.PASS;
+                return ActionResult.CONSUME;
             }
         }
 

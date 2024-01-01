@@ -37,7 +37,6 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         if (world != null) {
             world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
         }
-        System.out.printf("L %s %s%n", pos, inventory);
     }
 
     @Override
@@ -49,6 +48,7 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        inventory.getHeldStacks().clear();
         Inventories.readNbt(nbt, inventory.getHeldStacks());
     }
 

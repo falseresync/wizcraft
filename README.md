@@ -33,4 +33,7 @@ Craft focuses using a lensed worktable setup: Energized worktable surrounded by 
 
 Credits for most of the textures go to: ElvGames @itch.io, Devillas @itch.io
 
+Thanks go to Falkreon, FoundationGames and other folks in ModFest Discord and elsewhere,
+who have helped me immensely to debug and develop this mod <3
+
 [<img src="https://raw.githubusercontent.com/ModFest/art/3bf66556e674d670e30f647d6a48c4e1798c21d4/badge/128h/ModFest%201.20%20Badge%20Compact.png" width="256" alt="ModFest 1.20">](https://modfest.net/1.20)

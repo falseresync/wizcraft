@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.network.server;
+package dev.falseresync.wizcraft.network.c2s;
 
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.lib.HasId;

@@ -1,9 +1,10 @@
-package dev.falseresync.wizcraft.network.server;
+package dev.falseresync.wizcraft.network;
 
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
+import dev.falseresync.wizcraft.network.c2s.UpdateSkyWandC2SPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;

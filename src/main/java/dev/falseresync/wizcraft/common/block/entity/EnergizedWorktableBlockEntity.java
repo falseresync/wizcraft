@@ -2,6 +2,9 @@ package dev.falseresync.wizcraft.common.block.entity;
 
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
+import dev.falseresync.wizcraft.network.ClientSideReport;
+import dev.falseresync.wizcraft.network.s2c.TriggerReportS2CPacket;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -15,6 +18,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -66,13 +70,6 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
         }
     }
 
-    protected static void reportNotEnoughPedestals(World world, PlayerEntity user) {
-        if (world.isClient()) {
-            user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-            WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.not_enough_pedestals"));
-        }
-    }
-
     public void craft(@Nullable PlayerEntity player) {
         if (world == null) {
             return;
@@ -80,8 +77,8 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
 
         searchPedestals(world, pos, this);
         if (pedestals.size() < 4) {
-            if (player != null) {
-                reportNotEnoughPedestals(world, player);
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                ServerPlayNetworking.send(serverPlayer, new TriggerReportS2CPacket(ClientSideReport.LENSED_WORKTABLE__NOT_ENOUGH_PEDESTALS));
             }
             return;
         }
@@ -121,7 +118,6 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
         if (world != null) {
             world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
         }
-        System.out.printf("W %s %s%n", pos, inventory);
     }
 
     @Override
@@ -133,6 +129,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        inventory.getHeldStacks().clear();
         Inventories.readNbt(nbt, inventory.getHeldStacks());
     }
 

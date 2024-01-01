@@ -26,12 +26,9 @@ public class SkyWand {
 
     static {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.INT.optionalFieldOf(KEY_MAX_CHARGE, 100)
-                        .forGetter(SkyWand::getMaxCharge),
-                Codec.INT.optionalFieldOf(KEY_CHARGE, 0)
-                        .forGetter(SkyWand::getCharge),
-                Focus.CODEC.optionalFieldOf(KEY_ACTIVE_FOCUS, WizFocuses.CHARGING)
-                        .forGetter(SkyWand::getActiveFocus)
+                Codec.INT.optionalFieldOf(KEY_MAX_CHARGE, 100).forGetter(SkyWand::getMaxCharge),
+                Codec.INT.optionalFieldOf(KEY_CHARGE, 0).forGetter(SkyWand::getCharge),
+                Focus.CODEC.optionalFieldOf(KEY_ACTIVE_FOCUS, WizFocuses.CHARGING).forGetter(SkyWand::getActiveFocus)
         ).apply(instance, SkyWand::new));
     }
 

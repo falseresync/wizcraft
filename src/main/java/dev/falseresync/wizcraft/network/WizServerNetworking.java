@@ -1,5 +1,6 @@
 package dev.falseresync.wizcraft.network;
 
+import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
@@ -9,7 +10,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class WizServerNetworking {
@@ -32,19 +35,31 @@ public class WizServerNetworking {
         var pickedFocus = ((FocusItem) packet.pickedFocus().getItem()).getFocus(packet.pickedFocus().toStack());
         var activeFocus = wand.getActiveFocus();
 
-        try (var tx = Transaction.openOuter()) {
+        var tx = Transaction.openOuter();
+        tx.addOuterCloseCallback(result -> {
+            if (result.wasCommitted()) {
+                wand.switchFocus(pickedFocus);
+                wand.saveToStack(mainHandStack);
+            }
+        });
+        try (tx) {
             var extracted = pickedFocus.getType() == WizFocuses.CHARGING
                     || storage.extract(packet.pickedFocus(), 1, tx) == 1;
 
-            var inserted = activeFocus.getType() == WizFocuses.CHARGING
-                    || storage.insert(ItemVariant.of(activeFocus.asStack()), 1, tx) == 1;
+            if (!extracted) {
+                var storedFocusIgnoreNbt = StorageUtil.findStoredResource(storage, variant -> variant.isOf(packet.pickedFocus().getItem()));
+                if (storedFocusIgnoreNbt != null) {
+                    extracted = storage.extract(storedFocusIgnoreNbt, 1, tx) == 1;
+                }
+            }
 
-            if (extracted && inserted) {
-                tx.commit();
+            if (extracted) {
+                var inserted = activeFocus.getType() == WizFocuses.CHARGING
+                        || storage.insert(ItemVariant.of(activeFocus.asStack()), 1, tx) == 1;
+                if (inserted) {
+                    tx.commit();
+                }
             }
         }
-
-        wand.switchFocus(pickedFocus);
-        wand.saveToStack(mainHandStack);
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -59,7 +60,8 @@ public class LightningFocus extends Focus {
         wand.expendCharge(cost);
         if (world instanceof ServerWorld serverWorld) {
             var lightning = EntityType.LIGHTNING_BOLT.create(world);
-            var raycastResult = user.raycast(WizUtils.findViewDistance(world) * 16 / 2F, 0, true);
+            var maxDistance = MathHelper.clamp(WizUtils.findViewDistance(world) * 16 / 4F, 32, 128);
+            var raycastResult = user.raycast(maxDistance, 0, true);
             var pos = raycastResult.getType() == HitResult.Type.MISS
                     ? findGroundPos(serverWorld, raycastResult.getPos())
                     : raycastResult.getPos();
@@ -75,7 +77,7 @@ public class LightningFocus extends Focus {
     protected Vec3d findGroundPos(ServerWorld world, Vec3d posInAir) {
         return new Vec3d(
                 posInAir.x,
-                world.getTopY(Heightmap.Type.WORLD_SURFACE, (int) posInAir.x, (int) posInAir.z),
+                world.getTopY(Heightmap.Type.MOTION_BLOCKING, (int) posInAir.x, (int) posInAir.z),
                 posInAir.z);
     }
 }

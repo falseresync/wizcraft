@@ -18,7 +18,7 @@ public record UpdateSkyWandC2SPacket(ItemVariant pickedFocus) implements FabricP
 
     @Override
     public void write(PacketByteBuf buf) {
-        pickedFocus.toPacket(buf);
+        this.pickedFocus.toPacket(buf);
     }
 
     @Override

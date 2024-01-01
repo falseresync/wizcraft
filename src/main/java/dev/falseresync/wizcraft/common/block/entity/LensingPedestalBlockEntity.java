@@ -24,7 +24,7 @@ public class LensingPedestalBlockEntity extends BlockEntity {
             return 1;
         }
     };
-    public final InventoryStorage storage = InventoryStorage.of(this.inventory, null);
+    protected final InventoryStorage storage = InventoryStorage.of(this.inventory, null);
 
     public LensingPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.LENSING_PEDESTAL, pos, state);
@@ -38,9 +38,8 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     @Override
     public void markDirty() {
         super.markDirty();
-        if (getWorld() != null) {
-            getWorld().emitGameEvent(GameEvent.BLOCK_ACTIVATE, getPos(), GameEvent.Emitter.of(getCachedState()));
-            getWorld().updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL_AND_REDRAW);
+        if (world != null && !world.isClient()) {
+            world.updateListeners(pos, getCachedState(), getCachedState(), Block.REDRAW_ON_MAIN_THREAD);
         }
     }
 
@@ -65,5 +64,9 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
+    }
+
+    public InventoryStorage getStorage() {
+        return this.storage;
     }
 }

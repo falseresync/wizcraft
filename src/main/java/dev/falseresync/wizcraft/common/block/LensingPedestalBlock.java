@@ -3,7 +3,6 @@ package dev.falseresync.wizcraft.common.block;
 import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
-import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
 import dev.falseresync.wizcraft.lib.HasId;
 import dev.falseresync.wizcraft.lib.WizUtils;
 import net.minecraft.block.BlockRenderType;
@@ -11,8 +10,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -20,7 +17,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +54,7 @@ public class LensingPedestalBlock extends BlockWithEntity implements HasId {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof LensingPedestalBlockEntity pedestal) {
-            var exchanged = WizUtils.exchangeStackInSlotWithHand(player, hand, pedestal.storage, 0, 1, null);
+            var exchanged = WizUtils.exchangeStackInSlotWithHand(player, hand, pedestal.getStorage(), 0, 1, null);
             if (exchanged == 1) {
                 return ActionResult.SUCCESS;
             }

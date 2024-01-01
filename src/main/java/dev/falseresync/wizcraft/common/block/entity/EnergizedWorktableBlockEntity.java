@@ -41,21 +41,10 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
 
     public EnergizedWorktableBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.ENERGIZED_WORKTABLE, pos, state);
-        inventory.addListener(sender -> {
-            markDirty();
-            updateScheduled = true;
-        });
+        inventory.addListener(sender -> markDirty());
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, EnergizedWorktableBlockEntity worktable) {
-        if (worktable.updateScheduled) {
-            worktable.markDirty();
-            for (LensingPedestalBlockEntity pedestal : worktable.pedestals) {
-                pedestal.markDirty();
-            }
-            worktable.updateScheduled = false;
-        }
-
         if (world.isClient()) {
             return;
         }
@@ -86,7 +75,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     }
 
     public void craft(@Nullable PlayerEntity player) {
-        if (world == null) {
+        if (world == null || world.isClient()) {
             return;
         }
 

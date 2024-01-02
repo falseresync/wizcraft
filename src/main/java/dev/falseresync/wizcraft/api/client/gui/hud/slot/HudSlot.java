@@ -22,7 +22,7 @@ public abstract class HudSlot implements HasId {
     protected abstract Rect2i getRegion(Vec2i widgetSize);
 
     public boolean canOccupy(Vec2i widgetSize, WidgetTypePriority priority) {
-        return !isOccupied(widgetSize) || priority.getValue() >= priority.getValue();
+        return !isOccupied(widgetSize) || priority.getValue() >= this.priority.getValue();
     }
 
     public boolean isOccupied(Vec2i widgetSize) {

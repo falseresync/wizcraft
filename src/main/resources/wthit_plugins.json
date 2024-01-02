@@ -1,0 +1,6 @@
+{
+  "wizcraft:plugin": {
+    "initializer": "dev.falseresync.wizcraft.compat.wthit.WizcraftWthitPlugin",
+    "side": "client"
+  }
+}

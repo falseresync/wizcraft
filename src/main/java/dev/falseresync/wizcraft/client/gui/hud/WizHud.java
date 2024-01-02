@@ -19,47 +19,48 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class WizHud {
-    protected static final WidgetSlot UNDER_BOSS_BAR = new WidgetSlot() {
-        private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.horizontallyCentered(8);
-        private static final Function<Integer, CottonHud.Positioner> SHIFTED_POSITIONER =
-                (numberOfBossBars) -> CottonHud.Positioner.horizontallyCentered(4 + 20 * numberOfBossBars);
+    public static final class Slots {
+        public static final WidgetSlot UNDER_BOSS_BAR = new WidgetSlot() {
+            private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.horizontallyCentered(8);
+            private static final Function<Integer, CottonHud.Positioner> SHIFTED_POSITIONER =
+                    (numberOfBossBars) -> CottonHud.Positioner.horizontallyCentered(4 + 20 * numberOfBossBars);
 
-        @Override
-        public CottonHud.Positioner getPositioner() {
-            var bossBars = MinecraftClient.getInstance().inGameHud.getBossBarHud().bossBars;
-            return bossBars.isEmpty()
-                    ? DEFAULT_POSITIONER
-                    : SHIFTED_POSITIONER.apply(bossBars.size());
-        }
-    };
+            @Override
+            public CottonHud.Positioner getPositioner() {
+                var bossBars = MinecraftClient.getInstance().inGameHud.getBossBarHud().bossBars;
+                return bossBars.isEmpty()
+                        ? DEFAULT_POSITIONER
+                        : SHIFTED_POSITIONER.apply(bossBars.size());
+            }
+        };
+        public static final WidgetSlot TOP_LEFT = new WidgetSlot() {
+            private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.of(4, 4);
 
-    protected static final WidgetSlot TOP_LEFT = new WidgetSlot() {
-        private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.of(4, 4);
-
-        @Override
-        public CottonHud.Positioner getPositioner() {
-            return DEFAULT_POSITIONER;
-        }
-    };
+            @Override
+            public CottonHud.Positioner getPositioner() {
+                return DEFAULT_POSITIONER;
+            }
+        };
+    }
 
     public static final WidgetController<WFocusPicker, Deque<ItemStack>> FOCUS_PICKER;
     public static final WidgetController<WLabelWithSFX, Text> STATUS_MESSAGE;
     public static final WidgetController<WWandChargeBar, SkyWand> WAND_CHARGE_BAR;
 
     static {
-        FOCUS_PICKER = new WidgetController.Aware<>(UNDER_BOSS_BAR, WidgetTypePriority.HIGH, WFocusPicker::new);
-        STATUS_MESSAGE = new WidgetController.Aware<>(UNDER_BOSS_BAR, WidgetTypePriority.NORMAL, text -> {
+        FOCUS_PICKER = new WidgetController.Aware<>(Slots.UNDER_BOSS_BAR, WidgetTypePriority.HIGH, WFocusPicker::new);
+        STATUS_MESSAGE = new WidgetController.Aware<>(Slots.UNDER_BOSS_BAR, WidgetTypePriority.NORMAL, text -> {
             var widget = new WLabelWithSFX(text);
             widget.enableFade();
             widget.enableShadow();
             widget.setHorizontalAlignment(HorizontalAlignment.CENTER);
             return widget;
         });
-        WAND_CHARGE_BAR = new WidgetController.Aware<>(TOP_LEFT, WidgetTypePriority.NORMAL, WWandChargeBar::new);
+        WAND_CHARGE_BAR = new WidgetController.Aware<>(Slots.TOP_LEFT, WidgetTypePriority.NORMAL, WWandChargeBar::new);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            UNDER_BOSS_BAR.tick();
-            TOP_LEFT.tick();
+            Slots.UNDER_BOSS_BAR.tick();
+            Slots.TOP_LEFT.tick();
 
             updateWandChargeBar(client);
         });

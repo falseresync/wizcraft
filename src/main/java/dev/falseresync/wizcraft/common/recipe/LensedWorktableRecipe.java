@@ -42,6 +42,11 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
     }
 
     @Override
+    public boolean isIgnoredInRecipeBook() {
+        return true;
+    }
+
+    @Override
     public boolean matches(Inventory inventory, World world) {
         if (inventory.size() < this.allIngredients.size()) {
             return false;

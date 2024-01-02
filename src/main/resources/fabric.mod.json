@@ -29,9 +29,6 @@
 			"dev.falseresync.wizcraft.compat.emi.WizcraftEmiPlugin"
 		]
 	},
-	"mixins": [
-		"wizcraft.mixins.json"
-	],
 	"accessWidener" : "wizcraft.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.15.1",

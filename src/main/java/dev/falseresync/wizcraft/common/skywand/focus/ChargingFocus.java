@@ -1,15 +1,14 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
-import dev.falseresync.wizcraft.client.gui.hud.WidgetInstancePriority;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
-import dev.falseresync.wizcraft.lib.WizUtils;
+import dev.falseresync.wizcraft.common.WizUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;

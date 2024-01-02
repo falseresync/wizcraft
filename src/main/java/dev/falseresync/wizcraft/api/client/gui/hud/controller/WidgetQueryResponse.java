@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.client.gui.hud;
+package dev.falseresync.wizcraft.api.client.gui.hud.controller;
 
 import org.jetbrains.annotations.Nullable;
 

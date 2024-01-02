@@ -1,62 +1,53 @@
 package dev.falseresync.wizcraft.client.gui.hud;
 
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetQueryResponse;
+import dev.falseresync.wizcraft.api.client.gui.hud.slot.HudSlot;
+import dev.falseresync.wizcraft.client.gui.hud.slot.TopLeftHudSlot;
+import dev.falseresync.wizcraft.client.gui.hud.slot.UnderBossBarHudSlot;
+import dev.falseresync.wizcraft.api.client.gui.hud.slot.WidgetTypePriority;
 import dev.falseresync.wizcraft.client.gui.hud.widget.WFocusPicker;
 import dev.falseresync.wizcraft.client.gui.hud.widget.WWandChargeBar;
 import dev.falseresync.wizcraft.client.gui.hud.widget.WLabelWithSFX;
+import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Rect2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.Deque;
-import java.util.function.Function;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class WizHud {
     public static final class Slots {
-        public static final WidgetSlot UNDER_BOSS_BAR = new WidgetSlot() {
-            private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.horizontallyCentered(8);
-            private static final Function<Integer, CottonHud.Positioner> SHIFTED_POSITIONER =
-                    (numberOfBossBars) -> CottonHud.Positioner.horizontallyCentered(4 + 20 * numberOfBossBars);
-
-            @Override
-            public CottonHud.Positioner getPositioner() {
-                var bossBars = MinecraftClient.getInstance().inGameHud.getBossBarHud().bossBars;
-                return bossBars.isEmpty()
-                        ? DEFAULT_POSITIONER
-                        : SHIFTED_POSITIONER.apply(bossBars.size());
-            }
-        };
-        public static final WidgetSlot TOP_LEFT = new WidgetSlot() {
-            private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.of(4, 4);
-
-            @Override
-            public CottonHud.Positioner getPositioner() {
-                return DEFAULT_POSITIONER;
-            }
-        };
+        public static final HudSlot UNDER_BOSS_BAR = new UnderBossBarHudSlot();
+        public static final HudSlot TOP_LEFT = new TopLeftHudSlot();
     }
 
-    public static final WidgetController<WFocusPicker, Deque<ItemStack>> FOCUS_PICKER;
-    public static final WidgetController<WLabelWithSFX, Text> STATUS_MESSAGE;
-    public static final WidgetController<WWandChargeBar, SkyWand> WAND_CHARGE_BAR;
+    public static final HudController<WFocusPicker, Deque<ItemStack>> FOCUS_PICKER;
+    public static final HudController<WLabelWithSFX, Text> STATUS_MESSAGE;
+    public static final HudController<WWandChargeBar, SkyWand> WAND_CHARGE_BAR;
 
     static {
-        FOCUS_PICKER = new WidgetController.Aware<>(Slots.UNDER_BOSS_BAR, WidgetTypePriority.HIGH, WFocusPicker::new);
-        STATUS_MESSAGE = new WidgetController.Aware<>(Slots.UNDER_BOSS_BAR, WidgetTypePriority.NORMAL, text -> {
+        FOCUS_PICKER = new HudController.Aware<>(Slots.UNDER_BOSS_BAR, WidgetTypePriority.HIGH, WFocusPicker::new);
+        STATUS_MESSAGE = new HudController.Aware<>(Slots.UNDER_BOSS_BAR, WidgetTypePriority.NORMAL, text -> {
             var widget = new WLabelWithSFX(text);
             widget.enableFade();
             widget.enableShadow();
             widget.setHorizontalAlignment(HorizontalAlignment.CENTER);
             return widget;
         });
-        WAND_CHARGE_BAR = new WidgetController.Aware<>(Slots.TOP_LEFT, WidgetTypePriority.NORMAL, WWandChargeBar::new);
+        WAND_CHARGE_BAR = new HudController.Aware<>(Slots.TOP_LEFT, WidgetTypePriority.NORMAL, WWandChargeBar::new);
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
             Slots.UNDER_BOSS_BAR.tick();

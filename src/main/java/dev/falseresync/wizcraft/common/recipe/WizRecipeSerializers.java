@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.common.recipe;
 
-import dev.falseresync.wizcraft.lib.HasId;
+import dev.falseresync.wizcraft.api.HasId;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 

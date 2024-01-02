@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.common.WizRegistries;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
-import dev.falseresync.wizcraft.lib.HasId;
+import dev.falseresync.wizcraft.api.HasId;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;

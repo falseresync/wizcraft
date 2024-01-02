@@ -1,13 +1,12 @@
 package dev.falseresync.wizcraft.client.gui.hud.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWidget;
 import dev.falseresync.wizcraft.client.gui.DrawingExt;
-import dev.falseresync.wizcraft.client.gui.hud.WidgetController;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.FocusItem;
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import io.github.cottonmc.cotton.gui.widget.data.Color;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -20,7 +19,7 @@ import java.util.Deque;
 /**
  * @implNote The focuses deque is validated to have at least one stack, therefore using {@link Deque#getFirst()} is okay
  */
-public class WFocusPicker extends WWidget implements WControllerAware {
+public class WFocusPicker extends WWidget implements ControllerAwareWidget {
     protected static final int ITEM_OFFSET = 20;
     protected static final int ITEM_SIZE = 16;
     protected static final int HINT_OFFSET = 36;
@@ -32,7 +31,7 @@ public class WFocusPicker extends WWidget implements WControllerAware {
     protected static final Identifier HINT_RIGHT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_right.png");
     protected final Deque<ItemStack> focuses;
     protected final WLabelWithSFX label;
-    protected WidgetController<?, ?> controller = null;
+    protected HudController<?, ?> controller = null;
 
     public WFocusPicker(Deque<ItemStack> focuses) {
         if (focuses.isEmpty()) {
@@ -127,7 +126,7 @@ public class WFocusPicker extends WWidget implements WControllerAware {
     }
 
     @Override
-    public void setController(WidgetController<?, ?> controller) {
+    public void setController(HudController<?, ?> controller) {
         this.controller = controller;
         this.label.setController(controller);
     }

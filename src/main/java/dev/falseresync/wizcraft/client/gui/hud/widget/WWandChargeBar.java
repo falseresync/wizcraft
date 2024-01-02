@@ -1,12 +1,12 @@
 package dev.falseresync.wizcraft.client.gui.hud.widget;
 
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWidget;
 import dev.falseresync.wizcraft.client.gui.DrawingExt;
-import dev.falseresync.wizcraft.client.gui.hud.WidgetController;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import io.github.cottonmc.cotton.gui.widget.data.Color;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,7 +18,7 @@ import net.minecraft.util.math.MathHelper;
  * @author Algo copied almost wholesale from LibGui
  */
 @Environment(EnvType.CLIENT)
-public class WWandChargeBar extends WWidget implements WControllerAware {
+public class WWandChargeBar extends WWidget implements ControllerAwareWidget {
     protected static final int BAR_WIDTH = 64;
     protected static final int BAR_HEIGHT = 16;
     protected static final int OVERLAY_WIDTH = 32;
@@ -31,7 +31,7 @@ public class WWandChargeBar extends WWidget implements WControllerAware {
     protected final Texture overlayTex;
     protected final int max;
     protected int value;
-    protected WidgetController<?, ?> controller = null;
+    protected HudController<?, ?> controller = null;
 
     public WWandChargeBar(SkyWand wand) {
         this.barTex = new Texture(BAR);
@@ -68,7 +68,7 @@ public class WWandChargeBar extends WWidget implements WControllerAware {
     }
 
     @Override
-    public void setController(WidgetController<?, ?> controller) {
+    public void setController(HudController<?, ?> controller) {
         this.controller = controller;
     }
 }

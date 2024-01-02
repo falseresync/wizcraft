@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.lib;
+package dev.falseresync.wizcraft.common;
 
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;

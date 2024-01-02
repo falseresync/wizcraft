@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.client;
 
-import dev.falseresync.wizcraft.client.gui.hud.WidgetInstancePriority;
-import dev.falseresync.wizcraft.client.gui.hud.WidgetQueryResponse;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetQueryResponse;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;

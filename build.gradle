@@ -38,24 +38,36 @@ fabricApi {
 
 dependencies {
 	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${minecraft_version}"
-	mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+	minecraft "com.mojang:minecraft:$minecraft_version"
+	mappings "net.fabricmc:yarn:$yarn_mappings:v2"
+	modImplementation "net.fabricmc:fabric-loader:$loader_version"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:$fabric_version"
 
-	modImplementation include("io.github.cottonmc:LibGui:${libgui_version}")
+	// ------------------------
+	// --- MOD DEPENDENCIES ---
+	// ------------------------
+	modImplementation include("io.github.cottonmc:LibGui:$libgui_version")
+
+	// --------------------------
+	// --- OTHER DEPENDENCIES ---
+	// --------------------------
+	implementation include("com.github.davidmoten:rtree2:$rtree2_version")
 
 	compileOnly 'org.jetbrains:annotations:24.1.0'
 
-	modCompileOnly "mcp.mobius.waila:wthit-api:fabric-${wthit_version}"
-	modLocalRuntime "mcp.mobius.waila:wthit:fabric-${wthit_version}"
-	modLocalRuntime "lol.bai:badpackets:fabric-${badpackets_version}"
+	// -----------------------------------
+	// --- COMPATIBILITY & CONVENIENCE ---
+	// -----------------------------------
+	// Comment out / uncomment for testing and convenience
+	modCompileOnly "mcp.mobius.waila:wthit-api:fabric-$wthit_version"
+	modLocalRuntime "mcp.mobius.waila:wthit:fabric-$wthit_version"
+	modLocalRuntime "lol.bai:badpackets:fabric-$badpackets_version"
 
-	modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
-	modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
+	modCompileOnly "dev.emi:emi-fabric:$emi_version:api"
+	modLocalRuntime "dev.emi:emi-fabric:$emi_version"
 
-	modCompileOnly "com.terraformersmc:modmenu:${modmenu_version}"
-	modLocalRuntime "com.terraformersmc:modmenu:${modmenu_version}"
+	modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
+	modLocalRuntime "com.terraformersmc:modmenu:$modmenu_version"
 }
 
 processResources {

@@ -1,6 +1,7 @@
 package dev.falseresync.wizcraft.client.gui.hud.widget;
 
-import dev.falseresync.wizcraft.client.gui.hud.WidgetController;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWidget;
+import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
@@ -11,10 +12,10 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
-public class WLabelWithSFX extends WLabel implements WControllerAware {
+public class WLabelWithSFX extends WLabel implements ControllerAwareWidget {
     protected boolean hasShadow = false;
     protected boolean hasFade = false;
-    protected WidgetController<?, ?> controller = null;
+    protected HudController<?, ?> controller = null;
 
     public WLabelWithSFX(Text text, int color) {
         super(text, color);
@@ -62,7 +63,7 @@ public class WLabelWithSFX extends WLabel implements WControllerAware {
     }
 
     @Override
-    public void setController(WidgetController<?, ?> controller) {
+    public void setController(HudController<?, ?> controller) {
         if (this.hasFade) {
             this.controller = controller;
         }

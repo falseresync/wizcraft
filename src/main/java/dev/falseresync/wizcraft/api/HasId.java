@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.lib;
+package dev.falseresync.wizcraft.api;
 
 import net.minecraft.util.Identifier;
 

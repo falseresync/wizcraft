@@ -5,8 +5,8 @@ import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.entity.EnergizedWorktableBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.lib.HasId;
-import dev.falseresync.wizcraft.lib.WizUtils;
+import dev.falseresync.wizcraft.api.HasId;
+import dev.falseresync.wizcraft.common.WizUtils;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -19,10 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {

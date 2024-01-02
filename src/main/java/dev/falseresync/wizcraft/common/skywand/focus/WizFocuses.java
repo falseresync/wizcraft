@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
-import dev.falseresync.wizcraft.lib.HasId;
+import dev.falseresync.wizcraft.api.HasId;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;

@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.network.c2s;
 
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.api.HasId;
+import dev.falseresync.wizcraft.api.common.HasId;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;

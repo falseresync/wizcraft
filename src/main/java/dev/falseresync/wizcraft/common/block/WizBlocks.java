@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.common.block;
 
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.api.HasId;
+import dev.falseresync.wizcraft.api.common.HasId;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;

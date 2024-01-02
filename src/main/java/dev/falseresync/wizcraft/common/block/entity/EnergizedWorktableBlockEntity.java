@@ -1,6 +1,5 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
-import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
 import dev.falseresync.wizcraft.network.ClientSideReport;
 import dev.falseresync.wizcraft.network.s2c.TriggerReportS2CPacket;
@@ -11,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -19,10 +19,8 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -70,10 +68,8 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
         }
     }
 
-    public void craft(@Nullable PlayerEntity player) {
-        if (world == null) {
-            return;
-        }
+    public void tryCraft(@Nullable PlayerEntity player) {
+        if (world == null) return;
 
         searchPedestals(world, pos, this);
         if (pedestals.size() < 4) {
@@ -83,22 +79,24 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
             return;
         }
 
+        var combinedInventory = createCombinedInventory();
+        world.getRecipeManager()
+                .getFirstMatch(WizRecipes.LENSED_WORKTABLE, combinedInventory, world)
+                .map(RecipeEntry::value)
+                .map(recipe -> recipe.craft(combinedInventory, world.getRegistryManager()))
+                .ifPresent(result -> finishCrafting(player, result));
+    }
+
+    protected Inventory createCombinedInventory() {
         var combinedInventory = new SimpleInventory(pedestals.size() + 1);
         combinedInventory.setStack(0, inventory.getStack(0));
         for (int i = 0; i < pedestals.size(); i++) {
             combinedInventory.setStack(i + 1, pedestals.get(i).getStorage().getSlot(0).getResource().toStack());
         }
+        return combinedInventory;
+    }
 
-        var result = world.getRecipeManager()
-                .getFirstMatch(WizRecipes.LENSED_WORKTABLE, combinedInventory, world)
-                .map(RecipeEntry::value)
-                .map(recipe -> recipe.craft(combinedInventory, world.getRegistryManager()))
-                .orElse(ItemStack.EMPTY);
-
-        if (result.isEmpty()) {
-            return;
-        }
-
+    protected void finishCrafting(@Nullable PlayerEntity player, ItemStack result) {
         pedestals.forEach(LensingPedestalBlockEntity::onCrafted);
         inventory.setStack(0, result);
         if (player != null) {

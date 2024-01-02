@@ -65,6 +65,7 @@ public class LibHudCompat {
             });
         }
     }
+
     /**
      * Listen to changes in a specific region.
      */

@@ -3,7 +3,7 @@ package dev.falseresync.wizcraft.common.item;
 import dev.falseresync.wizcraft.client.WizKeybindings;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
-import dev.falseresync.wizcraft.api.HasId;
+import dev.falseresync.wizcraft.api.common.HasId;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;

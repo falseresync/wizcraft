@@ -4,7 +4,7 @@ import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.WizBlocks;
 import dev.falseresync.wizcraft.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
-import dev.falseresync.wizcraft.api.HasId;
+import dev.falseresync.wizcraft.api.common.HasId;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.Block;

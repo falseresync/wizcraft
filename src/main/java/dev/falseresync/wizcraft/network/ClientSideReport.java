@@ -1,5 +1,5 @@
 package dev.falseresync.wizcraft.network;
 
 public enum ClientSideReport {
-    LENSED_WORKTABLE__NOT_ENOUGH_PEDESTALS
+    INVALID_PEDESTAL_FORMATION
 }

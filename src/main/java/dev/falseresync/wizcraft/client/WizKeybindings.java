@@ -14,8 +14,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.stream.Streams;
 import org.lwjgl.glfw.GLFW;
@@ -46,17 +48,27 @@ public final class WizKeybindings {
                     return;
                 }
 
-                var focuses = Streams.of(client.player.getInventory().main)
+                var inventory = client.player.getInventory();
+                var focuses = inventory.main.stream()
                         .filter(stack -> stack.getItem() instanceof FocusItem)
                         .collect(Collectors.toCollection(ArrayDeque::new));
 
                 var wand = SkyWand.fromStack(mainHandStack);
                 var activeFocus = wand.getActiveFocus();
-                if (activeFocus.getType() == WizFocuses.CHARGING && focuses.isEmpty()) {
-                    WizHud.STATUS_MESSAGE.override(
-                            Text.translatable("hud.wizcraft.sky_wand.no_focuses"),
-                            WidgetInstancePriority.HIGH);
-                    return;
+                if (focuses.isEmpty()) {
+                    if (activeFocus.getType() == WizFocuses.CHARGING) {
+                        WizHud.Slots.UNDER_BOSS_BAR.clear();
+                        WizHud.STATUS_MESSAGE.override(
+                                Text.translatable("hud.wizcraft.sky_wand.no_focuses"),
+                                WidgetInstancePriority.HIGH);
+                        return;
+                    } else if (inventory.getEmptySlot() == -1) {
+                        WizHud.Slots.UNDER_BOSS_BAR.clear();
+                        WizHud.STATUS_MESSAGE.override(
+                                Text.translatable("hud.wizcraft.sky_wand.full_inventory"),
+                                WidgetInstancePriority.HIGH);
+                        return;
+                    }
                 }
 
                 if (activeFocus.getType() != WizFocuses.CHARGING) {

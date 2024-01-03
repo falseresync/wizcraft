@@ -74,7 +74,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
         searchPedestals(world, pos, this);
         if (pedestals.size() < 4) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                ServerPlayNetworking.send(serverPlayer, new TriggerReportS2CPacket(ClientSideReport.LENSED_WORKTABLE__NOT_ENOUGH_PEDESTALS));
+                ServerPlayNetworking.send(serverPlayer, new TriggerReportS2CPacket(ClientSideReport.INVALID_PEDESTAL_FORMATION));
             }
             return;
         }

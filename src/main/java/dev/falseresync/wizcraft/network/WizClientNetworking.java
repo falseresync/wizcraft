@@ -16,12 +16,12 @@ public class WizClientNetworking {
 
     public static void triggerReport(TriggerReportS2CPacket packet, ClientPlayerEntity player, PacketSender responseSender) {
         switch (packet.report()) {
-            case LENSED_WORKTABLE__NOT_ENOUGH_PEDESTALS -> reportNotEnoughPedestals(player);
+            case INVALID_PEDESTAL_FORMATION -> reportInvalidPedestalFormation(player);
         }
     }
 
-    public static void reportNotEnoughPedestals(PlayerEntity player) {
+    public static void reportInvalidPedestalFormation(PlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.not_enough_pedestals"));
+        WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.invalid_pedestal_formation"));
     }
 }

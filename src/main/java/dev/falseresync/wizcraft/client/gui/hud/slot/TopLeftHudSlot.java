@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class TopLeftHudSlot extends HudSlot {
     private static final Identifier ID = new Identifier(Wizcraft.MODID, "top_left");
-    private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.of(4, 4);
+    private static final CottonHud.Positioner DEFAULT_POSITIONER = CottonHud.Positioner.of(2, 2);
 
     @Override
     public Identifier getId() {
@@ -25,6 +25,6 @@ public class TopLeftHudSlot extends HudSlot {
 
     @Override
     protected Rect2i getRegion(Vec2i widgetSize) {
-        return new Rect2i(4, 4, widgetSize.x(), widgetSize.y());
+        return new Rect2i(2, 2, widgetSize.x(), widgetSize.y());
     }
 }

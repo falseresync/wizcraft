@@ -23,6 +23,12 @@ repositories {
 		}
 	}
 	maven {
+		url "https://jitpack.io"
+		content {
+			includeGroup "com.github.falseresync"
+		}
+	}
+	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
 	}
@@ -47,12 +53,11 @@ dependencies {
 	// --- MOD DEPENDENCIES ---
 	// ------------------------
 	modImplementation include("io.github.cottonmc:LibGui:$libgui_version")
+	modImplementation include("com.github.falseresync:libhudcompat:$libhudcompat_version")
 
 	// --------------------------
 	// --- OTHER DEPENDENCIES ---
 	// --------------------------
-	implementation include("com.github.davidmoten:rtree2:$rtree2_version")
-
 	compileOnly 'org.jetbrains:annotations:24.1.0'
 
 	// -----------------------------------

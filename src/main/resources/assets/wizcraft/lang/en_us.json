@@ -18,7 +18,8 @@
   "hud.wizcraft.sky_wand.no_focuses": "No other focus to pick",
   "hud.wizcraft.sky_wand.insufficient_charge": "Not enough charge",
   "hud.wizcraft.sky_wand.no_anchor": "Setup an anchor first",
-  "hud.wizcraft.sky_wand.not_enough_pedestals": "You need 4 pedestals to craft",
+  "hud.wizcraft.sky_wand.invalid_pedestal_formation": "Place all pedestals at proper positions",
+  "hud.wizcraft.sky_wand.full_inventory": "Cannot pick a focus with a full inventory",
   "keyCategory.wizcraft": "Wizcraft",
   "key.wizcraft.tool_control": "Tool control",
   "emi.category.wizcraft.lensed_worktable": "Lensed worktable"

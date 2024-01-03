@@ -29,33 +29,33 @@ public class WLabelWithSFX extends WLabel implements ControllerAwareWidget {
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
         var fade = 0;
-        if (this.hasFade) {
-            if (this.controller == null || this.controller.getRemainingDisplayTicks() == 0) {
+        if (hasFade) {
+            if (controller == null || controller.getRemainingDisplayTicks() == 0) {
                 return;
             }
-            fade = Math.min(255, (int) (this.controller.getRemainingDisplayTicks() * 256F / 10F)) << 24;
+            fade = Math.min(255, (int) (controller.getRemainingDisplayTicks() * 256F / 10F)) << 24;
         }
 
-        int yOffset = TextAlignment.getTextOffsetY(this.verticalAlignment, this.height, 1);
+        int yOffset = TextAlignment.getTextOffsetY(verticalAlignment, height, 1);
 
-        if (this.hasShadow) {
+        if (hasShadow) {
             ScreenDrawing.drawStringWithShadow(
                     context,
-                    this.text.asOrderedText(),
-                    this.horizontalAlignment,
+                    text.asOrderedText(),
+                    horizontalAlignment,
                     x,
                     y + yOffset,
-                    this.getWidth(),
-                    (shouldRenderInDarkMode() ? this.darkmodeColor : this.color) + fade);
+                    getWidth(),
+                    (shouldRenderInDarkMode() ? darkmodeColor : color) + fade);
         } else {
             ScreenDrawing.drawString(
                     context,
-                    this.text.asOrderedText(),
-                    this.horizontalAlignment,
+                    text.asOrderedText(),
+                    horizontalAlignment,
                     x,
                     y + yOffset,
-                    this.getWidth(),
-                    (shouldRenderInDarkMode() ? this.darkmodeColor : this.color) + fade);
+                    getWidth(),
+                    (shouldRenderInDarkMode() ? darkmodeColor : color) + fade);
         }
 
         Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
@@ -64,16 +64,16 @@ public class WLabelWithSFX extends WLabel implements ControllerAwareWidget {
 
     @Override
     public void setController(HudController<?, ?> controller) {
-        if (this.hasFade) {
+        if (hasFade) {
             this.controller = controller;
         }
     }
 
     public void enableShadow() {
-        this.hasShadow = true;
+        hasShadow = true;
     }
 
     public void enableFade() {
-        this.hasFade = true;
+        hasFade = true;
     }
 }

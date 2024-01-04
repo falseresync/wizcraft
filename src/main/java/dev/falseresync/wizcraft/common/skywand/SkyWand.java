@@ -3,40 +3,35 @@ package dev.falseresync.wizcraft.common.skywand;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class SkyWand {
     public static final Codec<SkyWand> CODEC;
-    protected int maxCharge;
-    protected int charge;
-    protected Focus activeFocus;
-
-    protected static final String KEY_SKY_WAND = "SkyWand";
-    protected static final String KEY_MAX_CHARGE = "MaxCharge";
-    protected static final String KEY_CHARGE = "Charge";
-    protected static final String KEY_ACTIVE_FOCUS = "ActiveFocus";
+    protected static final String KEY_SKY_WAND = "wizcraft:sky_wand";
+    protected static final String KEY_MAX_CHARGE = "max_charge";
+    protected static final String KEY_CHARGE = "charge";
+    protected static final String KEY_FOCUS = "focus";
 
     static {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.INT.optionalFieldOf(KEY_MAX_CHARGE, 100).forGetter(SkyWand::getMaxCharge),
                 Codec.INT.optionalFieldOf(KEY_CHARGE, 0).forGetter(SkyWand::getCharge),
-                Focus.CODEC.optionalFieldOf(KEY_ACTIVE_FOCUS, WizFocuses.CHARGING).forGetter(SkyWand::getActiveFocus)
+                Focus.CODEC.optionalFieldOf(KEY_FOCUS, WizFocuses.CHARGING).forGetter(SkyWand::getFocus)
         ).apply(instance, SkyWand::new));
     }
 
-    protected SkyWand(int maxCharge, int charge, Focus activeFocus) {
+    protected int maxCharge;
+    protected int charge;
+    protected Focus focus;
+
+    protected SkyWand(int maxCharge, int charge, Focus focus) {
         this.maxCharge = maxCharge;
         this.charge = charge;
-        this.activeFocus = activeFocus;
-
+        this.focus = focus;
     }
 
     /**
@@ -50,6 +45,7 @@ public class SkyWand {
 
     /**
      * Save wand data to the passed stack's NBT. Modifies the passed stack and returns a copy of it
+     *
      * @return A copy of the modified passed stack with wand data attached
      */
     public ItemStack saveToStack(ItemStack stack) {
@@ -60,34 +56,34 @@ public class SkyWand {
     }
 
     public int getMaxCharge() {
-        return this.maxCharge;
+        return maxCharge;
     }
 
     public boolean isFullyCharged() {
-        return this.charge >= getMaxCharge();
+        return charge >= getMaxCharge();
     }
 
     public int getCharge() {
-        return this.charge;
+        return charge;
     }
 
     protected void setCharge(int charge) {
         this.charge = Math.min(charge, getMaxCharge());
     }
 
-    public void incrementCharge() {
-        setCharge(this.charge + 60);
+    public void addCharge(int amount) {
+        setCharge(charge + amount);
     }
 
     public void expendCharge(int amount) {
-        setCharge(this.charge - amount);
+        setCharge(charge - amount);
     }
 
-    public Focus getActiveFocus() {
-        return this.activeFocus;
+    public Focus getFocus() {
+        return focus;
     }
 
     public void switchFocus(Focus focus) {
-        this.activeFocus = focus;
+        this.focus = focus;
     }
 }

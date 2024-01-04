@@ -75,7 +75,7 @@ public class ChargingFocus extends Focus {
 
     @Override
     public void finish(World world, SkyWand wand, LivingEntity user) {
-        wand.incrementCharge();
+        wand.addCharge(40);
         reportSuccessfullyCharged(world, user);
     }
 

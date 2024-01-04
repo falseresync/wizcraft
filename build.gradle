@@ -12,10 +12,6 @@ base {
 
 repositories {
 	maven {
-		name = "CottonMC"
-		url = "https://server.bbkr.space/artifactory/libs-release"
-	}
-	maven {
 		url "https://maven2.bai.lol"
 		content {
 			includeGroup "lol.bai"
@@ -27,6 +23,14 @@ repositories {
 		content {
 			includeGroup "com.github.falseresync"
 		}
+	}
+	maven {
+		name = "CottonMC"
+		url = "https://server.bbkr.space/artifactory/libs-release"
+	}
+	maven {
+		name = "Ladysnake Mods"
+		url = 'https://maven.ladysnake.org/releases'
 	}
 	maven {
 		name = "TerraformersMC"
@@ -54,6 +58,8 @@ dependencies {
 	// ------------------------
 	modImplementation include("io.github.cottonmc:LibGui:$libgui_version")
 	modImplementation include("com.github.falseresync:libhudcompat:$libhudcompat_version")
+	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:$cca_version")
+	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-level:$cca_version")
 
 	// --------------------------
 	// --- OTHER DEPENDENCIES ---

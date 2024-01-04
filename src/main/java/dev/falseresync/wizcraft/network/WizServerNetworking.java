@@ -31,7 +31,7 @@ public class WizServerNetworking {
         // Hopefully this *should* be guaranteed to be a FocusItem
         // Otherwise liquid shit's hitting the fan
         var pickedFocus = ((FocusItem) packet.pickedFocus().getItem()).getFocus(packet.pickedFocus().toStack());
-        var activeFocus = wand.getActiveFocus();
+        var activeFocus = wand.getFocus();
 
         var tx = Transaction.openOuter();
         tx.addOuterCloseCallback(result -> {

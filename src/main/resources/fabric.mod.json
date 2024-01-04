@@ -16,8 +16,14 @@
 	"icon": "assets/wizcraft/icon.png",
 	"environment": "*",
 	"entrypoints": {
+		"cardinal-components": [
+			"dev.falseresync.wizcraft.datafixer.WizcraftSchemas"
+		],
 		"main": [
 			"dev.falseresync.wizcraft.common.Wizcraft"
+		],
+		"server": [
+			"dev.falseresync.wizcraft.datafixer.WizcraftServerDataFix"
 		],
 		"client": [
 			"dev.falseresync.wizcraft.client.WizcraftClient"
@@ -30,6 +36,9 @@
 		]
 	},
 	"accessWidener" : "wizcraft.accesswidener",
+	"mixins": [
+		"wizcraft.datafixer.mixins.json"
+	],
 	"depends": {
 		"fabricloader": ">=0.15.1",
 		"minecraft": "~1.20.4",
@@ -37,5 +46,10 @@
 		"fabric-api": "*",
 		"libgui": "*",
 		"libhudcompat": "*"
+	},
+	"custom": {
+		"cardinal-components": [
+			"wizcraft:schema_version"
+		]
 	}
 }

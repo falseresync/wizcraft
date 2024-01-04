@@ -33,7 +33,7 @@ public class SkyWandItem extends Item implements HasId {
         Wizcraft.LOGGER.trace(user.getName() + " started using a wand");
         var stack = user.getStackInHand(hand);
         var wand = SkyWand.fromStack(stack);
-        var result = wand.getActiveFocus().use(world, wand, user);
+        var result = wand.getFocus().use(world, wand, user);
         return new TypedActionResult<>(result, wand.saveToStack(stack));
     }
 
@@ -46,7 +46,7 @@ public class SkyWandItem extends Item implements HasId {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         super.usageTick(world, user, stack, remainingUseTicks);
         var wand = SkyWand.fromStack(stack);
-        wand.getActiveFocus().tick(world, wand, user, remainingUseTicks);
+        wand.getFocus().tick(world, wand, user, remainingUseTicks);
         wand.saveToStack(stack);
     }
 
@@ -54,7 +54,7 @@ public class SkyWandItem extends Item implements HasId {
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         Wizcraft.LOGGER.trace(user.getName() + " interrupted a wand usage");
         var wand = SkyWand.fromStack(stack);
-        wand.getActiveFocus().interrupt(world, wand, user, remainingUseTicks);
+        wand.getFocus().interrupt(world, wand, user, remainingUseTicks);
         wand.saveToStack(stack);
     }
 
@@ -62,7 +62,7 @@ public class SkyWandItem extends Item implements HasId {
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " finished using a wand");
         var wand = SkyWand.fromStack(stack);
-        wand.getActiveFocus().finish(world, wand, user);
+        wand.getFocus().finish(world, wand, user);
         return wand.saveToStack(stack);
     }
 
@@ -75,7 +75,7 @@ public class SkyWandItem extends Item implements HasId {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
         var wand = SkyWand.fromStack(stack);
-        var activeFocus = wand.getActiveFocus();
+        var activeFocus = wand.getFocus();
         tooltip.add(Text.translatable("tooltip.wizcraft.sky_wand.active_focus", activeFocus.getName().getString())
                 .styled(style -> style.withColor(Formatting.GRAY)));
         activeFocus.appendTooltip(stack, world, tooltip, context);

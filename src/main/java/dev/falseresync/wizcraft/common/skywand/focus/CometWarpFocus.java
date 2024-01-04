@@ -91,7 +91,7 @@ public class CometWarpFocus extends Focus {
         var isFree = user instanceof PlayerEntity player && player.isCreative();
 
         if (user.isSneaking()) {
-            var placementCost = isFree ? 0 : 10;
+            var placementCost = isFree ? 0 : 5;
             if (charge < placementCost) {
                 CommonReports.insufficientCharge(world, user);
                 return ActionResult.PASS;
@@ -102,7 +102,7 @@ public class CometWarpFocus extends Focus {
             this.anchor = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
             return ActionResult.SUCCESS;
         } else {
-            var teleportCost = isFree ? 0 : 30;
+            var teleportCost = isFree ? 0 : 10;
             if (charge < teleportCost) {
                 CommonReports.insufficientCharge(world, user);
                 return ActionResult.PASS;

@@ -29,6 +29,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class CometWarpFocus extends Focus {
+    public static final int DEFAULT_PLACEMENT_COST = 5;
+    public static final int DEFAULT_WARPING_COST = 15;
+    public static final int DEFAULT_INTERDIMENSIONAL_COST = 30;
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "comet_warp");
     public static final Codec<CometWarpFocus> CODEC;
 
@@ -87,46 +90,49 @@ public class CometWarpFocus extends Focus {
     public ActionResult use(World world, SkyWand wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a comet warp focus");
 
-        var charge = wand.getCharge();
-        var isFree = user instanceof PlayerEntity player && player.isCreative();
 
-        if (user.isSneaking()) {
-            var placementCost = isFree ? 0 : 5;
-            if (charge < placementCost) {
-                CommonReports.insufficientCharge(world, user);
-                return ActionResult.PASS;
+        if (user instanceof PlayerEntity player) {
+            if (user.isSneaking()) {
+                if (wand.cannotExpendCharge(DEFAULT_PLACEMENT_COST, player)) {
+                    CommonReports.insufficientCharge(world, user);
+                    return ActionResult.FAIL;
+                }
+
+                reportPlaced(world, user);
+                wand.expendCharge(DEFAULT_PLACEMENT_COST);
+                this.anchor = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
+                return ActionResult.SUCCESS;
+            } else {
+                if (this.anchor == null) {
+                    reportNoAnchor(world, user);
+                    return ActionResult.FAIL;
+                }
+
+                if (wand.cannotExpendCharge(DEFAULT_WARPING_COST, player)) {
+                    CommonReports.insufficientCharge(world, user);
+                    return ActionResult.FAIL;
+                }
+
+                reportTeleported(world, user);
+                wand.expendCharge(DEFAULT_WARPING_COST);
+                if (world instanceof ServerWorld serverWorld) {
+                    var destination = serverWorld.getServer().getWorld(this.anchor.getDimension());
+                    if (destination == null) {
+                        destination = serverWorld;
+                    }
+                    FabricDimensions.teleport(user, destination, new TeleportTarget(
+                            this.anchor.getPos().toCenterPos(),
+                            Vec3d.ZERO,
+                            user.getYaw(),
+                            user.getPitch()));
+                    this.anchor = null;
+                }
+
+                return ActionResult.SUCCESS;
             }
-
-            reportPlaced(world, user);
-            wand.expendCharge(placementCost);
-            this.anchor = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
-            return ActionResult.SUCCESS;
-        } else {
-            var teleportCost = isFree ? 0 : 10;
-            if (charge < teleportCost) {
-                CommonReports.insufficientCharge(world, user);
-                return ActionResult.PASS;
-            }
-
-            if (this.anchor == null) {
-                reportNoAnchor(world, user);
-                return ActionResult.FAIL;
-            }
-
-            reportTeleported(world, user);
-            wand.expendCharge(teleportCost);
-            if (world instanceof ServerWorld serverWorld) {
-                var destination = serverWorld.getServer().getWorld(this.anchor.getDimension());
-                FabricDimensions.teleport(user, destination, new TeleportTarget(
-                        this.anchor.getPos().toCenterPos(),
-                        Vec3d.ZERO,
-                        user.getYaw(),
-                        user.getPitch()));
-                this.anchor = null;
-            }
-
-            return ActionResult.SUCCESS;
         }
+
+        return ActionResult.PASS;
     }
 
     public @Nullable GlobalPos getAnchor() {

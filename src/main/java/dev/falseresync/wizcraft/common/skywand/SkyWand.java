@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
@@ -77,6 +78,11 @@ public class SkyWand {
 
     public void expendCharge(int amount) {
         setCharge(charge - amount);
+    }
+
+    public boolean cannotExpendCharge(int amount, PlayerEntity user) {
+        var cost = user.isCreative() ? 0 : amount;
+        return charge < cost;
     }
 
     public Focus getFocus() {

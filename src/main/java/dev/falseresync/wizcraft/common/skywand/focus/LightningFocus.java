@@ -21,6 +21,7 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
 public class LightningFocus extends Focus {
+    public static final int DEFAULT_COST = 10;
     public static final Codec<LightningFocus> CODEC = Codec.unit(() -> WizFocuses.LIGHTNING);
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "lightning");
 
@@ -48,28 +49,31 @@ public class LightningFocus extends Focus {
     public ActionResult use(World world, SkyWand wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a lightning focus");
 
-        var charge = wand.getCharge();
-        var cost = user instanceof PlayerEntity player && player.isCreative() ? 0 : 25;
-        if (charge < cost) {
-            CommonReports.insufficientCharge(world, user);
-            return ActionResult.PASS;
+        if (user instanceof PlayerEntity player) {
+            if (wand.cannotExpendCharge(DEFAULT_COST, player)) {
+                CommonReports.insufficientCharge(world, user);
+                return ActionResult.FAIL;
+            }
+
+            wand.expendCharge(DEFAULT_COST);
+            if (world instanceof ServerWorld serverWorld) {
+                var lightning = EntityType.LIGHTNING_BOLT.create(world);
+                var maxDistance = MathHelper.clamp(WizUtils.findViewDistance(world) * 16 / 4F, 32, 128);
+                var raycastResult = user.raycast(maxDistance, 0, true);
+                var pos = raycastResult.getType() == HitResult.Type.MISS
+                        ? findGroundPos(serverWorld, raycastResult.getPos())
+                        : raycastResult.getPos();
+                // There won't be an NPE, because lightnings are not optional features. Hopefully.
+                //noinspection DataFlowIssue
+                lightning.refreshPositionAfterTeleport(pos);
+                lightning.setChanneler(user instanceof ServerPlayerEntity serverPlayer ? serverPlayer : null);
+                world.spawnEntity(lightning);
+            }
+
+            return ActionResult.SUCCESS;
         }
 
-        wand.expendCharge(cost);
-        if (world instanceof ServerWorld serverWorld) {
-            var lightning = EntityType.LIGHTNING_BOLT.create(world);
-            var maxDistance = MathHelper.clamp(WizUtils.findViewDistance(world) * 16 / 4F, 32, 128);
-            var raycastResult = user.raycast(maxDistance, 0, true);
-            var pos = raycastResult.getType() == HitResult.Type.MISS
-                    ? findGroundPos(serverWorld, raycastResult.getPos())
-                    : raycastResult.getPos();
-            // There won't be an NPE, because lightnings are not optional features. Hopefully.
-            //noinspection DataFlowIssue
-            lightning.refreshPositionAfterTeleport(pos);
-            lightning.setChanneler(user instanceof ServerPlayerEntity player ? player : null);
-            world.spawnEntity(lightning);
-        }
-        return ActionResult.SUCCESS;
+        return ActionResult.PASS;
     }
 
     protected Vec3d findGroundPos(ServerWorld world, Vec3d posInAir) {

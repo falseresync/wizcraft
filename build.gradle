@@ -58,8 +58,6 @@ dependencies {
 	// ------------------------
 	modImplementation include("io.github.cottonmc:LibGui:$libgui_version")
 	modImplementation include("com.github.falseresync:libhudcompat:$libhudcompat_version")
-	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:$cca_version")
-	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-level:$cca_version")
 
 	// --------------------------
 	// --- OTHER DEPENDENCIES ---

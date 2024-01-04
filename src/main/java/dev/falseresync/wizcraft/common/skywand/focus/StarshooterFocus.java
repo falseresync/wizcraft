@@ -9,13 +9,12 @@ import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 public class StarshooterFocus extends Focus {
+    public static final int DEFAULT_COST = 2;
     public static final Codec<StarshooterFocus> CODEC = Codec.unit(() -> WizFocuses.STARSHOOTER);
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "starshooter");
 
@@ -43,16 +42,17 @@ public class StarshooterFocus extends Focus {
     public ActionResult use(World world, SkyWand wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a starshooter focus");
 
-        var charge = wand.getCharge();
-        var cost = user instanceof PlayerEntity player && player.isCreative() ? 0 : 10;
-        if (charge < cost) {
-            CommonReports.insufficientCharge(world, user);
-            return ActionResult.PASS;
+        if (user instanceof PlayerEntity player) {
+            if (wand.cannotExpendCharge(DEFAULT_COST, player)) {
+                CommonReports.insufficientCharge(world, user);
+                return ActionResult.FAIL;
+            }
+
+            wand.expendCharge(DEFAULT_COST);
+            world.spawnEntity(new StarProjectileEntity(user, world));
+            return ActionResult.SUCCESS;
         }
 
-        wand.expendCharge(cost);
-        var projectile = new StarProjectileEntity(user, world);
-        world.spawnEntity(projectile);
-        return ActionResult.SUCCESS;
+        return ActionResult.PASS;
     }
 }

@@ -62,7 +62,7 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
         if (!getWorld().isClient) {
             Entity other = entityHitResult.getEntity();
             Entity owner = getOwner();
-            other.damage(getDamageSources().indirectMagic(this, owner), 2.0F);
+            other.damage(getDamageSources().indirectMagic(this, owner), 3.0F);
         }
     }
 

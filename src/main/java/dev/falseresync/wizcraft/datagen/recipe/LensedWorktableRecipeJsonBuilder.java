@@ -20,18 +20,15 @@ public class LensedWorktableRecipeJsonBuilder {
     }
 
     public LensedWorktableRecipeJsonBuilder pedestalInput(Ingredient pedestalInput) {
-        this.pedestalInputs.add(pedestalInput);
+        pedestalInputs.add(pedestalInput);
         return this;
     }
 
     public void offerTo(RecipeExporter exporter, Identifier id) {
-        if (this.pedestalInputs.isEmpty()) {
+        if (pedestalInputs.isEmpty()) {
             throw new IllegalStateException("A Lensed worktable recipe should contain at least one pedestal input");
         }
-        var recipe = new LensedWorktableRecipe(
-                new ItemStack(this.result),
-                this.worktableInput,
-                this.pedestalInputs);
+        var recipe = new LensedWorktableRecipe(new ItemStack(result), worktableInput, pedestalInputs);
         exporter.accept(id, recipe, null);
     }
 }

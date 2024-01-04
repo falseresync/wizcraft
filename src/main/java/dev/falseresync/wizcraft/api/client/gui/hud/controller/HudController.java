@@ -45,6 +45,12 @@ public class HudController<T extends WWidget, WidgetCreationArgument> {
         instance = null;
     }
 
+    public void reposition() {
+        if (instance != null) {
+            CottonHud.setPositioner(instance, slot.getPositioner());
+        }
+    }
+
     public void resetDisplayTicks() {
         remainingDisplayTicks = calculateDisplayTicks();
     }

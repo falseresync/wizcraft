@@ -80,9 +80,14 @@ public class SkyWand {
         setCharge(charge - amount);
     }
 
-    public boolean cannotExpendCharge(int amount, PlayerEntity user) {
+    public boolean tryExpendCharge(int amount, PlayerEntity user) {
         var cost = user.isCreative() ? 0 : amount;
-        return charge < cost;
+        if (getCharge() >= cost) {
+            expendCharge(cost);
+            return true;
+        }
+
+        return false;
     }
 
     public Focus getFocus() {

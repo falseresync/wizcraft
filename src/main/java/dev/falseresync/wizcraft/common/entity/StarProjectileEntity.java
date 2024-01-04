@@ -74,7 +74,7 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
 
     protected void pop() {
         getWorld().playSound(getOwner() instanceof PlayerEntity player ? player : null,
-                getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 1.0F, 1.25F);
+                getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.75F, 1.25F);
 
         var random = getWorld().getRandom();
         for (int i = 0; i < random.nextBetween(5, 10); i++) {

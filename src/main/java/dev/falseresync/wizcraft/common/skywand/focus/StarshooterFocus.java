@@ -43,12 +43,11 @@ public class StarshooterFocus extends Focus {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a starshooter focus");
 
         if (user instanceof PlayerEntity player) {
-            if (wand.cannotExpendCharge(DEFAULT_COST, player)) {
+            if (!wand.tryExpendCharge(DEFAULT_COST, player)) {
                 CommonReports.insufficientCharge(world, user);
                 return ActionResult.FAIL;
             }
 
-            wand.expendCharge(DEFAULT_COST);
             world.spawnEntity(new StarProjectileEntity(user, world));
             return ActionResult.SUCCESS;
         }

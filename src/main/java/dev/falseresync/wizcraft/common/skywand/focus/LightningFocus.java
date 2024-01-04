@@ -6,6 +6,7 @@ import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.CommonReports;
 import dev.falseresync.wizcraft.common.skywand.SkyWand;
 import dev.falseresync.wizcraft.common.WizUtils;
+import net.fabricmc.fabric.api.lookup.v1.entity.EntityApiLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,12 +51,11 @@ public class LightningFocus extends Focus {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a lightning focus");
 
         if (user instanceof PlayerEntity player) {
-            if (wand.cannotExpendCharge(DEFAULT_COST, player)) {
+            if (!wand.tryExpendCharge(DEFAULT_COST, player)) {
                 CommonReports.insufficientCharge(world, user);
                 return ActionResult.FAIL;
             }
 
-            wand.expendCharge(DEFAULT_COST);
             if (world instanceof ServerWorld serverWorld) {
                 var lightning = EntityType.LIGHTNING_BOLT.create(world);
                 var maxDistance = MathHelper.clamp(WizUtils.findViewDistance(world) * 16 / 4F, 32, 128);

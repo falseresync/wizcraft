@@ -13,7 +13,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -90,10 +89,9 @@ public class CometWarpFocus extends Focus {
     public ActionResult use(World world, SkyWand wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a comet warp focus");
 
-
         if (user instanceof PlayerEntity player) {
             if (user.isSneaking()) {
-                if (wand.cannotExpendCharge(DEFAULT_PLACEMENT_COST, player)) {
+                if (!wand.tryExpendCharge(DEFAULT_PLACEMENT_COST, player)) {
                     CommonReports.insufficientCharge(world, user);
                     return ActionResult.FAIL;
                 }
@@ -101,20 +99,18 @@ public class CometWarpFocus extends Focus {
                 reportPlaced(world, user);
                 wand.expendCharge(DEFAULT_PLACEMENT_COST);
                 this.anchor = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
-                return ActionResult.SUCCESS;
             } else {
                 if (this.anchor == null) {
                     reportNoAnchor(world, user);
                     return ActionResult.FAIL;
                 }
 
-                if (wand.cannotExpendCharge(DEFAULT_WARPING_COST, player)) {
+                if (!wand.tryExpendCharge(DEFAULT_WARPING_COST, player)) {
                     CommonReports.insufficientCharge(world, user);
                     return ActionResult.FAIL;
                 }
 
                 reportTeleported(world, user);
-                wand.expendCharge(DEFAULT_WARPING_COST);
                 if (world instanceof ServerWorld serverWorld) {
                     var destination = serverWorld.getServer().getWorld(this.anchor.getDimension());
                     if (destination == null) {
@@ -128,8 +124,8 @@ public class CometWarpFocus extends Focus {
                     this.anchor = null;
                 }
 
-                return ActionResult.SUCCESS;
             }
+            return ActionResult.SUCCESS;
         }
 
         return ActionResult.PASS;

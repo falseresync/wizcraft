@@ -78,7 +78,7 @@ public class SkyWandItem extends Item implements HasId {
         var activeFocus = wand.getFocus();
         tooltip.add(Text.translatable("tooltip.wizcraft.sky_wand.active_focus", activeFocus.getName().getString())
                 .styled(style -> style.withColor(Formatting.GRAY)));
-        activeFocus.appendTooltip(stack, world, tooltip, context);
+        activeFocus.appendTooltip(world, tooltip, context);
         if (world != null && world.isClient()) {
             appendClientTooltip(wand, tooltip, context);
         }

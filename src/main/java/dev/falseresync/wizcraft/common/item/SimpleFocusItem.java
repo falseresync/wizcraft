@@ -24,7 +24,7 @@ public class SimpleFocusItem extends Item implements FocusItem, HasId {
 
     @Override
     public ItemStack getDefaultStack() {
-        return this.focus.asStack();
+        return this.focus.toStack();
     }
 
     @Override
@@ -55,6 +55,6 @@ public class SimpleFocusItem extends Item implements FocusItem, HasId {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        Focus.fromStack(stack, this.focus).appendTooltip(stack, world, tooltip, context);
+        Focus.fromStack(stack, this.focus).appendTooltip(world, tooltip, context);
     }
 }

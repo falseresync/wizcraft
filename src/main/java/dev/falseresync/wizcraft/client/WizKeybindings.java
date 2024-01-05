@@ -69,9 +69,9 @@ public final class WizKeybindings {
                 }
 
                 if (activeFocus.getType() != WizFocuses.CHARGING) {
-                    focuses.offerFirst(WizFocuses.CHARGING.asStack());
+                    focuses.offerFirst(WizFocuses.CHARGING.toStack());
                 }
-                focuses.offerFirst(activeFocus.asStack());
+                focuses.offerFirst(activeFocus.toStack());
 
                 var focusPicker = WizHud.FOCUS_PICKER.getOrCreate(focuses);
                 if (focusPicker.status() == WidgetQueryResponse.Status.EXISTS && focusPicker.widget() != null) {

@@ -53,7 +53,7 @@ public class WizServerNetworking {
 
             if (extracted) {
                 var inserted = activeFocus.getType() == WizFocuses.CHARGING
-                        || storage.insert(ItemVariant.of(activeFocus.asStack()), 1, tx) == 1;
+                        || storage.insert(ItemVariant.of(activeFocus.toStack()), 1, tx) == 1;
                 if (inserted) {
                     tx.commit();
                 }

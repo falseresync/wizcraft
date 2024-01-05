@@ -8,17 +8,24 @@ import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 /**
  * @implNote The focuses deque is validated to have at least one stack, therefore using {@link Deque#getFirst()} is okay
  */
+@Environment(EnvType.CLIENT)
 public class WFocusPicker extends WWidget implements ControllerAwareWidget {
     protected static final int ITEM_OFFSET = 20;
     protected static final int ITEM_SIZE = 16;
@@ -26,11 +33,14 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
     protected static final int HINT_SIZE = 16;
     protected static final int SELECTION_SIZE = 22;
     protected static final int LABEL_OFFSET = 4;
+    protected static final int TOOLTIP_OFFSET = 2;
+    protected static final int TOOLTIP_LINE_SPACING = 2;
     protected static final Identifier SELECTION_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_selection.png");
     protected static final Identifier HINT_LEFT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_left.png");
     protected static final Identifier HINT_RIGHT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_right.png");
     protected final Deque<ItemStack> focuses;
     protected final WLabelWithSFX label;
+    protected final List<WLabelWithSFX> tooltip;
     protected HudController<?, ?> controller = null;
 
     public WFocusPicker(Deque<ItemStack> focuses) {
@@ -41,29 +51,35 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
             throw new IllegalArgumentException("Focus picker only accepts FocusItem stacks");
         }
         this.focuses = focuses;
-        this.label = new WLabelWithSFX(getPicked().getName());
-        this.label.enableShadow();
-        this.label.enableFade();
-        this.label.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        label = new WLabelWithSFX(getPicked().getName());
+        label.enableShadow();
+        label.enableFade();
+        label.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        tooltip = new ArrayList<>();
+        updateTooltip();
     }
 
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        if (this.controller == null || this.controller.getRemainingDisplayTicks() == 0) {
-            return;
-        }
+        if (controller == null || controller.getRemainingDisplayTicks() == 0) return;
 
-        float opacity = Math.min(1, this.controller.getRemainingDisplayTicks() / 10f);
+        float opacity = Math.min(1, controller.getRemainingDisplayTicks() / 10f);
 
         RenderSystem.enableDepthTest();
 
         DrawingExt.square(context, calcX(x, SELECTION_SIZE), calcY(y, SELECTION_SIZE), SELECTION_SIZE, SELECTION_TEX, opacity);
-        this.label.paint(context, x, y + getHeight() + LABEL_OFFSET, mouseX, mouseY);
+        var labelY = y + getHeight() + LABEL_OFFSET;
+        label.paint(context, x, labelY, mouseX, mouseY);
+        var tooltipBeginY = labelY + label.getHeight() + TOOLTIP_OFFSET;
+        for (int i = 0; i < tooltip.size(); i++) {
+            var w = tooltip.get(i);
+            w.paint(context, x,  tooltipBeginY + (i - 1) * (w.getHeight() + TOOLTIP_LINE_SPACING), mouseX, mouseY);
+        }
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1, 1, 1, opacity);
 
-        switch (this.focuses.size()) {
+        switch (focuses.size()) {
             case 1 -> paint1(context, x, y);
             case 2 -> paint2(context, x, y);
             case 3 -> paint3(context, x, y);
@@ -82,24 +98,24 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
     }
 
     protected void paint1(DrawContext context, int x, int y) {
-        var selected = this.focuses.peekFirst();
+        var selected =  focuses.peekFirst();
         context.drawItemWithoutEntity(selected, calcX(x, ITEM_SIZE) - ITEM_OFFSET, calcY(y, ITEM_SIZE));
     }
 
     protected void paint2(DrawContext context, int x, int y) {
         // Polling here allows to peek the next focus
-        var selected = this.focuses.pollFirst();
+        var selected = focuses.pollFirst();
         context.drawItemWithoutEntity(selected, calcX(x, ITEM_SIZE), calcY(y, ITEM_SIZE));
 
-        var next = this.focuses.peekFirst();
+        var next = focuses.peekFirst();
         context.drawItemWithoutEntity(next, calcX(x, ITEM_SIZE) + ITEM_OFFSET, calcY(y, ITEM_SIZE));
 
         // Reset the deque
-        this.focuses.offerFirst(selected);
+        focuses.offerFirst(selected);
     }
 
     protected void paint3(DrawContext context, int x, int y) {
-        var last = this.focuses.peekLast();
+        var last = focuses.peekLast();
         context.drawItemWithoutEntity(last, calcX(x, ITEM_SIZE) - ITEM_OFFSET, calcY(y, ITEM_SIZE));
 
         paint2(context, x, y);
@@ -111,23 +127,39 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
         paint3(context, x, y);
     }
 
+    protected void updateTooltip() {
+        tooltip.clear();
+        var stack = getPicked();
+        var focus = ((FocusItem) stack.getItem()).getFocus(stack);
+        tooltip.addAll(focus.getTooltip(MinecraftClient.getInstance().player, TooltipContext.BASIC).stream()
+                .map(text -> {
+                    var w = new WLabelWithSFX(text);
+                    w.enableFade();
+                    w.enableShadow();
+                    w.setHorizontalAlignment(HorizontalAlignment.CENTER);
+                    return w;
+                })
+                .toList());
+    }
+
     public void pickNext() {
-        this.focuses.offerLast(this.focuses.pollFirst());
-        this.label.setText(getPicked().getName());
+        focuses.offerLast(focuses.pollFirst());
+        label.setText(getPicked().getName());
+        updateTooltip();
     }
 
     public ItemStack getPicked() {
-        return this.focuses.peekFirst();
+        return focuses.peekFirst();
     }
 
     @Override
     public void addNarrations(NarrationMessageBuilder builder) {
-        builder.put(NarrationPart.TITLE, this.focuses.getFirst().getName());
+        builder.put(NarrationPart.TITLE, focuses.getFirst().getName());
     }
 
     @Override
     public void setController(HudController<?, ?> controller) {
         this.controller = controller;
-        this.label.setController(controller);
+        label.setController(controller);
     }
 }

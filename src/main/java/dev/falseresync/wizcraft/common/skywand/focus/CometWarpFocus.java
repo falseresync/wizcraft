@@ -12,7 +12,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -71,8 +70,8 @@ public class CometWarpFocus extends Focus {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendTooltip(@Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(world, tooltip, context);
         if (this.anchor == null) {
             tooltip.add(Text.translatable("tooltip.wizcraft.sky_wand.setup_anchor")
                     .styled(style -> style.withColor(Formatting.GRAY)));
@@ -97,7 +96,6 @@ public class CometWarpFocus extends Focus {
                 }
 
                 reportPlaced(world, user);
-                wand.expendCharge(DEFAULT_PLACEMENT_COST);
                 this.anchor = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
             } else {
                 if (this.anchor == null) {

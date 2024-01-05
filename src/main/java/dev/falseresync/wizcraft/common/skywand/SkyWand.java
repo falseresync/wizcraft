@@ -16,12 +16,15 @@ public class SkyWand {
     protected static final String KEY_MAX_CHARGE = "max_charge";
     protected static final String KEY_CHARGE = "charge";
     protected static final String KEY_FOCUS = "focus";
+    protected static final String KEY_CACHED_FOCUS_STACK_NBT = "cached_focus_stack_nbt";
 
     static {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.INT.optionalFieldOf(KEY_MAX_CHARGE, 100).forGetter(SkyWand::getMaxCharge),
                 Codec.INT.optionalFieldOf(KEY_CHARGE, 0).forGetter(SkyWand::getCharge),
-                Focus.CODEC.optionalFieldOf(KEY_FOCUS, WizFocuses.CHARGING).forGetter(SkyWand::getFocus)
+                Focus.CODEC.optionalFieldOf(KEY_FOCUS, WizFocuses.CHARGING).forGetter(SkyWand::getFocus),
+                NbtCompound.CODEC.optionalFieldOf(KEY_CACHED_FOCUS_STACK_NBT, new NbtCompound())
+                        .forGetter(wand -> wand.getFocus().getCachedStackNbt())
         ).apply(instance, SkyWand::new));
     }
 
@@ -29,10 +32,11 @@ public class SkyWand {
     protected int charge;
     protected Focus focus;
 
-    protected SkyWand(int maxCharge, int charge, Focus focus) {
+    protected SkyWand(int maxCharge, int charge, Focus focus, NbtCompound cachedFocusStackNbt) {
         this.maxCharge = maxCharge;
         this.charge = charge;
         this.focus = focus;
+        this.focus.setCachedStackNbt(cachedFocusStackNbt);
     }
 
     /**

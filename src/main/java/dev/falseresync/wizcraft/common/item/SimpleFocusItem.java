@@ -21,12 +21,12 @@ public class SimpleFocusItem<T extends Focus> extends Item implements FocusItem,
     public SimpleFocusItem(Settings settings, FocusType<T> focusType) {
         super(settings);
         this.focusType = focusType;
-        this.id = focusType.defaultFocus().getId().withSuffixedPath("_focus");
+        this.id = focusType.defaultFocus().get().getId().withSuffixedPath("_focus");
     }
 
     @Override
     public T getDefaultFocus() {
-        return focusType.defaultFocus();
+        return focusType.defaultFocus().get();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SimpleFocusItem<T extends Focus> extends Item implements FocusItem,
 
     @Override
     public Text getName() {
-        return Text.translatable(getTranslationKey(), focusType.defaultFocus().getName().getString());
+        return Text.translatable(getTranslationKey(), focusType.defaultFocus().get().getName().getString());
     }
 
     @Override

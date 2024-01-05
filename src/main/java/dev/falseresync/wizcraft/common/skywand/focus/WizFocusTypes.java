@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class WizFocusTypes {
     public static final FocusType<ChargingFocus> CHARGING;
@@ -15,19 +16,19 @@ public class WizFocusTypes {
     private static final Map<Identifier, FocusType<?>> TO_REGISTER = new HashMap<>();
 
     static {
-        CHARGING = r(new ChargingFocus(), ChargingFocus.CODEC);
-        STARSHOOTER = r(new StarshooterFocus());
-        LIGHTNING = r(new LightningFocus());
-        COMET_WARP = r(new CometWarpFocus(), CometWarpFocus.CODEC);
+        CHARGING = r(ChargingFocus::new, ChargingFocus.CODEC);
+        STARSHOOTER = r(StarshooterFocus::new);
+        LIGHTNING = r(LightningFocus::new);
+        COMET_WARP = r(CometWarpFocus::new, CometWarpFocus.CODEC);
     }
 
-    private static <T extends Focus> FocusType<T> r(T focus) {
-        return r(focus, Codec.unit(() -> focus));
+    private static <T extends Focus> FocusType<T> r(Supplier<T> defaultFocus) {
+        return r(defaultFocus, Codec.unit(defaultFocus));
     }
 
-    private static <T extends Focus> FocusType<T> r(T defaultFocus, Codec<T> customDataCodec) {
+    private static <T extends Focus> FocusType<T> r(Supplier<T> defaultFocus, Codec<T> customDataCodec) {
         var type = new FocusType<>(defaultFocus, customDataCodec);
-        TO_REGISTER.put(defaultFocus.getId(), type);
+        TO_REGISTER.put(defaultFocus.get().getId(), type);
         return type;
     }
 

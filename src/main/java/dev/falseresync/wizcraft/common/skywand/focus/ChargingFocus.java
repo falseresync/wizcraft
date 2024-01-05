@@ -2,7 +2,6 @@ package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.WizUtils;
 import dev.falseresync.wizcraft.common.Wizcraft;
@@ -12,20 +11,15 @@ import dev.falseresync.wizcraft.network.ClientSideReport;
 import dev.falseresync.wizcraft.network.s2c.TriggerReportS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class ChargingFocus extends Focus {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "charging");

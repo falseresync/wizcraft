@@ -3,7 +3,7 @@ package dev.falseresync.wizcraft.common.block;
 import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
-import dev.falseresync.wizcraft.api.common.HasId;
+import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.WizUtils;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;

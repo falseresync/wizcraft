@@ -5,7 +5,7 @@ import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.entity.EnergizedWorktableBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.api.common.HasId;
+import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.WizUtils;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;

@@ -8,11 +8,11 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
-public record UpdateSkyWandC2SPacket(ItemVariant pickedFocus) implements FabricPacket, HasId {
+public record UpdateSkyWandFocusC2SPacket(ItemVariant pickedFocus) implements FabricPacket, HasId {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "update_sky_wand_focus");
-    public static final PacketType<UpdateSkyWandC2SPacket> TYPE = PacketType.create(ID, UpdateSkyWandC2SPacket::new);
+    public static final PacketType<UpdateSkyWandFocusC2SPacket> TYPE = PacketType.create(ID, UpdateSkyWandFocusC2SPacket::new);
 
-    public UpdateSkyWandC2SPacket(PacketByteBuf buf) {
+    public UpdateSkyWandFocusC2SPacket(PacketByteBuf buf) {
         this(ItemVariant.fromPacket(buf));
     }
 
@@ -22,7 +22,7 @@ public record UpdateSkyWandC2SPacket(ItemVariant pickedFocus) implements FabricP
     }
 
     @Override
-    public PacketType<UpdateSkyWandC2SPacket> getType() {
+    public PacketType<UpdateSkyWandFocusC2SPacket> getType() {
         return TYPE;
     }
 

@@ -6,7 +6,7 @@ import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.CommonReports;
-import dev.falseresync.wizcraft.common.skywand.SkyWand;
+import dev.falseresync.wizcraft.common.skywand.SkyWandData;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -31,13 +31,10 @@ public class CometWarpFocus extends Focus {
     public static final int DEFAULT_WARPING_COST = 15;
     public static final int DEFAULT_INTERDIMENSIONAL_COST = 30;
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "comet_warp");
-    public static final Codec<CometWarpFocus> CODEC;
-
-    static {
-        CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                GlobalPos.CODEC.optionalFieldOf("anchor", null).forGetter(CometWarpFocus::getAnchor)
-        ).apply(instance, CometWarpFocus::new));
-    }
+    public static final Codec<CometWarpFocus> CODEC =
+            RecordCodecBuilder.create(instance -> instance.group(
+                    GlobalPos.CODEC.optionalFieldOf("anchor", null).forGetter(CometWarpFocus::getAnchor)
+            ).apply(instance, CometWarpFocus::new));
 
     @Nullable
     protected GlobalPos anchor;
@@ -50,13 +47,8 @@ public class CometWarpFocus extends Focus {
     }
 
     @Override
-    public Codec<CometWarpFocus> getCodec() {
-        return CODEC;
-    }
-
-    @Override
-    public Focus getType() {
-        return WizFocuses.COMET_WARP;
+    public FocusType<CometWarpFocus> getType() {
+        return WizFocusTypes.COMET_WARP;
     }
 
     @Override
@@ -85,7 +77,7 @@ public class CometWarpFocus extends Focus {
     }
 
     @Override
-    public ActionResult use(World world, SkyWand wand, LivingEntity user) {
+    public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a comet warp focus");
 
         if (user instanceof PlayerEntity player) {

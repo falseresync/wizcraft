@@ -5,9 +5,5 @@ import net.minecraft.item.ItemStack;
 
 
 public interface FocusItem {
-    default Focus getFocus(ItemStack stack) {
-        return Focus.fromStack(stack, getDefaultFocus());
-    }
-
     Focus getDefaultFocus();
 }

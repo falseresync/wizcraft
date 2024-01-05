@@ -11,22 +11,22 @@ import dev.falseresync.wizcraft.client.gui.hud.widget.WFocusPicker;
 import dev.falseresync.wizcraft.client.gui.hud.widget.WLabelWithSFX;
 import dev.falseresync.wizcraft.client.gui.hud.widget.WWandChargeBar;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.skywand.SkyWand;
+import dev.falseresync.wizcraft.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.common.skywand.focus.FocusStack;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 import java.util.Deque;
 
 @Environment(EnvType.CLIENT)
 public class WizHud {
-    public static final HudController<WFocusPicker, Deque<ItemStack>> FOCUS_PICKER;
+    public static final HudController<WFocusPicker, Deque<FocusStack>> FOCUS_PICKER;
     public static final HudController<WLabelWithSFX, Text> STATUS_MESSAGE;
-    public static final HudController<WWandChargeBar, SkyWand> WAND_CHARGE_BAR;
+    public static final HudController<WWandChargeBar, SkyWandData> WAND_CHARGE_BAR;
 
     static {
         FOCUS_PICKER = new HudController.Aware<>(Slots.UNDER_BOSS_BAR, WidgetTypePriority.HIGH, WFocusPicker::new);
@@ -60,7 +60,7 @@ public class WizHud {
             return;
         }
 
-        var wand = SkyWand.fromStack(mainHandStack);
+        var wand = SkyWandData.fromStack(mainHandStack);
         var chargeBar = WAND_CHARGE_BAR.getOrCreate(wand, WidgetInstancePriority.HIGH);
         if (chargeBar.status() == WidgetQueryResponse.Status.EXISTS && chargeBar.widget() != null) {
             WAND_CHARGE_BAR.resetDisplayTicks();

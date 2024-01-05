@@ -1,7 +1,9 @@
 package dev.falseresync.wizcraft.common.item;
 
-import dev.falseresync.wizcraft.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.HasId;
+import dev.falseresync.wizcraft.common.skywand.focus.Focus;
+import dev.falseresync.wizcraft.common.skywand.focus.FocusStack;
+import dev.falseresync.wizcraft.common.skywand.focus.FocusType;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,29 +14,24 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SimpleFocusItem extends Item implements FocusItem, HasId {
+public class SimpleFocusItem<T extends Focus> extends Item implements FocusItem, HasId {
     protected final Identifier id;
-    protected final Focus focus;
+    protected final FocusType<T> focusType;
 
-    public SimpleFocusItem(Settings settings, Focus focus) {
+    public SimpleFocusItem(Settings settings, FocusType<T> focusType) {
         super(settings);
-        this.focus = focus;
-        this.id = focus.getId().withSuffixedPath("_focus");
+        this.focusType = focusType;
+        this.id = focusType.defaultFocus().getId().withSuffixedPath("_focus");
     }
 
     @Override
-    public ItemStack getDefaultStack() {
-        return this.focus.toStack();
-    }
-
-    @Override
-    public Focus getDefaultFocus() {
-        return this.focus;
+    public T getDefaultFocus() {
+        return focusType.defaultFocus();
     }
 
     @Override
     public Identifier getId() {
-        return this.id;
+        return id;
     }
 
     @Override
@@ -49,12 +46,12 @@ public class SimpleFocusItem extends Item implements FocusItem, HasId {
 
     @Override
     public Text getName() {
-        return Text.translatable(getTranslationKey(), this.focus.getName().getString());
+        return Text.translatable(getTranslationKey(), focusType.defaultFocus().getName().getString());
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        Focus.fromStack(stack, this.focus).appendTooltip(world, tooltip, context);
+        new FocusStack(stack).getFocus().appendTooltip(world, tooltip, context);
     }
 }

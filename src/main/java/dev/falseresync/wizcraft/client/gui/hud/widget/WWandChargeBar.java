@@ -4,7 +4,7 @@ import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWid
 import dev.falseresync.wizcraft.client.gui.DrawingExt;
 import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.skywand.SkyWand;
+import dev.falseresync.wizcraft.common.skywand.SkyWandData;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
@@ -33,7 +33,7 @@ public class WWandChargeBar extends WWidget implements ControllerAwareWidget {
     protected int value;
     protected HudController<?, ?> controller = null;
 
-    public WWandChargeBar(SkyWand wand) {
+    public WWandChargeBar(SkyWandData wand) {
         this.barTex = new Texture(BAR);
         this.overlayTex = new Texture(OVERLAY)
                 .withUv(OVERLAY_U1, 0f, OVERLAY_U2, 1f);

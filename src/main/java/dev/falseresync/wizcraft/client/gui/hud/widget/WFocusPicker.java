@@ -1,11 +1,13 @@
 package dev.falseresync.wizcraft.client.gui.hud.widget;
 
+import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWidget;
 import dev.falseresync.wizcraft.client.gui.DrawingExt;
 import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.FocusItem;
+import dev.falseresync.wizcraft.common.skywand.focus.FocusStack;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.fabricmc.api.EnvType;
@@ -38,20 +40,15 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
     protected static final Identifier SELECTION_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_selection.png");
     protected static final Identifier HINT_LEFT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_left.png");
     protected static final Identifier HINT_RIGHT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_right.png");
-    protected final Deque<ItemStack> focuses;
+    protected final Deque<FocusStack> focusStacks;
     protected final WLabelWithSFX label;
     protected final List<WLabelWithSFX> tooltip;
     protected HudController<?, ?> controller = null;
 
-    public WFocusPicker(Deque<ItemStack> focuses) {
-        if (focuses.isEmpty()) {
-            throw new IllegalArgumentException("Focus picker expects at least one focus, got none");
-        }
-        if (!focuses.stream().allMatch(focus -> focus.getItem() instanceof FocusItem)) {
-            throw new IllegalArgumentException("Focus picker only accepts FocusItem stacks");
-        }
-        this.focuses = focuses;
-        label = new WLabelWithSFX(getPicked().getName());
+    public WFocusPicker(Deque<FocusStack> focusStacks) {
+        Preconditions.checkArgument(!focusStacks.isEmpty(), "Focus picker expects at least one FocusStack, got none");
+        this.focusStacks = focusStacks;
+        label = new WLabelWithSFX(getPicked().toItemStack().getName());
         label.enableShadow();
         label.enableFade();
         label.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -79,7 +76,7 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1, 1, 1, opacity);
 
-        switch (focuses.size()) {
+        switch (focusStacks.size()) {
             case 1 -> paint1(context, x, y);
             case 2 -> paint2(context, x, y);
             case 3 -> paint3(context, x, y);
@@ -98,25 +95,29 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
     }
 
     protected void paint1(DrawContext context, int x, int y) {
-        var selected =  focuses.peekFirst();
-        context.drawItemWithoutEntity(selected, calcX(x, ITEM_SIZE) - ITEM_OFFSET, calcY(y, ITEM_SIZE));
+        var selected = focusStacks.peekFirst();
+        //noinspection DataFlowIssue
+        context.drawItemWithoutEntity(selected.toItemStack(), calcX(x, ITEM_SIZE) - ITEM_OFFSET, calcY(y, ITEM_SIZE));
     }
 
     protected void paint2(DrawContext context, int x, int y) {
         // Polling here allows to peek the next focus
-        var selected = focuses.pollFirst();
-        context.drawItemWithoutEntity(selected, calcX(x, ITEM_SIZE), calcY(y, ITEM_SIZE));
+        var selected = focusStacks.pollFirst();
+        //noinspection DataFlowIssue
+        context.drawItemWithoutEntity(selected.toItemStack(), calcX(x, ITEM_SIZE), calcY(y, ITEM_SIZE));
 
-        var next = focuses.peekFirst();
-        context.drawItemWithoutEntity(next, calcX(x, ITEM_SIZE) + ITEM_OFFSET, calcY(y, ITEM_SIZE));
+        var next = focusStacks.peekFirst();
+        //noinspection DataFlowIssue
+        context.drawItemWithoutEntity(next.toItemStack(), calcX(x, ITEM_SIZE) + ITEM_OFFSET, calcY(y, ITEM_SIZE));
 
         // Reset the deque
-        focuses.offerFirst(selected);
+        focusStacks.offerFirst(selected);
     }
 
     protected void paint3(DrawContext context, int x, int y) {
-        var last = focuses.peekLast();
-        context.drawItemWithoutEntity(last, calcX(x, ITEM_SIZE) - ITEM_OFFSET, calcY(y, ITEM_SIZE));
+        var last = focusStacks.peekLast();
+        //noinspection DataFlowIssue
+        context.drawItemWithoutEntity(last.toItemStack(), calcX(x, ITEM_SIZE) - ITEM_OFFSET, calcY(y, ITEM_SIZE));
 
         paint2(context, x, y);
     }
@@ -129,9 +130,9 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
 
     protected void updateTooltip() {
         tooltip.clear();
-        var stack = getPicked();
-        var focus = ((FocusItem) stack.getItem()).getFocus(stack);
-        tooltip.addAll(focus.getTooltip(MinecraftClient.getInstance().player, TooltipContext.BASIC).stream()
+        tooltip.addAll(getPicked().getFocus()
+                .getTooltip(MinecraftClient.getInstance().player, TooltipContext.BASIC)
+                .stream()
                 .map(text -> {
                     var w = new WLabelWithSFX(text);
                     w.enableFade();
@@ -143,18 +144,18 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
     }
 
     public void pickNext() {
-        focuses.offerLast(focuses.pollFirst());
-        label.setText(getPicked().getName());
+        focusStacks.offerLast(focusStacks.pollFirst());
+        label.setText(getPicked().toItemStack().getName());
         updateTooltip();
     }
 
-    public ItemStack getPicked() {
-        return focuses.peekFirst();
+    public FocusStack getPicked() {
+        return focusStacks.peekFirst();
     }
 
     @Override
     public void addNarrations(NarrationMessageBuilder builder) {
-        builder.put(NarrationPart.TITLE, focuses.getFirst().getName());
+        builder.put(NarrationPart.TITLE, focusStacks.getFirst().toItemStack().getName());
     }
 
     @Override

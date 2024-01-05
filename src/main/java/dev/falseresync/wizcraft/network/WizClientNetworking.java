@@ -14,13 +14,13 @@ public class WizClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(TriggerReportS2CPacket.TYPE, WizClientNetworking::triggerReport);
     }
 
-    public static void triggerReport(TriggerReportS2CPacket packet, ClientPlayerEntity player, PacketSender responseSender) {
+    private static void triggerReport(TriggerReportS2CPacket packet, ClientPlayerEntity player, PacketSender responseSender) {
         switch (packet.report()) {
             case INVALID_PEDESTAL_FORMATION -> reportInvalidPedestalFormation(player);
         }
     }
 
-    public static void reportInvalidPedestalFormation(PlayerEntity player) {
+    private static void reportInvalidPedestalFormation(PlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
         WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.invalid_pedestal_formation"));
     }

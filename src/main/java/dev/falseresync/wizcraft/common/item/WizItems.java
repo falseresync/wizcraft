@@ -1,10 +1,9 @@
 package dev.falseresync.wizcraft.common.item;
 
+import dev.falseresync.wizcraft.api.common.HasId;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.WizBlocks;
-import dev.falseresync.wizcraft.common.skywand.focus.Focus;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
-import dev.falseresync.wizcraft.api.common.HasId;
+import dev.falseresync.wizcraft.common.skywand.focus.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.Block;
@@ -20,10 +19,10 @@ import java.util.function.BiConsumer;
 
 public final class WizItems {
     public static final SkyWandItem SKY_WAND;
-    public static final SimpleFocusItem CHARGING_FOCUS;
-    public static final SimpleFocusItem STARSHOOTER_FOCUS;
-    public static final SimpleFocusItem LIGHTNING_FOCUS;
-    public static final SimpleFocusItem COMET_WARP_FOCUS;
+    public static final SimpleFocusItem<ChargingFocus> CHARGING_FOCUS;
+    public static final SimpleFocusItem<StarshooterFocus> STARSHOOTER_FOCUS;
+    public static final SimpleFocusItem<LightningFocus> LIGHTNING_FOCUS;
+    public static final SimpleFocusItem<CometWarpFocus> COMET_WARP_FOCUS;
     public static final BlockItem ENERGIZED_WORKTABLE;
     public static final BlockItem LENSING_PEDESTAL;
     public static final ItemGroup GROUP_WIZCRAFT;
@@ -36,10 +35,10 @@ public final class WizItems {
         SKY_WAND = r(new SkyWandItem(new FabricItemSettings().maxCount(1)));
 
         SIMPLE_FOCUS_SETTINGS = new FabricItemSettings().maxCount(1);
-        CHARGING_FOCUS = rSimpleFocus(WizFocuses.CHARGING);
-        STARSHOOTER_FOCUS = rSimpleFocus(WizFocuses.STARSHOOTER);
-        LIGHTNING_FOCUS = rSimpleFocus(WizFocuses.LIGHTNING);
-        COMET_WARP_FOCUS = rSimpleFocus(WizFocuses.COMET_WARP);
+        CHARGING_FOCUS = rSimpleFocus(WizFocusTypes.CHARGING);
+        STARSHOOTER_FOCUS = rSimpleFocus(WizFocusTypes.STARSHOOTER);
+        LIGHTNING_FOCUS = rSimpleFocus(WizFocusTypes.LIGHTNING);
+        COMET_WARP_FOCUS = rSimpleFocus(WizFocusTypes.COMET_WARP);
 
         SIMPLE_BLOCK_ITEM_SETTINGS = new FabricItemSettings();
         ENERGIZED_WORKTABLE = rBlockItem(WizBlocks.ENERGIZED_WORKTABLE);
@@ -63,8 +62,8 @@ public final class WizItems {
         return r(block.getId(), new BlockItem(block, SIMPLE_BLOCK_ITEM_SETTINGS));
     }
 
-    private static <T extends Focus> SimpleFocusItem rSimpleFocus(T focus) {
-        return r(new SimpleFocusItem(SIMPLE_FOCUS_SETTINGS, focus));
+    private static <T extends Focus> SimpleFocusItem<T> rSimpleFocus(FocusType<T> type) {
+        return r(new SimpleFocusItem<>(SIMPLE_FOCUS_SETTINGS, type));
     }
 
     private static <T extends Item & HasId> T r(T item) {

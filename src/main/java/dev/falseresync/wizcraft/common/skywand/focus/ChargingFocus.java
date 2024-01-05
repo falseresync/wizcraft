@@ -1,12 +1,11 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
-import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
+import dev.falseresync.wizcraft.common.WizUtils;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.skywand.SkyWand;
-import dev.falseresync.wizcraft.common.WizUtils;
+import dev.falseresync.wizcraft.common.skywand.SkyWandData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.particle.ParticleTypes;
@@ -21,7 +20,6 @@ import net.minecraft.world.World;
 
 public class ChargingFocus extends Focus {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "charging");
-    public static final Codec<ChargingFocus> CODEC = Codec.unit(() -> WizFocuses.CHARGING);
 
     @Override
     public Identifier getId() {
@@ -29,13 +27,8 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
-    public Codec<ChargingFocus> getCodec() {
-        return CODEC;
-    }
-
-    @Override
-    public Focus getType() {
-        return WizFocuses.CHARGING;
+    public FocusType<ChargingFocus> getType() {
+        return WizFocusTypes.CHARGING;
     }
 
     @Override
@@ -44,7 +37,7 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
-    public ActionResult use(World world, SkyWand wand, LivingEntity user) {
+    public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
         Wizcraft.LOGGER.trace("Attempting to charge a wand");
         world.calculateAmbientDarkness();
         Integer lightLevel = null;
@@ -74,7 +67,7 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
-    public void finish(World world, SkyWand wand, LivingEntity user) {
+    public void finish(World world, SkyWandData wand, LivingEntity user) {
         wand.addCharge(40);
         reportSuccessfullyCharged(world, user);
     }

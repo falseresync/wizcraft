@@ -1,11 +1,10 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
-import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.entity.StarProjectileEntity;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.CommonReports;
-import dev.falseresync.wizcraft.common.skywand.SkyWand;
+import dev.falseresync.wizcraft.common.skywand.SkyWandData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -15,7 +14,6 @@ import net.minecraft.world.World;
 
 public class StarshooterFocus extends Focus {
     public static final int DEFAULT_COST = 2;
-    public static final Codec<StarshooterFocus> CODEC = Codec.unit(() -> WizFocuses.STARSHOOTER);
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "starshooter");
 
     @Override
@@ -24,13 +22,8 @@ public class StarshooterFocus extends Focus {
     }
 
     @Override
-    public Codec<StarshooterFocus> getCodec() {
-        return CODEC;
-    }
-
-    @Override
-    public StarshooterFocus getType() {
-        return WizFocuses.STARSHOOTER;
+    public FocusType<StarshooterFocus> getType() {
+        return WizFocusTypes.STARSHOOTER;
     }
 
     @Override
@@ -39,7 +32,7 @@ public class StarshooterFocus extends Focus {
     }
 
     @Override
-    public ActionResult use(World world, SkyWand wand, LivingEntity user) {
+    public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a starshooter focus");
 
         if (user instanceof PlayerEntity player) {

@@ -1,12 +1,10 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
-import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.CommonReports;
-import dev.falseresync.wizcraft.common.skywand.SkyWand;
+import dev.falseresync.wizcraft.common.skywand.SkyWandData;
 import dev.falseresync.wizcraft.common.WizUtils;
-import net.fabricmc.fabric.api.lookup.v1.entity.EntityApiLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,17 +21,11 @@ import net.minecraft.world.World;
 
 public class LightningFocus extends Focus {
     public static final int DEFAULT_COST = 10;
-    public static final Codec<LightningFocus> CODEC = Codec.unit(() -> WizFocuses.LIGHTNING);
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "lightning");
 
     @Override
-    public Codec<LightningFocus> getCodec() {
-        return CODEC;
-    }
-
-    @Override
-    public LightningFocus getType() {
-        return WizFocuses.LIGHTNING;
+    public FocusType<LightningFocus> getType() {
+        return WizFocusTypes.LIGHTNING;
     }
 
     @Override
@@ -47,7 +39,7 @@ public class LightningFocus extends Focus {
     }
 
     @Override
-    public ActionResult use(World world, SkyWand wand, LivingEntity user) {
+    public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a lightning focus");
 
         if (user instanceof PlayerEntity player) {

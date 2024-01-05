@@ -1,11 +1,11 @@
-package dev.falseresync.wizcraft.common.skywand;
+package dev.falseresync.wizcraft.api.common.skywand;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.falseresync.wizcraft.common.CommonKeys;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.skywand.focus.Focus;
-import dev.falseresync.wizcraft.common.skywand.focus.FocusStack;
+import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocusTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

@@ -1,6 +1,8 @@
 package dev.falseresync.wizcraft.common.item;
 
 import dev.falseresync.wizcraft.api.common.HasId;
+import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.WizBlocks;
 import dev.falseresync.wizcraft.common.skywand.focus.*;

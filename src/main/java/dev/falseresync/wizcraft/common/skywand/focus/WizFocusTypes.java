@@ -1,6 +1,8 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
+import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;

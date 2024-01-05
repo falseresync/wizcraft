@@ -1,12 +1,7 @@
-package dev.falseresync.wizcraft.common.skywand.focus;
+package dev.falseresync.wizcraft.api.common.skywand.focus;
 
-import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
-import dev.falseresync.wizcraft.api.common.HasId;
-import dev.falseresync.wizcraft.common.item.FocusItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 
 import java.util.function.Supplier;
 

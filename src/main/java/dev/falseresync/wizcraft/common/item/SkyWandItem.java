@@ -2,10 +2,9 @@ package dev.falseresync.wizcraft.common.item;
 
 import dev.falseresync.wizcraft.client.WizKeybindings;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
 import dev.falseresync.wizcraft.api.common.HasId;
 import dev.falseresync.wizcraft.common.skywand.focus.ChargingFocus;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocusTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;

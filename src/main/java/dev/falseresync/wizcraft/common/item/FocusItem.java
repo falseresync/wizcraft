@@ -1,7 +1,6 @@
 package dev.falseresync.wizcraft.common.item;
 
-import dev.falseresync.wizcraft.common.skywand.focus.Focus;
-import net.minecraft.item.ItemStack;
+import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
 
 
 public interface FocusItem {

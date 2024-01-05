@@ -2,11 +2,13 @@ package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.WizUtils;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
 import dev.falseresync.wizcraft.network.ClientSideReport;
 import dev.falseresync.wizcraft.network.s2c.TriggerReportS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

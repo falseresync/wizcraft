@@ -1,10 +1,12 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
+import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.entity.StarProjectileEntity;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.CommonReports;
-import dev.falseresync.wizcraft.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

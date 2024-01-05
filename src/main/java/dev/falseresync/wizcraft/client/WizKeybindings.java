@@ -5,8 +5,8 @@ import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetQueryRespons
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.skywand.SkyWandData;
-import dev.falseresync.wizcraft.common.skywand.focus.FocusStack;
+import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocusTypes;
 import dev.falseresync.wizcraft.network.c2s.UpdateSkyWandFocusC2SPacket;
 import net.fabricmc.api.EnvType;

@@ -6,8 +6,7 @@ import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWid
 import dev.falseresync.wizcraft.client.gui.DrawingExt;
 import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.item.FocusItem;
-import dev.falseresync.wizcraft.common.skywand.focus.FocusStack;
+import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.fabricmc.api.EnvType;
@@ -17,7 +16,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;

@@ -1,9 +1,9 @@
-package dev.falseresync.wizcraft.common.skywand.focus;
+package dev.falseresync.wizcraft.api.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.api.common.HasId;
 import dev.falseresync.wizcraft.api.WizRegistries;
-import dev.falseresync.wizcraft.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

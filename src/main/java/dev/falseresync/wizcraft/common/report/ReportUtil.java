@@ -22,7 +22,7 @@ public class ReportUtil {
                     (random.nextFloat() - 0.5) / 2,
                     random.nextFloat() / 2,
                     (random.nextFloat() - 0.5) / 2,
-                    1f);
+                    0.15);
         } else {
             for (int i = 0; i < random.nextBetween(minAmount, maxAmount); i++) {
                 world.addParticle(

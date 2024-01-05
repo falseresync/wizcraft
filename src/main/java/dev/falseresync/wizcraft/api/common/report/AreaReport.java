@@ -8,12 +8,12 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public interface AreaReport extends Report {
-    void executeOnArea(ServerWorld world, BlockPos pos);
+    void executeOnArea(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source);
 
     static void trigger(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source, AreaReport report) {
         if (source != null) {
             ServerPlayNetworking.send(source, new TriggerReportS2CPacket(report));
         }
-        report.executeOnArea(world, pos);
+        report.executeOnArea(world, pos, source);
     }
 }

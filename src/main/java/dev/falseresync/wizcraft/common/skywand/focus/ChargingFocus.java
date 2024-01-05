@@ -2,6 +2,7 @@ package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.falseresync.wizcraft.api.common.report.AreaReport;
 import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
@@ -13,6 +14,7 @@ import dev.falseresync.wizcraft.common.report.WizReports;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
@@ -98,7 +100,7 @@ public class ChargingFocus extends Focus {
         if (user instanceof ServerPlayerEntity player) {
             chargingProgress = 0;
             wand.addCharge(40);
-            Report.trigger(player, WizReports.SUCCESSFULLY_CHARGED);
+            AreaReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizReports.SUCCESSFULLY_CHARGED);
         }
     }
 

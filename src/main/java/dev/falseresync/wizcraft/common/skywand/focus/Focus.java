@@ -25,6 +25,10 @@ public abstract class Focus implements HasId {
 
     public abstract Item getItem();
 
+    public int getMaxUsageTicks(SkyWandData wand) {
+        return 50;
+    }
+
     public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
         return ActionResult.PASS;
     }

@@ -1,25 +1,46 @@
 package dev.falseresync.wizcraft.common.skywand.focus;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.WizUtils;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.network.ClientSideReport;
+import dev.falseresync.wizcraft.network.s2c.TriggerReportS2CPacket;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class ChargingFocus extends Focus {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "charging");
+    public static final Codec<ChargingFocus> CODEC =
+            RecordCodecBuilder.create(instance -> instance.group(
+                    Codec.INT.optionalFieldOf("charging_progress", 0).forGetter(ChargingFocus::getChargingProgress)
+            ).apply(instance, ChargingFocus::new));
+    protected int chargingProgress = 0;
+
+    public ChargingFocus() {
+    }
+
+    public ChargingFocus(int chargingProgress) {
+        this.chargingProgress = chargingProgress;
+    }
 
     @Override
     public Identifier getId() {
@@ -67,9 +88,29 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
+    public void tick(World world, SkyWandData wand, LivingEntity user, int remainingUseTicks) {
+        super.tick(world, wand, user, remainingUseTicks);
+        chargingProgress += 1;
+    }
+
+    @Override
+    public void interrupt(World world, SkyWandData wand, LivingEntity user, int remainingUseTicks) {
+        super.interrupt(world, wand, user, remainingUseTicks);
+        chargingProgress = 0;
+    }
+
+    @Override
     public void finish(World world, SkyWandData wand, LivingEntity user) {
+        super.finish(world, wand, user);
+        chargingProgress = 0;
         wand.addCharge(40);
-        reportSuccessfullyCharged(world, user);
+        if (user instanceof ServerPlayerEntity player) {
+            ServerPlayNetworking.send(player, new TriggerReportS2CPacket(ClientSideReport.SUCCESSFULLY_CHARGED));
+        }
+    }
+
+    public int getChargingProgress() {
+        return chargingProgress;
     }
 
     protected void reportCannotCharge(World world, LivingEntity user) {
@@ -83,28 +124,6 @@ public class ChargingFocus extends Focus {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_AMETHYST_BLOCK_HIT);
             WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.already_charged"));
-        }
-    }
-
-    protected void reportSuccessfullyCharged(World world, LivingEntity user) {
-        user.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE, 0.5F, 1.25F);
-        if (world.isClient()) {
-            var pos = user.getPos().add(user.getHandPosOffset(WizItems.SKY_WAND));
-            var random = world.getRandom();
-            for (int i = 0; i < random.nextBetween(5, 10); i++) {
-                world.addParticle(
-                        ParticleTypes.FIREWORK,
-                        pos.x,
-                        pos.y,
-                        pos.z,
-                        (random.nextFloat() - 0.5) / 2,
-                        random.nextFloat() / 2,
-                        (random.nextFloat() - 0.5) / 2);
-            }
-            WizHud.STATUS_MESSAGE.override(
-                    Text.translatable("hud.wizcraft.sky_wand.successfully_charged")
-                            .styled(style -> style.withColor(Formatting.GOLD)),
-                    WidgetInstancePriority.HIGH);
         }
     }
 }

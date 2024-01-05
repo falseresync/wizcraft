@@ -15,7 +15,7 @@ public class WizFocusTypes {
     private static final Map<Identifier, FocusType<?>> TO_REGISTER = new HashMap<>();
 
     static {
-        CHARGING = r(new ChargingFocus());
+        CHARGING = r(new ChargingFocus(), ChargingFocus.CODEC);
         STARSHOOTER = r(new StarshooterFocus());
         LIGHTNING = r(new LightningFocus());
         COMET_WARP = r(new CometWarpFocus(), CometWarpFocus.CODEC);

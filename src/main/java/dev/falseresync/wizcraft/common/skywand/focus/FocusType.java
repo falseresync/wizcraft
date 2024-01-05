@@ -8,10 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-public record FocusType<T extends Focus>(
-        T defaultFocus,
-
-        Codec<T> customDataCodec) {
+public record FocusType<T extends Focus>(T defaultFocus, Codec<T> customDataCodec) {
     public ItemStack defaultStack() {
         return defaultFocus.getItem().getDefaultStack();
     }

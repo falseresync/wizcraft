@@ -4,6 +4,8 @@ import dev.falseresync.wizcraft.client.WizKeybindings;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.skywand.SkyWandData;
 import dev.falseresync.wizcraft.api.common.HasId;
+import dev.falseresync.wizcraft.common.skywand.focus.ChargingFocus;
+import dev.falseresync.wizcraft.common.skywand.focus.WizFocusTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -16,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +42,8 @@ public class SkyWandItem extends Item implements HasId {
 
     @Override
     public int getMaxUseTime(ItemStack stack) {
-        return 50;
+        var wand = SkyWandData.fromStack(stack);
+        return wand.getFocus().getMaxUsageTicks(wand);
     }
 
     @Override
@@ -64,6 +68,29 @@ public class SkyWandItem extends Item implements HasId {
         var wand = SkyWandData.fromStack(stack);
         wand.getFocus().finish(world, wand, user);
         return wand.copyAndAttach(stack);
+    }
+
+    @Override
+    public boolean isItemBarVisible(ItemStack stack) {
+        var wand = SkyWandData.fromStack(stack);
+        var focus = wand.getFocus();
+        return focus instanceof ChargingFocus chargingFocus && chargingFocus.getChargingProgress() != 0
+                || super.isItemBarVisible(stack);
+    }
+
+    @Override
+    public int getItemBarColor(ItemStack stack) {
+        return ColorHelper.Argb.getArgb(0, 115, 190, 211);
+    }
+
+    @Override
+    public int getItemBarStep(ItemStack stack) {
+        var wand = SkyWandData.fromStack(stack);
+        var focus = wand.getFocus();
+        if (focus instanceof ChargingFocus chargingFocus) {
+            return Math.round(chargingFocus.getChargingProgress() * 13f / focus.getMaxUsageTicks(wand));
+        }
+        return super.getItemBarStep(stack);
     }
 
     @Override

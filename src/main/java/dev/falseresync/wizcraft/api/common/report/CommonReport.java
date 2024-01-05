@@ -7,13 +7,13 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-public interface AreaReport extends Report {
-    void executeOnArea(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source);
+public interface CommonReport extends ClientReport {
+    void executeOnServer(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source);
 
-    static void trigger(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source, AreaReport report) {
+    static void trigger(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source, CommonReport report) {
         if (source != null) {
             ServerPlayNetworking.send(source, new TriggerReportS2CPacket(report));
         }
-        report.executeOnArea(world, pos, source);
+        report.executeOnServer(world, pos, source);
     }
 }

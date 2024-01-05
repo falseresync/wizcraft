@@ -6,7 +6,7 @@ import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.skywand.CommonReports;
 import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
-import dev.falseresync.wizcraft.common.WizUtils;
+import dev.falseresync.wizcraft.common.WizUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,7 +52,7 @@ public class LightningFocus extends Focus {
 
             if (world instanceof ServerWorld serverWorld) {
                 var lightning = EntityType.LIGHTNING_BOLT.create(world);
-                var maxDistance = MathHelper.clamp(WizUtils.findViewDistance(world) * 16 / 4F, 32, 128);
+                var maxDistance = MathHelper.clamp(WizUtil.findViewDistance(world) * 16 / 4F, 32, 128);
                 var raycastResult = user.raycast(maxDistance, 0, true);
                 var pos = raycastResult.getType() == HitResult.Type.MISS
                         ? findGroundPos(serverWorld, raycastResult.getPos())

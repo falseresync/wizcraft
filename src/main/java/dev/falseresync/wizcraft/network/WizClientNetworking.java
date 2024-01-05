@@ -11,6 +11,6 @@ public class WizClientNetworking {
     }
 
     private static void triggerReport(TriggerReportS2CPacket packet, ClientPlayerEntity player, PacketSender responseSender) {
-        packet.report().execute(player);
+        packet.report().executeOnClient(player);
     }
 }

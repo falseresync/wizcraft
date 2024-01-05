@@ -8,11 +8,11 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public interface Report extends HasId {
+public interface ClientReport extends HasId {
     @Environment(EnvType.CLIENT)
-    void execute(ClientPlayerEntity player);
+    void executeOnClient(ClientPlayerEntity player);
 
-    static void trigger(ServerPlayerEntity player, Report report) {
+    static void trigger(ServerPlayerEntity player, ClientReport report) {
         ServerPlayNetworking.send(player, new TriggerReportS2CPacket(report));
     }
 }

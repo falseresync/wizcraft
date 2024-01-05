@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
-import dev.falseresync.wizcraft.api.common.report.AreaReport;
-import dev.falseresync.wizcraft.api.common.report.Report;
+import dev.falseresync.wizcraft.api.common.report.CommonReport;
+import dev.falseresync.wizcraft.api.common.report.ClientReport;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
 import dev.falseresync.wizcraft.common.report.WizReports;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
@@ -73,7 +73,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
         searchPedestals(world, pos, this);
         if (pedestals.size() < 4) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                Report.trigger(serverPlayer, WizReports.INVALID_PEDESTAL_FORMATION);
+                ClientReport.trigger(serverPlayer, WizReports.INVALID_PEDESTAL_FORMATION);
             }
             return;
         }
@@ -98,7 +98,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     protected void finishCrafting(@Nullable PlayerEntity player, ItemStack result) {
         pedestals.forEach(LensingPedestalBlockEntity::onCrafted);
         inventory.setStack(0, result);
-        AreaReport.trigger((ServerWorld) world, pos, (ServerPlayerEntity) player, WizReports.SUCCESS);
+        CommonReport.trigger((ServerWorld) world, pos, (ServerPlayerEntity) player, WizReports.SUCCESS);
     }
 
     @Override

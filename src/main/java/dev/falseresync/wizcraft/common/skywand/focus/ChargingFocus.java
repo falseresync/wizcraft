@@ -2,11 +2,11 @@ package dev.falseresync.wizcraft.common.skywand.focus;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.falseresync.wizcraft.api.common.report.AreaReport;
-import dev.falseresync.wizcraft.api.common.report.Report;
+import dev.falseresync.wizcraft.api.common.report.CommonReport;
+import dev.falseresync.wizcraft.api.common.report.ClientReport;
 import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
-import dev.falseresync.wizcraft.common.WizUtils;
+import dev.falseresync.wizcraft.common.WizUtil;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
@@ -57,18 +57,18 @@ public class ChargingFocus extends Focus {
             if (!world.isNight()
                     || world.getRainGradient(1) > 1
                     || world.getLightLevel(LightType.SKY, user.getBlockPos()) < world.getMaxLightLevel() * 0.5) {
-                Report.trigger(player, WizReports.CANNOT_CHARGE);
+                ClientReport.trigger(player, WizReports.CANNOT_CHARGE);
                 return ActionResult.FAIL;
             }
 
-            if (user.raycast(WizUtils.findViewDistance(world) * 16, 0, true).getType()
+            if (user.raycast(WizUtil.findViewDistance(world) * 16, 0, true).getType()
                     != HitResult.Type.MISS) {
-                Report.trigger(player, WizReports.CANNOT_CHARGE);
+                ClientReport.trigger(player, WizReports.CANNOT_CHARGE);
                 return ActionResult.FAIL;
             }
 
             if (wand.isFullyCharged()) {
-                Report.trigger(player, WizReports.ALREADY_FULLY_CHARGED);
+                ClientReport.trigger(player, WizReports.ALREADY_FULLY_CHARGED);
                 return ActionResult.PASS;
             }
 
@@ -100,7 +100,7 @@ public class ChargingFocus extends Focus {
         if (user instanceof ServerPlayerEntity player) {
             chargingProgress = 0;
             wand.addCharge(40);
-            AreaReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizReports.SUCCESSFULLY_CHARGED);
+            CommonReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizReports.SUCCESSFULLY_CHARGED);
         }
     }
 

@@ -7,6 +7,7 @@ import dev.falseresync.wizcraft.common.entity.WizEntities;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.recipe.WizRecipeSerializers;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
+import dev.falseresync.wizcraft.common.report.WizReports;
 import dev.falseresync.wizcraft.common.skywand.focus.WizFocusTypes;
 import dev.falseresync.wizcraft.network.WizServerNetworking;
 import net.fabricmc.api.ModInitializer;
@@ -22,6 +23,7 @@ public class Wizcraft implements ModInitializer {
     @Override
     public void onInitialize() {
         WizRegistries.register();
+        WizReports.register((id, report) -> Registry.register(WizRegistries.REPORTS, id, report));
         WizBlocks.register((id, block) -> Registry.register(Registries.BLOCK, id, block));
         WizBlockEntities.register((id, type) -> Registry.register(Registries.BLOCK_ENTITY_TYPE, id, type));
         WizItems.registerItems((id, item) -> Registry.register(Registries.ITEM, id, item));

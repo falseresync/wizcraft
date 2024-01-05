@@ -8,6 +8,7 @@
   "focus.wizcraft.comet_warp": "Comet Warp",
   "block.wizcraft.energized_worktable": "Energized worktable",
   "block.wizcraft.lensing_pedestal": "Lensing pedestal",
+  "entity.wizcraft.star_projectile": "Star projectile",
   "tooltip.wizcraft.sky_wand.active_focus": "Active focus: %s",
   "tooltip.wizcraft.sky_wand.change_focus": "Press [%s] to change focus",
   "tooltip.wizcraft.sky_wand.setup_anchor": "Use while sneaking to setup an anchor",

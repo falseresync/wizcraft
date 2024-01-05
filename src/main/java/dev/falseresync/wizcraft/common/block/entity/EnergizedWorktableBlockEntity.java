@@ -1,9 +1,9 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
+import dev.falseresync.wizcraft.api.common.report.AreaReport;
+import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
-import dev.falseresync.wizcraft.network.ClientSideReport;
-import dev.falseresync.wizcraft.network.s2c.TriggerReportS2CPacket;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import dev.falseresync.wizcraft.common.report.WizReports;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,8 +19,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -69,12 +68,12 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     }
 
     public void tryCraft(@Nullable PlayerEntity player) {
-        if (world == null) return;
+        if (world == null || world.isClient()) return;
 
         searchPedestals(world, pos, this);
         if (pedestals.size() < 4) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                ServerPlayNetworking.send(serverPlayer, new TriggerReportS2CPacket(ClientSideReport.INVALID_PEDESTAL_FORMATION));
+                Report.trigger(serverPlayer, WizReports.INVALID_PEDESTAL_FORMATION);
             }
             return;
         }
@@ -99,15 +98,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     protected void finishCrafting(@Nullable PlayerEntity player, ItemStack result) {
         pedestals.forEach(LensingPedestalBlockEntity::onCrafted);
         inventory.setStack(0, result);
-        if (player != null) {
-            reportSuccess();
-        }
-    }
-
-    protected void reportSuccess() {
-        if (world != null && !world.isClient()) {
-            world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 1f, 1f);
-        }
+        AreaReport.trigger((ServerWorld) world, pos, (ServerPlayerEntity) player, WizReports.SUCCESS);
     }
 
     @Override

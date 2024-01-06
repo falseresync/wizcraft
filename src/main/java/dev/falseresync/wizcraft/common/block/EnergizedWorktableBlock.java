@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "energized_worktable");
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "plated_worktable");
     public static final MapCodec<EnergizedWorktableBlock> CODEC = createCodec(EnergizedWorktableBlock::new);
 
     protected EnergizedWorktableBlock(Settings settings) {

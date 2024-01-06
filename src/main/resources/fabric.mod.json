@@ -3,7 +3,7 @@
 	"id": "wizcraft",
 	"version": "${version}",
 	"name": "Wizcraft",
-	"description": "Credits for many of the textures go to: ElvGames @itch.io, Devillas @itch.io",
+	"description": "Credits for many of the textures go to: ElvGames @itch.io, Devillas @itch.io \nThanks go to Falkreon, FoundationGames and other folks in ModFest Discord and elsewhere, who have helped me immensely to debug and develop this mod <3",
 	"authors": [
 		"falseresync"
 	],
@@ -29,6 +29,9 @@
 			"dev.falseresync.wizcraft.compat.emi.WizcraftEmiPlugin"
 		]
 	},
+	"mixins": [
+		"wizcraft.datafix.mixins.json"
+	],
 	"accessWidener" : "wizcraft.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.15.1",

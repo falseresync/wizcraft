@@ -6,7 +6,7 @@
   "focus.wizcraft.starshooter": "Starshooter",
   "focus.wizcraft.lightning": "Lightning",
   "focus.wizcraft.comet_warp": "Comet Warp",
-  "block.wizcraft.energized_worktable": "Energized worktable",
+  "block.wizcraft.plated_worktable": "Plated worktable",
   "block.wizcraft.lensing_pedestal": "Lensing pedestal",
   "entity.wizcraft.star_projectile": "Star projectile",
   "tooltip.wizcraft.sky_wand.active_focus": "Active focus: %s",

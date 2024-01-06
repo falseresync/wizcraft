@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 public class Wizcraft implements ModInitializer {
     public static final String MODID = "wizcraft";
-    public static final Logger LOGGER = LoggerFactory.getLogger("wizcraft");
+    public static final Logger LOGGER = LoggerFactory.getLogger("Wizcraft");
 
     @Override
     public void onInitialize() {

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.falseresync.wizcraft.datafixer.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "DataFixTypesMixin",
+    "NbtHelperMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

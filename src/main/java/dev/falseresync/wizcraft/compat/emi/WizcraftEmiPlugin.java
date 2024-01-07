@@ -13,17 +13,17 @@ import net.minecraft.util.Identifier;
 
 public class WizcraftEmiPlugin implements EmiPlugin {
     public static final Identifier EMI_ATLAS
-            = new Identifier(Wizcraft.MODID, "textures/block/energized_worktable_block.png");
-    public static final EmiStack ENERGIZED_WORKTABLE = EmiStack.of(WizItems.ENERGIZED_WORKTABLE);
+            = new Identifier(Wizcraft.MODID, "textures/block/plated_worktable_top.png");
+    public static final EmiStack PLATED_WORKTABLE = EmiStack.of(WizItems.PLATED_WORKTABLE);
     public static final EmiRecipeCategory LENSED_WORKTABLE = new EmiRecipeCategory(
             new Identifier(Wizcraft.MODID, "lensed_worktable"),
-            ENERGIZED_WORKTABLE,
+            PLATED_WORKTABLE,
             new EmiTexture(EMI_ATLAS, 0, 0, 16, 16));
 
     @Override
     public void register(EmiRegistry registry) {
         registry.addCategory(LENSED_WORKTABLE);
-        registry.addWorkstation(LENSED_WORKTABLE, ENERGIZED_WORKTABLE);
+        registry.addWorkstation(LENSED_WORKTABLE, PLATED_WORKTABLE);
 
         var recipeManager = registry.getRecipeManager();
         for (var recipeEntry : recipeManager.listAllOfType(WizRecipes.LENSED_WORKTABLE)) {

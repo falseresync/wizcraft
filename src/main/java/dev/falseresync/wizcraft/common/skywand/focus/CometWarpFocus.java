@@ -50,7 +50,7 @@ public class CometWarpFocus extends Focus {
 
     @Override
     public FocusType<CometWarpFocus> getType() {
-        return WizFocusTypes.COMET_WARP;
+        return WizFocuses.COMET_WARP;
     }
 
     @Override

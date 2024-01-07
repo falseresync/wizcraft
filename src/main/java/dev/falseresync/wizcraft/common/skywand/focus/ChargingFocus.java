@@ -43,7 +43,7 @@ public class ChargingFocus extends Focus {
 
     @Override
     public FocusType<ChargingFocus> getType() {
-        return WizFocusTypes.CHARGING;
+        return WizFocuses.CHARGING;
     }
 
     @Override

@@ -12,20 +12,15 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class WizBlocks {
-    public static final Block LENS;
-    public static final EnergizedWorktableBlock ENERGIZED_WORKTABLE;
+    public static final WizBlock LENS;
+    public static final PlatedWorktableBlock PLATED_WORKTABLE;
     public static final LensingPedestalBlock LENSING_PEDESTAL;
     private static final Map<Identifier, Block> TO_REGISTER = new HashMap<>();
 
     static {
-        LENS = r("lens", new Block(FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
-        ENERGIZED_WORKTABLE = r(new EnergizedWorktableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE)));
+        LENS = r(new WizBlock(new Identifier(Wizcraft.MODID, "lens"), FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
+        PLATED_WORKTABLE = r(new PlatedWorktableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE)));
         LENSING_PEDESTAL = r(new LensingPedestalBlock(FabricBlockSettings.copyOf(Blocks.BRICK_WALL)));
-    }
-
-    private static <T extends Block> T r(String id, T block) {
-        TO_REGISTER.put(new Identifier(Wizcraft.MODID, id), block);
-        return block;
     }
 
     private static <T extends Block & HasId> T r(T block) {

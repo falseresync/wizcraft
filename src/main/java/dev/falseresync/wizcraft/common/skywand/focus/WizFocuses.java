@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class WizFocusTypes {
+public class WizFocuses {
     public static final FocusType<ChargingFocus> CHARGING;
     public static final FocusType<StarshooterFocus> STARSHOOTER;
     public static final FocusType<LightningFocus> LIGHTNING;

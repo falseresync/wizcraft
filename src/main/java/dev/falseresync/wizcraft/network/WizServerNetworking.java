@@ -3,7 +3,7 @@ package dev.falseresync.wizcraft.network;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
 import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocusTypes;
+import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
 import dev.falseresync.wizcraft.network.c2s.UpdateSkyWandFocusC2SPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -40,7 +40,7 @@ public class WizServerNetworking {
             }
         });
         try (tx) {
-            var extracted = pickedFocusStack.getFocus().getType() == WizFocusTypes.CHARGING
+            var extracted = pickedFocusStack.getFocus().getType() == WizFocuses.CHARGING
                     || storage.extract(packet.pickedFocus(), 1, tx) == 1;
 
             if (!extracted) {
@@ -51,7 +51,7 @@ public class WizServerNetworking {
             }
 
             if (extracted) {
-                var inserted = activeFocusStack.getFocus().getType() == WizFocusTypes.CHARGING
+                var inserted = activeFocusStack.getFocus().getType() == WizFocuses.CHARGING
                         || storage.insert(activeFocusStack.toItemVariant(), 1, tx) == 1;
                 if (inserted) {
                     tx.commit();

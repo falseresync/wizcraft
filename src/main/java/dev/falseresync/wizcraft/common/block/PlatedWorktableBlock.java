@@ -2,7 +2,7 @@ package dev.falseresync.wizcraft.common.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.block.entity.EnergizedWorktableBlockEntity;
+import dev.falseresync.wizcraft.common.block.entity.PlatedWorktableBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.api.HasId;
@@ -22,11 +22,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
+public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "plated_worktable");
-    public static final MapCodec<EnergizedWorktableBlock> CODEC = createCodec(EnergizedWorktableBlock::new);
+    public static final MapCodec<PlatedWorktableBlock> CODEC = createCodec(PlatedWorktableBlock::new);
 
-    protected EnergizedWorktableBlock(Settings settings) {
+    protected PlatedWorktableBlock(Settings settings) {
         super(settings);
     }
 
@@ -38,13 +38,13 @@ public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new EnergizedWorktableBlockEntity(pos, state);
+        return new PlatedWorktableBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, WizBlockEntities.ENERGIZED_WORKTABLE, EnergizedWorktableBlockEntity::tick);
+        return validateTicker(type, WizBlockEntities.PLATED_WORKTABLE, PlatedWorktableBlockEntity::tick);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class EnergizedWorktableBlock extends BlockWithEntity implements HasId {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.getBlockEntity(pos) instanceof EnergizedWorktableBlockEntity worktable) {
+        if (world.getBlockEntity(pos) instanceof PlatedWorktableBlockEntity worktable) {
             if (world.isClient()) {
                 return ActionResult.SUCCESS;
             }

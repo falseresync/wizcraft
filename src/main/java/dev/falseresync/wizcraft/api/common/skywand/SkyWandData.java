@@ -6,7 +6,7 @@ import dev.falseresync.wizcraft.common.CommonKeys;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocusTypes;
+import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -19,7 +19,7 @@ public class SkyWandData {
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.INT.optionalFieldOf(CommonKeys.MAX_CHARGE, 100).forGetter(SkyWandData::getMaxCharge),
                     Codec.INT.optionalFieldOf(CommonKeys.CHARGE, 0).forGetter(SkyWandData::getCharge),
-                    FocusStack.CODEC.optionalFieldOf(CommonKeys.FOCUS_STACK, WizFocusTypes.CHARGING.defaultFocusStack())
+                    FocusStack.CODEC.optionalFieldOf(CommonKeys.FOCUS_STACK, WizFocuses.CHARGING.defaultFocusStack())
                             .forGetter(SkyWandData::getFocusStack)
             ).apply(instance, SkyWandData::new));
 

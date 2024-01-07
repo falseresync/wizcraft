@@ -15,7 +15,7 @@ public class WizRenderers {
     static {
         EntityRendererRegistry.register(WizEntities.STAR_PROJECTILE, StarProjectileRenderer::new);
 
-        BlockEntityRendererFactories.register(WizBlockEntities.ENERGIZED_WORKTABLE, EnergizedWorktableRenderer::new);
+        BlockEntityRendererFactories.register(WizBlockEntities.PLATED_WORKTABLE, EnergizedWorktableRenderer::new);
         BlockEntityRendererFactories.register(WizBlockEntities.LENSING_PEDESTAL, LensingPedestalRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(WizBlocks.LENSING_PEDESTAL, RenderLayer.getCutout());

@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class WizBlockEntities {
-    public static final BlockEntityType<EnergizedWorktableBlockEntity> ENERGIZED_WORKTABLE;
+    public static final BlockEntityType<PlatedWorktableBlockEntity> PLATED_WORKTABLE;
     public static final BlockEntityType<LensingPedestalBlockEntity> LENSING_PEDESTAL;
     private static final Map<Identifier, BlockEntityType<?>> TO_REGISTER = new HashMap<>();
 
     static {
-        ENERGIZED_WORKTABLE = r(WizBlocks.ENERGIZED_WORKTABLE.getId(), FabricBlockEntityTypeBuilder
-                .create(EnergizedWorktableBlockEntity::new, WizBlocks.ENERGIZED_WORKTABLE)
+        PLATED_WORKTABLE = r(WizBlocks.PLATED_WORKTABLE.getId(), FabricBlockEntityTypeBuilder
+                .create(PlatedWorktableBlockEntity::new, WizBlocks.PLATED_WORKTABLE)
                 .build());
         LENSING_PEDESTAL = r(WizBlocks.LENSING_PEDESTAL.getId(), FabricBlockEntityTypeBuilder
                 .create(LensingPedestalBlockEntity::new, WizBlocks.LENSING_PEDESTAL)

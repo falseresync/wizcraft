@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.client.render.blockentity;
 
 import dev.falseresync.wizcraft.client.render.CommonRenders;
-import dev.falseresync.wizcraft.common.block.entity.EnergizedWorktableBlockEntity;
+import dev.falseresync.wizcraft.common.block.entity.PlatedWorktableBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,7 +11,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
 @Environment(EnvType.CLIENT)
-public class EnergizedWorktableRenderer implements BlockEntityRenderer<EnergizedWorktableBlockEntity> {
+public class EnergizedWorktableRenderer implements BlockEntityRenderer<PlatedWorktableBlockEntity> {
     protected final ItemRenderer itemRenderer;
 
     public EnergizedWorktableRenderer(BlockEntityRendererFactory.Context ctx) {
@@ -19,7 +19,7 @@ public class EnergizedWorktableRenderer implements BlockEntityRenderer<Energized
     }
 
     @Override
-    public void render(EnergizedWorktableBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(PlatedWorktableBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var slot = entity.getStorage().getSlot(0);
         var world = entity.getWorld();
         if (slot.isResourceBlank() || world == null) {

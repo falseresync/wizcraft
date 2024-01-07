@@ -7,7 +7,7 @@ import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
 import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocusTypes;
+import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
 import dev.falseresync.wizcraft.network.c2s.UpdateSkyWandFocusC2SPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -54,7 +54,7 @@ public final class WizKeybindings {
                 var wand = SkyWandData.fromStack(mainHandStack);
                 var activeFocusStack = wand.getFocusStack();
                 if (focuses.isEmpty()) {
-                    if (activeFocusStack.getFocus().getType() == WizFocusTypes.CHARGING) {
+                    if (activeFocusStack.getFocus().getType() == WizFocuses.CHARGING) {
                         WizHud.Slots.UNDER_BOSS_BAR.clear();
                         WizHud.STATUS_MESSAGE.override(
                                 Text.translatable("hud.wizcraft.sky_wand.no_focuses"),
@@ -69,8 +69,8 @@ public final class WizKeybindings {
                     }
                 }
 
-                if (activeFocusStack.getFocus().getType() != WizFocusTypes.CHARGING) {
-                    focuses.offerFirst(WizFocusTypes.CHARGING.defaultFocusStack());
+                if (activeFocusStack.getFocus().getType() != WizFocuses.CHARGING) {
+                    focuses.offerFirst(WizFocuses.CHARGING.defaultFocusStack());
                 }
                 focuses.offerFirst(activeFocusStack);
 

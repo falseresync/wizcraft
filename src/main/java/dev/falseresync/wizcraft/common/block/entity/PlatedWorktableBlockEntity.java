@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnergizedWorktableBlockEntity extends BlockEntity {
+public class PlatedWorktableBlockEntity extends BlockEntity {
     public static final int PEDESTALS_SEARCH_COOLDOWN = 5;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
     protected final SimpleInventory inventory = new SimpleInventory(1) {
@@ -39,12 +39,12 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
     protected final InventoryStorage storage = InventoryStorage.of(inventory, null);
     protected int remainingPedestalsSearchCooldown = 0;
 
-    public EnergizedWorktableBlockEntity(BlockPos pos, BlockState state) {
-        super(WizBlockEntities.ENERGIZED_WORKTABLE, pos, state);
+    public PlatedWorktableBlockEntity(BlockPos pos, BlockState state) {
+        super(WizBlockEntities.PLATED_WORKTABLE, pos, state);
         inventory.addListener(sender -> markDirty());
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, EnergizedWorktableBlockEntity worktable) {
+    public static void tick(World world, BlockPos pos, BlockState state, PlatedWorktableBlockEntity worktable) {
         if (world.isClient()) {
             return;
         }
@@ -56,7 +56,7 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
         }
     }
 
-    protected static void searchPedestals(World world, BlockPos pos, EnergizedWorktableBlockEntity worktable) {
+    protected static void searchPedestals(World world, BlockPos pos, PlatedWorktableBlockEntity worktable) {
         worktable.remainingPedestalsSearchCooldown = PEDESTALS_SEARCH_COOLDOWN;
         worktable.pedestals.clear();
 

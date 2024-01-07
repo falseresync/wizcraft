@@ -27,7 +27,7 @@ public class LightningFocus extends Focus {
 
     @Override
     public FocusType<LightningFocus> getType() {
-        return WizFocusTypes.LIGHTNING;
+        return WizFocuses.LIGHTNING;
     }
 
     @Override

@@ -47,7 +47,7 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
                 .offerTo(exporter, new Identifier(Wizcraft.MODID, "sky_wand"));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.ENERGIZED_WORKTABLE)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.PLATED_WORKTABLE)
                 .input('g', Items.GOLD_INGOT)
                 .input('c', Items.CRAFTING_TABLE)
                 .input('d', Items.DIAMOND)

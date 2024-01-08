@@ -19,7 +19,7 @@ public class WizBlocks {
 
     static {
         LENS = r(new WizBlock(new Identifier(Wizcraft.MODID, "lens"), FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
-        PLATED_WORKTABLE = r(new PlatedWorktableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE)));
+        PLATED_WORKTABLE = r(new PlatedWorktableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).requiresTool()));
         LENSING_PEDESTAL = r(new LensingPedestalBlock(FabricBlockSettings.copyOf(Blocks.BRICK_WALL)));
     }
 

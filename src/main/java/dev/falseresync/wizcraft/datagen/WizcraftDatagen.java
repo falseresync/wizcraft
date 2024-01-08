@@ -9,5 +9,7 @@ public class WizcraftDatagen implements DataGeneratorEntrypoint {
 		var pack = fabricDataGenerator.createPack();
 		pack.addProvider(WizModelProvider::new);
 		pack.addProvider(WizRecipeProvider::new);
+		pack.addProvider(WizBlockLootTableProvider::new);
+		pack.addProvider(WizBlockTagProvider::new);
 	}
 }

@@ -2,6 +2,7 @@ package dev.falseresync.wizcraft.common.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
+import dev.falseresync.wizcraft.common.block.entity.EnergizedWorktableBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
 import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.WizUtil;
@@ -14,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -65,6 +67,17 @@ public class LensingPedestalBlock extends BlockWithEntity implements HasId {
         }
 
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.isOf(newState.getBlock())) {
+            if (world.getBlockEntity(pos) instanceof LensingPedestalBlockEntity pedestal) {
+                ItemScatterer.spawn(world, pos, pedestal.getInventory());
+            }
+
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
     }
 
     @Override

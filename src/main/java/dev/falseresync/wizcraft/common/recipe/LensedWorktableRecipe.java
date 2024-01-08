@@ -3,6 +3,7 @@ package dev.falseresync.wizcraft.common.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.falseresync.wizcraft.common.CommonKeys;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.HasId;
 import net.minecraft.inventory.Inventory;
@@ -22,14 +23,20 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public final class LensedWorktableRecipe implements Recipe<Inventory> {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "lensed_worktable");
+    public static final Identifier TYPE_ID = new Identifier(Wizcraft.MODID, "lensed_worktable");
     private final ItemStack result;
+    private final int craftingTime;
     private final Ingredient worktableInput;
     private final DefaultedList<Ingredient> pedestalInputs;
     private final DefaultedList<Ingredient> allIngredients;
 
     public LensedWorktableRecipe(ItemStack result, Ingredient worktableInput, DefaultedList<Ingredient> pedestalInputs) {
+        this(result, 60, worktableInput, pedestalInputs);
+    }
+
+    public LensedWorktableRecipe(ItemStack result, int craftingTime, Ingredient worktableInput, DefaultedList<Ingredient> pedestalInputs) {
         this.result = result;
+        this.craftingTime = craftingTime;
         this.worktableInput = worktableInput;
         this.pedestalInputs = pedestalInputs;
         this.allIngredients = DefaultedList.ofSize(pedestalInputs.size() + 1);
@@ -108,6 +115,10 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
         return this.result;
     }
 
+    public int getCraftingTime() {
+        return craftingTime;
+    }
+
     public Ingredient getWorktableInput() {
         return this.worktableInput;
     }
@@ -118,9 +129,10 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
 
     public static class Serializer implements RecipeSerializer<LensedWorktableRecipe>, HasId {
         public static final Codec<LensedWorktableRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ItemStack.RECIPE_RESULT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("worktable").forGetter(recipe -> recipe.worktableInput),
-                Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("pedestals")
+                ItemStack.RECIPE_RESULT_CODEC.fieldOf(CommonKeys.RESULT).forGetter(recipe -> recipe.result),
+                Codec.INT.optionalFieldOf(CommonKeys.CRAFTING_TIME, 60).forGetter(recipe -> recipe.craftingTime),
+                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf(CommonKeys.WORKTABLE).forGetter(recipe -> recipe.worktableInput),
+                Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf(CommonKeys.PEDESTALS)
                         .flatXmap(
                                 ingredients -> {
                                     var nonEmptyIngredients = ingredients.stream().filter(ingredient -> !ingredient.isEmpty()).toArray(Ingredient[]::new);
@@ -145,18 +157,20 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
         @Override
         public LensedWorktableRecipe read(PacketByteBuf buf) {
             var result = buf.readItemStack();
+            var craftingTime = buf.readVarInt();
             var worktableInput = Ingredient.fromPacket(buf);
             var numberOfPedestalInputs = buf.readVarInt();
             var pedestalInputs = DefaultedList.<Ingredient>ofSize(numberOfPedestalInputs);
             for (int i = 0; i < numberOfPedestalInputs; i++) {
                 pedestalInputs.add(Ingredient.fromPacket(buf));
             }
-            return new LensedWorktableRecipe(result, worktableInput, pedestalInputs);
+            return new LensedWorktableRecipe(result, craftingTime, worktableInput, pedestalInputs);
         }
 
         @Override
         public void write(PacketByteBuf buf, LensedWorktableRecipe recipe) {
             buf.writeItemStack(recipe.result);
+            buf.writeVarInt(recipe.craftingTime);
             recipe.worktableInput.write(buf);
             buf.writeVarInt(recipe.pedestalInputs.size());
             for (var pedestalInput : recipe.pedestalInputs) {
@@ -166,7 +180,7 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
 
         @Override
         public Identifier getId() {
-            return LensedWorktableRecipe.ID;
+            return LensedWorktableRecipe.TYPE_ID;
         }
     }
 }

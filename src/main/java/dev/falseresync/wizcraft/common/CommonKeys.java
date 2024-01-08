@@ -19,4 +19,10 @@ public final class CommonKeys {
     public static final String FOCUS = "focus";
     public static final String FOCUS_TYPE = "focus_type";
     public static final String FOCUS_STACK = "focus_stack";
+    public static final String CURRENT_RECIPE = "current_recipe";
+    public static final String RESULT = "result";
+    public static final String CRAFTING_TIME = "crafting_time";
+    public static final String REMAINING_CRAFTING_TIME = "remaining_crafting_time";
+    public static final String WORKTABLE = "worktable";
+    public static final String PEDESTALS = "pedestals";
 }

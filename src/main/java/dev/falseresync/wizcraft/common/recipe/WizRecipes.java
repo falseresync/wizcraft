@@ -13,7 +13,7 @@ public class WizRecipes {
     private static final Map<Identifier, RecipeType<?>> TO_REGISTER = new HashMap<>();
 
     static {
-        LENSED_WORKTABLE = r(LensedWorktableRecipe.ID);
+        LENSED_WORKTABLE = r(LensedWorktableRecipe.TYPE_ID);
     }
 
     private static <T extends Recipe<?>> RecipeType<T> r(Identifier id) {

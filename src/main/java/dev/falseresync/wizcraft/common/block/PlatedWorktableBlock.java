@@ -44,7 +44,7 @@ public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, WizBlockEntities.PLATED_WORKTABLE, PlatedWorktableBlockEntity::tick);
+        return world.isClient() ? null : validateTicker(type, WizBlockEntities.PLATED_WORKTABLE, PlatedWorktableBlockEntity::tick);
     }
 
     @Override
@@ -55,9 +55,7 @@ public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof PlatedWorktableBlockEntity worktable) {
-            if (world.isClient()) {
-                return ActionResult.SUCCESS;
-            }
+            if (world.isClient()) return ActionResult.CONSUME;
 
             var playerStack = player.getMainHandStack();
             if (playerStack.isOf(WizItems.SKY_WAND)) {

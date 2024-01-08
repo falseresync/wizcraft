@@ -28,6 +28,8 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         inventory.addListener(sender -> markDirty());
     }
 
+    // PUBLIC INTERFACE
+
     public void onCrafted(ItemStack remainder) {
         inventory.setStack(0, remainder);
     }
@@ -35,6 +37,16 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     public ItemStack getHeldStackCopy() {
         return inventory.getStack(0).copy();
     }
+
+    public SimpleInventory getInventory() {
+        return inventory;
+    }
+
+    public InventoryStorage getStorage() {
+        return storage;
+    }
+
+    // DATA-SAVING INTERNALS
 
     @Override
     public void markDirty() {
@@ -66,13 +78,5 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
-    }
-
-    public SimpleInventory getInventory() {
-        return inventory;
-    }
-
-    public InventoryStorage getStorage() {
-        return storage;
     }
 }

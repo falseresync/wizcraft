@@ -2,6 +2,7 @@ package dev.falseresync.wizcraft.common.block.entity;
 
 import dev.falseresync.wizcraft.api.annotation.MarksDirty;
 import dev.falseresync.wizcraft.api.annotation.NotRequiresMarkDirty;
+import dev.falseresync.wizcraft.api.annotation.RequiresMarkDirty;
 import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
 import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.common.CommonKeys;
@@ -15,8 +16,11 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -31,10 +35,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class WorktableBlockEntity extends BlockEntity {
     public static final int IDLE_SEARCH_COOLDOWN = 5;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
+    protected final List<BlockPos> nonEmptyPedestalPositions = new ArrayList<>();
     protected final SimpleInventory inventory = new SimpleInventory(1) {
         @Override
         public int getMaxCountPerStack() {
@@ -90,6 +96,7 @@ public class WorktableBlockEntity extends BlockEntity {
 
         remainingCraftingTime -= 1;
         searchPedestals(world, pos);
+        markDirty();
         if (pedestals.size() < 4) {
             interruptCrafting();
             return;
@@ -129,6 +136,22 @@ public class WorktableBlockEntity extends BlockEntity {
                 .ifPresent(this::beginCrafting);
     }
 
+    public List<BlockPos> getNonEmptyPedestalPositions() {
+        return nonEmptyPedestalPositions;
+    }
+
+    public int getRemainingCraftingTime() {
+        return remainingCraftingTime;
+    }
+
+    public int getCraftingTime() {
+        return craftingTime;
+    }
+
+    public ItemStack getHeldStackCopy() {
+        return inventory.getStack(0).copy();
+    }
+
     public SimpleInventory getInventory() {
         return inventory;
     }
@@ -139,7 +162,7 @@ public class WorktableBlockEntity extends BlockEntity {
 
     // DATA-MUTATING INTERNALS
 
-    @NotRequiresMarkDirty
+    @RequiresMarkDirty
     protected void searchPedestals(World world, BlockPos pos) {
         pedestals.clear();
 
@@ -226,6 +249,17 @@ public class WorktableBlockEntity extends BlockEntity {
 
         Inventories.writeNbt(nbt, inventory.getHeldStacks());
 
+        if (!pedestals.isEmpty()) {
+            var nbtList = pedestals.stream()
+                    .filter(pedestal -> !pedestal.getHeldStackCopy().isEmpty())
+                    .map(BlockEntity::getPos)
+                    .map(NbtHelper::fromBlockPos)
+                    .collect(Collectors.toCollection(NbtList::new));
+            nbt.put(CommonKeys.NON_EMPTY_PEDESTALS, nbtList);
+        } else {
+            nbt.remove(CommonKeys.NON_EMPTY_PEDESTALS);
+        }
+
         if (currentRecipeId != null) {
             nbt.putString(CommonKeys.CURRENT_RECIPE, currentRecipeId.toString());
         } else {
@@ -237,6 +271,12 @@ public class WorktableBlockEntity extends BlockEntity {
         } else {
             nbt.remove(CommonKeys.REMAINING_CRAFTING_TIME);
         }
+
+        if (craftingTime != 0) {
+            nbt.putInt(CommonKeys.CRAFTING_TIME, craftingTime);
+        } else {
+            nbt.remove(CommonKeys.CRAFTING_TIME);
+        }
     }
 
     @Override
@@ -246,12 +286,27 @@ public class WorktableBlockEntity extends BlockEntity {
         inventory.getHeldStacks().clear();
         Inventories.readNbt(nbt, inventory.getHeldStacks());
 
+        nonEmptyPedestalPositions.clear();
+        if (nbt.contains(CommonKeys.NON_EMPTY_PEDESTALS, NbtElement.LIST_TYPE)) {
+            var nbtList = nbt.getList(CommonKeys.NON_EMPTY_PEDESTALS, NbtElement.COMPOUND_TYPE);
+            for (int i = 0; i < nbtList.size(); i++) {
+                nonEmptyPedestalPositions.add(NbtHelper.toBlockPos(nbtList.getCompound(i)));
+            }
+        }
+
+        currentRecipeId = null;
         if (nbt.contains(CommonKeys.CURRENT_RECIPE, NbtElement.STRING_TYPE)) {
             currentRecipeId = Identifier.tryParse(nbt.getString(CommonKeys.CURRENT_RECIPE));
         }
 
+        remainingCraftingTime = 0;
         if (nbt.contains(CommonKeys.REMAINING_CRAFTING_TIME, NbtElement.INT_TYPE)) {
             remainingCraftingTime = nbt.getInt(CommonKeys.REMAINING_CRAFTING_TIME);
+        }
+
+        craftingTime = 0;
+        if (nbt.contains(CommonKeys.CRAFTING_TIME, NbtElement.INT_TYPE)) {
+            craftingTime = nbt.getInt(CommonKeys.CRAFTING_TIME);
         }
     }
 

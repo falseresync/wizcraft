@@ -19,7 +19,7 @@ public class WizBlocks {
 
     static {
         LENS = r("lens", new Block(FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
-        ENERGIZED_WORKTABLE = r(new EnergizedWorktableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE)));
+        ENERGIZED_WORKTABLE = r(new EnergizedWorktableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).requiresTool()));
         LENSING_PEDESTAL = r(new LensingPedestalBlock(FabricBlockSettings.copyOf(Blocks.BRICK_WALL)));
     }
 

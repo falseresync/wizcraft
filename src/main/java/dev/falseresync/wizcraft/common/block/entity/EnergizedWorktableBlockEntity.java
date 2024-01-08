@@ -133,6 +133,10 @@ public class EnergizedWorktableBlockEntity extends BlockEntity {
         return createNbt();
     }
 
+    public SimpleInventory getInventory() {
+        return inventory;
+    }
+
     public InventoryStorage getStorage() {
         return storage;
     }

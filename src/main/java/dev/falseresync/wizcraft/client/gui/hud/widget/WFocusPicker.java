@@ -6,7 +6,7 @@ import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWid
 import dev.falseresync.wizcraft.client.gui.DrawingExt;
 import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.fabricmc.api.EnvType;

@@ -1,14 +1,14 @@
-package dev.falseresync.wizcraft.common.skywand.focus;
+package dev.falseresync.wizcraft.common.wand.focus;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
+import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.skywand.CommonReports;
-import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.common.wand.CommonReports;
+import dev.falseresync.wizcraft.api.common.wand.Wand;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -79,7 +79,7 @@ public class CometWarpFocus extends Focus {
     }
 
     @Override
-    public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
+    public ActionResult use(World world, Wand wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a comet warp focus");
 
         if (user instanceof PlayerEntity player) {

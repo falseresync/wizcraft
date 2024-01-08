@@ -1,9 +1,9 @@
 package dev.falseresync.wizcraft.network;
 
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
+import dev.falseresync.wizcraft.api.common.wand.Wand;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
+import dev.falseresync.wizcraft.common.wand.focus.WizFocuses;
 import dev.falseresync.wizcraft.network.c2s.UpdateSkyWandFocusC2SPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -24,7 +24,7 @@ public class WizServerNetworking {
             throw new IllegalStateException("Must not update sky wand if it's not in the main hand");
         }
 
-        var wand = SkyWandData.fromStack(mainHandStack);
+        var wand = Wand.fromStack(mainHandStack);
         var storage = PlayerInventoryStorage.of(inventory);
 
         // Hopefully this *should* be guaranteed to be a FocusItem

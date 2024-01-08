@@ -1,9 +1,9 @@
-package dev.falseresync.wizcraft.api.common.skywand.focus;
+package dev.falseresync.wizcraft.api.common.wand.focus;
 
 import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.api.WizRegistries;
-import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.api.common.wand.Wand;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,21 +25,21 @@ public abstract class Focus implements HasId {
 
     public abstract Item getItem();
 
-    public int getMaxUsageTicks(SkyWandData wand) {
+    public int getMaxUsageTicks(Wand wand) {
         return 50;
     }
 
-    public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
+    public ActionResult use(World world, Wand wand, LivingEntity user) {
         return ActionResult.PASS;
     }
 
-    public void tick(World world, SkyWandData wand, LivingEntity user, int remainingUseTicks) {
+    public void tick(World world, Wand wand, LivingEntity user, int remainingUseTicks) {
     }
 
-    public void interrupt(World world, SkyWandData wand, LivingEntity user, int remainingUseTicks) {
+    public void interrupt(World world, Wand wand, LivingEntity user, int remainingUseTicks) {
     }
 
-    public void finish(World world, SkyWandData wand, LivingEntity user) {
+    public void finish(World world, Wand wand, LivingEntity user) {
     }
 
     public void appendTooltip(@Nullable World world, List<Text> tooltip, TooltipContext context) {

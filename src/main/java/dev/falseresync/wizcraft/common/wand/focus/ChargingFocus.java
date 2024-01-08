@@ -1,15 +1,15 @@
-package dev.falseresync.wizcraft.common.skywand.focus;
+package dev.falseresync.wizcraft.common.wand.focus;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.falseresync.wizcraft.api.common.report.CommonReport;
-import dev.falseresync.wizcraft.api.common.report.ClientReport;
-import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
+import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
+import dev.falseresync.wizcraft.api.common.report.Report;
+import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.common.WizUtil;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.common.report.WizReports;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -52,23 +52,23 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
-    public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
+    public ActionResult use(World world, Wand wand, LivingEntity user) {
         if (user instanceof ServerPlayerEntity player) {
             if (!world.isNight()
                     || world.getRainGradient(1) > 1
                     || world.getLightLevel(LightType.SKY, user.getBlockPos()) < world.getMaxLightLevel() * 0.5) {
-                ClientReport.trigger(player, WizReports.CANNOT_CHARGE);
+                Report.trigger(player, WizReports.Wand.CANNOT_CHARGE);
                 return ActionResult.FAIL;
             }
 
             if (user.raycast(WizUtil.findViewDistance(world) * 16, 0, true).getType()
                     != HitResult.Type.MISS) {
-                ClientReport.trigger(player, WizReports.CANNOT_CHARGE);
+                Report.trigger(player, WizReports.Wand.CANNOT_CHARGE);
                 return ActionResult.FAIL;
             }
 
             if (wand.isFullyCharged()) {
-                ClientReport.trigger(player, WizReports.ALREADY_FULLY_CHARGED);
+                Report.trigger(player, WizReports.Wand.ALREADY_FULLY_CHARGED);
                 return ActionResult.PASS;
             }
 
@@ -79,7 +79,7 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
-    public void tick(World world, SkyWandData wand, LivingEntity user, int remainingUseTicks) {
+    public void tick(World world, Wand wand, LivingEntity user, int remainingUseTicks) {
         super.tick(world, wand, user, remainingUseTicks);
         if (!world.isClient()) {
             chargingProgress += 1;
@@ -87,7 +87,7 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
-    public void interrupt(World world, SkyWandData wand, LivingEntity user, int remainingUseTicks) {
+    public void interrupt(World world, Wand wand, LivingEntity user, int remainingUseTicks) {
         super.interrupt(world, wand, user, remainingUseTicks);
         if (!world.isClient()) {
             chargingProgress = 0;
@@ -95,12 +95,12 @@ public class ChargingFocus extends Focus {
     }
 
     @Override
-    public void finish(World world, SkyWandData wand, LivingEntity user) {
+    public void finish(World world, Wand wand, LivingEntity user) {
         super.finish(world, wand, user);
         if (user instanceof ServerPlayerEntity player) {
             chargingProgress = 0;
             wand.addCharge(40);
-            CommonReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizReports.SUCCESSFULLY_CHARGED);
+            MultiplayerReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizReports.Wand.SUCCESSFULLY_CHARGED);
         }
     }
 

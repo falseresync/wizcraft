@@ -5,9 +5,9 @@ import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetQueryRespons
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
+import dev.falseresync.wizcraft.api.common.wand.Wand;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
+import dev.falseresync.wizcraft.common.wand.focus.WizFocuses;
 import dev.falseresync.wizcraft.network.c2s.UpdateSkyWandFocusC2SPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -51,7 +51,7 @@ public final class WizKeybindings {
                         .map(FocusStack::new)
                         .collect(Collectors.toCollection(ArrayDeque::new));
 
-                var wand = SkyWandData.fromStack(mainHandStack);
+                var wand = Wand.fromStack(mainHandStack);
                 var activeFocusStack = wand.getFocusStack();
                 if (focuses.isEmpty()) {
                     if (activeFocusStack.getFocus().getType() == WizFocuses.CHARGING) {

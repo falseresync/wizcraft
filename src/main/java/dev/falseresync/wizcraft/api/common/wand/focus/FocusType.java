@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.api.common.skywand.focus;
+package dev.falseresync.wizcraft.api.common.wand.focus;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.item.ItemStack;

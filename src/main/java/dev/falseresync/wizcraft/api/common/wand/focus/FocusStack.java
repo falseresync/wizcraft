@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.api.common.skywand.focus;
+package dev.falseresync.wizcraft.api.common.wand.focus;
 
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;

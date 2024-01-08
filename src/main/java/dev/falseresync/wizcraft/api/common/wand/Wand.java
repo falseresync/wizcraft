@@ -1,12 +1,12 @@
-package dev.falseresync.wizcraft.api.common.skywand;
+package dev.falseresync.wizcraft.api.common.wand;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.falseresync.wizcraft.common.CommonKeys;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
+import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
+import dev.falseresync.wizcraft.common.wand.focus.WizFocuses;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -14,20 +14,20 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.math.MathHelper;
 
-public class SkyWandData {
-    public static final Codec<SkyWandData> CODEC =
+public class Wand {
+    public static final Codec<Wand> CODEC =
             RecordCodecBuilder.create(instance -> instance.group(
-                    Codec.INT.optionalFieldOf(CommonKeys.MAX_CHARGE, 100).forGetter(SkyWandData::getMaxCharge),
-                    Codec.INT.optionalFieldOf(CommonKeys.CHARGE, 0).forGetter(SkyWandData::getCharge),
+                    Codec.INT.optionalFieldOf(CommonKeys.MAX_CHARGE, 100).forGetter(Wand::getMaxCharge),
+                    Codec.INT.optionalFieldOf(CommonKeys.CHARGE, 0).forGetter(Wand::getCharge),
                     FocusStack.CODEC.optionalFieldOf(CommonKeys.FOCUS_STACK, WizFocuses.CHARGING.defaultFocusStack())
-                            .forGetter(SkyWandData::getFocusStack)
-            ).apply(instance, SkyWandData::new));
+                            .forGetter(Wand::getFocusStack)
+            ).apply(instance, Wand::new));
 
     protected int maxCharge;
     protected int charge;
     protected FocusStack focusStack;
 
-    protected SkyWandData(int maxCharge, int charge, FocusStack focusStack) {
+    protected Wand(int maxCharge, int charge, FocusStack focusStack) {
         this.maxCharge = maxCharge;
         this.charge = charge;
         this.focusStack = focusStack;
@@ -36,8 +36,8 @@ public class SkyWandData {
     /**
      * Reads wand data from stack NBT. Doesn't modify or store the stack or irrelevant stack NBT
      */
-    public static SkyWandData fromStack(ItemStack stack) {
-        return CODEC.parse(NbtOps.INSTANCE, stack.getOrCreateSubNbt(CommonKeys.Namespaced.SKY_WAND))
+    public static Wand fromStack(ItemStack stack) {
+        return CODEC.parse(NbtOps.INSTANCE, stack.getOrCreateSubNbt(CommonKeys.Namespaced.WAND))
                 .resultOrPartial(Wizcraft.LOGGER::error).orElseThrow();
     }
 
@@ -45,7 +45,7 @@ public class SkyWandData {
      * Attach wand data to passed stack
      */
     public void attach(ItemStack stack) {
-        stack.setSubNbt(CommonKeys.Namespaced.SKY_WAND, toNbt());
+        stack.setSubNbt(CommonKeys.Namespaced.WAND, toNbt());
     }
 
     /**
@@ -53,7 +53,7 @@ public class SkyWandData {
      */
     public ItemStack copyAndAttach(ItemStack stack) {
         var modified = stack.copy();
-        modified.setSubNbt(CommonKeys.Namespaced.SKY_WAND, toNbt());
+        modified.setSubNbt(CommonKeys.Namespaced.WAND, toNbt());
         return modified;
     }
 

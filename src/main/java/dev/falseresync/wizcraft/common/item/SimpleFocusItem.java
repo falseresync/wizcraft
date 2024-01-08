@@ -1,9 +1,9 @@
 package dev.falseresync.wizcraft.common.item;
 
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusStack;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
+import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

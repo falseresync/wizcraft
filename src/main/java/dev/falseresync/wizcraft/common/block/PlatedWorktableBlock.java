@@ -61,7 +61,7 @@ public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
 
             var playerStack = player.getMainHandStack();
             if (playerStack.isOf(WizItems.SKY_WAND)) {
-                worktable.tryCraft(player);
+                worktable.interact(player);
                 return ActionResult.SUCCESS;
             }
 

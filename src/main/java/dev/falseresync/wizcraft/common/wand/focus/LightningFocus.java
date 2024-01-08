@@ -1,11 +1,11 @@
-package dev.falseresync.wizcraft.common.skywand.focus;
+package dev.falseresync.wizcraft.common.wand.focus;
 
-import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
+import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.skywand.CommonReports;
-import dev.falseresync.wizcraft.api.common.skywand.SkyWandData;
+import dev.falseresync.wizcraft.common.wand.CommonReports;
+import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.common.WizUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -41,7 +41,7 @@ public class LightningFocus extends Focus {
     }
 
     @Override
-    public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
+    public ActionResult use(World world, Wand wand, LivingEntity user) {
         Wizcraft.LOGGER.trace(user.getName() + " attempts to use a lightning focus");
 
         if (user instanceof PlayerEntity player) {

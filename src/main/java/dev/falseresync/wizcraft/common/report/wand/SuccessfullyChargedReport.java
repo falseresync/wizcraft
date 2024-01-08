@@ -1,7 +1,7 @@
-package dev.falseresync.wizcraft.common.report.skywand;
+package dev.falseresync.wizcraft.common.report.wand;
 
 import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
-import dev.falseresync.wizcraft.api.common.report.CommonReport;
+import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-public class SuccessfullyChargedReport implements CommonReport {
+public class SuccessfullyChargedReport implements MultiplayerReport {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "successfully_charged");
 
     @Override
@@ -43,6 +43,6 @@ public class SuccessfullyChargedReport implements CommonReport {
         var sourcePos = source.getEyePos()
                 .add(source.getHandPosOffset(WizItems.SKY_WAND))
                 .add(rotation.x * orthogonalDistance, -0.25, rotation.z * orthogonalDistance);
-        ReportUtil.addFireworkSparkles(world, sourcePos);
+        ReportUtil.addSparkles(world, sourcePos);
     }
 }

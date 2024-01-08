@@ -1,6 +1,6 @@
-package dev.falseresync.wizcraft.common.report.lensedworktable;
+package dev.falseresync.wizcraft.common.report.worktable;
 
-import dev.falseresync.wizcraft.api.common.report.ClientReport;
+import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import net.fabricmc.api.EnvType;
@@ -10,7 +10,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class InvalidPedestalFormationReport implements ClientReport {
+public class InvalidPedestalFormationReport implements Report {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "invalid_pedestal_formation");
 
     @Override

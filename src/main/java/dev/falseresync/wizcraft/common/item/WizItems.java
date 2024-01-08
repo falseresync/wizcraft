@@ -1,11 +1,11 @@
 package dev.falseresync.wizcraft.common.item;
 
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.api.common.skywand.focus.Focus;
-import dev.falseresync.wizcraft.api.common.skywand.focus.FocusType;
+import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.WizBlocks;
-import dev.falseresync.wizcraft.common.skywand.focus.*;
+import dev.falseresync.wizcraft.common.wand.focus.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.Block;

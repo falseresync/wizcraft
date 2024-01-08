@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.common.skywand;
+package dev.falseresync.wizcraft.common.wand;
 
 import dev.falseresync.wizcraft.client.gui.hud.WizHud;
 import net.minecraft.entity.LivingEntity;

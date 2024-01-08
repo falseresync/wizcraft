@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
@@ -27,8 +28,12 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         inventory.addListener(sender -> markDirty());
     }
 
-    public void onCrafted() {
-        inventory.clear();
+    public void onCrafted(ItemStack remainder) {
+        inventory.setStack(0, remainder);
+    }
+
+    public ItemStack getHeldStackCopy() {
+        return inventory.getStack(0).copy();
     }
 
     @Override

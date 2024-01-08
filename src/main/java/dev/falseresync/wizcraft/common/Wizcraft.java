@@ -8,7 +8,7 @@ import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.recipe.WizRecipeSerializers;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
 import dev.falseresync.wizcraft.common.report.WizReports;
-import dev.falseresync.wizcraft.common.skywand.focus.WizFocuses;
+import dev.falseresync.wizcraft.common.wand.focus.WizFocuses;
 import dev.falseresync.wizcraft.network.WizServerNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.registry.Registries;

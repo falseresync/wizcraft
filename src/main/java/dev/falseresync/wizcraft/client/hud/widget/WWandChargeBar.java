@@ -1,8 +1,8 @@
-package dev.falseresync.wizcraft.client.gui.hud.widget;
+package dev.falseresync.wizcraft.client.hud.widget;
 
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWidget;
-import dev.falseresync.wizcraft.client.gui.DrawingExt;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
+import dev.falseresync.wizcraft.api.client.hud.controller.ControllerAwareWidget;
+import dev.falseresync.wizcraft.client.DrawingExt;
+import dev.falseresync.wizcraft.api.client.hud.controller.HudController;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -25,8 +25,8 @@ public class WWandChargeBar extends WWidget implements ControllerAwareWidget {
     protected static final int OVERLAY_X_OFFSET = 16;
     protected static final float OVERLAY_U1 = (float) OVERLAY_X_OFFSET / BAR_WIDTH;
     protected static final float OVERLAY_U2 = (float) (OVERLAY_X_OFFSET + OVERLAY_WIDTH) / BAR_WIDTH;
-    public static final Identifier BAR = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/charge_bar.png");
-    public static final Identifier OVERLAY = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/charge_bar_overlay.png");
+    public static final Identifier BAR = new Identifier(Wizcraft.MODID, "textures/hud/wand/charge_bar.png");
+    public static final Identifier OVERLAY = new Identifier(Wizcraft.MODID, "textures/hud/wand/charge_bar_overlay.png");
     protected final Texture barTex;
     protected final Texture overlayTex;
     protected final int max;

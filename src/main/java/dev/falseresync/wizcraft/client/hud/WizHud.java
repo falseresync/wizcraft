@@ -1,15 +1,15 @@
-package dev.falseresync.wizcraft.client.gui.hud;
+package dev.falseresync.wizcraft.client.hud;
 
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetQueryResponse;
-import dev.falseresync.wizcraft.api.client.gui.hud.slot.HudSlot;
-import dev.falseresync.wizcraft.api.client.gui.hud.slot.WidgetTypePriority;
-import dev.falseresync.wizcraft.client.gui.hud.slot.TopLeftHudSlot;
-import dev.falseresync.wizcraft.client.gui.hud.slot.UnderBossBarHudSlot;
-import dev.falseresync.wizcraft.client.gui.hud.widget.WFocusPicker;
-import dev.falseresync.wizcraft.client.gui.hud.widget.WLabelWithSFX;
-import dev.falseresync.wizcraft.client.gui.hud.widget.WWandChargeBar;
+import dev.falseresync.wizcraft.api.client.hud.controller.HudController;
+import dev.falseresync.wizcraft.api.client.hud.controller.WidgetInstancePriority;
+import dev.falseresync.wizcraft.api.client.hud.controller.WidgetQueryResponse;
+import dev.falseresync.wizcraft.api.client.hud.slot.HudSlot;
+import dev.falseresync.wizcraft.api.client.hud.slot.WidgetTypePriority;
+import dev.falseresync.wizcraft.client.hud.slot.TopLeftHudSlot;
+import dev.falseresync.wizcraft.client.hud.slot.UnderBossBarHudSlot;
+import dev.falseresync.wizcraft.client.hud.widget.WFocusPicker;
+import dev.falseresync.wizcraft.client.hud.widget.WLabelWithSFX;
+import dev.falseresync.wizcraft.client.hud.widget.WWandChargeBar;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
@@ -56,7 +56,7 @@ public class WizHud {
         }
 
         var mainHandStack = client.player.getMainHandStack();
-        if (!mainHandStack.isOf(WizItems.SKY_WAND)) {
+        if (!mainHandStack.isOf(WizItems.WAND)) {
             return;
         }
 

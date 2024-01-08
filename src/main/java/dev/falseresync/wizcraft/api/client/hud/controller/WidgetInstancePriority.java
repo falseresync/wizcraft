@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.api.client.gui.hud.controller;
+package dev.falseresync.wizcraft.api.client.hud.controller;
 
 public enum WidgetInstancePriority {
     NORMAL(0),

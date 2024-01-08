@@ -23,10 +23,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SkyWandItem extends Item implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "sky_wand");
+public class WandItem extends Item implements HasId {
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand");
 
-    public SkyWandItem(Settings settings) {
+    public WandItem(Settings settings) {
         super(settings);
     }
 
@@ -102,7 +102,7 @@ public class SkyWandItem extends Item implements HasId {
         super.appendTooltip(stack, world, tooltip, context);
         var wand = Wand.fromStack(stack);
         var activeFocus = wand.getFocus();
-        tooltip.add(Text.translatable("tooltip.wizcraft.sky_wand.active_focus", activeFocus.getName().getString())
+        tooltip.add(Text.translatable("tooltip.wizcraft.wand.active_focus", activeFocus.getName().getString())
                 .styled(style -> style.withColor(Formatting.GRAY)));
         activeFocus.appendTooltip(world, tooltip, context);
         if (world != null && world.isClient()) {
@@ -118,7 +118,7 @@ public class SkyWandItem extends Item implements HasId {
     @Environment(EnvType.CLIENT)
     public void appendClientTooltip(Wand wand, List<Text> tooltip, TooltipContext context) {
         tooltip.add(Text.translatable(
-                "tooltip.wizcraft.sky_wand.change_focus",
+                "tooltip.wizcraft.wand.change_focus",
                     KeyBindingHelper.getBoundKeyOf(WizKeybindings.TOOL_CONTROL).getLocalizedText().getString()
                 ).styled(style -> style.withColor(Formatting.GRAY).withItalic(true)));
     }

@@ -1,7 +1,7 @@
-package dev.falseresync.wizcraft.api.client.gui.hud.slot;
+package dev.falseresync.wizcraft.api.client.hud.slot;
 
 import dev.falseresync.libhudcompat.LibHudCompat;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
+import dev.falseresync.wizcraft.api.client.hud.controller.HudController;
 import dev.falseresync.wizcraft.api.HasId;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.widget.data.Rect2i;

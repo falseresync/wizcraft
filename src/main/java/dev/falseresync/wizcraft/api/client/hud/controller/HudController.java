@@ -1,7 +1,7 @@
-package dev.falseresync.wizcraft.api.client.gui.hud.controller;
+package dev.falseresync.wizcraft.api.client.hud.controller;
 
-import dev.falseresync.wizcraft.api.client.gui.hud.slot.HudSlot;
-import dev.falseresync.wizcraft.api.client.gui.hud.slot.WidgetTypePriority;
+import dev.falseresync.wizcraft.api.client.hud.slot.HudSlot;
+import dev.falseresync.wizcraft.api.client.hud.slot.WidgetTypePriority;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Vec2i;

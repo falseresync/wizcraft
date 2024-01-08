@@ -13,7 +13,7 @@ public class WizBlockLootTableProvider extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         addDrop(WizBlocks.LENS, drops(WizItems.LENS));
-        addDrop(WizBlocks.PLATED_WORKTABLE, drops(WizItems.PLATED_WORKTABLE));
+        addDrop(WizBlocks.WORKTABLE, drops(WizItems.WORKTABLE));
         addDrop(WizBlocks.LENSING_PEDESTAL, drops(WizItems.LENSING_PEDESTAL));
     }
 }

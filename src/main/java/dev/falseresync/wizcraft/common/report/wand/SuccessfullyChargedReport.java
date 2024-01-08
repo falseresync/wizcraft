@@ -1,8 +1,8 @@
 package dev.falseresync.wizcraft.common.report.wand;
 
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
+import dev.falseresync.wizcraft.api.client.hud.controller.WidgetInstancePriority;
 import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
-import dev.falseresync.wizcraft.client.gui.hud.WizHud;
+import dev.falseresync.wizcraft.client.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.report.ReportUtil;
@@ -31,7 +31,7 @@ public class SuccessfullyChargedReport implements MultiplayerReport {
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE, 1F, 1.25F);
         WizHud.STATUS_MESSAGE.override(
-                Text.translatable("hud.wizcraft.sky_wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)),
+                Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)),
                 WidgetInstancePriority.HIGH);
     }
 
@@ -41,7 +41,7 @@ public class SuccessfullyChargedReport implements MultiplayerReport {
         var rotation = source.getRotationVec(1);
         var orthogonalDistance = 1;
         var sourcePos = source.getEyePos()
-                .add(source.getHandPosOffset(WizItems.SKY_WAND))
+                .add(source.getHandPosOffset(WizItems.WAND))
                 .add(rotation.x * orthogonalDistance, -0.25, rotation.z * orthogonalDistance);
         ReportUtil.addSparkles(world, sourcePos);
     }

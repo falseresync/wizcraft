@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PlatedWorktableBlockEntity extends BlockEntity {
+public class WorktableBlockEntity extends BlockEntity {
     public static final int IDLE_SEARCH_COOLDOWN = 5;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
     protected final SimpleInventory inventory = new SimpleInventory(1) {
@@ -54,14 +54,14 @@ public class PlatedWorktableBlockEntity extends BlockEntity {
     protected @Nullable Identifier currentRecipeId;
     protected @Nullable LensedWorktableRecipe currentRecipe;
 
-    public PlatedWorktableBlockEntity(BlockPos pos, BlockState state) {
-        super(WizBlockEntities.PLATED_WORKTABLE, pos, state);
+    public WorktableBlockEntity(BlockPos pos, BlockState state) {
+        super(WizBlockEntities.WORKTABLE, pos, state);
         inventory.addListener(sender -> markDirty());
     }
 
     // PUBLIC INTERFACE
 
-    public static void tick(World world, BlockPos pos, BlockState state, PlatedWorktableBlockEntity worktable) {
+    public static void tick(World world, BlockPos pos, BlockState state, WorktableBlockEntity worktable) {
         worktable.tick(world, pos, state);
     }
 

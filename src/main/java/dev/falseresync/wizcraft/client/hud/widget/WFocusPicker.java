@@ -1,10 +1,10 @@
-package dev.falseresync.wizcraft.client.gui.hud.widget;
+package dev.falseresync.wizcraft.client.hud.widget;
 
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWidget;
-import dev.falseresync.wizcraft.client.gui.DrawingExt;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
+import dev.falseresync.wizcraft.api.client.hud.controller.ControllerAwareWidget;
+import dev.falseresync.wizcraft.client.DrawingExt;
+import dev.falseresync.wizcraft.api.client.hud.controller.HudController;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
@@ -35,9 +35,9 @@ public class WFocusPicker extends WWidget implements ControllerAwareWidget {
     protected static final int LABEL_OFFSET = 4;
     protected static final int TOOLTIP_OFFSET = 2;
     protected static final int TOOLTIP_LINE_SPACING = 2;
-    protected static final Identifier SELECTION_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_selection.png");
-    protected static final Identifier HINT_LEFT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_left.png");
-    protected static final Identifier HINT_RIGHT_TEX = new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_right.png");
+    protected static final Identifier SELECTION_TEX = new Identifier(Wizcraft.MODID, "textures/hud/wand/focus_picker_selection.png");
+    protected static final Identifier HINT_LEFT_TEX = new Identifier(Wizcraft.MODID, "textures/hud/wand/focus_picker_hint_left.png");
+    protected static final Identifier HINT_RIGHT_TEX = new Identifier(Wizcraft.MODID, "textures/hud/wand/focus_picker_hint_right.png");
     protected final Deque<FocusStack> focusStacks;
     protected final WLabelWithSFX label;
     protected final List<WLabelWithSFX> tooltip;

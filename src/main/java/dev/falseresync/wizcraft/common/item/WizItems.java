@@ -23,13 +23,13 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public final class WizItems {
-    public static final SkyWandItem SKY_WAND;
+    public static final WandItem WAND;
     public static final SimpleFocusItem<ChargingFocus> CHARGING_FOCUS;
     public static final SimpleFocusItem<StarshooterFocus> STARSHOOTER_FOCUS;
     public static final SimpleFocusItem<LightningFocus> LIGHTNING_FOCUS;
     public static final SimpleFocusItem<CometWarpFocus> COMET_WARP_FOCUS;
     public static final BlockItem LENS;
-    public static final BlockItem PLATED_WORKTABLE;
+    public static final BlockItem WORKTABLE;
     public static final BlockItem LENSING_PEDESTAL;
     public static final ItemGroup GROUP_GENERAL;
     private static final FabricItemSettings SIMPLE_FOCUS_SETTINGS;
@@ -39,7 +39,7 @@ public final class WizItems {
     private static final Map<Identifier, ItemGroup> ITEM_GROUPS_TO_REGISTER = new HashMap<>();
 
     static {
-        SKY_WAND = r(new SkyWandItem(new FabricItemSettings().maxCount(1)));
+        WAND = r(new WandItem(new FabricItemSettings().maxCount(1)));
 
         SIMPLE_FOCUS_SETTINGS = new FabricItemSettings().maxCount(1);
         var chargingFocusItem = new SimpleFocusItem<>(SIMPLE_FOCUS_SETTINGS, WizFocuses.CHARGING);
@@ -50,11 +50,11 @@ public final class WizItems {
 
         SIMPLE_BLOCK_ITEM_SETTINGS = new FabricItemSettings();
         LENS = rBlockItem(WizBlocks.LENS);
-        PLATED_WORKTABLE = rBlockItem(WizBlocks.PLATED_WORKTABLE);
+        WORKTABLE = rBlockItem(WizBlocks.WORKTABLE);
         LENSING_PEDESTAL = rBlockItem(WizBlocks.LENSING_PEDESTAL);
 
         GROUP_GENERAL = r(new Identifier(Wizcraft.MODID, "general"), FabricItemGroup.builder()
-                .icon(SKY_WAND::getDefaultStack)
+                .icon(WAND::getDefaultStack)
                 .displayName(Text.translatable("itemGroup.wizcraft"))
                 .entries((displayContext, entries) -> GROUP_ENTRIES.get(Group.GENERAL).forEach(entries::add))
                 .build());

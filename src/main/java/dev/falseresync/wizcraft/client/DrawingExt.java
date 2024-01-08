@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.client.gui;
+package dev.falseresync.wizcraft.client;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Color;

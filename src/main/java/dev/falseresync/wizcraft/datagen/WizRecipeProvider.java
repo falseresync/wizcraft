@@ -38,7 +38,7 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
                 .offerTo(exporter, lwPrefix(WizItems.COMET_WARP_FOCUS));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizItems.SKY_WAND)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizItems.WAND)
                 .input('d', Items.DIAMOND)
                 .input('g', Items.GOLD_INGOT)
                 .input('s', Items.STICK)
@@ -46,7 +46,7 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .pattern(" gs")
                 .pattern("s  ")
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-                .offerTo(exporter, WizItems.SKY_WAND.getId());
+                .offerTo(exporter, WizItems.WAND.getId());
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, WizItems.LENS)
                 .input('g', Items.GOLD_INGOT)
@@ -59,7 +59,7 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_amethyst", conditionsFromItem(Items.AMETHYST_SHARD))
                 .offerTo(exporter, WizBlocks.LENS.getId());
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.PLATED_WORKTABLE)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.WORKTABLE)
                 .input('g', Items.GOLD_INGOT)
                 .input('c', Items.CRAFTING_TABLE)
                 .input('d', Items.DIAMOND)
@@ -68,7 +68,7 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .pattern("gcg")
                 .pattern("sss")
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-                .offerTo(exporter, WizBlocks.PLATED_WORKTABLE.getId());
+                .offerTo(exporter, WizBlocks.WORKTABLE.getId());
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.LENSING_PEDESTAL)
                 .input('l', WizItems.LENS)

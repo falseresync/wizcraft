@@ -1,13 +1,11 @@
-package dev.falseresync.wizcraft.client.gui.hud.slot;
+package dev.falseresync.wizcraft.client.hud.slot;
 
-import dev.falseresync.wizcraft.api.client.gui.hud.slot.HudSlot;
+import dev.falseresync.wizcraft.api.client.hud.slot.HudSlot;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.widget.data.Rect2i;
 import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
 import net.minecraft.util.Identifier;
-
-import java.util.Optional;
 
 public class TopLeftHudSlot extends HudSlot {
     private static final Identifier ID = new Identifier(Wizcraft.MODID, "top_left");

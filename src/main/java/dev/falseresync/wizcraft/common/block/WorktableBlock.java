@@ -2,7 +2,7 @@ package dev.falseresync.wizcraft.common.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.block.entity.PlatedWorktableBlockEntity;
+import dev.falseresync.wizcraft.common.block.entity.WorktableBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.api.HasId;
@@ -23,11 +23,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "plated_worktable");
-    public static final MapCodec<PlatedWorktableBlock> CODEC = createCodec(PlatedWorktableBlock::new);
+public class WorktableBlock extends BlockWithEntity implements HasId {
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "worktable");
+    public static final MapCodec<WorktableBlock> CODEC = createCodec(WorktableBlock::new);
 
-    protected PlatedWorktableBlock(Settings settings) {
+    protected WorktableBlock(Settings settings) {
         super(settings);
     }
 
@@ -39,13 +39,13 @@ public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new PlatedWorktableBlockEntity(pos, state);
+        return new WorktableBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient() ? null : validateTicker(type, WizBlockEntities.PLATED_WORKTABLE, PlatedWorktableBlockEntity::tick);
+        return world.isClient() ? null : validateTicker(type, WizBlockEntities.WORKTABLE, WorktableBlockEntity::tick);
     }
 
     @Override
@@ -55,11 +55,11 @@ public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.getBlockEntity(pos) instanceof PlatedWorktableBlockEntity worktable) {
+        if (world.getBlockEntity(pos) instanceof WorktableBlockEntity worktable) {
             if (world.isClient()) return ActionResult.CONSUME;
 
             var playerStack = player.getMainHandStack();
-            if (playerStack.isOf(WizItems.SKY_WAND)) {
+            if (playerStack.isOf(WizItems.WAND)) {
                 worktable.interact(player);
                 return ActionResult.SUCCESS;
             }
@@ -76,7 +76,7 @@ public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
-            if (world.getBlockEntity(pos) instanceof PlatedWorktableBlockEntity worktable) {
+            if (world.getBlockEntity(pos) instanceof WorktableBlockEntity worktable) {
                 ItemScatterer.spawn(world, pos, worktable.getInventory());
             }
 

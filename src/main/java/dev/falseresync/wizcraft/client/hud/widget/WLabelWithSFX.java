@@ -1,7 +1,7 @@
-package dev.falseresync.wizcraft.client.gui.hud.widget;
+package dev.falseresync.wizcraft.client.hud.widget;
 
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.ControllerAwareWidget;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.HudController;
+import dev.falseresync.wizcraft.api.client.hud.controller.ControllerAwareWidget;
+import dev.falseresync.wizcraft.api.client.hud.controller.HudController;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.TextAlignment;
 import io.github.cottonmc.cotton.gui.widget.WLabel;

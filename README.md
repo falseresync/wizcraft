@@ -1,11 +1,11 @@
 # Wizcraft
 ![Wizcraft Banner](https://cdn.modrinth.com/data/F9eqqJxr/images/f5548ac2b96dca43a57a28c5c18dacd17dfb6a67.png)
 
-## Sky Wand and Focuses
+## Wand and Focuses
 
-Sky Wand is a versatile tool! You can combine it with focuses by having some focuses in your inventory and pressing [LEFT ALT] to cycle through them.
+Wand is a versatile tool! You can combine it with focuses by having some focuses in your inventory and pressing [LEFT ALT] to cycle through them.
 
-![Sky wand and focuses preview](https://cdn.modrinth.com/data/F9eqqJxr/images/94c3539c1b0085e5d1dccc6212b1eda240afbb27.png)
+![Wand and Focuses preview](https://cdn.modrinth.com/data/F9eqqJxr/images/94c3539c1b0085e5d1dccc6212b1eda240afbb27.png)
 
 ### Charging focus
 

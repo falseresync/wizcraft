@@ -12,17 +12,6 @@ public class FocusStack {
     private final ItemStack stack;
     private final Focus focus;
 
-    public static final Codec<FocusStack> CODEC =
-            RecordCodecBuilder.create(instance -> instance.group(
-                    ItemStack.CODEC.fieldOf(CommonKeys.STACK).forGetter(FocusStack::toItemStack),
-                    Focus.CODEC.fieldOf(CommonKeys.FOCUS).forGetter(FocusStack::getFocus)
-            ).apply(instance, FocusStack::new));
-
-    private FocusStack(ItemStack stack, Focus focus) {
-        this.stack = stack;
-        this.focus = focus;
-    }
-
     public FocusStack(ItemVariant variant) {
         this(variant.toStack());
     }

@@ -5,8 +5,11 @@ import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
+import dev.falseresync.wizcraft.datafixer.fixes.FlattenFocusStackNbtFix;
+import dev.falseresync.wizcraft.datafixer.fixes.RenameSkyWandToWandItemNbtFix;
 import dev.falseresync.wizcraft.datafixer.schema.WizSchema100;
 import dev.falseresync.wizcraft.datafixer.schema.WizSchema200;
+import dev.falseresync.wizcraft.datafixer.schema.WizSchema300;
 import net.minecraft.SharedConstants;
 import net.minecraft.datafixer.Schemas;
 import net.minecraft.datafixer.TypeReferences;
@@ -29,7 +32,7 @@ import java.util.function.BiFunction;
  */
 public class WizcraftDataFixer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Wizcraft/DataFixer");
-    public static final int DATA_VERSION = 200;
+    public static final int DATA_VERSION = 300;
     private static final int VANILLA_SCHEMA_VERSION = DataFixUtils.makeKey(SharedConstants.getGameVersion().getSaveVersion().getId());
     private static final BiFunction<Integer, Schema, Schema> EMPTY_SCHEMA = IdentifierNormalizingSchema::new;
     private static final String KEY_DATA_VERSION = "wizcraft:data_version";
@@ -49,10 +52,19 @@ public class WizcraftDataFixer {
         var schema100 = builder.addSchema(100, WizSchema100::new);
         builder.addFixer(new ChoiceTypesFix(schema100, "Add Star projectile", TypeReferences.ENTITY));
         builder.addFixer(new ChoiceTypesFix(schema100, "Add Lensing pedestal and Energized worktable", TypeReferences.BLOCK_ENTITY));
+
         var schema200 = builder.addSchema(200, WizSchema200::new);
         builder.addFixer(RenameBlockEntityFix.create(schema200, "Rename Energized worktable to Plated worktable", id -> id.replace("energized", "plated")));
         builder.addFixer(BlockNameFix.create(schema200, "Rename Energized worktable to Plated worktable", id -> id.replace("energized", "plated")));
         builder.addFixer(ItemNameFix.create(schema200, "Rename Energized worktable to Plated worktable", id -> id.replace("energized", "plated")));
+
+        var schema300 = builder.addSchema(300, WizSchema300::new);
+        builder.addFixer(RenameBlockEntityFix.create(schema300, "Rename Plated worktable to Worktable", id -> id.replace("plated_", "")));
+        builder.addFixer(BlockNameFix.create(schema300, "Rename Plated worktable to Worktable", id -> id.replace("plated_", "")));
+        builder.addFixer(ItemNameFix.create(schema300, "Rename Plated worktable to Worktable", id -> id.replace("plated_", "")));
+        builder.addFixer(ItemNameFix.create(schema300, "Rename Sky wand to Wand (ID)", id -> id.replace("sky_", "")));
+        builder.addFixer(new RenameSkyWandToWandItemNbtFix(schema300));
+        builder.addFixer(new FlattenFocusStackNbtFix(schema300));
 
         LOGGER.info("Bootstrapping an executor");
         return builder.buildOptimized(

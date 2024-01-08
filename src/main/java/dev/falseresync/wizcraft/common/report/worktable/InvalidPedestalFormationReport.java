@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.common.report.worktable;
 
 import dev.falseresync.wizcraft.api.common.report.Report;
-import dev.falseresync.wizcraft.client.gui.hud.WizHud;
+import dev.falseresync.wizcraft.client.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,6 +22,6 @@ public class InvalidPedestalFormationReport implements Report {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.invalid_pedestal_formation"));
+        WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.worktable.invalid_pedestal_formation"));
     }
 }

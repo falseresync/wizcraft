@@ -1,14 +1,14 @@
 package dev.falseresync.wizcraft.client;
 
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetInstancePriority;
-import dev.falseresync.wizcraft.api.client.gui.hud.controller.WidgetQueryResponse;
-import dev.falseresync.wizcraft.client.gui.hud.WizHud;
+import dev.falseresync.wizcraft.api.client.hud.controller.WidgetInstancePriority;
+import dev.falseresync.wizcraft.api.client.hud.controller.WidgetQueryResponse;
+import dev.falseresync.wizcraft.client.hud.WizHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import dev.falseresync.wizcraft.common.wand.focus.WizFocuses;
-import dev.falseresync.wizcraft.network.c2s.UpdateSkyWandFocusC2SPacket;
+import dev.falseresync.wizcraft.network.c2s.UpdateWandFocusC2SPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -41,7 +41,7 @@ public final class WizKeybindings {
 
             while (TOOL_CONTROL.wasPressed()) {
                 var mainHandStack = client.player.getInventory().getMainHandStack();
-                if (!mainHandStack.isOf(WizItems.SKY_WAND)) {
+                if (!mainHandStack.isOf(WizItems.WAND)) {
                     return;
                 }
 
@@ -57,13 +57,13 @@ public final class WizKeybindings {
                     if (activeFocusStack.getFocus().getType() == WizFocuses.CHARGING) {
                         WizHud.Slots.UNDER_BOSS_BAR.clear();
                         WizHud.STATUS_MESSAGE.override(
-                                Text.translatable("hud.wizcraft.sky_wand.no_focuses"),
+                                Text.translatable("hud.wizcraft.wand.no_focuses"),
                                 WidgetInstancePriority.HIGH);
                         return;
                     } else if (inventory.getEmptySlot() == -1) {
                         WizHud.Slots.UNDER_BOSS_BAR.clear();
                         WizHud.STATUS_MESSAGE.override(
-                                Text.translatable("hud.wizcraft.sky_wand.full_inventory"),
+                                Text.translatable("hud.wizcraft.wand.full_inventory"),
                                 WidgetInstancePriority.HIGH);
                         return;
                     }
@@ -78,7 +78,7 @@ public final class WizKeybindings {
                 if (focusPickerQuery.status() == WidgetQueryResponse.Status.EXISTS && focusPickerQuery.widget() != null) {
                     WizHud.FOCUS_PICKER.resetDisplayTicks();
                     focusPickerQuery.widget().pickNext();
-                    ClientPlayNetworking.send(new UpdateSkyWandFocusC2SPacket(focusPickerQuery.widget().getPicked().toItemVariant()));
+                    ClientPlayNetworking.send(new UpdateWandFocusC2SPacket(focusPickerQuery.widget().getPicked().toItemVariant()));
                 }
             }
         });

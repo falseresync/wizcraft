@@ -15,11 +15,11 @@ public class WizModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.blockStateCollector.accept(
                 VariantsBlockStateSupplier.create(
-                        WizBlocks.PLATED_WORKTABLE,
+                        WizBlocks.WORKTABLE,
                         BlockStateVariant.create().put(
                                 VariantSettings.MODEL,
                                 TexturedModel.CUBE_BOTTOM_TOP.upload(
-                                        WizBlocks.PLATED_WORKTABLE,
+                                        WizBlocks.WORKTABLE,
                                         blockStateModelGenerator.modelCollector))));
         var lensingPedestalModelId = ModelIds.getBlockModelId(WizBlocks.LENSING_PEDESTAL);
         blockStateModelGenerator.blockStateCollector.accept(
@@ -31,7 +31,7 @@ public class WizModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-        itemModelGenerator.register(WizItems.SKY_WAND, Models.GENERATED);
+        itemModelGenerator.register(WizItems.WAND, Models.GENERATED);
         itemModelGenerator.register(WizItems.CHARGING_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizItems.STARSHOOTER_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizItems.LIGHTNING_FOCUS, Models.GENERATED);

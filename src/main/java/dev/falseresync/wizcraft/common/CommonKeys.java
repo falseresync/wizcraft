@@ -8,12 +8,12 @@ public final class CommonKeys {
     }
 
     public static final class Namespaced {
-        public static final String WAND = namespaced("sky_wand");
+        public static final String WAND = namespaced("wand");
         public static final String FOCUS = namespaced("focus");
     }
 
     public static final String STACK = "stack";
-    public static final String SKY_WAND = "sky_wand";
+    public static final String WAND = "wand";
     public static final String MAX_CHARGE = "max_charge";
     public static final String CHARGE = "charge";
     public static final String FOCUS = "focus";

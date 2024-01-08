@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.client;
 
-import dev.falseresync.wizcraft.client.gui.hud.WizHud;
+import dev.falseresync.wizcraft.client.hud.WizHud;
 import dev.falseresync.wizcraft.client.render.WizRenderers;
 import dev.falseresync.wizcraft.network.WizClientNetworking;
 import net.fabricmc.api.ClientModInitializer;

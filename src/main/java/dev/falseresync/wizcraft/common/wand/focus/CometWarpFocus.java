@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
-import dev.falseresync.wizcraft.client.gui.hud.WizHud;
+import dev.falseresync.wizcraft.client.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.wand.CommonReports;
@@ -67,11 +67,11 @@ public class CometWarpFocus extends Focus {
     public void appendTooltip(@Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(world, tooltip, context);
         if (this.anchor == null) {
-            tooltip.add(Text.translatable("tooltip.wizcraft.sky_wand.setup_anchor")
+            tooltip.add(Text.translatable("tooltip.wizcraft.wand.setup_anchor")
                     .styled(style -> style.withColor(Formatting.GRAY)));
         } else {
             tooltip.add(Text.translatable(
-                            "tooltip.wizcraft.sky_wand.has_anchor",
+                            "tooltip.wizcraft.wand.has_anchor",
                             this.anchor.getDimension().getValue().getPath(),
                             this.anchor.getPos().toShortString())
                     .styled(style -> style.withColor(Formatting.GRAY)));
@@ -130,7 +130,7 @@ public class CometWarpFocus extends Focus {
     protected void reportNoAnchor(World world, LivingEntity user) {
         if (world.isClient()) {
             user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-            WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.sky_wand.no_anchor"));
+            WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.wand.no_anchor"));
         }
     }
 

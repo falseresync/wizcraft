@@ -13,7 +13,6 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -77,7 +76,7 @@ public class PlatedWorktableBlock extends BlockWithEntity implements HasId {
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
-            if (world.getBlockEntity(pos) instanceof EnergizedWorktableBlockEntity worktable) {
+            if (world.getBlockEntity(pos) instanceof PlatedWorktableBlockEntity worktable) {
                 ItemScatterer.spawn(world, pos, worktable.getInventory());
             }
 

@@ -129,6 +129,10 @@ public class PlatedWorktableBlockEntity extends BlockEntity {
                 .ifPresent(this::beginCrafting);
     }
 
+    public SimpleInventory getInventory() {
+        return inventory;
+    }
+
     public InventoryStorage getStorage() {
         return storage;
     }

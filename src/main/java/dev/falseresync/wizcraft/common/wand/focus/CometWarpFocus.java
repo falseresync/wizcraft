@@ -2,20 +2,19 @@ package dev.falseresync.wizcraft.common.wand.focus;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.falseresync.wizcraft.api.common.report.Report;
+import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
-import dev.falseresync.wizcraft.client.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.wand.CommonReports;
-import dev.falseresync.wizcraft.api.common.wand.Wand;
+import dev.falseresync.wizcraft.common.report.WizReports;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -80,69 +79,48 @@ public class CometWarpFocus extends Focus {
 
     @Override
     public ActionResult use(World world, Wand wand, LivingEntity user) {
-        Wizcraft.LOGGER.trace(user.getName() + " attempts to use a comet warp focus");
-
-        if (user instanceof PlayerEntity player) {
+        if (user instanceof ServerPlayerEntity player) {
             if (user.isSneaking()) {
                 if (!wand.tryExpendCharge(DEFAULT_PLACEMENT_COST, player)) {
-                    CommonReports.insufficientCharge(world, user);
+                    Report.trigger(player, WizReports.Wand.INSUFFICIENT_CHARGE);
                     return ActionResult.FAIL;
                 }
 
-                reportPlaced(world, user);
+                Report.trigger(player, WizReports.Focuses.ANCHOR_PLACED);
                 this.anchor = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
             } else {
                 if (this.anchor == null) {
-                    reportNoAnchor(world, user);
+                    Report.trigger(player, WizReports.Focuses.NO_ANCHOR);
                     return ActionResult.FAIL;
                 }
 
-                if (!wand.tryExpendCharge(DEFAULT_WARPING_COST, player)) {
-                    CommonReports.insufficientCharge(world, user);
+                var destination = ((ServerWorld) world).getServer().getWorld(anchor.getDimension());
+                if (destination == null) {
+                    destination = ((ServerWorld) world);
+                }
+
+                var warpingCost = destination.getDimension() == world.getDimension()
+                        ? DEFAULT_WARPING_COST
+                        : DEFAULT_INTERDIMENSIONAL_COST;
+                if (!wand.tryExpendCharge(warpingCost, player)) {
+                    Report.trigger(player, WizReports.Wand.INSUFFICIENT_CHARGE);
                     return ActionResult.FAIL;
                 }
 
-                reportTeleported(world, user);
-                if (world instanceof ServerWorld serverWorld) {
-                    var destination = serverWorld.getServer().getWorld(this.anchor.getDimension());
-                    if (destination == null) {
-                        destination = serverWorld;
-                    }
-                    FabricDimensions.teleport(user, destination, new TeleportTarget(
-                            this.anchor.getPos().toCenterPos(),
-                            Vec3d.ZERO,
-                            user.getYaw(),
-                            user.getPitch()));
-                    this.anchor = null;
-                }
+                Report.trigger(player, WizReports.Focuses.TELEPORTED);
+                FabricDimensions.teleport(
+                        user, destination,
+                        new TeleportTarget(anchor.getPos().toCenterPos(), Vec3d.ZERO, user.getYaw(), user.getPitch()));
+                anchor = null;
 
             }
             return ActionResult.SUCCESS;
         }
 
-        return ActionResult.PASS;
+        return ActionResult.CONSUME;
     }
 
     public @Nullable GlobalPos getAnchor() {
-        return this.anchor;
-    }
-
-    protected void reportNoAnchor(World world, LivingEntity user) {
-        if (world.isClient()) {
-            user.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-            WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.wand.no_anchor"));
-        }
-    }
-
-    protected void reportPlaced(World world, LivingEntity user) {
-        if (world.isClient()) {
-            user.playSoundIfNotSilent(SoundEvents.ITEM_LODESTONE_COMPASS_LOCK);
-        }
-    }
-
-    protected void reportTeleported(World world, LivingEntity user) {
-        if (world.isClient()) {
-            user.playSoundIfNotSilent(SoundEvents.ENTITY_PLAYER_TELEPORT);
-        }
+        return anchor;
     }
 }

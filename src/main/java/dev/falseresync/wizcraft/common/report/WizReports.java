@@ -1,9 +1,10 @@
 package dev.falseresync.wizcraft.common.report;
 
 import dev.falseresync.wizcraft.api.common.report.Report;
-import dev.falseresync.wizcraft.common.report.wand.AlreadyFullyChargedReport;
-import dev.falseresync.wizcraft.common.report.wand.CannotChargeReport;
-import dev.falseresync.wizcraft.common.report.wand.SuccessfullyChargedReport;
+import dev.falseresync.wizcraft.common.report.focuses.AnchorPlacedReport;
+import dev.falseresync.wizcraft.common.report.focuses.NoAnchorReport;
+import dev.falseresync.wizcraft.common.report.focuses.TeleportedReport;
+import dev.falseresync.wizcraft.common.report.wand.*;
 import dev.falseresync.wizcraft.common.report.worktable.InvalidPedestalFormationReport;
 import dev.falseresync.wizcraft.common.report.worktable.WorktableCraftingReport;
 import dev.falseresync.wizcraft.common.report.worktable.WorktableInterruptedReport;
@@ -25,6 +26,7 @@ public final class WizReports {
     public static void register(BiConsumer<Identifier, Report> registrar) {
         Worktable.init();
         Wand.init();
+        Focuses.init();
         TO_REGISTER.forEach(registrar);
     }
 
@@ -42,6 +44,16 @@ public final class WizReports {
         public static final CannotChargeReport CANNOT_CHARGE = r(new CannotChargeReport());
         public static final AlreadyFullyChargedReport ALREADY_FULLY_CHARGED = r(new AlreadyFullyChargedReport());
         public static final SuccessfullyChargedReport SUCCESSFULLY_CHARGED = r(new SuccessfullyChargedReport());
+        public static final InsufficientChargeReport INSUFFICIENT_CHARGE = r(new InsufficientChargeReport());
+
+        private static void init() {
+        }
+    }
+
+    public static final class Focuses {
+        public static final NoAnchorReport NO_ANCHOR = r(new NoAnchorReport());
+        public static final AnchorPlacedReport ANCHOR_PLACED = r(new AnchorPlacedReport());
+        public static final TeleportedReport TELEPORTED = r(new TeleportedReport());
 
         private static void init() {
         }

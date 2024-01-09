@@ -22,7 +22,7 @@ public class LensingPedestalRenderer implements BlockEntityRenderer<LensingPedes
     public void render(LensingPedestalBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var world = entity.getWorld();
         var stack = entity.getHeldStackCopy();
-        if (stack.isEmpty() || world == null) return;
+        if (!entity.controlsRendering() || stack.isEmpty() || world == null) return;
 
         matrices.push();
 

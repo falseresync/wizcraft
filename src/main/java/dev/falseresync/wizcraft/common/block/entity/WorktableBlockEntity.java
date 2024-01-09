@@ -1,8 +1,7 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
-import dev.falseresync.wizcraft.api.annotation.MarksDirty;
-import dev.falseresync.wizcraft.api.annotation.NotRequiresMarkDirty;
-import dev.falseresync.wizcraft.api.annotation.RequiresMarkDirty;
+import dev.falseresync.wizcraft.api.annotation.dirty.Dirty;
+import dev.falseresync.wizcraft.api.annotation.dirty.MarksDirty;
 import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
 import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.common.CommonKeys;
@@ -40,14 +39,14 @@ import java.util.stream.Collectors;
 public class WorktableBlockEntity extends BlockEntity {
     public static final int IDLE_SEARCH_COOLDOWN = 5;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
-    protected final List<BlockPos> nonEmptyPedestalPositions = new ArrayList<>();
-    protected final SimpleInventory inventory = new SimpleInventory(1) {
+    protected final @Dirty List<BlockPos> nonEmptyPedestalPositions = new ArrayList<>();
+    protected final @MarksDirty SimpleInventory inventory = new SimpleInventory(1) {
         @Override
         public int getMaxCountPerStack() {
             return 1;
         }
     };
-    protected final InventoryStorage storage = InventoryStorage.of(inventory, null);
+    protected final @MarksDirty InventoryStorage storage = InventoryStorage.of(inventory, null);
     protected final SimpleInventory combinedInventory = new SimpleInventory(5) {
         @Override
         public int getMaxCountPerStack() {
@@ -55,9 +54,10 @@ public class WorktableBlockEntity extends BlockEntity {
         }
     };
     protected int remainingIdleSearchCooldown = 0;
-    protected int remainingCraftingTime = 0;
-    protected int craftingTime = 0;
-    protected @Nullable Identifier currentRecipeId;
+    protected @Dirty int remainingCraftingTime = 0;
+    protected @Dirty int craftingTime = 0;
+    protected @Dirty
+    @Nullable Identifier currentRecipeId;
     protected @Nullable LensedWorktableRecipe currentRecipe;
 
     public WorktableBlockEntity(BlockPos pos, BlockState state) {
@@ -162,7 +162,7 @@ public class WorktableBlockEntity extends BlockEntity {
 
     // DATA-MUTATING INTERNALS
 
-    @RequiresMarkDirty
+    @Dirty
     protected void searchPedestals(World world, BlockPos pos) {
         pedestals.clear();
 
@@ -190,6 +190,10 @@ public class WorktableBlockEntity extends BlockEntity {
         remainingCraftingTime = recipeEntry.value().getCraftingTime();
         markDirty();
 
+        for (var pedestal : pedestals) {
+            pedestal.setControlsRendering(false);
+        }
+
         MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.CRAFTING);
     }
 
@@ -215,7 +219,6 @@ public class WorktableBlockEntity extends BlockEntity {
         MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.SUCCESS);
     }
 
-    @NotRequiresMarkDirty
     protected void initStaticRecipeData(LensedWorktableRecipe recipe) {
         currentRecipe = recipe;
         craftingTime = currentRecipe.getCraftingTime();
@@ -229,6 +232,10 @@ public class WorktableBlockEntity extends BlockEntity {
         craftingTime = 0;
         remainingCraftingTime = 0;
         remainingIdleSearchCooldown = 0;
+
+        for (var pedestal : pedestals) {
+            pedestal.setControlsRendering(true);
+        }
 
         markDirty();
     }

@@ -3,9 +3,9 @@ package dev.falseresync.wizcraft.common.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.CommonKeys;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.api.HasId;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -31,7 +31,7 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
     private final DefaultedList<Ingredient> allIngredients;
 
     public LensedWorktableRecipe(ItemStack result, Ingredient worktableInput, DefaultedList<Ingredient> pedestalInputs) {
-        this(result, 60, worktableInput, pedestalInputs);
+        this(result, 100, worktableInput, pedestalInputs);
     }
 
     public LensedWorktableRecipe(ItemStack result, int craftingTime, Ingredient worktableInput, DefaultedList<Ingredient> pedestalInputs) {
@@ -130,7 +130,14 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
     public static class Serializer implements RecipeSerializer<LensedWorktableRecipe>, HasId {
         public static final Codec<LensedWorktableRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ItemStack.RECIPE_RESULT_CODEC.fieldOf(CommonKeys.RESULT).forGetter(recipe -> recipe.result),
-                Codec.INT.optionalFieldOf(CommonKeys.CRAFTING_TIME, 60).forGetter(recipe -> recipe.craftingTime),
+                Codec.INT.optionalFieldOf(CommonKeys.CRAFTING_TIME, 100)
+                        .flatXmap(
+                                craftingTime -> craftingTime < 30
+                                        ? DataResult.error(() -> "Crafting time below 30 ticks is unsupported")
+                                        : DataResult.success(craftingTime),
+                                DataResult::success
+                        )
+                        .forGetter(recipe -> recipe.craftingTime),
                 Ingredient.DISALLOW_EMPTY_CODEC.fieldOf(CommonKeys.WORKTABLE).forGetter(recipe -> recipe.worktableInput),
                 Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf(CommonKeys.PEDESTALS)
                         .flatXmap(

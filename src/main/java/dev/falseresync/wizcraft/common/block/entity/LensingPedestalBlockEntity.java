@@ -1,5 +1,6 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
+import dev.falseresync.wizcraft.common.CommonKeys;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -22,6 +24,7 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         }
     };
     protected final InventoryStorage storage = InventoryStorage.of(inventory, null);
+    protected boolean controlsRendering = true;
 
     public LensingPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.LENSING_PEDESTAL, pos, state);
@@ -32,6 +35,15 @@ public class LensingPedestalBlockEntity extends BlockEntity {
 
     public void onCrafted(ItemStack remainder) {
         inventory.setStack(0, remainder);
+    }
+
+    public void setControlsRendering(boolean control) {
+        controlsRendering = control;
+        markDirty();
+    }
+
+    public boolean controlsRendering() {
+        return controlsRendering;
     }
 
     public ItemStack getHeldStackCopy() {
@@ -59,14 +71,27 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+
         Inventories.writeNbt(nbt, inventory.getHeldStacks());
+
+        if (!controlsRendering) {
+            nbt.putBoolean(CommonKeys.CONTROLS_RENDERING, false);
+        } else {
+            nbt.remove(CommonKeys.CONTROLS_RENDERING);
+        }
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+
         inventory.getHeldStacks().clear();
         Inventories.readNbt(nbt, inventory.getHeldStacks());
+
+        controlsRendering = true;
+        if (nbt.contains(CommonKeys.CONTROLS_RENDERING, NbtElement.BYTE_TYPE)) {
+            controlsRendering = nbt.getBoolean(CommonKeys.CRAFTING_TIME);
+        }
     }
 
     @Nullable

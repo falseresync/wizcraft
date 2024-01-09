@@ -22,14 +22,11 @@ public class SpaghettificationParticle extends SpriteBillboardParticle {
     }
 
     protected SpaghettificationParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, ItemStack stack) {
-        super(world, x, y, z, 0.0, 0.0, 0.0);
+        super(world, x, y, z, 0, 0, 0);
         this.setSprite(MinecraftClient.getInstance().getItemRenderer().getModel(stack, world, null, 0).getParticleSprite());
-        this.velocityX *= 0.1F;
-        this.velocityY *= 0.1F;
-        this.velocityZ *= 0.1F;
-        this.velocityX += velocityX;
-        this.velocityY += velocityY;
-        this.velocityZ += velocityZ;
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
+        this.velocityZ = velocityZ;
         this.gravityStrength = 0;
         this.scale /= 2.0F;
         this.sampleU = world.random.nextFloat() * 3.0F;

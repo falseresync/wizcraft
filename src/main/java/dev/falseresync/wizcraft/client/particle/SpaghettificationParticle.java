@@ -27,8 +27,10 @@ public class SpaghettificationParticle extends SpriteBillboardParticle {
         this.velocityX = velocityX;
         this.velocityY = velocityY;
         this.velocityZ = velocityZ;
-        this.gravityStrength = 0;
-        this.scale /= 2.0F;
+        this.maxAge = 5;
+        this.collidesWithWorld = false;
+        this.gravityStrength = 0.05f;
+        this.scale /= 4.0F;
         this.sampleU = world.random.nextFloat() * 3.0F;
         this.sampleV = world.random.nextFloat() * 3.0F;
     }

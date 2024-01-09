@@ -31,7 +31,7 @@ public class WorktableSuccessReport implements MultiplayerReport {
 
     @Override
     public void executeOnServer(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source) {
-        world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 1f, 1f);
+        world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1f, 1f);
     }
 
     @Override

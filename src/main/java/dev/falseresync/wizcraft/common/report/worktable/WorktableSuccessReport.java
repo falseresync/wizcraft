@@ -5,6 +5,7 @@ import dev.falseresync.wizcraft.client.render.CommonRenders;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.particle.WizParticleTypes;
 import dev.falseresync.wizcraft.common.report.ReportUtil;
+import dev.falseresync.wizcraft.common.sound.WizSounds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -31,7 +32,7 @@ public class WorktableSuccessReport implements MultiplayerReport {
 
     @Override
     public void executeOnServer(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source) {
-        world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1f, 1f);
+        world.playSound(null, pos, WizSounds.Block.WORKTABLE_SUCCESS, SoundCategory.BLOCKS, 1f, 1f);
     }
 
     @Override

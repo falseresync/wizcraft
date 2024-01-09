@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class NoAnchorReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "no_anchor");
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "focus/no_anchor");
 
     @Override
     public Identifier getId() {

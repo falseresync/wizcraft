@@ -10,7 +10,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class InsufficientChargeReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "insufficient_charge");
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand/insufficient_charge");
     @Override
     public Identifier getId() {
         return ID;

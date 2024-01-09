@@ -6,6 +6,7 @@ import dev.falseresync.wizcraft.client.hud.WizHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.report.ReportUtil;
+import dev.falseresync.wizcraft.common.sound.WizSounds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -29,7 +30,7 @@ public class SuccessfullyChargedReport implements MultiplayerReport {
     @Override
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
-        player.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_TWINKLE, 1F, 1.25F);
+        player.playSound(WizSounds.Focus.SUCCESSFULLY_CHARGED, 1, 1);
         WizHud.STATUS_MESSAGE.override(
                 Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)),
                 WidgetInstancePriority.HIGH);

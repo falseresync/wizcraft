@@ -75,7 +75,7 @@ public class ChargingFocus extends Focus {
             user.setCurrentHand(user.getActiveHand());
             return ActionResult.SUCCESS;
         }
-        return ActionResult.PASS;
+        return ActionResult.CONSUME;
     }
 
     @Override

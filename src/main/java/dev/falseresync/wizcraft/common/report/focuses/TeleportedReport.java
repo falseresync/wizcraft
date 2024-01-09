@@ -7,7 +7,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 public class TeleportedReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "teleported");
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "focus/teleported");
 
     @Override
     public Identifier getId() {

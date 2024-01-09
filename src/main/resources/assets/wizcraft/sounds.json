@@ -1,0 +1,66 @@
+{
+  "block.worktable.success": {
+    "subtitle": "sound.wizcraft.block.worktable.success",
+    "sounds": [
+      "block/amethyst/resonate1",
+      "block/amethyst/resonate2",
+      "block/amethyst/resonate3",
+      "block/amethyst/resonate4"
+    ]
+  },
+  "entity.star_projectile.explode": {
+    "subtitle": "sound.wizcraft.entity.star_projectile.explode",
+    "sounds": [
+      {
+        "name": "random/explode1",
+        "volume": 0.1,
+        "pitch": 1.25
+      },
+      {
+        "name": "random/explode2",
+        "volume": 0.1,
+        "pitch": 1.25
+      },
+      {
+        "name": "random/explode3",
+        "volume": 0.1,
+        "pitch": 1.25
+      },
+      {
+        "name": "random/explode4",
+        "volume": 0.1,
+        "pitch": 1.25
+      }
+    ]
+  },
+  "focus.comet_warp.anchor_placed": {
+    "subtitle": "sound.wizcraft.focus.comet_warp.anchor_placed",
+    "sounds": [
+      {
+        "name": "block/lodestone/lock1",
+        "pitch": 0.85
+      },
+      {
+        "name": "block/lodestone/lock1",
+        "pitch": 0.95
+      },
+      {
+        "name": "block/lodestone/lock2",
+        "pitch": 0.85
+      },
+      {
+        "name": "block/lodestone/lock2",
+        "pitch": 0.95
+      }
+    ]
+  },
+  "focus.charging.successfully_charged": {
+    "subtitle": "sound.wizcraft.focus.charging.successfully_charged",
+    "sounds": [
+      {
+        "name": "fireworks/twinkle1",
+        "pitch": 1.25
+      }
+    ]
+  }
+}

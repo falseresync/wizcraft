@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class AlreadyFullyChargedReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "already_fully_charged");
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand/already_fully_charged");
 
     @Override
     public Identifier getId() {

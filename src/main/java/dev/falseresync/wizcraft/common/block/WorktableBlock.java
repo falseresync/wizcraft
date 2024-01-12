@@ -45,7 +45,7 @@ public class WorktableBlock extends BlockWithEntity implements HasId {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient() ? null : validateTicker(type, WizBlockEntities.WORKTABLE, WorktableBlockEntity::tick);
+        return validateTicker(type, WizBlockEntities.WORKTABLE, WorktableBlockEntity::tick);
     }
 
     @Override
@@ -77,6 +77,7 @@ public class WorktableBlock extends BlockWithEntity implements HasId {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             if (world.getBlockEntity(pos) instanceof WorktableBlockEntity worktable) {
+                worktable.remove(world, pos);
                 ItemScatterer.spawn(world, pos, worktable.getInventory());
             }
 

@@ -47,7 +47,7 @@ public class WorktableBlockEntity extends BlockEntity {
         }
     };
     protected final @MarksDirty InventoryStorage storage = InventoryStorage.of(inventory, null);
-    protected final SimpleInventory combinedInventory = new SimpleInventory(5) {
+    protected final SimpleInventory virtualCombinedInventory = new SimpleInventory(5) {
         @Override
         public int getMaxCountPerStack() {
             return 1;
@@ -55,7 +55,8 @@ public class WorktableBlockEntity extends BlockEntity {
     };
     protected int remainingIdleSearchCooldown = 0;
     protected @Dirty int remainingCraftingTime = 0;
-    protected @Dirty int craftingTime = 0;
+    protected int craftingTime = 0;
+    protected ItemStack currentlyCrafted = ItemStack.EMPTY;
     protected @Dirty
     @Nullable Identifier currentRecipeId;
     protected @Nullable LensedWorktableRecipe currentRecipe;
@@ -66,58 +67,6 @@ public class WorktableBlockEntity extends BlockEntity {
     }
 
     // PUBLIC INTERFACE
-
-    public static void tick(World world, BlockPos pos, BlockState state, WorktableBlockEntity worktable) {
-        worktable.tick(world, pos, state);
-    }
-
-    protected void tick(World world, BlockPos pos, BlockState state) {
-        if (currentRecipe == null && currentRecipeId != null) {
-            world.getRecipeManager().get(currentRecipeId)
-                    .flatMap(entry -> entry.value() instanceof LensedWorktableRecipe recipe
-                            ? Optional.of(recipe)
-                            : Optional.empty())
-                    .ifPresentOrElse(this::initStaticRecipeData, this::reset);
-        }
-
-        if (currentRecipe != null) {
-            tickCrafting(world, pos, currentRecipe);
-            return;
-        }
-
-        tickIdle(world, pos);
-    }
-
-    protected void tickCrafting(World world, BlockPos pos, LensedWorktableRecipe recipe) {
-        if (remainingCraftingTime <= 0) {
-            finishCrafting();
-            return;
-        }
-
-        remainingCraftingTime -= 1;
-        searchPedestals(world, pos);
-        markDirty();
-        if (pedestals.size() < 4) {
-            interruptCrafting();
-            return;
-        }
-
-        updateCombinedInventory();
-        if (!recipe.matches(combinedInventory, world)) {
-            interruptCrafting();
-            return;
-        }
-    }
-
-    protected void tickIdle(World world, BlockPos pos) {
-        if (remainingIdleSearchCooldown > 0) {
-            remainingIdleSearchCooldown -= 1;
-            return;
-        }
-
-        remainingIdleSearchCooldown = IDLE_SEARCH_COOLDOWN;
-        searchPedestals(world, pos);
-    }
 
     public void interact(@Nullable PlayerEntity player) {
         if (world == null || world.isClient()) return;
@@ -130,22 +79,26 @@ public class WorktableBlockEntity extends BlockEntity {
             return;
         }
 
-        updateCombinedInventory();
+        updateVirtualCombinedInventory();
         world.getRecipeManager()
-                .getFirstMatch(WizRecipes.LENSED_WORKTABLE, combinedInventory, world)
+                .getFirstMatch(WizRecipes.LENSED_WORKTABLE, virtualCombinedInventory, world)
                 .ifPresent(this::beginCrafting);
+    }
+
+    public void remove(World world, BlockPos pos) {
+        searchPedestals(world, pos);
+        pedestals.forEach(pedestal -> pedestal.linkTo(null));
     }
 
     public List<BlockPos> getNonEmptyPedestalPositions() {
         return nonEmptyPedestalPositions;
     }
 
-    public int getRemainingCraftingTime() {
-        return remainingCraftingTime;
-    }
-
-    public int getCraftingTime() {
-        return craftingTime;
+    public Progress getProgress() {
+        return new Progress(currentlyCrafted,
+                remainingCraftingTime,
+                craftingTime - remainingCraftingTime,
+                1 - (float) remainingCraftingTime / craftingTime);
     }
 
     public ItemStack getHeldStackCopy() {
@@ -160,6 +113,63 @@ public class WorktableBlockEntity extends BlockEntity {
         return storage;
     }
 
+    // TICKERS
+
+    public static void tick(World world, BlockPos pos, BlockState state, WorktableBlockEntity worktable) {
+        worktable.tick(world, pos, state);
+    }
+
+    protected void tick(World world, BlockPos pos, BlockState state) {
+        if (currentRecipe == null && currentRecipeId != null) {
+            updateVirtualCombinedInventory();
+            world.getRecipeManager().get(currentRecipeId)
+                    .flatMap(entry -> entry.value() instanceof LensedWorktableRecipe recipe
+                            ? Optional.of(recipe)
+                            : Optional.empty())
+                    .ifPresentOrElse(recipe -> initStaticRecipeData(world, recipe), this::reset);
+        }
+
+        if (world.isClient) return;
+
+        if (currentRecipe != null) {
+            tickCrafting(world, pos, currentRecipe);
+            return;
+        }
+
+        tickIdle(world, pos);
+    }
+
+    protected void tickCrafting(World world, BlockPos pos, LensedWorktableRecipe recipe) {
+        remainingCraftingTime -= 1;
+        searchPedestals(world, pos);
+        markDirty();
+        if (pedestals.size() < 4) {
+            interruptCrafting();
+            return;
+        }
+
+        updateVirtualCombinedInventory();
+        if (!recipe.matches(virtualCombinedInventory, world)) {
+            interruptCrafting();
+            return;
+        }
+
+        if (remainingCraftingTime <= 0) {
+            finishCrafting();
+            return;
+        }
+    }
+
+    protected void tickIdle(World world, BlockPos pos) {
+        if (remainingIdleSearchCooldown > 0) {
+            remainingIdleSearchCooldown -= 1;
+            return;
+        }
+
+        remainingIdleSearchCooldown = IDLE_SEARCH_COOLDOWN;
+        searchPedestals(world, pos);
+    }
+
     // DATA-MUTATING INTERNALS
 
     @Dirty
@@ -168,16 +178,21 @@ public class WorktableBlockEntity extends BlockEntity {
 
         for (var pedestalPos : List.of(pos.north(2), pos.west(2), pos.south(2), pos.east(2))) {
             if (world.getBlockEntity(pedestalPos) instanceof LensingPedestalBlockEntity pedestal) {
-                pedestals.add(pedestal);
+                if (!pedestal.isLinkedTo(this)) {
+                    world.breakBlock(pos, true);
+                    MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.CANNOT_PLACE);
+                } else {
+                    pedestals.add(pedestal);
+                    pedestal.linkTo(this);
+                }
             }
         }
     }
 
-    @MarksDirty
-    protected void updateCombinedInventory() {
-        combinedInventory.setStack(0, inventory.getStack(0).copy());
+    protected void updateVirtualCombinedInventory() {
+        virtualCombinedInventory.setStack(0, inventory.getStack(0).copy());
         for (int i = 0; i < pedestals.size(); i++) {
-            combinedInventory.setStack(i + 1, pedestals.get(i).getHeldStackCopy());
+            virtualCombinedInventory.setStack(i + 1, pedestals.get(i).getHeldStackCopy());
         }
     }
 
@@ -186,13 +201,9 @@ public class WorktableBlockEntity extends BlockEntity {
         if (world == null || world.isClient()) return;
 
         currentRecipeId = recipeEntry.id();
-        initStaticRecipeData(recipeEntry.value());
+        initStaticRecipeData(world, recipeEntry.value());
         remainingCraftingTime = recipeEntry.value().getCraftingTime();
         markDirty();
-
-        for (var pedestal : pedestals) {
-            pedestal.setControlsRendering(false);
-        }
 
         MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.CRAFTING);
     }
@@ -209,8 +220,8 @@ public class WorktableBlockEntity extends BlockEntity {
     protected void finishCrafting() {
         if (world == null || world.isClient() || currentRecipe == null) return;
 
-        inventory.setStack(0, currentRecipe.craft(null, world.getRegistryManager()));
-        var remainders = currentRecipe.getRemainder(combinedInventory);
+        inventory.setStack(0, currentRecipe.craft(virtualCombinedInventory, world.getRegistryManager()));
+        var remainders = currentRecipe.getRemainder(virtualCombinedInventory);
         for (int i = 0; i < pedestals.size(); i++) {
             pedestals.get(i).onCrafted(remainders.get(i + 1));
         }
@@ -219,23 +230,21 @@ public class WorktableBlockEntity extends BlockEntity {
         MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.SUCCESS);
     }
 
-    protected void initStaticRecipeData(LensedWorktableRecipe recipe) {
+    protected void initStaticRecipeData(World world, LensedWorktableRecipe recipe) {
         currentRecipe = recipe;
-        craftingTime = currentRecipe.getCraftingTime();
+        craftingTime = recipe.getCraftingTime();
+        currentlyCrafted = currentRecipe.craft(virtualCombinedInventory, world.getRegistryManager());
     }
 
     @MarksDirty
     protected void reset() {
-        combinedInventory.clear();
+        virtualCombinedInventory.clear();
         currentRecipeId = null;
         currentRecipe = null;
         craftingTime = 0;
+        currentlyCrafted = ItemStack.EMPTY;
         remainingCraftingTime = 0;
         remainingIdleSearchCooldown = 0;
-
-        for (var pedestal : pedestals) {
-            pedestal.setControlsRendering(true);
-        }
 
         markDirty();
     }
@@ -278,12 +287,6 @@ public class WorktableBlockEntity extends BlockEntity {
         } else {
             nbt.remove(CommonKeys.REMAINING_CRAFTING_TIME);
         }
-
-        if (craftingTime != 0) {
-            nbt.putInt(CommonKeys.CRAFTING_TIME, craftingTime);
-        } else {
-            nbt.remove(CommonKeys.CRAFTING_TIME);
-        }
     }
 
     @Override
@@ -310,11 +313,6 @@ public class WorktableBlockEntity extends BlockEntity {
         if (nbt.contains(CommonKeys.REMAINING_CRAFTING_TIME, NbtElement.INT_TYPE)) {
             remainingCraftingTime = nbt.getInt(CommonKeys.REMAINING_CRAFTING_TIME);
         }
-
-        craftingTime = 0;
-        if (nbt.contains(CommonKeys.CRAFTING_TIME, NbtElement.INT_TYPE)) {
-            craftingTime = nbt.getInt(CommonKeys.CRAFTING_TIME);
-        }
     }
 
     @Nullable
@@ -326,5 +324,8 @@ public class WorktableBlockEntity extends BlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
+    }
+
+    public record Progress(ItemStack currentlyCrafted, int remainingCraftingTime, int passedCraftingTime, float value) {
     }
 }

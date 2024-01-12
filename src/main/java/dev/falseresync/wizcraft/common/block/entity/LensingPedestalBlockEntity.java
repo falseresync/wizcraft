@@ -1,5 +1,7 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
+import dev.falseresync.wizcraft.api.annotation.dirty.Dirty;
+import dev.falseresync.wizcraft.api.annotation.dirty.MarksDirty;
 import dev.falseresync.wizcraft.common.CommonKeys;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
@@ -10,21 +12,25 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public class LensingPedestalBlockEntity extends BlockEntity {
-    protected final SimpleInventory inventory = new SimpleInventory(1) {
+    protected final @MarksDirty SimpleInventory inventory = new SimpleInventory(1) {
         @Override
         public int getMaxCountPerStack() {
             return 1;
         }
     };
-    protected final InventoryStorage storage = InventoryStorage.of(inventory, null);
-    protected boolean controlsRendering = true;
+    protected final @MarksDirty InventoryStorage storage = InventoryStorage.of(inventory, null);
+    protected @Dirty
+    @Nullable BlockPos linkedTo = null;
 
     public LensingPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(WizBlockEntities.LENSING_PEDESTAL, pos, state);
@@ -37,13 +43,17 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         inventory.setStack(0, remainder);
     }
 
-    public void setControlsRendering(boolean control) {
-        controlsRendering = control;
+    public void linkTo(@Nullable BlockEntity controller) {
+        linkedTo = controller != null ? controller.getPos() : null;
         markDirty();
     }
 
-    public boolean controlsRendering() {
-        return controlsRendering;
+    public boolean isLinked() {
+        return linkedTo != null;
+    }
+
+    public boolean isLinkedTo(BlockEntity controller) {
+        return isLinked() && controller.getPos().equals(linkedTo);
     }
 
     public ItemStack getHeldStackCopy() {
@@ -65,6 +75,7 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         super.markDirty();
         if (world != null) {
             world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+            Optional.ofNullable(linkedTo).map(world::getBlockEntity).ifPresent(BlockEntity::markDirty);
         }
     }
 
@@ -74,10 +85,10 @@ public class LensingPedestalBlockEntity extends BlockEntity {
 
         Inventories.writeNbt(nbt, inventory.getHeldStacks());
 
-        if (!controlsRendering) {
-            nbt.putBoolean(CommonKeys.CONTROLS_RENDERING, false);
+        if (linkedTo != null) {
+            nbt.put(CommonKeys.LINKED_TO, NbtHelper.fromBlockPos(linkedTo));
         } else {
-            nbt.remove(CommonKeys.CONTROLS_RENDERING);
+            nbt.remove(CommonKeys.LINKED_TO);
         }
     }
 
@@ -88,9 +99,9 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         inventory.getHeldStacks().clear();
         Inventories.readNbt(nbt, inventory.getHeldStacks());
 
-        controlsRendering = true;
-        if (nbt.contains(CommonKeys.CONTROLS_RENDERING, NbtElement.BYTE_TYPE)) {
-            controlsRendering = nbt.getBoolean(CommonKeys.CRAFTING_TIME);
+        linkedTo = null;
+        if (nbt.contains(CommonKeys.LINKED_TO, NbtElement.COMPOUND_TYPE)) {
+            linkedTo = NbtHelper.toBlockPos(nbt.getCompound(CommonKeys.LINKED_TO));
         }
     }
 

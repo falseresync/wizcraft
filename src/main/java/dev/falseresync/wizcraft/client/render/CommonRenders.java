@@ -18,24 +18,22 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
-public class CommonRenders {
+public final class CommonRenders {
     public static void levitateItemAboveBlock(World world, BlockPos pos, float tickDelta, ItemStack stack, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
-        levitateItemAboveBlock(world, pos, Vec3d.ZERO, tickDelta, stack, itemRenderer, matrices, vertexConsumers);
+        levitateItemAboveBlock(world, pos, Vec3d.ZERO, Vec3d.ZERO, tickDelta, stack, itemRenderer, matrices, vertexConsumers);
     }
 
-    public static void levitateItemAboveBlock(World world, BlockPos pos, Vec3d translation, float tickDelta, ItemStack stack, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
+    public static void levitateItemAboveBlock(World world, BlockPos pos, Vec3d translation, Vec3d scale, float tickDelta, ItemStack stack, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
+        if (stack.isEmpty()) return;
+
         matrices.push();
 
         var offset = MathHelper.sin((world.getTime() + tickDelta) / 16) / 16;
-        matrices.translate(translation.x, translation.y, translation.z);
-        matrices.translate(0.5, 1.25 + offset, 0.5);
+        matrices.translate(0.5 + translation.x, 1.25 + offset + translation.y, 0.5 + translation.z);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(world.getTime() + tickDelta));
 
-        if (stack.getItem() instanceof BlockItem) {
-            matrices.scale(0.75f, 0.75f, 0.75f);
-        } else {
-            matrices.scale(0.5f, 0.5f, 0.5f);
-        }
+        scale = scale.multiply(stack.getItem() instanceof BlockItem ? 0.75 : 0.5);
+        matrices.scale((float) scale.x, (float) scale.y, (float) scale.z);
 
         var lightAbove = WorldRenderer.getLightmapCoordinates(world, pos.up());
         itemRenderer.renderItem(

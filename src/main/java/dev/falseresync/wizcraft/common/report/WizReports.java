@@ -5,10 +5,7 @@ import dev.falseresync.wizcraft.common.report.focuses.AnchorPlacedReport;
 import dev.falseresync.wizcraft.common.report.focuses.NoAnchorReport;
 import dev.falseresync.wizcraft.common.report.focuses.TeleportedReport;
 import dev.falseresync.wizcraft.common.report.wand.*;
-import dev.falseresync.wizcraft.common.report.worktable.InvalidPedestalFormationReport;
-import dev.falseresync.wizcraft.common.report.worktable.WorktableCraftingReport;
-import dev.falseresync.wizcraft.common.report.worktable.WorktableInterruptedReport;
-import dev.falseresync.wizcraft.common.report.worktable.WorktableSuccessReport;
+import dev.falseresync.wizcraft.common.report.worktable.*;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -32,6 +29,7 @@ public final class WizReports {
 
     public static final class Worktable {
         public static final InvalidPedestalFormationReport INVALID_PEDESTAL_FORMATION = r(new InvalidPedestalFormationReport());
+        public static final CannotPlaceReport CANNOT_PLACE = r(new CannotPlaceReport());
         public static final WorktableSuccessReport SUCCESS = r(new WorktableSuccessReport());
         public static final WorktableInterruptedReport INTERRUPTED = r(new WorktableInterruptedReport());
         public static final WorktableCraftingReport CRAFTING = r(new WorktableCraftingReport());

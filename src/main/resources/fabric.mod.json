@@ -30,6 +30,7 @@
 		]
 	},
 	"mixins": [
+		"wizcraft.common.mixins.json",
 		"wizcraft.datafix.mixins.json"
 	],
 	"accessWidener" : "wizcraft.accesswidener",

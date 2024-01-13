@@ -1,0 +1,44 @@
+package dev.falseresync.wizcraft.common.mixin;
+
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.falseresync.wizcraft.common.skywand.focus.LightningFocus;
+import net.minecraft.entity.LightningEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(LightningEntity.class)
+public abstract class LightningEntityMixin implements LightningFocus.WizcraftLightning {
+    @Unique
+    private static final TrackedData<Boolean> THUNDERLESS = DataTracker.registerData(LightningEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    @WrapWithCondition(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V",
+                    ordinal = 0))
+    private boolean wizcraft$tick$removeThunder(World instance, double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean useDistance) {
+        return !((LightningEntity) (Object) this).getDataTracker().get(THUNDERLESS);
+    }
+
+    @Inject(method = "initDataTracker", at = @At("TAIL"))
+    private void wizcraft$initDataTracker(CallbackInfo ci) {
+        ((LightningEntity) (Object) this).getDataTracker().startTracking(THUNDERLESS, false);
+    }
+
+    @Override
+    public void wizcraft$setThunderless() {
+        ((LightningEntity) (Object) this).getDataTracker().set(THUNDERLESS, true, true);
+    }
+}

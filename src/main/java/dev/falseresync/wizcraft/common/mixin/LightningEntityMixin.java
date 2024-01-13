@@ -32,6 +32,21 @@ public abstract class LightningEntityMixin implements LightningFocus.WizcraftLig
         return !((LightningEntity) (Object) this).getDataTracker().get(THUNDERLESS);
     }
 
+    @WrapOperation(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V",
+                    ordinal = 1))
+    private void wizcraft$tick$changeSoundCategory(World instance, double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean useDistance, Operation<Void> original) {
+        if (((LightningEntity) (Object) this).getDataTracker().get(THUNDERLESS)) {
+            original.call(instance, x, y, z, sound, SoundCategory.PLAYERS, 1.0f, pitch, true);
+        } else {
+            original.call(instance, x, y, z, sound, category, volume, pitch, useDistance);
+        }
+    }
+
+
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     private void wizcraft$initDataTracker(CallbackInfo ci) {
         ((LightningEntity) (Object) this).getDataTracker().startTracking(THUNDERLESS, false);

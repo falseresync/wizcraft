@@ -87,7 +87,7 @@ public class SkyWandData {
     }
 
     public boolean tryExpendCharge(int amount, PlayerEntity user) {
-        var cost = user.isCreative() ? 0 : amount;
+        var cost = user.isCreative() || !Wizcraft.CONFIG.expendWandChargeInSurvival ? 0 : amount;
         if (getCharge() >= cost) {
             expendCharge(cost);
             return true;

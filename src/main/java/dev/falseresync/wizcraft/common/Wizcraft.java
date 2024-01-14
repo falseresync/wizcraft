@@ -19,6 +19,12 @@ import org.slf4j.LoggerFactory;
 public class Wizcraft implements ModInitializer {
     public static final String MODID = "wizcraft";
     public static final Logger LOGGER = LoggerFactory.getLogger("Wizcraft");
+    public static final WizcraftConfig CONFIG;
+
+    static {
+        WizcraftConfig.HANDLER.load();
+        CONFIG = WizcraftConfig.HANDLER.instance();
+    }
 
     @Override
     public void onInitialize() {
@@ -34,4 +40,6 @@ public class Wizcraft implements ModInitializer {
         WizRecipes.register((id, type) -> Registry.register(Registries.RECIPE_TYPE, id, type));
         WizServerNetworking.registerReceivers();
     }
+
+
 }

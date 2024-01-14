@@ -23,5 +23,7 @@
   "hud.wizcraft.sky_wand.full_inventory": "Cannot pick a focus with a full inventory",
   "keyCategory.wizcraft": "Wizcraft",
   "key.wizcraft.tool_control": "Tool control",
+  "yacl3.config.wizcraft:config.category.cheats": "Cheats",
+  "yacl3.config.wizcraft:config.expendWandChargeInSurvival": "Expend Wand charge in survival",
   "emi.category.wizcraft.lensed_worktable": "Lensed worktable"
 }

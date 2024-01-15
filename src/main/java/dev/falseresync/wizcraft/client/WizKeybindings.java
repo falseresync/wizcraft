@@ -70,7 +70,7 @@ public final class WizKeybindings {
                 }
 
                 if (activeFocusStack.getFocus().getType() != WizFocuses.CHARGING) {
-                    focuses.offerFirst(WizFocuses.CHARGING.defaultFocusStack());
+                    focuses.offerFirst(WizFocuses.CHARGING.newFocusStack());
                 }
                 focuses.offerFirst(activeFocusStack);
 

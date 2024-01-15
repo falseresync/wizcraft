@@ -27,9 +27,13 @@
 		],
 		"emi": [
 			"dev.falseresync.wizcraft.compat.emi.WizcraftEmiPlugin"
+		],
+		"modmenu": [
+			"dev.falseresync.wizcraft.compat.modmenu.WizcraftModMenuCompat"
 		]
 	},
 	"mixins": [
+		"wizcraft.common.mixins.json",
 		"wizcraft.datafix.mixins.json"
 	],
 	"accessWidener" : "wizcraft.accesswidener",
@@ -39,6 +43,7 @@
 		"java": ">=17",
 		"fabric-api": "*",
 		"libgui": "*",
-		"libhudcompat": "*"
+		"libhudcompat": "*",
+		"yet_another_config_lib_v3": "*"
 	}
 }

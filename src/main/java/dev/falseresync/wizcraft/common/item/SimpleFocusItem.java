@@ -17,16 +17,18 @@ import java.util.List;
 public class SimpleFocusItem<T extends Focus> extends Item implements FocusItem, HasId {
     protected final Identifier id;
     protected final FocusType<T> focusType;
+    protected final T defaultFocus;
 
     public SimpleFocusItem(Settings settings, FocusType<T> focusType) {
         super(settings);
         this.focusType = focusType;
-        this.id = focusType.defaultFocus().get().getId().withSuffixedPath("_focus");
+        this.defaultFocus = focusType.defaultFocusFactory().get();
+        this.id = defaultFocus.getId().withSuffixedPath("_focus");
     }
 
     @Override
     public T getDefaultFocus() {
-        return focusType.defaultFocus().get();
+        return defaultFocus;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class SimpleFocusItem<T extends Focus> extends Item implements FocusItem,
 
     @Override
     public Text getName() {
-        return Text.translatable(getTranslationKey(), focusType.defaultFocus().get().getName().getString());
+        return Text.translatable(getTranslationKey(), defaultFocus.getName().getString());
     }
 
     @Override

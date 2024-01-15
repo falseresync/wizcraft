@@ -5,12 +5,12 @@ import net.minecraft.item.ItemStack;
 
 import java.util.function.Supplier;
 
-public record FocusType<T extends Focus>(Supplier<T> defaultFocus, Codec<T> customDataCodec) {
-    public ItemStack defaultStack() {
-        return defaultFocus.get().getItem().getDefaultStack();
+public record FocusType<T extends Focus>(Supplier<T> defaultFocusFactory, Codec<T> customDataCodec) {
+    public ItemStack newStack() {
+        return new ItemStack(defaultFocusFactory.get().getItem());
     }
 
-    public FocusStack defaultFocusStack() {
-        return new FocusStack(defaultStack());
+    public FocusStack newFocusStack() {
+        return new FocusStack(newStack());
     }
 }

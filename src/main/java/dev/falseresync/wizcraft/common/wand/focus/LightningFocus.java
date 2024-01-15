@@ -58,6 +58,7 @@ public class LightningFocus extends Focus {
             //noinspection DataFlowIssue
             lightning.refreshPositionAfterTeleport(pos);
             lightning.setChanneler(player);
+            ((WizcraftLightning) lightning).wizcraft$setThunderless();
             world.spawnEntity(lightning);
 
             return ActionResult.SUCCESS;
@@ -71,5 +72,9 @@ public class LightningFocus extends Focus {
                 posInAir.x,
                 world.getTopY(Heightmap.Type.MOTION_BLOCKING, (int) posInAir.x, (int) posInAir.z),
                 posInAir.z);
+    }
+
+    public interface WizcraftLightning {
+        void wizcraft$setThunderless();
     }
 }

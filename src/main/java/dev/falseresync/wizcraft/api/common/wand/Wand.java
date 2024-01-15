@@ -19,7 +19,7 @@ public class Wand {
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.INT.optionalFieldOf(CommonKeys.MAX_CHARGE, 100).forGetter(Wand::getMaxCharge),
                     Codec.INT.optionalFieldOf(CommonKeys.CHARGE, 0).forGetter(Wand::getCharge),
-                    ItemStack.CODEC.optionalFieldOf(CommonKeys.FOCUS_STACK, WizFocuses.CHARGING.defaultStack())
+                    ItemStack.CODEC.optionalFieldOf(CommonKeys.FOCUS_STACK, WizFocuses.CHARGING.newStack())
                             .forGetter(wand -> wand.getFocusStack().toItemStack())
             ).apply(instance, Wand::new));
 

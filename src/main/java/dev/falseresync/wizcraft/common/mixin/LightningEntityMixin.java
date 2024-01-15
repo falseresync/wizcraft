@@ -3,7 +3,7 @@ package dev.falseresync.wizcraft.common.mixin;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.falseresync.wizcraft.common.skywand.focus.LightningFocus;
+import dev.falseresync.wizcraft.common.wand.focus.LightningFocus;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;

@@ -19,7 +19,8 @@ public class SkyWandData {
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.INT.optionalFieldOf(CommonKeys.MAX_CHARGE, 100).forGetter(SkyWandData::getMaxCharge),
                     Codec.INT.optionalFieldOf(CommonKeys.CHARGE, 0).forGetter(SkyWandData::getCharge),
-                    FocusStack.CODEC.optionalFieldOf(CommonKeys.FOCUS_STACK, WizFocusTypes.CHARGING.defaultFocusStack())
+                    FocusStack.CODEC.fieldOf(CommonKeys.FOCUS_STACK)
+                            .orElseGet(WizFocusTypes.CHARGING::newFocusStack)
                             .forGetter(SkyWandData::getFocusStack)
             ).apply(instance, SkyWandData::new));
 

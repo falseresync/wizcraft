@@ -53,7 +53,7 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     }
 
     public boolean isLinkedTo(BlockEntity controller) {
-        return isLinked() && controller.getPos().equals(linkedTo);
+        return !isLinked() || controller.getPos().equals(linkedTo);
     }
 
     public ItemStack getHeldStackCopy() {

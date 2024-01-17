@@ -10,6 +10,7 @@ import dev.falseresync.wizcraft.common.recipe.WizRecipeSerializers;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
 import dev.falseresync.wizcraft.common.report.WizReports;
 import dev.falseresync.wizcraft.common.wand.focus.WizFocuses;
+import dev.falseresync.wizcraft.compat.anshar.AnsharCompat;
 import dev.falseresync.wizcraft.network.WizServerNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.registry.Registries;
@@ -41,7 +42,7 @@ public class Wizcraft implements ModInitializer {
         WizRecipes.register((id, type) -> Registry.register(Registries.RECIPE_TYPE, id, type));
         WizParticleTypes.register((id, type) -> Registry.register(Registries.PARTICLE_TYPE, id, type));
         WizServerNetworking.registerReceivers();
+
+        AnsharCompat.load();
     }
-
-
 }

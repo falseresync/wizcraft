@@ -25,6 +25,13 @@ repositories {
 		}
 	}
 	maven {
+		name = "Modrinth Maven"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+	maven {
 		name = "CottonMC"
 		url = "https://server.bbkr.space/artifactory/libs-release"
 	}
@@ -82,6 +89,10 @@ dependencies {
 
 	modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
 	modLocalRuntime "com.terraformersmc:modmenu:$modmenu_version"
+
+	modCompileOnly "maven.modrinth:anshar:0.0.10"
+	modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.4.0"
+//	modLocalRuntime "maven.modrinth:anshar:0.0.10"
 }
 
 processResources {

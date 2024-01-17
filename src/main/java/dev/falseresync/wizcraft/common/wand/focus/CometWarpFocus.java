@@ -9,6 +9,7 @@ import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.report.WizReports;
+import dev.falseresync.wizcraft.compat.anshar.AnsharCompat;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -107,12 +108,15 @@ public class CometWarpFocus extends Focus {
                     return ActionResult.FAIL;
                 }
 
+                if (AnsharCompat.get().tryEnterNetwork(world, anchor.getPos(), player)) {
+                    return ActionResult.SUCCESS;
+                }
+
                 Report.trigger(player, WizReports.Focuses.TELEPORTED);
                 FabricDimensions.teleport(
                         user, destination,
                         new TeleportTarget(anchor.getPos().toCenterPos(), Vec3d.ZERO, user.getYaw(), user.getPitch()));
                 anchor = null;
-
             }
             return ActionResult.SUCCESS;
         }

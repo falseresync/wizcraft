@@ -1,26 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "building",
+  "category": "misc",
   "key": {
-    "c": {
-      "item": "minecraft:crafting_table"
+    "a": {
+      "item": "minecraft:amethyst_shard"
     },
     "d": {
       "item": "minecraft:diamond"
     },
     "g": {
       "item": "minecraft:gold_ingot"
-    },
-    "s": {
-      "tag": "minecraft:wooden_slabs"
     }
   },
   "pattern": [
+    "aaa",
     "gdg",
-    "gcg",
-    "sss"
+    "aaa"
   ],
   "result": {
-    "item": "wizcraft:plated_worktable"
+    "item": "wizcraft:lens"
   }
 }

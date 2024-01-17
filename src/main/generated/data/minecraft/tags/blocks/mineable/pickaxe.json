@@ -1,7 +1,8 @@
 {
   "replace": false,
   "values": [
-    "wizcraft:plated_worktable",
+    "wizcraft:lens",
+    "wizcraft:worktable",
     "wizcraft:lensing_pedestal"
   ]
 }

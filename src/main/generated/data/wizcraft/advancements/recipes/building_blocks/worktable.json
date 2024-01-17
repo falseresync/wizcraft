@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wizcraft:sky_wand"
+        "recipe": "wizcraft:worktable"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "wizcraft:sky_wand"
+      "wizcraft:worktable"
     ]
   }
 }

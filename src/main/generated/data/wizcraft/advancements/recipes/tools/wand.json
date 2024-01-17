@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_lens": {
+    "has_diamond": {
       "conditions": {
         "items": [
           {
             "items": [
-              "wizcraft:lens"
+              "minecraft:diamond"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wizcraft:lensing_pedestal"
+        "recipe": "wizcraft:wand"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_lens"
+      "has_diamond"
     ]
   ],
   "rewards": {
     "recipes": [
-      "wizcraft:lensing_pedestal"
+      "wizcraft:wand"
     ]
   }
 }

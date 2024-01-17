@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "wizcraft:plated_worktable"
+          "name": "wizcraft:worktable"
         }
       ],
       "rolls": 1.0

@@ -55,7 +55,7 @@ public class ChargingFocus extends Focus {
     public ActionResult use(World world, SkyWandData wand, LivingEntity user) {
         if (user instanceof ServerPlayerEntity player) {
             if (!world.isNight()
-                    || world.getRainGradient(1) > 1
+                    || world.getRainGradient(1) > 0.75
                     || world.getLightLevel(LightType.SKY, user.getBlockPos()) < world.getMaxLightLevel() * 0.5) {
                 ClientReport.trigger(player, WizReports.CANNOT_CHARGE);
                 return ActionResult.FAIL;

@@ -33,7 +33,7 @@ bin/
 run/
 runSecondary/
 runServer/
-src/main/generated/
+src/main/generated/.cache/
 
 # java
 

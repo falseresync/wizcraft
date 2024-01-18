@@ -9,7 +9,6 @@ import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.common.report.WizReports;
-import dev.falseresync.wizcraft.compat.anshar.AnsharCompat;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -106,10 +105,6 @@ public class CometWarpFocus extends Focus {
                 if (!wand.tryExpendCharge(warpingCost, player)) {
                     Report.trigger(player, WizReports.Wand.INSUFFICIENT_CHARGE);
                     return ActionResult.FAIL;
-                }
-
-                if (AnsharCompat.get().tryEnterNetwork(world, anchor.getPos(), player)) {
-                    return ActionResult.SUCCESS;
                 }
 
                 Report.trigger(player, WizReports.Focuses.TELEPORTED);

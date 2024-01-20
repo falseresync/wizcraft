@@ -1,12 +1,8 @@
-package dev.falseresync.wizcraft.common.block;
+package dev.falseresync.wizcraft.api.common.worktable;
 
-import com.mojang.serialization.MapCodec;
-import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.block.entity.WorktableBlockEntity;
-import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
-import dev.falseresync.wizcraft.common.item.WizItems;
 import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.WizUtil;
+import dev.falseresync.wizcraft.common.item.WizItems;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -14,38 +10,41 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class WorktableBlock extends BlockWithEntity implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "worktable");
-    public static final MapCodec<WorktableBlock> CODEC = createCodec(WorktableBlock::new);
+import java.util.function.Supplier;
 
-    protected WorktableBlock(Settings settings) {
+// Dear vanilla, suck dick for Codecs. Those are really the epitome of PITA
+// This one, for example, has prevented me from completely generifying this class
+// I could've had a Builder here that takes my BE params and spits out a block automatically
+// But noooooooo, it MUUUUUST be data-driven, ffs
+public abstract class WorktableBlock<B extends WorktableBlockEntity> extends BlockWithEntity implements HasId {
+    protected final Supplier<BlockEntityType<B>> type;
+    protected final BlockEntityTicker<B> ticker;
+
+    public WorktableBlock(Supplier<BlockEntityType<B>> type, BlockEntityTicker<B> ticker, Settings settings) {
         super(settings);
-    }
-
-    @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
-        return CODEC;
+        this.type = type;
+        this.ticker = ticker;
     }
 
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new WorktableBlockEntity(pos, state);
+        return type.get().instantiate(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, WizBlockEntities.WORKTABLE, WorktableBlockEntity::tick);
+        return validateTicker(type, this.type.get(), ticker);
     }
 
     @Override
@@ -83,10 +82,5 @@ public class WorktableBlock extends BlockWithEntity implements HasId {
 
             super.onStateReplaced(state, world, pos, newState, moved);
         }
-    }
-
-    @Override
-    public Identifier getId() {
-        return ID;
     }
 }

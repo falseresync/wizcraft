@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 @Environment(EnvType.CLIENT)
 public final class CommonRenders {
     public static void levitateItemAboveBlock(World world, BlockPos pos, float tickDelta, ItemStack stack, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
-        levitateItemAboveBlock(world, pos, Vec3d.ZERO, Vec3d.ZERO, tickDelta, stack, itemRenderer, matrices, vertexConsumers);
+        levitateItemAboveBlock(world, pos, Vec3d.ZERO, RenderingUtil.UNIT_VEC3D, tickDelta, stack, itemRenderer, matrices, vertexConsumers);
     }
 
     public static void levitateItemAboveBlock(World world, BlockPos pos, Vec3d translation, Vec3d scale, float tickDelta, ItemStack stack, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {

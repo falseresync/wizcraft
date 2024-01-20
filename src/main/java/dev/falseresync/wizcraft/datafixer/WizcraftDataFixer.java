@@ -10,6 +10,7 @@ import dev.falseresync.wizcraft.datafixer.fixes.RenameSkyWandToWandItemNbtFix;
 import dev.falseresync.wizcraft.datafixer.schema.WizSchema100;
 import dev.falseresync.wizcraft.datafixer.schema.WizSchema200;
 import dev.falseresync.wizcraft.datafixer.schema.WizSchema300;
+import dev.falseresync.wizcraft.datafixer.schema.WizSchema400;
 import net.minecraft.SharedConstants;
 import net.minecraft.datafixer.Schemas;
 import net.minecraft.datafixer.TypeReferences;
@@ -32,7 +33,7 @@ import java.util.function.BiFunction;
  */
 public class WizcraftDataFixer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Wizcraft/DataFixer");
-    public static final int DATA_VERSION = 300;
+    public static final int DATA_VERSION = 400;
     private static final int VANILLA_SCHEMA_VERSION = DataFixUtils.makeKey(SharedConstants.getGameVersion().getSaveVersion().getId());
     private static final BiFunction<Integer, Schema, Schema> EMPTY_SCHEMA = IdentifierNormalizingSchema::new;
     private static final String KEY_DATA_VERSION = "wizcraft:data_version";
@@ -65,6 +66,10 @@ public class WizcraftDataFixer {
         builder.addFixer(ItemNameFix.create(schema300, "Rename Sky wand to Wand (ID)", id -> id.replace("sky_", "")));
         builder.addFixer(new RenameSkyWandToWandItemNbtFix(schema300));
         builder.addFixer(new FlattenFocusStackNbtFix(schema300));
+
+        var schema400 = builder.addSchema(400, WizSchema400::new);
+        builder.addFixer(RenameBlockEntityFix.create(schema400, "Rename Worktable to Crafting worktable", id -> id.replace("worktable", "crafting_worktable")));
+        builder.addFixer(BlockNameFix.create(schema400, "Rename Worktable to Crafting worktable", id -> id.replace("worktable", "crafting_worktable")));
 
         LOGGER.info("Bootstrapping an executor");
         return builder.buildOptimized(

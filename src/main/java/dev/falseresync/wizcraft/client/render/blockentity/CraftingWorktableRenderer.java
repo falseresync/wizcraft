@@ -2,7 +2,7 @@ package dev.falseresync.wizcraft.client.render.blockentity;
 
 import dev.falseresync.wizcraft.client.render.CommonRenders;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
-import dev.falseresync.wizcraft.common.block.entity.WorktableBlockEntity;
+import dev.falseresync.wizcraft.common.block.entity.worktable.CraftingWorktableBlockEntity;
 import dev.falseresync.wizcraft.common.particle.WizParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,14 +27,14 @@ import java.util.stream.Stream;
 import static dev.falseresync.wizcraft.client.render.RenderingUtil.getSymmetricVec3d;
 
 @Environment(EnvType.CLIENT)
-public class WorktableRenderer implements BlockEntityRenderer<WorktableBlockEntity> {
+public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWorktableBlockEntity> {
     protected final ItemRenderer itemRenderer;
 
-    public WorktableRenderer(BlockEntityRendererFactory.Context ctx) {
+    public CraftingWorktableRenderer(BlockEntityRendererFactory.Context ctx) {
         this.itemRenderer = ctx.getItemRenderer();
     }
 
-    protected static void animateCraftingProgress(RenderingData worktable, WorktableBlockEntity.Progress progress, List<RenderingData> pedestals, World world, ItemRenderer itemRenderer, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
+    protected static void animateCraftingProgress(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, List<RenderingData> pedestals, World world, ItemRenderer itemRenderer, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
         var random = world.getRandom();
 
         // Stop early because particles live some time
@@ -96,7 +96,7 @@ public class WorktableRenderer implements BlockEntityRenderer<WorktableBlockEnti
         return 0.2 * (-0.4 - 1.05 / (1 * (1.1 * Math.log10(-2 * p + 2.0) + 1 * (2 * p - 2))));
     }
 
-    protected static void addParticleBeam(RenderingData worktable, WorktableBlockEntity.Progress progress, RenderingData pedestal, World world, float tickDelta) {
+    protected static void addParticleBeam(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, RenderingData pedestal, World world, float tickDelta) {
         if (pedestal.stack.isEmpty()) return;
 
         var temporalOffset = Math.abs(MathHelper.sin((progress.remainingCraftingTime() + tickDelta)));
@@ -111,7 +111,7 @@ public class WorktableRenderer implements BlockEntityRenderer<WorktableBlockEnti
         return 1.75 * ( -4.3 / ( 3.6 * p - 6.35 ) - 1.85 * p + 0.3 );
     }
 
-    protected static void addParticleHurricane(RenderingData worktable, WorktableBlockEntity.Progress progress, RenderingData pedestal, World world, float tickDelta) {
+    protected static void addParticleHurricane(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, RenderingData pedestal, World world, float tickDelta) {
         if (pedestal.stack.isEmpty()) return;
 
         var temporalOffset = Math.abs(MathHelper.sin((progress.remainingCraftingTime() + tickDelta)));
@@ -131,7 +131,7 @@ public class WorktableRenderer implements BlockEntityRenderer<WorktableBlockEnti
         }
     }
 
-    protected static void addDisintegrationParticles(World world, Random random, RenderingData renderingData, WorktableBlockEntity.Progress progress) {
+    protected static void addDisintegrationParticles(World world, Random random, RenderingData renderingData, CraftingWorktableBlockEntity.Progress progress) {
         if (renderingData.stack.isEmpty()) return;
 
         var velocity = new Vec3d((random.nextFloat() - 0.5) / 8, random.nextGaussian() / 16, (random.nextFloat() - 0.5) / 8);
@@ -142,7 +142,7 @@ public class WorktableRenderer implements BlockEntityRenderer<WorktableBlockEnti
     }
 
     @Override
-    public void render(WorktableBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(CraftingWorktableBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var world = blockEntity.getWorld();
         if (world == null) return;
 

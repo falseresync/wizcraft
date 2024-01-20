@@ -3,6 +3,7 @@
   "values": [
     "wizcraft:lens",
     "wizcraft:worktable",
+    "wizcraft:crafting_worktable",
     "wizcraft:lensing_pedestal"
   ]
 }

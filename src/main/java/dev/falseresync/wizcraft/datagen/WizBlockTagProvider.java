@@ -16,10 +16,12 @@ public class WizBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
-                .add(WizBlocks.WORKTABLE);
+                .add(WizBlocks.DUMMY_WORKTABLE)
+                .add(WizBlocks.CRAFTING_WORKTABLE);
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .add(WizBlocks.LENS)
-                .add(WizBlocks.WORKTABLE)
+                .add(WizBlocks.DUMMY_WORKTABLE)
+                .add(WizBlocks.CRAFTING_WORKTABLE)
                 .add(WizBlocks.LENSING_PEDESTAL);
     }
 }

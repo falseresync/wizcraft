@@ -50,7 +50,7 @@ public final class WizItems {
 
         SIMPLE_BLOCK_ITEM_SETTINGS = new FabricItemSettings();
         LENS = rBlockItem(WizBlocks.LENS);
-        WORKTABLE = rBlockItem(WizBlocks.WORKTABLE);
+        WORKTABLE = rBlockItem(WizBlocks.DUMMY_WORKTABLE);
         LENSING_PEDESTAL = rBlockItem(WizBlocks.LENSING_PEDESTAL);
 
         GROUP_GENERAL = r(new Identifier(Wizcraft.MODID, "general"), FabricItemGroup.builder()

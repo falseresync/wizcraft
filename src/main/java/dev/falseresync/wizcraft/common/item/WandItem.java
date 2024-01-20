@@ -4,6 +4,7 @@ import dev.falseresync.wizcraft.client.WizKeybindings;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.HasId;
+import dev.falseresync.wizcraft.common.block.WizBlocks;
 import dev.falseresync.wizcraft.common.wand.focus.ChargingFocus;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,6 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +39,18 @@ public class WandItem extends Item implements HasId {
         var wand = Wand.fromStack(stack);
         var result = wand.getFocus().use(world, wand, user);
         return new TypedActionResult<>(result, wand.copyAndAttach(stack));
+    }
+
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        if (context.getWorld().getBlockState(context.getBlockPos()).isOf(WizBlocks.DUMMY_WORKTABLE)) {
+            if (context.getWorld().isClient()) return ActionResult.CONSUME;
+
+            context.getWorld().setBlockState(context.getBlockPos(), WizBlocks.CRAFTING_WORKTABLE.getDefaultState());
+            return ActionResult.SUCCESS;
+        }
+
+        return super.useOnBlock(context);
     }
 
     @Override

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "wizcraft:worktable"
+    "wizcraft:worktable",
+    "wizcraft:crafting_worktable"
   ]
 }

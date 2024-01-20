@@ -68,7 +68,7 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .pattern("gcg")
                 .pattern("sss")
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-                .offerTo(exporter, WizBlocks.WORKTABLE.getId());
+                .offerTo(exporter, WizBlocks.DUMMY_WORKTABLE.getId());
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.LENSING_PEDESTAL)
                 .input('l', WizItems.LENS)

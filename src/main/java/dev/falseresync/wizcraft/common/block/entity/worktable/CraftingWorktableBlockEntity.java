@@ -1,10 +1,13 @@
-package dev.falseresync.wizcraft.common.block.entity;
+package dev.falseresync.wizcraft.common.block.entity.worktable;
 
 import dev.falseresync.wizcraft.api.annotation.dirty.Dirty;
 import dev.falseresync.wizcraft.api.annotation.dirty.MarksDirty;
 import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
 import dev.falseresync.wizcraft.api.common.report.Report;
+import dev.falseresync.wizcraft.api.common.worktable.WorktableBlockEntity;
 import dev.falseresync.wizcraft.common.CommonKeys;
+import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
+import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
 import dev.falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
 import dev.falseresync.wizcraft.common.report.WizReports;
@@ -36,7 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class WorktableBlockEntity extends BlockEntity {
+public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     public static final int IDLE_SEARCH_COOLDOWN = 5;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
     protected final @Dirty List<BlockPos> nonEmptyPedestalPositions = new ArrayList<>();
@@ -61,13 +64,14 @@ public class WorktableBlockEntity extends BlockEntity {
     @Nullable Identifier currentRecipeId;
     protected @Nullable LensedWorktableRecipe currentRecipe;
 
-    public WorktableBlockEntity(BlockPos pos, BlockState state) {
-        super(WizBlockEntities.WORKTABLE, pos, state);
+    public CraftingWorktableBlockEntity(BlockPos pos, BlockState state) {
+        super(WizBlockEntities.CRAFTING_WORKTABLE, pos, state);
         inventory.addListener(sender -> markDirty());
     }
 
     // PUBLIC INTERFACE
 
+    @Override
     public void interact(@Nullable PlayerEntity player) {
         if (world == null || world.isClient()) return;
 
@@ -85,6 +89,7 @@ public class WorktableBlockEntity extends BlockEntity {
                 .ifPresent(this::beginCrafting);
     }
 
+    @Override
     public void remove(World world, BlockPos pos) {
         searchPedestals(world, pos);
         pedestals.forEach(pedestal -> pedestal.linkTo(null));
@@ -105,17 +110,19 @@ public class WorktableBlockEntity extends BlockEntity {
         return inventory.getStack(0).copy();
     }
 
+    @Override
     public SimpleInventory getInventory() {
         return inventory;
     }
 
+    @Override
     public InventoryStorage getStorage() {
         return storage;
     }
 
     // TICKERS
 
-    public static void tick(World world, BlockPos pos, BlockState state, WorktableBlockEntity worktable) {
+    public static void tick(World world, BlockPos pos, BlockState state, CraftingWorktableBlockEntity worktable) {
         worktable.tick(world, pos, state);
     }
 
@@ -325,6 +332,8 @@ public class WorktableBlockEntity extends BlockEntity {
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
     }
+
+    // OTHER
 
     public record Progress(ItemStack currentlyCrafted, int remainingCraftingTime, int passedCraftingTime, float value) {
     }

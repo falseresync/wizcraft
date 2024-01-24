@@ -10,8 +10,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-public class CannotPlaceReport implements MultiplayerReport {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "cannot_place_report");
+public class WorktableCannotPlaceReport implements MultiplayerReport {
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "worktable/cannot_place");
     @Override
     public Identifier getId() {
         return ID;

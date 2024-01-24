@@ -1,6 +1,5 @@
 package dev.falseresync.wizcraft.common.item;
 
-import com.mojang.datafixers.util.Pair;
 import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.api.common.worktable.WorktableBlock;
 import dev.falseresync.wizcraft.client.WizKeybindings;
@@ -25,7 +24,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -33,10 +31,7 @@ import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class WandItem extends Item implements HasId {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand");
@@ -79,7 +74,7 @@ public class WandItem extends Item implements HasId {
                 var player = (ServerPlayerEntity) context.getPlayer();
                 ServerPlayNetworking.send(player, new TriggerBlockPatternTipS2CPacket(
                         halfwayCompletedPattern.get().getFirst().delta().stream().map(CachedBlockPosition::getBlockPos).toList()));
-                Report.trigger((ServerPlayerEntity) context.getPlayer(), WizReports.Worktable.INVALID_PEDESTAL_FORMATION);
+                Report.trigger((ServerPlayerEntity) context.getPlayer(), WizReports.Worktable.INCOMPLETE);
                 return ActionResult.FAIL;
             }
 

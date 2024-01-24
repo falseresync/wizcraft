@@ -1,9 +1,9 @@
 package dev.falseresync.wizcraft.common.report;
 
 import dev.falseresync.wizcraft.api.common.report.Report;
-import dev.falseresync.wizcraft.common.report.focuses.AnchorPlacedReport;
-import dev.falseresync.wizcraft.common.report.focuses.NoAnchorReport;
-import dev.falseresync.wizcraft.common.report.focuses.TeleportedReport;
+import dev.falseresync.wizcraft.common.report.focuses.cometwarp.CometWarpAnchorPlacedReport;
+import dev.falseresync.wizcraft.common.report.focuses.cometwarp.CometWarpNoAnchorReport;
+import dev.falseresync.wizcraft.common.report.focuses.cometwarp.CometWarpTeleportedReport;
 import dev.falseresync.wizcraft.common.report.wand.*;
 import dev.falseresync.wizcraft.common.report.worktable.*;
 import net.minecraft.util.Identifier;
@@ -28,8 +28,8 @@ public final class WizReports {
     }
 
     public static final class Worktable {
-        public static final IncompleteWorktableReport INVALID_PEDESTAL_FORMATION = r(new IncompleteWorktableReport());
-        public static final CannotPlaceReport CANNOT_PLACE = r(new CannotPlaceReport());
+        public static final WorktableIncompleteReport INCOMPLETE = r(new WorktableIncompleteReport());
+        public static final WorktableCannotPlaceReport CANNOT_PLACE = r(new WorktableCannotPlaceReport());
         public static final WorktableSuccessReport SUCCESS = r(new WorktableSuccessReport());
         public static final WorktableInterruptedReport INTERRUPTED = r(new WorktableInterruptedReport());
         public static final WorktableCraftingReport CRAFTING = r(new WorktableCraftingReport());
@@ -39,19 +39,19 @@ public final class WizReports {
     }
 
     public static final class Wand {
-        public static final CannotChargeReport CANNOT_CHARGE = r(new CannotChargeReport());
-        public static final AlreadyFullyChargedReport ALREADY_FULLY_CHARGED = r(new AlreadyFullyChargedReport());
-        public static final SuccessfullyChargedReport SUCCESSFULLY_CHARGED = r(new SuccessfullyChargedReport());
-        public static final InsufficientChargeReport INSUFFICIENT_CHARGE = r(new InsufficientChargeReport());
+        public static final WandCannotChargeReport CANNOT_CHARGE = r(new WandCannotChargeReport());
+        public static final WandAlreadyFullyChargedReport ALREADY_FULLY_CHARGED = r(new WandAlreadyFullyChargedReport());
+        public static final WandSuccessfullyChargedReport SUCCESSFULLY_CHARGED = r(new WandSuccessfullyChargedReport());
+        public static final WandInsufficientChargeReport INSUFFICIENT_CHARGE = r(new WandInsufficientChargeReport());
 
         private static void init() {
         }
     }
 
     public static final class Focuses {
-        public static final NoAnchorReport NO_ANCHOR = r(new NoAnchorReport());
-        public static final AnchorPlacedReport ANCHOR_PLACED = r(new AnchorPlacedReport());
-        public static final TeleportedReport TELEPORTED = r(new TeleportedReport());
+        public static final CometWarpNoAnchorReport NO_ANCHOR = r(new CometWarpNoAnchorReport());
+        public static final CometWarpAnchorPlacedReport ANCHOR_PLACED = r(new CometWarpAnchorPlacedReport());
+        public static final CometWarpTeleportedReport TELEPORTED = r(new CometWarpTeleportedReport());
 
         private static void init() {
         }

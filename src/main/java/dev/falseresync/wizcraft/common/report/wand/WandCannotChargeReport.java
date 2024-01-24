@@ -10,7 +10,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class CannotChargeReport implements Report {
+public class WandCannotChargeReport implements Report {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand/cannot_charge");
 
     @Override

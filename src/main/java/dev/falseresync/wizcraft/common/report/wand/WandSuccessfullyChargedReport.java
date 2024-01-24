@@ -12,15 +12,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-public class SuccessfullyChargedReport implements MultiplayerReport {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "successfully_charged");
+public class WandSuccessfullyChargedReport implements MultiplayerReport {
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand/successfully_charged");
 
     @Override
     public Identifier getId() {

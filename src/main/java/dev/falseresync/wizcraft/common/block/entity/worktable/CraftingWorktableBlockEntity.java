@@ -78,7 +78,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         searchPedestals(world, pos);
         if (pedestals.size() < 4) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                Report.trigger(serverPlayer, WizReports.Worktable.INVALID_PEDESTAL_FORMATION);
+                Report.trigger(serverPlayer, WizReports.Worktable.INCOMPLETE);
             }
             return;
         }

@@ -10,7 +10,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class AlreadyFullyChargedReport implements Report {
+public class WandAlreadyFullyChargedReport implements Report {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand/already_fully_charged");
 
     @Override

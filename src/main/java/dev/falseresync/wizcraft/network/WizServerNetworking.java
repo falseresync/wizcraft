@@ -35,7 +35,7 @@ public class WizServerNetworking {
         tx.addOuterCloseCallback(result -> {
             if (result.wasCommitted()) {
                 wand.switchFocus(pickedFocusStack);
-                wand.attach(mainHandStack);
+                wand.attachTo(mainHandStack);
             }
         });
         try (tx) {

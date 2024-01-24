@@ -27,6 +27,7 @@ public final class CommonKeys {
     public static final String RESULT = "result";
     public static final String CRAFTING_TIME = "crafting_time";
     public static final String REMAINING_CRAFTING_TIME = "remaining_crafting_time";
+    public static final String CHARGING = "charging";
     public static final String WORKTABLE = "worktable";
     public static final String PEDESTALS = "pedestals";
 }

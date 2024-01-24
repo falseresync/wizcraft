@@ -1,5 +1,6 @@
 package dev.falseresync.wizcraft.client.render;
 
+import dev.falseresync.wizcraft.client.render.blockentity.ChargingWorktableRenderer;
 import dev.falseresync.wizcraft.client.render.blockentity.CraftingWorktableRenderer;
 import dev.falseresync.wizcraft.client.render.blockentity.LensingPedestalRenderer;
 import dev.falseresync.wizcraft.client.render.entity.StarProjectileRenderer;
@@ -16,6 +17,7 @@ public class WizRenderers {
         EntityRendererRegistry.register(WizEntities.STAR_PROJECTILE, StarProjectileRenderer::new);
 
         BlockEntityRendererFactories.register(WizBlockEntities.CRAFTING_WORKTABLE, CraftingWorktableRenderer::new);
+        BlockEntityRendererFactories.register(WizBlockEntities.CHARGING_WORKTABLE, ChargingWorktableRenderer::new);
         BlockEntityRendererFactories.register(WizBlockEntities.LENSING_PEDESTAL, LensingPedestalRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(WizBlocks.LENSING_PEDESTAL, RenderLayer.getCutout());

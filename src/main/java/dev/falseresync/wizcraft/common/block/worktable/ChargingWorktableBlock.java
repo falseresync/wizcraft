@@ -2,7 +2,9 @@ package dev.falseresync.wizcraft.common.block.worktable;
 
 import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.api.common.worktable.WorktableBlock;
+import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.WizBlocks;
+import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
 import dev.falseresync.wizcraft.common.block.entity.worktable.ChargingWorktableBlockEntity;
 import dev.falseresync.wizcraft.common.block.pattern.BetterBlockPattern;
 import dev.falseresync.wizcraft.common.block.pattern.BetterBlockPatternBuilder;
@@ -13,20 +15,22 @@ import net.minecraft.util.Identifier;
 import java.util.function.Supplier;
 
 public class ChargingWorktableBlock extends WorktableBlock<ChargingWorktableBlockEntity> {
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "charging_worktable");
+    public static final MapCodec<ChargingWorktableBlock> CODEC = createCodec(ChargingWorktableBlock::new);
     private static BetterBlockPattern PATTERN;
 
-    public ChargingWorktableBlock(Supplier<BlockEntityType<ChargingWorktableBlockEntity>> type, BlockEntityTicker<ChargingWorktableBlockEntity> ticker, Settings settings) {
-        super(type, ticker, ChargingWorktableBlock::getPattern, settings);
+    public ChargingWorktableBlock(Settings settings) {
+        super(() -> WizBlockEntities.CHARGING_WORKTABLE, ChargingWorktableBlockEntity::tick, ChargingWorktableBlock::getPattern, settings);
     }
 
     @Override
     public Identifier getId() {
-        return null;
+        return ID;
     }
 
     @Override
     protected MapCodec<ChargingWorktableBlock> getCodec() {
-        return null;
+        return CODEC;
     }
 
     public static BetterBlockPattern getPattern() {

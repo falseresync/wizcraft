@@ -65,15 +65,19 @@ public class BetterBlockPatternBuilder {
 
     protected Predicate<CachedBlockPosition>[][][] bakePredicates() {
         validate();
-        @SuppressWarnings("unchecked")
-        var predicates = (Predicate<CachedBlockPosition>[][][]) new Predicate[width][layers.size()][depth];
-
         var sizeY = sidewaysLayers ? depth : layers.size();
         var sizeZ = sidewaysLayers ? layers.size() : depth;
+        @SuppressWarnings("unchecked")
+        var predicates = (Predicate<CachedBlockPosition>[][][]) new Predicate[width][sizeY][sizeZ];
+
         for (int x = 0; x < width; x++) {
-            for (int y = 0; y < sizeY; y++) {
-                for (int z = 0; z < sizeZ; z++) {
-                    predicates[x][y][z] = keys.get(layers.get(y)[z].charAt(x));
+            for (int y = 0; y < layers.size(); y++) {
+                for (int z = 0; z < depth; z++) {
+                    if (sidewaysLayers) {
+                        predicates[x][z][y] = keys.get(layers.get(y)[z].charAt(x));
+                    } else {
+                        predicates[x][y][z] = keys.get(layers.get(y)[z].charAt(x));
+                    }
                 }
             }
         }

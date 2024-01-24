@@ -44,14 +44,14 @@ public class Wand {
     /**
      * Attach wand data to passed stack
      */
-    public void attach(ItemStack stack) {
+    public void attachTo(ItemStack stack) {
         stack.setSubNbt(CommonKeys.Namespaced.WAND, toNbt());
     }
 
     /**
      * Copy a stack and attach wand data to it
      */
-    public ItemStack copyAndAttach(ItemStack stack) {
+    public ItemStack attachToCopyOf(ItemStack stack) {
         var modified = stack.copy();
         modified.setSubNbt(CommonKeys.Namespaced.WAND, toNbt());
         return modified;

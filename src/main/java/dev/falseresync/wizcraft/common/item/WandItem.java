@@ -31,6 +31,7 @@ import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class WandItem extends Item implements HasId {
@@ -46,7 +47,7 @@ public class WandItem extends Item implements HasId {
         var stack = user.getStackInHand(hand);
         var wand = Wand.fromStack(stack);
         var result = wand.getFocus().use(world, wand, user);
-        return new TypedActionResult<>(result, wand.copyAndAttach(stack));
+        return new TypedActionResult<>(result, wand.attachToCopyOf(stack));
     }
 
     @Override
@@ -69,7 +70,7 @@ public class WandItem extends Item implements HasId {
 
             var halfwayCompletedPattern = testedPatterns.stream()
                     .filter(mapping -> mapping.mapFirst(BetterBlockPattern.Match::isHalfwayCompleted).getFirst())
-                    .findFirst();
+                    .min(Comparator.comparingInt(mapping -> mapping.mapFirst(pattern -> pattern.delta().size()).getFirst()));
             if (halfwayCompletedPattern.isPresent()) {
                 var player = (ServerPlayerEntity) context.getPlayer();
                 ServerPlayNetworking.send(player, new TriggerBlockPatternTipS2CPacket(
@@ -95,7 +96,7 @@ public class WandItem extends Item implements HasId {
         super.usageTick(world, user, stack, remainingUseTicks);
         var wand = Wand.fromStack(stack);
         wand.getFocus().tick(world, wand, user, remainingUseTicks);
-        wand.attach(stack);
+        wand.attachTo(stack);
     }
 
     @Override
@@ -103,7 +104,7 @@ public class WandItem extends Item implements HasId {
         Wizcraft.LOGGER.trace(user.getName() + " interrupted a wand usage");
         var wand = Wand.fromStack(stack);
         wand.getFocus().interrupt(world, wand, user, remainingUseTicks);
-        wand.attach(stack);
+        wand.attachTo(stack);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class WandItem extends Item implements HasId {
         Wizcraft.LOGGER.trace(user.getName() + " finished using a wand");
         var wand = Wand.fromStack(stack);
         wand.getFocus().finish(world, wand, user);
-        return wand.copyAndAttach(stack);
+        return wand.attachToCopyOf(stack);
     }
 
     @Override

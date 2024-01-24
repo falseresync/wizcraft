@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair;
 import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.WizUtil;
 import dev.falseresync.wizcraft.common.block.pattern.BetterBlockPattern;
-import dev.falseresync.wizcraft.common.item.WizItems;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -77,14 +76,17 @@ public abstract class WorktableBlock<B extends WorktableBlockEntity> extends Blo
             if (world.isClient()) return ActionResult.CONSUME;
 
             var playerStack = player.getMainHandStack();
-            if (playerStack.isOf(WizItems.WAND)) {
-                worktable.interact(player);
-                return ActionResult.SUCCESS;
+
+            if (worktable.shouldExchangeFor(playerStack)) {
+                var exchanged = WizUtil.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
+                if (exchanged == 1) {
+                    return ActionResult.CONSUME;
+                }
             }
 
-            var exchanged = WizUtil.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
-            if (exchanged == 1) {
-                return ActionResult.CONSUME;
+            if (worktable.canBeActivatedBy(playerStack)) {
+                worktable.activate(player);
+                return ActionResult.SUCCESS;
             }
         }
 

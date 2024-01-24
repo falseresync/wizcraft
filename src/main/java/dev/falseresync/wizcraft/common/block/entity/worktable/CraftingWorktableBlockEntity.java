@@ -72,7 +72,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     // PUBLIC INTERFACE
 
     @Override
-    public void interact(@Nullable PlayerEntity player) {
+    public void activate(@Nullable PlayerEntity player) {
         if (world == null || world.isClient()) return;
 
         searchPedestals(world, pos);

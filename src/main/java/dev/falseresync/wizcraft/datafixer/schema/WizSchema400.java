@@ -15,6 +15,7 @@ public class WizSchema400 extends WizSchema{
     public Map<String, Supplier<TypeTemplate>> registerBlockEntities(Schema schema) {
         var blockEntities = super.registerBlockEntities(schema);
         blockEntities.put(wizcraft("crafting_worktable"), blockEntities.remove(wizcraft("worktable")));
+//        withItems(schema, blockEntities, wizcraft("charging_worktable"));
         return blockEntities;
     }
 }

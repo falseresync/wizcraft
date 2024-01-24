@@ -20,7 +20,7 @@
   "hud.wizcraft.wand.insufficient_charge": "Not enough charge",
   "hud.wizcraft.wand.no_anchor": "Setup an anchor first",
   "hud.wizcraft.wand.full_inventory": "Cannot pick a focus with a full inventory",
-  "hud.wizcraft.worktable.invalid_pedestal_formation": "Place all pedestals at proper positions",
+  "hud.wizcraft.worktable.incomplete_worktable": "Place all required blocks to complete the worktable",
   "sound.wizcraft.block.worktable.success": "Worktable successfully crafts an item",
   "sound.wizcraft.entity.star_projectile.explode": "Star projectile explodes",
   "sound.wizcraft.focus.charging.successfully_charged": "Successfully charged a wand",

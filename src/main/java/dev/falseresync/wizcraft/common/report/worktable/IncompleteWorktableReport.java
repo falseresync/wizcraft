@@ -10,8 +10,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class InvalidPedestalFormationReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "invalid_pedestal_formation");
+public class IncompleteWorktableReport implements Report {
+    public static final Identifier ID = new Identifier(Wizcraft.MODID, "incomplete_worktable");
 
     @Override
     public Identifier getId() {
@@ -22,6 +22,6 @@ public class InvalidPedestalFormationReport implements Report {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.worktable.invalid_pedestal_formation"));
+        WizHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.worktable.incomplete_worktable"));
     }
 }

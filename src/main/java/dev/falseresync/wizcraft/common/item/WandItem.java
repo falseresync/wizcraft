@@ -1,21 +1,31 @@
 package dev.falseresync.wizcraft.common.item;
 
+import com.mojang.datafixers.util.Pair;
+import dev.falseresync.wizcraft.api.common.report.Report;
+import dev.falseresync.wizcraft.api.common.worktable.WorktableBlock;
 import dev.falseresync.wizcraft.client.WizKeybindings;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.block.WizBlocks;
+import dev.falseresync.wizcraft.common.block.pattern.BetterBlockPattern;
+import dev.falseresync.wizcraft.common.report.WizReports;
 import dev.falseresync.wizcraft.common.wand.focus.ChargingFocus;
+import dev.falseresync.wizcraft.network.s2c.TriggerBlockPatternTipS2CPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +33,10 @@ import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class WandItem extends Item implements HasId {
     public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand");
@@ -43,11 +56,34 @@ public class WandItem extends Item implements HasId {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        if (context.getWorld().getBlockState(context.getBlockPos()).isOf(WizBlocks.DUMMY_WORKTABLE)) {
-            if (context.getWorld().isClient()) return ActionResult.CONSUME;
+        var world = context.getWorld();
+        var pos = context.getBlockPos();
+        if (world.getBlockState(pos).isOf(WizBlocks.DUMMY_WORKTABLE)) {
+            if (world.isClient() || context.getPlayer() == null) return ActionResult.CONSUME;
 
-            context.getWorld().setBlockState(context.getBlockPos(), WizBlocks.CRAFTING_WORKTABLE.getDefaultState());
-            return ActionResult.SUCCESS;
+            var testedPatterns = WorktableBlock.getPatternMappings().stream()
+                    .map(mapping -> mapping.mapFirst(pattern -> pattern.searchAround(world, pos)))
+                    .toList();
+            var completedPattern = testedPatterns.stream()
+                    .filter(mapping -> mapping.mapFirst(BetterBlockPattern.Match::isCompleted).getFirst())
+                    .findFirst();
+            if (completedPattern.isPresent()) {
+                world.setBlockState(pos, completedPattern.get().getSecond().getDefaultState());
+                return ActionResult.SUCCESS;
+            }
+
+            var halfwayCompletedPattern = testedPatterns.stream()
+                    .filter(mapping -> mapping.mapFirst(BetterBlockPattern.Match::isHalfwayCompleted).getFirst())
+                    .findFirst();
+            if (halfwayCompletedPattern.isPresent()) {
+                var player = (ServerPlayerEntity) context.getPlayer();
+                ServerPlayNetworking.send(player, new TriggerBlockPatternTipS2CPacket(
+                        halfwayCompletedPattern.get().getFirst().delta().stream().map(CachedBlockPosition::getBlockPos).toList()));
+                Report.trigger((ServerPlayerEntity) context.getPlayer(), WizReports.Worktable.INVALID_PEDESTAL_FORMATION);
+                return ActionResult.FAIL;
+            }
+
+            return ActionResult.PASS;
         }
 
         return super.useOnBlock(context);

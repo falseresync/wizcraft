@@ -28,7 +28,7 @@ public final class WizReports {
     }
 
     public static final class Worktable {
-        public static final InvalidPedestalFormationReport INVALID_PEDESTAL_FORMATION = r(new InvalidPedestalFormationReport());
+        public static final IncompleteWorktableReport INVALID_PEDESTAL_FORMATION = r(new IncompleteWorktableReport());
         public static final CannotPlaceReport CANNOT_PLACE = r(new CannotPlaceReport());
         public static final WorktableSuccessReport SUCCESS = r(new WorktableSuccessReport());
         public static final WorktableInterruptedReport INTERRUPTED = r(new WorktableInterruptedReport());

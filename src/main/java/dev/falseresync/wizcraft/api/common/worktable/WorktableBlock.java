@@ -3,20 +3,28 @@ package dev.falseresync.wizcraft.api.common.worktable;
 import com.mojang.datafixers.util.Pair;
 import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.WizUtil;
+import dev.falseresync.wizcraft.common.block.WizBlocks;
 import dev.falseresync.wizcraft.common.block.pattern.BetterBlockPattern;
+import dev.falseresync.wizcraft.common.item.WizItems;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,6 +39,11 @@ import java.util.function.Supplier;
 public abstract class WorktableBlock<B extends WorktableBlockEntity> extends BlockWithEntity implements HasId {
     protected final Supplier<BlockEntityType<B>> type;
     protected final BlockEntityTicker<B> ticker;
+    public static final VoxelShape SHAPE = VoxelShapes.union(
+            /* Panel */ VoxelShapes.cuboid(0, 14 / 16f, 0, 16 / 16f, 16 / 16f, 16 / 16f),
+            /* Base */ VoxelShapes.cuboid(2 / 16f, 0, 2 / 16f, 14 / 16f, 4 / 16f, 14 / 16f),
+            /* Post */ VoxelShapes.cuboid(4 / 16f, 4 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 12 / 16f)
+    );
     protected static final ArrayList<Pair<Supplier<BetterBlockPattern>, WorktableBlock<?>>> PATTERN_MAPPINGS = new ArrayList<>();
     protected static List<Pair<BetterBlockPattern, WorktableBlock<?>>> BAKED_PATTERN_MAPPINGS;
 
@@ -51,6 +64,21 @@ public abstract class WorktableBlock<B extends WorktableBlockEntity> extends Blo
                     .toList();
         }
         return BAKED_PATTERN_MAPPINGS;
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return WizBlocks.DUMMY_WORKTABLE.getTranslationKey();
+    }
+
+    @Override
+    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
+        return new ItemStack(WizItems.WORKTABLE);
     }
 
     @Nullable

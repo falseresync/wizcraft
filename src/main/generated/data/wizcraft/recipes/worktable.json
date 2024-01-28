@@ -2,22 +2,22 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "c": {
-      "item": "minecraft:crafting_table"
-    },
-    "d": {
-      "item": "minecraft:diamond"
-    },
     "g": {
       "item": "minecraft:gold_ingot"
+    },
+    "l": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "p": {
+      "tag": "minecraft:planks"
     },
     "s": {
       "tag": "minecraft:wooden_slabs"
     }
   },
   "pattern": [
-    "gdg",
-    "gcg",
+    "glg",
+    " p ",
     "sss"
   ],
   "result": {

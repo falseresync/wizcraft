@@ -20,7 +20,11 @@ public class WizRenderers {
         BlockEntityRendererFactories.register(WizBlockEntities.CHARGING_WORKTABLE, ChargingWorktableRenderer::new);
         BlockEntityRendererFactories.register(WizBlockEntities.LENSING_PEDESTAL, LensingPedestalRenderer::new);
 
-        BlockRenderLayerMap.INSTANCE.putBlock(WizBlocks.LENSING_PEDESTAL, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
+                WizBlocks.LENSING_PEDESTAL,
+                WizBlocks.DUMMY_WORKTABLE,
+                WizBlocks.CRAFTING_WORKTABLE,
+                WizBlocks.CHARGING_WORKTABLE);
     }
 
     public static void register() {}

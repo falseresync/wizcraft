@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_bottom_top",
-  "textures": {
-    "bottom": "wizcraft:block/worktable_bottom",
-    "side": "wizcraft:block/worktable_side",
-    "top": "wizcraft:block/worktable_top"
-  }
-}

@@ -15,6 +15,7 @@ public class WizBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(WizBlocks.LENS, drops(WizItems.LENS));
         addDrop(WizBlocks.DUMMY_WORKTABLE, drops(WizItems.WORKTABLE));
         addDrop(WizBlocks.CRAFTING_WORKTABLE, drops(WizItems.WORKTABLE));
+        addDrop(WizBlocks.CHARGING_WORKTABLE, drops(WizItems.WORKTABLE));
         addDrop(WizBlocks.LENSING_PEDESTAL, drops(WizItems.LENSING_PEDESTAL));
     }
 }

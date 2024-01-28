@@ -61,13 +61,13 @@ public class WizRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.WORKTABLE)
                 .input('g', Items.GOLD_INGOT)
-                .input('c', Items.CRAFTING_TABLE)
-                .input('d', Items.DIAMOND)
+                .input('l', Items.LAPIS_LAZULI)
+                .input('p', ItemTags.PLANKS)
                 .input('s', ItemTags.WOODEN_SLABS)
-                .pattern("gdg")
-                .pattern("gcg")
+                .pattern("glg")
+                .pattern(" p ")
                 .pattern("sss")
-                .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+                .criterion("has_gold", conditionsFromItem(Items.GOLD_INGOT))
                 .offerTo(exporter, WizBlocks.DUMMY_WORKTABLE.getId());
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.LENSING_PEDESTAL)

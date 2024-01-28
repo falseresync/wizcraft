@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "wizcraft:block/worktable"
+      "model": "wizcraft:block/dummy_worktable"
     }
   }
 }

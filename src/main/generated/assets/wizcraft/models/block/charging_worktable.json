@@ -1,6 +1,6 @@
 {
   "parent": "wizcraft:block/template_worktable",
   "textures": {
-    "overlay": "wizcraft:block/crafting_worktable_overlay"
+    "overlay": "wizcraft:block/charging_worktable_overlay"
   }
 }

@@ -24,6 +24,7 @@ import java.util.function.BiConsumer;
 
 public final class WizItems {
     public static final WandItem WAND;
+    public static final FocusesBeltItem FOCUSES_BELT;
     public static final SimpleFocusItem<ChargingFocus> CHARGING_FOCUS;
     public static final SimpleFocusItem<StarshooterFocus> STARSHOOTER_FOCUS;
     public static final SimpleFocusItem<LightningFocus> LIGHTNING_FOCUS;
@@ -40,6 +41,7 @@ public final class WizItems {
 
     static {
         WAND = r(new WandItem(new FabricItemSettings().maxCount(1)));
+        FOCUSES_BELT = r(new FocusesBeltItem(new FabricItemSettings().maxCount(1)));
 
         SIMPLE_FOCUS_SETTINGS = new FabricItemSettings().maxCount(1);
         var chargingFocusItem = new SimpleFocusItem<>(SIMPLE_FOCUS_SETTINGS, WizFocuses.CHARGING);

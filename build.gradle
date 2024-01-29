@@ -97,6 +97,8 @@ dependencies {
 
 	modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
 	modLocalRuntime "com.terraformersmc:modmenu:$modmenu_version"
+
+	modLocalRuntime "maven.modrinth:betterf3:$betterf3_version"
 }
 
 processResources {

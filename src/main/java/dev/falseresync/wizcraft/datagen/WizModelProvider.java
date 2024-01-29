@@ -1,8 +1,8 @@
 package dev.falseresync.wizcraft.datagen;
 
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.block.WizBlocks;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.block.Block;
@@ -27,19 +27,19 @@ public class WizModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         var dummyWorktableModelId = new Identifier(Wizcraft.MODID, "block/dummy_worktable");
         blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(
-                WizBlocks.DUMMY_WORKTABLE,
+                WizcraftBlocks.DUMMY_WORKTABLE,
                 BlockStateVariant.create().put(VariantSettings.MODEL, dummyWorktableModelId)));
-        blockStateModelGenerator.registerParentedItemModel(WizBlocks.DUMMY_WORKTABLE, dummyWorktableModelId);
+        blockStateModelGenerator.registerParentedItemModel(WizcraftBlocks.DUMMY_WORKTABLE, dummyWorktableModelId);
 
-        createWorktableVariant(blockStateModelGenerator, WizBlocks.CRAFTING_WORKTABLE);
-        createWorktableVariant(blockStateModelGenerator, WizBlocks.CHARGING_WORKTABLE);
+        createWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CRAFTING_WORKTABLE);
+        createWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CHARGING_WORKTABLE);
 
-        var lensingPedestalModelId = ModelIds.getBlockModelId(WizBlocks.LENSING_PEDESTAL);
+        var lensingPedestalModelId = ModelIds.getBlockModelId(WizcraftBlocks.LENSING_PEDESTAL);
         blockStateModelGenerator.blockStateCollector.accept(
                 VariantsBlockStateSupplier.create(
-                        WizBlocks.LENSING_PEDESTAL,
+                        WizcraftBlocks.LENSING_PEDESTAL,
                         BlockStateVariant.create().put(VariantSettings.MODEL, lensingPedestalModelId)));
-        blockStateModelGenerator.registerParentedItemModel(WizBlocks.LENSING_PEDESTAL, lensingPedestalModelId);
+        blockStateModelGenerator.registerParentedItemModel(WizcraftBlocks.LENSING_PEDESTAL, lensingPedestalModelId);
     }
 
     private void createWorktableVariant(BlockStateModelGenerator blockStateModelGenerator, Block block) {
@@ -53,10 +53,10 @@ public class WizModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-        itemModelGenerator.register(WizItems.WAND, Models.GENERATED);
-        itemModelGenerator.register(WizItems.CHARGING_FOCUS, Models.GENERATED);
-        itemModelGenerator.register(WizItems.STARSHOOTER_FOCUS, Models.GENERATED);
-        itemModelGenerator.register(WizItems.LIGHTNING_FOCUS, Models.GENERATED);
-        itemModelGenerator.register(WizItems.COMET_WARP_FOCUS, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.WAND, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.CHARGING_FOCUS, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.STARSHOOTER_FOCUS, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.LIGHTNING_FOCUS, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.COMET_WARP_FOCUS, Models.GENERATED);
     }
 }

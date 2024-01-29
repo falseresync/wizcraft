@@ -2,7 +2,7 @@ package dev.falseresync.wizcraft.compat.wthit;
 
 import dev.falseresync.libhudcompat.LibHudCompat;
 import dev.falseresync.wizcraft.api.common.worktable.WorktableBlock;
-import dev.falseresync.wizcraft.common.block.WizBlocks;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
 import mcp.mobius.waila.api.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,7 +20,7 @@ public class WizcraftWthitPlugin implements IWailaPlugin, IEventListener {
         registrar.addOverride(new IBlockComponentProvider() {
             @Override
             public @Nullable BlockState getOverride(IBlockAccessor accessor, IPluginConfig config) {
-                return WizBlocks.DUMMY_WORKTABLE.getDefaultState();
+                return WizcraftBlocks.DUMMY_WORKTABLE.getDefaultState();
             }
         }, WorktableBlock.class);
     }

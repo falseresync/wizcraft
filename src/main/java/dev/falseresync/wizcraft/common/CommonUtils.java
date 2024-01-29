@@ -11,7 +11,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class WizUtil {
+public class CommonUtils {
     public static int findViewDistance(World world) {
         return world.isClient()
                 ? MinecraftClient.getInstance().options.getClampedViewDistance()

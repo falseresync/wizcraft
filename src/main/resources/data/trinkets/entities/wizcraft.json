@@ -3,7 +3,6 @@
   "slots": [
     "head/face",
     "chest/necklace",
-    "legs/belt",
-    "extra1/charm"
+    "legs/belt"
   ]
 }

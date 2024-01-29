@@ -5,27 +5,23 @@ import dev.falseresync.wizcraft.api.annotation.dirty.MarksDirty;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.common.worktable.WorktableBlockEntity;
 import dev.falseresync.wizcraft.common.CommonKeys;
-import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.block.entity.WizcraftBlockEntities;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtType;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
     protected final @MarksDirty SimpleInventory inventory = new SimpleInventory(1) {
@@ -38,7 +34,7 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
     protected @Dirty boolean charging = false;
 
     public ChargingWorktableBlockEntity(BlockPos pos, BlockState state) {
-        super(WizBlockEntities.CHARGING_WORKTABLE, pos, state);
+        super(WizcraftBlockEntities.CHARGING_WORKTABLE, pos, state);
         inventory.addListener(sender -> markDirty());
     }
 
@@ -67,7 +63,7 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
 
     @Override
     public boolean shouldExchangeFor(ItemStack stack) {
-        return stack.isOf(WizItems.WAND) || stack.isEmpty();
+        return stack.isOf(WizcraftItems.WAND) || stack.isEmpty();
     }
 
     @Override
@@ -83,7 +79,7 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
         if (world.isClient()) return;
 
         var heldStack = inventory.getStack(0);
-        if (!heldStack.isOf(WizItems.WAND)) {
+        if (!heldStack.isOf(WizcraftItems.WAND)) {
             if (charging) {
                 charging = false;
                 markDirty();

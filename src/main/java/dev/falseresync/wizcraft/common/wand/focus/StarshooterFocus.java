@@ -5,8 +5,8 @@ import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.entity.StarProjectileEntity;
-import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.report.WizReports;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
+import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -26,19 +26,19 @@ public class StarshooterFocus extends Focus {
 
     @Override
     public FocusType<StarshooterFocus> getType() {
-        return WizFocuses.STARSHOOTER;
+        return WizcraftFocuses.STARSHOOTER;
     }
 
     @Override
     public Item getItem() {
-        return WizItems.STARSHOOTER_FOCUS;
+        return WizcraftItems.STARSHOOTER_FOCUS;
     }
 
     @Override
     public ActionResult use(World world, Wand wand, LivingEntity user) {
         if (user instanceof ServerPlayerEntity player) {
             if (!wand.tryExpendCharge(DEFAULT_COST, player)) {
-                Report.trigger(player, WizReports.Wand.INSUFFICIENT_CHARGE);
+                Report.trigger(player, WizcraftReports.Wand.INSUFFICIENT_CHARGE);
                 return ActionResult.FAIL;
             }
 

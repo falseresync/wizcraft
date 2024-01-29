@@ -6,7 +6,7 @@ import dev.falseresync.wizcraft.common.CommonKeys;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
-import dev.falseresync.wizcraft.common.wand.focus.WizFocuses;
+import dev.falseresync.wizcraft.common.wand.focus.WizcraftFocuses;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -19,7 +19,7 @@ public class Wand {
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.INT.optionalFieldOf(CommonKeys.MAX_CHARGE, 100).forGetter(Wand::getMaxCharge),
                     Codec.INT.optionalFieldOf(CommonKeys.CHARGE, 0).forGetter(Wand::getCharge),
-                    ItemStack.CODEC.optionalFieldOf(CommonKeys.FOCUS_STACK, WizFocuses.CHARGING.newStack())
+                    ItemStack.CODEC.optionalFieldOf(CommonKeys.FOCUS_STACK, WizcraftFocuses.CHARGING.newStack())
                             .forGetter(wand -> wand.getFocusStack().toItemStack())
             ).apply(instance, Wand::new));
 

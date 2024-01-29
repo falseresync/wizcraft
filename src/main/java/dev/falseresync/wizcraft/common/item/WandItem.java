@@ -6,9 +6,9 @@ import dev.falseresync.wizcraft.client.WizKeybindings;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.common.block.WizBlocks;
-import dev.falseresync.wizcraft.common.block.pattern.BetterBlockPattern;
-import dev.falseresync.wizcraft.common.report.WizReports;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
+import dev.falseresync.wizcraft.api.common.blockpattern.BetterBlockPattern;
+import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import dev.falseresync.wizcraft.common.wand.focus.ChargingFocus;
 import dev.falseresync.wizcraft.network.s2c.TriggerBlockPatternTipS2CPacket;
 import net.fabricmc.api.EnvType;
@@ -54,7 +54,7 @@ public class WandItem extends Item implements HasId {
     public ActionResult useOnBlock(ItemUsageContext context) {
         var world = context.getWorld();
         var pos = context.getBlockPos();
-        if (world.getBlockState(pos).isOf(WizBlocks.DUMMY_WORKTABLE)) {
+        if (world.getBlockState(pos).isOf(WizcraftBlocks.DUMMY_WORKTABLE)) {
             if (world.isClient() || context.getPlayer() == null) return ActionResult.CONSUME;
 
             var testedPatterns = WorktableBlock.getPatternMappings().stream()
@@ -75,7 +75,7 @@ public class WandItem extends Item implements HasId {
                 var player = (ServerPlayerEntity) context.getPlayer();
                 ServerPlayNetworking.send(player, new TriggerBlockPatternTipS2CPacket(
                         halfwayCompletedPattern.get().getFirst().delta().stream().map(CachedBlockPosition::getBlockPos).toList()));
-                Report.trigger((ServerPlayerEntity) context.getPlayer(), WizReports.Worktable.INCOMPLETE);
+                Report.trigger((ServerPlayerEntity) context.getPlayer(), WizcraftReports.Worktable.INCOMPLETE);
                 return ActionResult.FAIL;
             }
 

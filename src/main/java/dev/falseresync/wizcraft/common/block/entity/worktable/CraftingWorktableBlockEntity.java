@@ -7,10 +7,10 @@ import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.api.common.worktable.WorktableBlockEntity;
 import dev.falseresync.wizcraft.common.CommonKeys;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
-import dev.falseresync.wizcraft.common.block.entity.WizBlockEntities;
+import dev.falseresync.wizcraft.common.block.entity.WizcraftBlockEntities;
 import dev.falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
-import dev.falseresync.wizcraft.common.report.WizReports;
+import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -65,7 +65,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     protected @Nullable LensedWorktableRecipe currentRecipe;
 
     public CraftingWorktableBlockEntity(BlockPos pos, BlockState state) {
-        super(WizBlockEntities.CRAFTING_WORKTABLE, pos, state);
+        super(WizcraftBlockEntities.CRAFTING_WORKTABLE, pos, state);
         inventory.addListener(sender -> markDirty());
     }
 
@@ -78,7 +78,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         searchPedestals(world, pos);
         if (pedestals.size() < 4) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                Report.trigger(serverPlayer, WizReports.Worktable.INCOMPLETE);
+                Report.trigger(serverPlayer, WizcraftReports.Worktable.INCOMPLETE);
             }
             return;
         }
@@ -187,7 +187,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
             if (world.getBlockEntity(pedestalPos) instanceof LensingPedestalBlockEntity pedestal) {
                 if (!pedestal.isLinkedTo(this)) {
                     world.breakBlock(pos, true);
-                    MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.CANNOT_PLACE);
+                    MultiplayerReport.trigger((ServerWorld) world, pos, null, WizcraftReports.Worktable.CANNOT_PLACE);
                 } else {
                     pedestals.add(pedestal);
                     pedestal.linkTo(this);
@@ -212,7 +212,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         remainingCraftingTime = recipeEntry.value().getCraftingTime();
         markDirty();
 
-        MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.CRAFTING);
+        MultiplayerReport.trigger((ServerWorld) world, pos, null, WizcraftReports.Worktable.CRAFTING);
     }
 
     @MarksDirty
@@ -220,7 +220,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         if (world == null || world.isClient()) return;
 
         reset();
-        MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.INTERRUPTED);
+        MultiplayerReport.trigger((ServerWorld) world, pos, null, WizcraftReports.Worktable.INTERRUPTED);
     }
 
     @MarksDirty
@@ -234,7 +234,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         }
 
         reset();
-        MultiplayerReport.trigger((ServerWorld) world, pos, null, WizReports.Worktable.SUCCESS);
+        MultiplayerReport.trigger((ServerWorld) world, pos, null, WizcraftReports.Worktable.SUCCESS);
     }
 
     protected void initStaticRecipeData(World world, LensedWorktableRecipe recipe) {

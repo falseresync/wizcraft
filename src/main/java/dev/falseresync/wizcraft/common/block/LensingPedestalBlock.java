@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.common.WizUtil;
+import dev.falseresync.wizcraft.common.CommonUtils;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -59,7 +59,7 @@ public class LensingPedestalBlock extends BlockWithEntity implements HasId {
                 return ActionResult.SUCCESS;
             }
 
-            var exchanged = WizUtil.exchangeStackInSlotWithHand(player, hand, pedestal.getStorage(), 0, 1, null);
+            var exchanged = CommonUtils.exchangeStackInSlotWithHand(player, hand, pedestal.getStorage(), 0, 1, null);
             if (exchanged == 1) {
                 return ActionResult.CONSUME;
             }

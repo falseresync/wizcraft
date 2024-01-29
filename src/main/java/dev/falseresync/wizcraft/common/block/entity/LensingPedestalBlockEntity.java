@@ -33,7 +33,7 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     @Nullable BlockPos linkedTo = null;
 
     public LensingPedestalBlockEntity(BlockPos pos, BlockState state) {
-        super(WizBlockEntities.LENSING_PEDESTAL, pos, state);
+        super(WizcraftBlockEntities.LENSING_PEDESTAL, pos, state);
         inventory.addListener(sender -> markDirty());
     }
 

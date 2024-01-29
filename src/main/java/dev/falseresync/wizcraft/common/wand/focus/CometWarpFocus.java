@@ -7,8 +7,8 @@ import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.report.WizReports;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
+import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -49,12 +49,12 @@ public class CometWarpFocus extends Focus {
 
     @Override
     public FocusType<CometWarpFocus> getType() {
-        return WizFocuses.COMET_WARP;
+        return WizcraftFocuses.COMET_WARP;
     }
 
     @Override
     public Item getItem() {
-        return WizItems.COMET_WARP_FOCUS;
+        return WizcraftItems.COMET_WARP_FOCUS;
     }
 
     @Override
@@ -82,15 +82,15 @@ public class CometWarpFocus extends Focus {
         if (user instanceof ServerPlayerEntity player) {
             if (user.isSneaking()) {
                 if (!wand.tryExpendCharge(DEFAULT_PLACEMENT_COST, player)) {
-                    Report.trigger(player, WizReports.Wand.INSUFFICIENT_CHARGE);
+                    Report.trigger(player, WizcraftReports.Wand.INSUFFICIENT_CHARGE);
                     return ActionResult.FAIL;
                 }
 
-                Report.trigger(player, WizReports.Focuses.ANCHOR_PLACED);
+                Report.trigger(player, WizcraftReports.Focuses.ANCHOR_PLACED);
                 this.anchor = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
             } else {
                 if (this.anchor == null) {
-                    Report.trigger(player, WizReports.Focuses.NO_ANCHOR);
+                    Report.trigger(player, WizcraftReports.Focuses.NO_ANCHOR);
                     return ActionResult.FAIL;
                 }
 
@@ -103,11 +103,11 @@ public class CometWarpFocus extends Focus {
                         ? DEFAULT_WARPING_COST
                         : DEFAULT_INTERDIMENSIONAL_COST;
                 if (!wand.tryExpendCharge(warpingCost, player)) {
-                    Report.trigger(player, WizReports.Wand.INSUFFICIENT_CHARGE);
+                    Report.trigger(player, WizcraftReports.Wand.INSUFFICIENT_CHARGE);
                     return ActionResult.FAIL;
                 }
 
-                Report.trigger(player, WizReports.Focuses.TELEPORTED);
+                Report.trigger(player, WizcraftReports.Focuses.TELEPORTED);
                 FabricDimensions.teleport(
                         user, destination,
                         new TeleportTarget(anchor.getPos().toCenterPos(), Vec3d.ZERO, user.getYaw(), user.getPitch()));

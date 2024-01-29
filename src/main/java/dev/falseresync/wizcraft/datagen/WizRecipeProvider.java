@@ -1,8 +1,8 @@
 package dev.falseresync.wizcraft.datagen;
 
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.common.block.WizBlocks;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import dev.falseresync.wizcraft.datagen.recipe.LensedWorktableRecipeJsonBuilder;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -21,24 +21,24 @@ public class WizRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(RecipeExporter exporter) {
-        new LensedWorktableRecipeJsonBuilder(WizItems.STARSHOOTER_FOCUS, Ingredient.ofItems(Items.COPPER_BLOCK))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.STARSHOOTER_FOCUS, Ingredient.ofItems(Items.COPPER_BLOCK))
                 .pedestalInput(Ingredient.ofItems(Items.GOLD_INGOT))
                 .pedestalInput(Ingredient.ofItems(Items.FIRE_CHARGE))
-                .offerTo(exporter, lwPrefix(WizItems.STARSHOOTER_FOCUS));
+                .offerTo(exporter, lwPrefix(WizcraftItems.STARSHOOTER_FOCUS));
 
-        new LensedWorktableRecipeJsonBuilder(WizItems.LIGHTNING_FOCUS, Ingredient.ofItems(Items.DIAMOND_BLOCK))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.LIGHTNING_FOCUS, Ingredient.ofItems(Items.DIAMOND_BLOCK))
                 .pedestalInput(Ingredient.ofItems(Items.LIGHTNING_ROD))
                 .pedestalInput(Ingredient.ofItems(Items.IRON_INGOT))
-                .offerTo(exporter, lwPrefix(WizItems.LIGHTNING_FOCUS));
+                .offerTo(exporter, lwPrefix(WizcraftItems.LIGHTNING_FOCUS));
 
-        new LensedWorktableRecipeJsonBuilder(WizItems.COMET_WARP_FOCUS, Ingredient.ofItems(Items.SLIME_BLOCK))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.COMET_WARP_FOCUS, Ingredient.ofItems(Items.SLIME_BLOCK))
                 .pedestalInput(Ingredient.ofItems(Items.ENDER_PEARL))
                 .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
                 .pedestalInput(Ingredient.ofItems(Items.ENDER_PEARL))
                 .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
-                .offerTo(exporter, lwPrefix(WizItems.COMET_WARP_FOCUS));
+                .offerTo(exporter, lwPrefix(WizcraftItems.COMET_WARP_FOCUS));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizItems.WAND)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND)
                 .input('d', Items.DIAMOND)
                 .input('g', Items.GOLD_INGOT)
                 .input('s', Items.STICK)
@@ -46,9 +46,9 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .pattern(" gs")
                 .pattern("s  ")
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-                .offerTo(exporter, WizItems.WAND.getId());
+                .offerTo(exporter, WizcraftItems.WAND.getId());
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, WizItems.LENS)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, WizcraftItems.LENS)
                 .input('g', Items.GOLD_INGOT)
                 .input('d', Items.DIAMOND)
                 .input('a', Items.AMETHYST_SHARD)
@@ -57,9 +57,9 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .pattern("aaa")
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
                 .criterion("has_amethyst", conditionsFromItem(Items.AMETHYST_SHARD))
-                .offerTo(exporter, WizBlocks.LENS.getId());
+                .offerTo(exporter, WizcraftBlocks.LENS.getId());
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.WORKTABLE)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.WORKTABLE)
                 .input('g', Items.GOLD_INGOT)
                 .input('l', Items.LAPIS_LAZULI)
                 .input('p', ItemTags.PLANKS)
@@ -68,16 +68,16 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .pattern(" p ")
                 .pattern("sss")
                 .criterion("has_gold", conditionsFromItem(Items.GOLD_INGOT))
-                .offerTo(exporter, WizBlocks.DUMMY_WORKTABLE.getId());
+                .offerTo(exporter, WizcraftBlocks.DUMMY_WORKTABLE.getId());
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.LENSING_PEDESTAL)
-                .input('l', WizItems.LENS)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.LENSING_PEDESTAL)
+                .input('l', WizcraftItems.LENS)
                 .input('b', Items.STONE_BRICKS)
                 .pattern("l")
                 .pattern("b")
                 .pattern("b")
-                .criterion("has_lens", conditionsFromItem(WizItems.LENS))
-                .offerTo(exporter, WizBlocks.LENSING_PEDESTAL.getId());
+                .criterion("has_lens", conditionsFromItem(WizcraftItems.LENS))
+                .offerTo(exporter, WizcraftBlocks.LENSING_PEDESTAL.getId());
     }
 
     private Identifier lwPrefix(HasId hasId) {

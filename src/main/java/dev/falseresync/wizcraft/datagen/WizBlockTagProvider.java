@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.datagen;
 
-import dev.falseresync.wizcraft.common.block.WizBlocks;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.registry.RegistryWrapper;
@@ -16,14 +16,14 @@ public class WizBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
-                .add(WizBlocks.DUMMY_WORKTABLE)
-                .add(WizBlocks.CRAFTING_WORKTABLE)
-                .add(WizBlocks.CHARGING_WORKTABLE);
+                .add(WizcraftBlocks.DUMMY_WORKTABLE)
+                .add(WizcraftBlocks.CRAFTING_WORKTABLE)
+                .add(WizcraftBlocks.CHARGING_WORKTABLE);
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-                .add(WizBlocks.LENS)
-                .add(WizBlocks.DUMMY_WORKTABLE)
-                .add(WizBlocks.CRAFTING_WORKTABLE)
-                .add(WizBlocks.CHARGING_WORKTABLE)
-                .add(WizBlocks.LENSING_PEDESTAL);
+                .add(WizcraftBlocks.LENS)
+                .add(WizcraftBlocks.DUMMY_WORKTABLE)
+                .add(WizcraftBlocks.CRAFTING_WORKTABLE)
+                .add(WizcraftBlocks.CHARGING_WORKTABLE)
+                .add(WizcraftBlocks.LENSING_PEDESTAL);
     }
 }

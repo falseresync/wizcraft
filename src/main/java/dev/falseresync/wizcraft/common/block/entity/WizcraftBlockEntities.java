@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.common.block.entity;
 
-import dev.falseresync.wizcraft.common.block.WizBlocks;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
 import dev.falseresync.wizcraft.common.block.entity.worktable.ChargingWorktableBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.worktable.CraftingWorktableBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -12,21 +12,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class WizBlockEntities {
+public class WizcraftBlockEntities {
     public static final BlockEntityType<CraftingWorktableBlockEntity> CRAFTING_WORKTABLE;
     public static final BlockEntityType<ChargingWorktableBlockEntity> CHARGING_WORKTABLE;
     public static final BlockEntityType<LensingPedestalBlockEntity> LENSING_PEDESTAL;
     private static final Map<Identifier, BlockEntityType<?>> TO_REGISTER = new HashMap<>();
 
     static {
-        CRAFTING_WORKTABLE = r(WizBlocks.CRAFTING_WORKTABLE.getId(), FabricBlockEntityTypeBuilder
-                .create(CraftingWorktableBlockEntity::new, WizBlocks.CRAFTING_WORKTABLE)
+        CRAFTING_WORKTABLE = r(WizcraftBlocks.CRAFTING_WORKTABLE.getId(), FabricBlockEntityTypeBuilder
+                .create(CraftingWorktableBlockEntity::new, WizcraftBlocks.CRAFTING_WORKTABLE)
                 .build());
-        CHARGING_WORKTABLE = r(WizBlocks.CHARGING_WORKTABLE.getId(), FabricBlockEntityTypeBuilder
-                .create(ChargingWorktableBlockEntity::new, WizBlocks.CHARGING_WORKTABLE)
+        CHARGING_WORKTABLE = r(WizcraftBlocks.CHARGING_WORKTABLE.getId(), FabricBlockEntityTypeBuilder
+                .create(ChargingWorktableBlockEntity::new, WizcraftBlocks.CHARGING_WORKTABLE)
                 .build());
-        LENSING_PEDESTAL = r(WizBlocks.LENSING_PEDESTAL.getId(), FabricBlockEntityTypeBuilder
-                .create(LensingPedestalBlockEntity::new, WizBlocks.LENSING_PEDESTAL)
+        LENSING_PEDESTAL = r(WizcraftBlocks.LENSING_PEDESTAL.getId(), FabricBlockEntityTypeBuilder
+                .create(LensingPedestalBlockEntity::new, WizcraftBlocks.LENSING_PEDESTAL)
                 .build());
     }
 

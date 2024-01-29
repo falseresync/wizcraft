@@ -10,7 +10,7 @@ import dev.falseresync.wizcraft.client.hud.slot.UnderBossBarHudSlot;
 import dev.falseresync.wizcraft.client.hud.widget.WFocusPicker;
 import dev.falseresync.wizcraft.client.hud.widget.WLabelWithSFX;
 import dev.falseresync.wizcraft.client.hud.widget.WWandChargeBar;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -56,7 +56,7 @@ public class WizHud {
         }
 
         var mainHandStack = client.player.getMainHandStack();
-        if (!mainHandStack.isOf(WizItems.WAND)) {
+        if (!mainHandStack.isOf(WizcraftItems.WAND)) {
             return;
         }
 

@@ -3,7 +3,7 @@ package dev.falseresync.wizcraft.client.render.blockentity;
 import dev.falseresync.wizcraft.client.render.CommonRenders;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.worktable.CraftingWorktableBlockEntity;
-import dev.falseresync.wizcraft.common.particle.WizParticleTypes;
+import dev.falseresync.wizcraft.common.particle.WizcraftParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -169,7 +169,7 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
 
     public record RenderingData(BlockPos pos, Vec3d center, Vec3d above, ItemStack stack, ParticleEffect particle) {
         private RenderingData(BlockPos pos, ItemStack stack) {
-            this(pos, pos.toCenterPos(), pos.toCenterPos().add(0, 0.75, 0), stack, new ItemStackParticleEffect(WizParticleTypes.SPAGHETTIFICATION, stack));
+            this(pos, pos.toCenterPos(), pos.toCenterPos().add(0, 0.75, 0), stack, new ItemStackParticleEffect(WizcraftParticleTypes.SPAGHETTIFICATION, stack));
         }
     }
 }

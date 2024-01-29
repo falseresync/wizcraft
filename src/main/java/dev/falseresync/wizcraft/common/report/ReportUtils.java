@@ -1,15 +1,12 @@
 package dev.falseresync.wizcraft.common.report;
 
-import dev.falseresync.wizcraft.client.render.CommonRenders;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ReportUtil {
+public class ReportUtils {
     public static void addSparkles(World world, Vec3d pos) {
         addParticle(world, ParticleTypes.FIREWORK, pos, 5, 10);
     }

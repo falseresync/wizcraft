@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class WizParticleTypes {
+public class WizcraftParticleTypes {
     private static final Map<Identifier, ParticleType<?>> TO_REGISTER = new HashMap<>();
 
     public static final ParticleType<ItemStackParticleEffect> SPAGHETTIFICATION =

@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.common.block.pattern;
+package dev.falseresync.wizcraft.api.common.blockpattern;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;

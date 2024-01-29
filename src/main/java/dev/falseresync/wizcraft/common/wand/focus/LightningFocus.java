@@ -4,10 +4,10 @@ import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.item.WizItems;
-import dev.falseresync.wizcraft.common.report.WizReports;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
+import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
-import dev.falseresync.wizcraft.common.WizUtil;
+import dev.falseresync.wizcraft.common.CommonUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -27,12 +27,12 @@ public class LightningFocus extends Focus {
 
     @Override
     public FocusType<LightningFocus> getType() {
-        return WizFocuses.LIGHTNING;
+        return WizcraftFocuses.LIGHTNING;
     }
 
     @Override
     public Item getItem() {
-        return WizItems.LIGHTNING_FOCUS;
+        return WizcraftItems.LIGHTNING_FOCUS;
     }
 
     @Override
@@ -44,12 +44,12 @@ public class LightningFocus extends Focus {
     public ActionResult use(World world, Wand wand, LivingEntity user) {
         if (user instanceof ServerPlayerEntity player) {
             if (!wand.tryExpendCharge(DEFAULT_COST, player)) {
-                Report.trigger(player, WizReports.Wand.INSUFFICIENT_CHARGE);
+                Report.trigger(player, WizcraftReports.Wand.INSUFFICIENT_CHARGE);
                 return ActionResult.FAIL;
             }
 
             var lightning = EntityType.LIGHTNING_BOLT.create(world);
-            var maxDistance = MathHelper.clamp(WizUtil.findViewDistance(world) * 16 / 4F, 32, 128);
+            var maxDistance = MathHelper.clamp(CommonUtils.findViewDistance(world) * 16 / 4F, 32, 128);
             var raycastResult = user.raycast(maxDistance, 0, true);
             var pos = raycastResult.getType() == HitResult.Type.MISS
                     ? findGroundPos((ServerWorld) world, raycastResult.getPos())

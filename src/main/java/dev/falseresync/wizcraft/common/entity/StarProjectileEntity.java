@@ -1,13 +1,12 @@
 package dev.falseresync.wizcraft.common.entity;
 
-import dev.falseresync.wizcraft.common.sound.WizSounds;
+import dev.falseresync.wizcraft.common.WizcraftSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +30,7 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
     }
 
     public StarProjectileEntity(LivingEntity owner, World world) {
-        this(WizEntities.STAR_PROJECTILE, world);
+        this(WizcraftEntities.STAR_PROJECTILE, world);
         setOwner(owner);
         var rotation = owner.getRotationVec(1);
         var orthogonalDistance = 1;
@@ -82,7 +81,7 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
         getWorld().createExplosion(
                 this, getDamageSources().indirectMagic(this, getOwner()),
                 EXPLOSION_BEHAVIOR, getX(), getY(), getZ(), 1f, false, World.ExplosionSourceType.NONE,
-                ParticleTypes.FLAME, ParticleTypes.EXPLOSION_EMITTER, WizSounds.Entity.STAR_PROJECTILE_EXPLODE);
+                ParticleTypes.FLAME, ParticleTypes.EXPLOSION_EMITTER, WizcraftSounds.Entity.STAR_PROJECTILE_EXPLODE);
         discard();
     }
 

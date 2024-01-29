@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public final class WizReports {
+public final class WizcraftReports {
     private static final Map<Identifier, Report> TO_REGISTER = new HashMap<>();
 
     private static <T extends Report> T r(T report) {

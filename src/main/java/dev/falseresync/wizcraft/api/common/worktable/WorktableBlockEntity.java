@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.api.common.worktable;
 
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -25,10 +25,10 @@ public abstract class WorktableBlockEntity extends BlockEntity {
     public abstract void remove(World world, BlockPos pos);
 
     public boolean shouldExchangeFor(ItemStack stack) {
-        return !stack.isOf(WizItems.WAND);
+        return !stack.isOf(WizcraftItems.WAND);
     }
 
     public boolean canBeActivatedBy(ItemStack stack) {
-        return stack.isOf(WizItems.WAND);
+        return stack.isOf(WizcraftItems.WAND);
     }
 }

@@ -6,7 +6,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import dev.falseresync.wizcraft.common.recipe.WizRecipes;
 import dev.falseresync.wizcraft.compat.emi.recipe.LensedWorktableEmiRecipe;
 import net.minecraft.util.Identifier;
@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 public class WizcraftEmiPlugin implements EmiPlugin {
     public static final Identifier EMI_ATLAS
             = new Identifier(Wizcraft.MODID, "textures/block/worktable_top.png");
-    public static final EmiStack WORKTABLE = EmiStack.of(WizItems.WORKTABLE);
+    public static final EmiStack WORKTABLE = EmiStack.of(WizcraftItems.WORKTABLE);
     public static final EmiRecipeCategory LENSED_WORKTABLE = new EmiRecipeCategory(
             new Identifier(Wizcraft.MODID, "lensed_worktable"),
             WORKTABLE,

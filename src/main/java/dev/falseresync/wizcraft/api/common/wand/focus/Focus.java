@@ -2,7 +2,7 @@ package dev.falseresync.wizcraft.api.common.wand.focus;
 
 import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.api.WizRegistries;
+import dev.falseresync.wizcraft.api.WizcraftRegistries;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -45,7 +45,7 @@ public abstract class Focus implements HasId {
     public void appendTooltip(@Nullable World world, List<Text> tooltip, TooltipContext context) {
     }
 
-    public static final Codec<Focus> CODEC = WizRegistries.FOCUS_TYPE.getCodec().dispatch(Focus::getType, FocusType::customDataCodec);
+    public static final Codec<Focus> CODEC = WizcraftRegistries.FOCUS_TYPE.getCodec().dispatch(Focus::getType, FocusType::customDataCodec);
 
     public static Focus fromNbt(NbtCompound nbt, Focus fallback) {
         return CODEC.parse(NbtOps.INSTANCE, nbt).result().orElse(fallback);

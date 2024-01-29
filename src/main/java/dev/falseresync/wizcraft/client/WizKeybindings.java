@@ -4,10 +4,10 @@ import dev.falseresync.wizcraft.api.client.hud.controller.WidgetInstancePriority
 import dev.falseresync.wizcraft.api.client.hud.controller.WidgetQueryResponse;
 import dev.falseresync.wizcraft.client.hud.WizHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
-import dev.falseresync.wizcraft.common.wand.focus.WizFocuses;
+import dev.falseresync.wizcraft.common.wand.focus.WizcraftFocuses;
 import dev.falseresync.wizcraft.network.c2s.UpdateWandFocusC2SPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,7 +41,7 @@ public final class WizKeybindings {
 
             while (TOOL_CONTROL.wasPressed()) {
                 var mainHandStack = client.player.getInventory().getMainHandStack();
-                if (!mainHandStack.isOf(WizItems.WAND)) {
+                if (!mainHandStack.isOf(WizcraftItems.WAND)) {
                     return;
                 }
 
@@ -54,7 +54,7 @@ public final class WizKeybindings {
                 var wand = Wand.fromStack(mainHandStack);
                 var activeFocusStack = wand.getFocusStack();
                 if (focuses.isEmpty()) {
-                    if (activeFocusStack.getFocus().getType() == WizFocuses.CHARGING) {
+                    if (activeFocusStack.getFocus().getType() == WizcraftFocuses.CHARGING) {
                         WizHud.Slots.UNDER_BOSS_BAR.clear();
                         WizHud.STATUS_MESSAGE.override(
                                 Text.translatable("hud.wizcraft.wand.no_focuses"),
@@ -69,8 +69,8 @@ public final class WizKeybindings {
                     }
                 }
 
-                if (activeFocusStack.getFocus().getType() != WizFocuses.CHARGING) {
-                    focuses.offerFirst(WizFocuses.CHARGING.newFocusStack());
+                if (activeFocusStack.getFocus().getType() != WizcraftFocuses.CHARGING) {
+                    focuses.offerFirst(WizcraftFocuses.CHARGING.newFocusStack());
                 }
                 focuses.offerFirst(activeFocusStack);
 

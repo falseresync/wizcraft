@@ -1,9 +1,8 @@
 package dev.falseresync.wizcraft.network.s2c;
 
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.api.WizRegistries;
+import dev.falseresync.wizcraft.api.WizcraftRegistries;
 import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
-import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
@@ -19,7 +18,7 @@ public record TriggerMultiplayerReportS2CPacket(MultiplayerReport report) implem
     }
 
     private static MultiplayerReport getReportFromId(Identifier id) {
-        return WizRegistries.REPORTS.getOrEmpty(id)
+        return WizcraftRegistries.REPORTS.getOrEmpty(id)
                 .filter(it -> it instanceof MultiplayerReport)
                 .map(it -> (MultiplayerReport) it)
                 .orElseThrow(() -> new IllegalStateException("Unknown multiplayer report ID: %s".formatted(id)));

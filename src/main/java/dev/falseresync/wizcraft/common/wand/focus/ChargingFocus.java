@@ -6,11 +6,11 @@ import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
 import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
-import dev.falseresync.wizcraft.common.WizUtil;
+import dev.falseresync.wizcraft.common.CommonUtils;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
-import dev.falseresync.wizcraft.common.report.WizReports;
+import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,12 +43,12 @@ public class ChargingFocus extends Focus {
 
     @Override
     public FocusType<ChargingFocus> getType() {
-        return WizFocuses.CHARGING;
+        return WizcraftFocuses.CHARGING;
     }
 
     @Override
     public Item getItem() {
-        return WizItems.CHARGING_FOCUS;
+        return WizcraftItems.CHARGING_FOCUS;
     }
 
     @Override
@@ -57,18 +57,18 @@ public class ChargingFocus extends Focus {
             if (!world.isNight()
                     || world.getRainGradient(1) > 0.75
                     || world.getLightLevel(LightType.SKY, user.getBlockPos()) < world.getMaxLightLevel() * 0.5) {
-                Report.trigger(player, WizReports.Wand.CANNOT_CHARGE);
+                Report.trigger(player, WizcraftReports.Wand.CANNOT_CHARGE);
                 return ActionResult.FAIL;
             }
 
-            if (user.raycast(WizUtil.findViewDistance(world) * 16, 0, true).getType()
+            if (user.raycast(CommonUtils.findViewDistance(world) * 16, 0, true).getType()
                     != HitResult.Type.MISS) {
-                Report.trigger(player, WizReports.Wand.CANNOT_CHARGE);
+                Report.trigger(player, WizcraftReports.Wand.CANNOT_CHARGE);
                 return ActionResult.FAIL;
             }
 
             if (wand.isFullyCharged()) {
-                Report.trigger(player, WizReports.Wand.ALREADY_FULLY_CHARGED);
+                Report.trigger(player, WizcraftReports.Wand.ALREADY_FULLY_CHARGED);
                 return ActionResult.PASS;
             }
 
@@ -100,7 +100,7 @@ public class ChargingFocus extends Focus {
         if (user instanceof ServerPlayerEntity player) {
             chargingProgress = 0;
             wand.addCharge(40);
-            MultiplayerReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizReports.Wand.SUCCESSFULLY_CHARGED);
+            MultiplayerReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizcraftReports.Wand.SUCCESSFULLY_CHARGED);
         }
     }
 

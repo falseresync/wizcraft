@@ -1,11 +1,10 @@
 package dev.falseresync.wizcraft.api.common.worktable;
 
-import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.common.WizUtil;
-import dev.falseresync.wizcraft.common.block.WizBlocks;
-import dev.falseresync.wizcraft.common.block.pattern.BetterBlockPattern;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.CommonUtils;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -27,43 +26,22 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Supplier;
-
-// Dear vanilla, suck dick for Codecs. Those are really the epitome of PITA
-// This one, for example, has prevented me from completely generifying this class
-// I could've had a Builder here that takes my BE params and spits out a block automatically
-// But noooooooo, it MUUUUUST be data-driven, ffs
 public abstract class WorktableBlock<B extends WorktableBlockEntity> extends BlockWithEntity implements HasId {
-    protected final Supplier<BlockEntityType<B>> type;
-    protected final BlockEntityTicker<B> ticker;
     public static final VoxelShape SHAPE = VoxelShapes.union(
             /* Panel */ VoxelShapes.cuboid(0, 14 / 16f, 0, 16 / 16f, 16 / 16f, 16 / 16f),
             /* Base */ VoxelShapes.cuboid(2 / 16f, 0, 2 / 16f, 14 / 16f, 4 / 16f, 14 / 16f),
             /* Post */ VoxelShapes.cuboid(4 / 16f, 4 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 12 / 16f)
     );
-    protected static final ArrayList<Pair<Supplier<BetterBlockPattern>, WorktableBlock<?>>> PATTERN_MAPPINGS = new ArrayList<>();
-    protected static List<Pair<BetterBlockPattern, WorktableBlock<?>>> BAKED_PATTERN_MAPPINGS;
 
-    public WorktableBlock(Supplier<BlockEntityType<B>> type, BlockEntityTicker<B> ticker, Supplier<BetterBlockPattern> pattern, Settings settings) {
+    public WorktableBlock(Settings settings) {
         super(settings);
-        this.type = type;
-        this.ticker = ticker;
-        PATTERN_MAPPINGS.add(Pair.of(pattern, this));
     }
 
-    public static List<Pair<BetterBlockPattern, WorktableBlock<?>>> getPatternMappings() {
-        if (BAKED_PATTERN_MAPPINGS == null) {
-            BAKED_PATTERN_MAPPINGS = PATTERN_MAPPINGS
-                    .stream()
-                    .map(mapping -> mapping.mapFirst(Supplier::get))
-                    // From the biggest pattern to the smallest
-                    .sorted(Comparator.comparingInt(mapping -> -mapping.mapFirst(BetterBlockPattern::getSize).getFirst()))
-                    .toList();
-        }
-        return BAKED_PATTERN_MAPPINGS;
+    // Dear vanilla, suck dick for Codecs. Those are really the epitome of PITA
+    // But noooooooo, it MUUUUUST be data-driven, ffs
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -73,25 +51,23 @@ public abstract class WorktableBlock<B extends WorktableBlockEntity> extends Blo
 
     @Override
     public String getTranslationKey() {
-        return WizBlocks.DUMMY_WORKTABLE.getTranslationKey();
+        return WizcraftBlocks.DUMMY_WORKTABLE.getTranslationKey();
     }
 
     @Override
     public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
-        return new ItemStack(WizItems.WORKTABLE);
+        return new ItemStack(WizcraftItems.WORKTABLE);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return type.get().instantiate(pos, state);
-    }
+    public abstract BlockEntity createBlockEntity(BlockPos pos, BlockState state);
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, this.type.get(), ticker);
-    }
+    public abstract  <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type);
+
+    public abstract WorktableVariant<B> getVariant();
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -106,7 +82,7 @@ public abstract class WorktableBlock<B extends WorktableBlockEntity> extends Blo
             var playerStack = player.getMainHandStack();
 
             if (worktable.shouldExchangeFor(playerStack)) {
-                var exchanged = WizUtil.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
+                var exchanged = CommonUtils.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
                 if (exchanged == 1) {
                     return ActionResult.CONSUME;
                 }

@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.network.s2c;
 
-import dev.falseresync.wizcraft.api.WizRegistries;
+import dev.falseresync.wizcraft.api.WizcraftRegistries;
 import dev.falseresync.wizcraft.api.common.report.Report;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.HasId;
@@ -18,7 +18,7 @@ public record TriggerReportS2CPacket(Report report) implements FabricPacket, Has
     }
 
     private static Report getReportFromId(Identifier id) {
-        return WizRegistries.REPORTS.getOrEmpty(id)
+        return WizcraftRegistries.REPORTS.getOrEmpty(id)
                 .orElseThrow(() -> new IllegalStateException("Unknown report ID: %s".formatted(id)));
     }
 

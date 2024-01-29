@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.common.block.pattern;
+package dev.falseresync.wizcraft.api.common.blockpattern;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.block.pattern.CachedBlockPosition;

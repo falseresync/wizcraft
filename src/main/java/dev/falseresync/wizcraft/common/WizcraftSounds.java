@@ -1,4 +1,4 @@
-package dev.falseresync.wizcraft.common.sound;
+package dev.falseresync.wizcraft.common;
 
 import dev.falseresync.wizcraft.common.Wizcraft;
 import net.minecraft.sound.SoundEvent;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class WizSounds {
+public class WizcraftSounds {
     private static final Map<Identifier, SoundEvent> TO_REGISTER = new HashMap<>();
 
     private static SoundEvent r(String id) {

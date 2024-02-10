@@ -1,13 +1,12 @@
 package dev.falseresync.wizcraft.common.item;
 
 import dev.falseresync.wizcraft.api.common.report.Report;
-import dev.falseresync.wizcraft.api.common.worktable.WorktableBlock;
-import dev.falseresync.wizcraft.client.WizKeybindings;
+import dev.falseresync.wizcraft.api.common.worktable.WorktableVariant;
+import dev.falseresync.wizcraft.client.WizcraftKeybindings;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
-import dev.falseresync.wizcraft.api.common.blockpattern.BetterBlockPattern;
 import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import dev.falseresync.wizcraft.common.wand.focus.ChargingFocus;
 import dev.falseresync.wizcraft.network.s2c.TriggerBlockPatternTipS2CPacket;
@@ -16,7 +15,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -57,25 +56,24 @@ public class WandItem extends Item implements HasId {
         if (world.getBlockState(pos).isOf(WizcraftBlocks.DUMMY_WORKTABLE)) {
             if (world.isClient() || context.getPlayer() == null) return ActionResult.CONSUME;
 
-            var testedPatterns = WorktableBlock.getPatternMappings().stream()
-                    .map(mapping -> mapping.mapFirst(pattern -> pattern.searchAround(world, pos)))
-                    .toList();
-            var completedPattern = testedPatterns.stream()
-                    .filter(mapping -> mapping.mapFirst(BetterBlockPattern.Match::isCompleted).getFirst())
+            var player = (ServerPlayerEntity) context.getPlayer();
+            var matchedVariants = WorktableVariant
+                    .getForPlayerAndSearchAround((ServerWorld) world, player, pos);
+            var fullyCompletedVariant = matchedVariants.stream()
+                    .filter(variant -> variant.match().isCompleted())
                     .findFirst();
-            if (completedPattern.isPresent()) {
-                world.setBlockState(pos, completedPattern.get().getSecond().getDefaultState());
+            if (fullyCompletedVariant.isPresent()) {
+                world.setBlockState(pos, fullyCompletedVariant.get().block().getDefaultState());
                 return ActionResult.SUCCESS;
             }
 
-            var halfwayCompletedPattern = testedPatterns.stream()
-                    .filter(mapping -> mapping.mapFirst(BetterBlockPattern.Match::isHalfwayCompleted).getFirst())
-                    .min(Comparator.comparingInt(mapping -> mapping.mapFirst(pattern -> pattern.delta().size()).getFirst()));
-            if (halfwayCompletedPattern.isPresent()) {
-                var player = (ServerPlayerEntity) context.getPlayer();
-                ServerPlayNetworking.send(player, new TriggerBlockPatternTipS2CPacket(
-                        halfwayCompletedPattern.get().getFirst().delta().stream().map(CachedBlockPosition::getBlockPos).toList()));
-                Report.trigger((ServerPlayerEntity) context.getPlayer(), WizcraftReports.Worktable.INCOMPLETE);
+            var leastUncompletedVariant = matchedVariants.stream()
+                    .filter(variant -> variant.match().isHalfwayCompleted())
+                    .min(Comparator.comparingInt(variant -> variant.match().delta().size()));
+            if (leastUncompletedVariant.isPresent()) {
+                ServerPlayNetworking.send(player, new TriggerBlockPatternTipS2CPacket(leastUncompletedVariant.get().match().deltaAsBlockPos()));
+                Report.trigger(player, WizcraftReports.Worktable.INCOMPLETE);
+
                 return ActionResult.FAIL;
             }
 
@@ -165,7 +163,7 @@ public class WandItem extends Item implements HasId {
     public void appendClientTooltip(Wand wand, List<Text> tooltip, TooltipContext context) {
         tooltip.add(Text.translatable(
                 "tooltip.wizcraft.wand.change_focus",
-                    KeyBindingHelper.getBoundKeyOf(WizKeybindings.TOOL_CONTROL).getLocalizedText().getString()
+                    KeyBindingHelper.getBoundKeyOf(WizcraftKeybindings.TOOL_CONTROL).getLocalizedText().getString()
                 ).styled(style -> style.withColor(Formatting.GRAY).withItalic(true)));
     }
 }

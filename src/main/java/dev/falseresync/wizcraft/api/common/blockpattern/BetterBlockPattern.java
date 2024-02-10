@@ -98,8 +98,15 @@ public class BetterBlockPattern {
     }
 
     public record Match(List<CachedBlockPosition> delta,
+                        List<BlockPos> deltaAsBlockPos,
                         BlockPos frontTopLeft, Direction forwards, Direction up,
                         int width, int height, int depth, int size) {
+        public Match(List<CachedBlockPosition> delta,
+                     BlockPos frontTopLeft, Direction forwards, Direction up,
+                     int width, int height, int depth, int size) {
+            this(delta, delta.stream().map(CachedBlockPosition::getBlockPos).toList(), frontTopLeft, forwards, up, width, height, depth, size);
+        }
+
         public boolean isCompleted() {
             return delta.isEmpty();
         }

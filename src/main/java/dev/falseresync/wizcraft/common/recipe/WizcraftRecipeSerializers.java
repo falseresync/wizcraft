@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class WizRecipeSerializers {
+public class WizcraftRecipeSerializers {
     public static final LensedWorktableRecipe.Serializer LENSED_WORKTABLE;
     private static final Map<Identifier, RecipeSerializer<?>> TO_REGISTER = new HashMap<>();
 

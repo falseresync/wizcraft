@@ -7,7 +7,7 @@ import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.item.WizcraftItems;
-import dev.falseresync.wizcraft.common.recipe.WizRecipes;
+import dev.falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import dev.falseresync.wizcraft.compat.emi.recipe.LensedWorktableEmiRecipe;
 import net.minecraft.util.Identifier;
 
@@ -26,7 +26,7 @@ public class WizcraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(LENSED_WORKTABLE, WORKTABLE);
 
         var recipeManager = registry.getRecipeManager();
-        for (var recipeEntry : recipeManager.listAllOfType(WizRecipes.LENSED_WORKTABLE)) {
+        for (var recipeEntry : recipeManager.listAllOfType(WizcraftRecipes.LENSED_WORKTABLE)) {
             registry.addRecipe(new LensedWorktableEmiRecipe(recipeEntry.id(), recipeEntry.value()));
         }
     }

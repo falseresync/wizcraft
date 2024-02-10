@@ -2,7 +2,7 @@ package dev.falseresync.wizcraft.client;
 
 import dev.falseresync.wizcraft.api.client.hud.controller.WidgetInstancePriority;
 import dev.falseresync.wizcraft.api.client.hud.controller.WidgetQueryResponse;
-import dev.falseresync.wizcraft.client.hud.WizHud;
+import dev.falseresync.wizcraft.client.hud.WizcraftHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
@@ -23,7 +23,7 @@ import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
-public final class WizKeybindings {
+public final class WizcraftKeybindings {
     public static final KeyBinding TOOL_CONTROL;
 
     static {
@@ -55,14 +55,14 @@ public final class WizKeybindings {
                 var activeFocusStack = wand.getFocusStack();
                 if (focuses.isEmpty()) {
                     if (activeFocusStack.getFocus().getType() == WizcraftFocuses.CHARGING) {
-                        WizHud.Slots.UNDER_BOSS_BAR.clear();
-                        WizHud.STATUS_MESSAGE.override(
+                        WizcraftHud.Slots.UNDER_BOSS_BAR.clear();
+                        WizcraftHud.STATUS_MESSAGE.override(
                                 Text.translatable("hud.wizcraft.wand.no_focuses"),
                                 WidgetInstancePriority.HIGH);
                         return;
                     } else if (inventory.getEmptySlot() == -1) {
-                        WizHud.Slots.UNDER_BOSS_BAR.clear();
-                        WizHud.STATUS_MESSAGE.override(
+                        WizcraftHud.Slots.UNDER_BOSS_BAR.clear();
+                        WizcraftHud.STATUS_MESSAGE.override(
                                 Text.translatable("hud.wizcraft.wand.full_inventory"),
                                 WidgetInstancePriority.HIGH);
                         return;
@@ -74,9 +74,9 @@ public final class WizKeybindings {
                 }
                 focuses.offerFirst(activeFocusStack);
 
-                var focusPickerQuery = WizHud.FOCUS_PICKER.getOrCreate(focuses);
+                var focusPickerQuery = WizcraftHud.FOCUS_PICKER.getOrCreate(focuses);
                 if (focusPickerQuery.status() == WidgetQueryResponse.Status.EXISTS && focusPickerQuery.widget() != null) {
-                    WizHud.FOCUS_PICKER.resetDisplayTicks();
+                    WizcraftHud.FOCUS_PICKER.resetDisplayTicks();
                     focusPickerQuery.widget().pickNext();
                     ClientPlayNetworking.send(new UpdateWandFocusC2SPacket(focusPickerQuery.widget().getPicked().toItemVariant()));
                 }

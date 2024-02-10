@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class WizcraftBlocks {
-    public static final WizBlock LENS;
+    public static final WizcraftBlock LENS;
     public static final DummyWorktableBlock DUMMY_WORKTABLE;
     public static final WorktableBlock<CraftingWorktableBlockEntity> CRAFTING_WORKTABLE;
     public static final WorktableBlock<ChargingWorktableBlockEntity> CHARGING_WORKTABLE;
@@ -26,7 +26,7 @@ public class WizcraftBlocks {
     private static final Map<Identifier, Block> TO_REGISTER = new HashMap<>();
 
     static {
-        LENS = r(new WizBlock(new Identifier(Wizcraft.MODID, "lens"), FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
+        LENS = r(new WizcraftBlock(new Identifier(Wizcraft.MODID, "lens"), FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
 
         var worktableBlockSettings = FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).requiresTool();
         DUMMY_WORKTABLE = r(new DummyWorktableBlock(worktableBlockSettings));
@@ -39,7 +39,7 @@ public class WizcraftBlocks {
                 .pattern(WizcraftWorktablePatterns::crafting)
                 .build());
         CHARGING_WORKTABLE = rWorktable(new WorktableBuilder<ChargingWorktableBlockEntity>()
-                .id(new Identifier(Wizcraft.MODID, "crafting_worktable"))
+                .id(new Identifier(Wizcraft.MODID, "charging_worktable"))
                 .settings(worktableBlockSettings)
                 .type(() -> WizcraftBlockEntities.CHARGING_WORKTABLE)
                 .ticker(ChargingWorktableBlockEntity::tick)

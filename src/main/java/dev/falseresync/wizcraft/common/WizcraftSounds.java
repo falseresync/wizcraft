@@ -1,6 +1,5 @@
 package dev.falseresync.wizcraft.common;
 
-import dev.falseresync.wizcraft.common.Wizcraft;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 

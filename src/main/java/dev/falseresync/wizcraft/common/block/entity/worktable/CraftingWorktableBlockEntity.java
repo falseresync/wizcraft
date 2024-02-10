@@ -9,7 +9,7 @@ import dev.falseresync.wizcraft.common.CommonKeys;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.WizcraftBlockEntities;
 import dev.falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
-import dev.falseresync.wizcraft.common.recipe.WizRecipes;
+import dev.falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
@@ -85,7 +85,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
 
         updateVirtualCombinedInventory();
         world.getRecipeManager()
-                .getFirstMatch(WizRecipes.LENSED_WORKTABLE, virtualCombinedInventory, world)
+                .getFirstMatch(WizcraftRecipes.LENSED_WORKTABLE, virtualCombinedInventory, world)
                 .ifPresent(this::beginCrafting);
     }
 

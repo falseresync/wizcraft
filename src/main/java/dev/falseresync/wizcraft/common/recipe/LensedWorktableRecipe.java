@@ -103,12 +103,12 @@ public final class LensedWorktableRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeSerializer<LensedWorktableRecipe> getSerializer() {
-        return WizRecipeSerializers.LENSED_WORKTABLE;
+        return WizcraftRecipeSerializers.LENSED_WORKTABLE;
     }
 
     @Override
     public RecipeType<LensedWorktableRecipe> getType() {
-        return WizRecipes.LENSED_WORKTABLE;
+        return WizcraftRecipes.LENSED_WORKTABLE;
     }
 
     public ItemStack getResult() {

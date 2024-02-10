@@ -23,7 +23,7 @@ import net.minecraft.text.Text;
 import java.util.Deque;
 
 @Environment(EnvType.CLIENT)
-public class WizHud {
+public class WizcraftHud {
     public static final HudController<WFocusPicker, Deque<FocusStack>> FOCUS_PICKER;
     public static final HudController<WLabelWithSFX, Text> STATUS_MESSAGE;
     public static final HudController<WWandChargeBar, Wand> WAND_CHARGE_BAR;

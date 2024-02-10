@@ -6,8 +6,8 @@ import dev.falseresync.wizcraft.common.block.entity.WizcraftBlockEntities;
 import dev.falseresync.wizcraft.common.entity.WizcraftEntities;
 import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import dev.falseresync.wizcraft.common.particle.WizcraftParticleTypes;
-import dev.falseresync.wizcraft.common.recipe.WizRecipeSerializers;
-import dev.falseresync.wizcraft.common.recipe.WizRecipes;
+import dev.falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
+import dev.falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import dev.falseresync.wizcraft.common.wand.focus.WizcraftFocuses;
 import dev.falseresync.wizcraft.network.WizServerNetworking;
@@ -37,8 +37,8 @@ public class Wizcraft implements ModInitializer {
         WizcraftItems.registerItemGroups((id, item) -> Registry.register(Registries.ITEM_GROUP, id, item));
         WizcraftEntities.register((id, type) -> Registry.register(Registries.ENTITY_TYPE, id, type));
         WizcraftFocuses.register((id, focus) -> Registry.register(WizcraftRegistries.FOCUS_TYPE, id, focus));
-        WizRecipeSerializers.register((id, serializer) -> Registry.register(Registries.RECIPE_SERIALIZER, id, serializer));
-        WizRecipes.register((id, type) -> Registry.register(Registries.RECIPE_TYPE, id, type));
+        WizcraftRecipeSerializers.register((id, serializer) -> Registry.register(Registries.RECIPE_SERIALIZER, id, serializer));
+        WizcraftRecipes.register((id, type) -> Registry.register(Registries.RECIPE_TYPE, id, type));
         WizcraftParticleTypes.register((id, type) -> Registry.register(Registries.PARTICLE_TYPE, id, type));
         WizServerNetworking.registerReceivers();
     }

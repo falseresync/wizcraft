@@ -11,6 +11,7 @@ import dev.falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import dev.falseresync.wizcraft.common.wand.focus.WizcraftFocuses;
 import dev.falseresync.wizcraft.network.WizServerNetworking;
+import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -18,17 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Wizcraft implements ModInitializer {
-    public static final String MODID = "wizcraft";
+    public static final String MOD_ID = "wizcraft";
     public static final Logger LOGGER = LoggerFactory.getLogger("Wizcraft");
-    public static final WizcraftConfig CONFIG;
-
-    static {
-        WizcraftConfig.HANDLER.load();
-        CONFIG = WizcraftConfig.HANDLER.instance();
-    }
 
     @Override
     public void onInitialize() {
+        MidnightConfig.init(MOD_ID, WizcraftConfig.class);
         WizcraftRegistries.register();
         WizcraftReports.register((id, report) -> Registry.register(WizcraftRegistries.REPORTS, id, report));
         WizcraftBlocks.register((id, block) -> Registry.register(Registries.BLOCK, id, block));

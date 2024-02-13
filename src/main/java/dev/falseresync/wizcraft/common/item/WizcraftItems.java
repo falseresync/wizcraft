@@ -55,7 +55,7 @@ public final class WizcraftItems {
         WORKTABLE = rBlockItem(WizcraftBlocks.DUMMY_WORKTABLE);
         LENSING_PEDESTAL = rBlockItem(WizcraftBlocks.LENSING_PEDESTAL);
 
-        GROUP_GENERAL = r(new Identifier(Wizcraft.MODID, "general"), FabricItemGroup.builder()
+        GROUP_GENERAL = r(new Identifier(Wizcraft.MOD_ID, "general"), FabricItemGroup.builder()
                 .icon(WAND::getDefaultStack)
                 .displayName(Text.translatable("itemGroup.wizcraft"))
                 .entries((displayContext, entries) -> GROUP_ENTRIES.get(Group.GENERAL).forEach(entries::add))

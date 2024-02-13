@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.common.report.worktable;
 
+import dev.falseresync.wizcraft.api.WizcraftApi;
 import dev.falseresync.wizcraft.api.common.report.Report;
-import dev.falseresync.wizcraft.client.hud.WizcraftHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class WorktableIncompleteReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "worktable/incomplete");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "worktable/incomplete");
 
     @Override
     public Identifier getId() {
@@ -22,6 +22,6 @@ public class WorktableIncompleteReport implements Report {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizcraftHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.worktable.incomplete_worktable"));
+        WizcraftApi.getHud().getMessageDisplay().post(Text.translatable("hud.wizcraft.worktable.incomplete_worktable"));
     }
 }

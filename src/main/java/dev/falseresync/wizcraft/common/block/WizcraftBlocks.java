@@ -26,20 +26,20 @@ public class WizcraftBlocks {
     private static final Map<Identifier, Block> TO_REGISTER = new HashMap<>();
 
     static {
-        LENS = r(new WizcraftBlock(new Identifier(Wizcraft.MODID, "lens"), FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
+        LENS = r(new WizcraftBlock(new Identifier(Wizcraft.MOD_ID, "lens"), FabricBlockSettings.copyOf(Blocks.GLASS).luminance(1)));
 
         var worktableBlockSettings = FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).requiresTool();
         DUMMY_WORKTABLE = r(new DummyWorktableBlock(worktableBlockSettings));
 
         CRAFTING_WORKTABLE = rWorktable(new WorktableBuilder<CraftingWorktableBlockEntity>()
-                .id(new Identifier(Wizcraft.MODID, "crafting_worktable"))
+                .id(new Identifier(Wizcraft.MOD_ID, "crafting_worktable"))
                 .settings(worktableBlockSettings)
                 .type(() -> WizcraftBlockEntities.CRAFTING_WORKTABLE)
                 .ticker(CraftingWorktableBlockEntity::tick)
                 .pattern(WizcraftWorktablePatterns::crafting)
                 .build());
         CHARGING_WORKTABLE = rWorktable(new WorktableBuilder<ChargingWorktableBlockEntity>()
-                .id(new Identifier(Wizcraft.MODID, "charging_worktable"))
+                .id(new Identifier(Wizcraft.MOD_ID, "charging_worktable"))
                 .settings(worktableBlockSettings)
                 .type(() -> WizcraftBlockEntities.CHARGING_WORKTABLE)
                 .ticker(ChargingWorktableBlockEntity::tick)

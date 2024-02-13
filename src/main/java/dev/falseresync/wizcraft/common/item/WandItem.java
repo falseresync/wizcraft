@@ -34,7 +34,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class WandItem extends Item implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "wand");
 
     public WandItem(Settings settings) {
         super(settings);

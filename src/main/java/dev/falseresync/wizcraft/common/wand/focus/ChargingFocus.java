@@ -22,7 +22,7 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 public class ChargingFocus extends Focus {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "charging");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "charging");
     public static final Codec<ChargingFocus> CODEC =
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.INT.optionalFieldOf("charging_progress", 0).forGetter(ChargingFocus::getChargingProgress)

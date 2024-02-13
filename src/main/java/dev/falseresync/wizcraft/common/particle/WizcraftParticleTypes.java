@@ -18,7 +18,7 @@ public class WizcraftParticleTypes {
             r("spaghettification", FabricParticleTypes.complex(ItemStackParticleEffect.PARAMETERS_FACTORY));
 
     private static <T extends ParticleEffect> ParticleType<T> r(String id, ParticleType<T> particleType) {
-        TO_REGISTER.put(new Identifier(Wizcraft.MODID, id), particleType);
+        TO_REGISTER.put(new Identifier(Wizcraft.MOD_ID, id), particleType);
         return particleType;
     }
 

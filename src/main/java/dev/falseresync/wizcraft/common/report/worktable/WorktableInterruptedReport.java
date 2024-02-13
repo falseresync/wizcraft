@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class WorktableInterruptedReport implements MultiplayerReport {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "worktable/interrupted");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "worktable/interrupted");
     @Override
     public Identifier getId() {
         return ID;

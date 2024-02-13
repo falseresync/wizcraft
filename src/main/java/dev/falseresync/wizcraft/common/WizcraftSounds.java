@@ -11,7 +11,7 @@ public class WizcraftSounds {
     private static final Map<Identifier, SoundEvent> TO_REGISTER = new HashMap<>();
 
     private static SoundEvent r(String id) {
-        var sound = SoundEvent.of(new Identifier(Wizcraft.MODID, id));
+        var sound = SoundEvent.of(new Identifier(Wizcraft.MOD_ID, id));
         TO_REGISTER.put(sound.getId(), sound);
         return sound;
     }

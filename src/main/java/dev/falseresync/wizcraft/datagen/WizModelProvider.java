@@ -14,7 +14,7 @@ import java.util.Optional;
 public class WizModelProvider extends FabricModelProvider {
     public static final TextureKey KEY_OVERLAY = TextureKey.of("overlay");
     public static final Model MODEL_TEMPLATE_WORKTABLE = new Model(
-            Optional.of(new Identifier(Wizcraft.MODID, "block/template_worktable")), Optional.empty(), KEY_OVERLAY);
+            Optional.of(new Identifier(Wizcraft.MOD_ID, "block/template_worktable")), Optional.empty(), KEY_OVERLAY);
     public static final TexturedModel.Factory WORKTABLE = TexturedModel.makeFactory(
             block -> new TextureMap().put(KEY_OVERLAY, TextureMap.getSubId(block, "_overlay")),
             MODEL_TEMPLATE_WORKTABLE);
@@ -25,7 +25,7 @@ public class WizModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-        var dummyWorktableModelId = new Identifier(Wizcraft.MODID, "block/dummy_worktable");
+        var dummyWorktableModelId = new Identifier(Wizcraft.MOD_ID, "block/dummy_worktable");
         blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(
                 WizcraftBlocks.DUMMY_WORKTABLE,
                 BlockStateVariant.create().put(VariantSettings.MODEL, dummyWorktableModelId)));

@@ -31,7 +31,7 @@ public class CometWarpFocus extends Focus {
     public static final int DEFAULT_PLACEMENT_COST = 5;
     public static final int DEFAULT_WARPING_COST = 15;
     public static final int DEFAULT_INTERDIMENSIONAL_COST = 30;
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "comet_warp");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "comet_warp");
     public static final Codec<CometWarpFocus> CODEC =
             RecordCodecBuilder.create(instance -> instance.group(
                     GlobalPos.CODEC.optionalFieldOf("anchor", null).forGetter(CometWarpFocus::getAnchor)

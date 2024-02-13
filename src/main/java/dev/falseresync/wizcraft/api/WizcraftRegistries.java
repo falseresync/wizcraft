@@ -12,12 +12,12 @@ import net.minecraft.util.Identifier;
 public class WizcraftRegistries {
     public static final SimpleRegistry<FocusType<?>> FOCUS_TYPE =
             FabricRegistryBuilder
-                    .<FocusType<?>>createSimple(RegistryKey.ofRegistry(new Identifier(Wizcraft.MODID, "focus_types")))
+                    .<FocusType<?>>createSimple(RegistryKey.ofRegistry(new Identifier(Wizcraft.MOD_ID, "focus_types")))
                     .attribute(RegistryAttribute.SYNCED)
                     .buildAndRegister();
     public static final SimpleRegistry<Report> REPORTS =
             FabricRegistryBuilder
-                    .<Report>createSimple(RegistryKey.ofRegistry(new Identifier(Wizcraft.MODID, "reports")))
+                    .<Report>createSimple(RegistryKey.ofRegistry(new Identifier(Wizcraft.MOD_ID, "reports")))
                     .attribute(RegistryAttribute.SYNCED)
                     .buildAndRegister();
 

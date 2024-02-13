@@ -27,7 +27,8 @@
   "sound.wizcraft.focus.comet_warp.anchor_placed": "Placed a Comet Wrap anchor",
   "keyCategory.wizcraft": "Wizcraft",
   "key.wizcraft.tool_control": "Tool control",
-  "yacl3.config.wizcraft:config.category.cheats": "Cheats",
-  "yacl3.config.wizcraft:config.expendWandChargeInSurvival": "Expend Wand charge in survival",
+  "wizcraft.midnightconfig.title": "Wizcraft Config",
+  "wizcraft.midnightconfig.category.cheats": "Cheats",
+  "wizcraft.midnightconfig.expendWandChargeInSurvival": "Expend Wand charge in survival",
   "emi.category.wizcraft.lensed_worktable": "Lensed worktable"
 }

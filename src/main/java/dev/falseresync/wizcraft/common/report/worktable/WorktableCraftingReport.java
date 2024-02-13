@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class WorktableCraftingReport implements MultiplayerReport {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "worktable/crafting");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "worktable/crafting");
     @Override
     public Identifier getId() {
         return ID;

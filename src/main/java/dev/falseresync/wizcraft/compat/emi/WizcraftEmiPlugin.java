@@ -13,10 +13,10 @@ import net.minecraft.util.Identifier;
 
 public class WizcraftEmiPlugin implements EmiPlugin {
     public static final Identifier EMI_ATLAS
-            = new Identifier(Wizcraft.MODID, "textures/block/worktable_top.png");
+            = new Identifier(Wizcraft.MOD_ID, "textures/block/worktable_top.png");
     public static final EmiStack WORKTABLE = EmiStack.of(WizcraftItems.WORKTABLE);
     public static final EmiRecipeCategory LENSED_WORKTABLE = new EmiRecipeCategory(
-            new Identifier(Wizcraft.MODID, "lensed_worktable"),
+            new Identifier(Wizcraft.MOD_ID, "lensed_worktable"),
             WORKTABLE,
             new EmiTexture(EMI_ATLAS, 0, 0, 16, 16));
 

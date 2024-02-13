@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 
 public record TriggerBlockPatternTipS2CPacket(List<BlockPos> missingBlocks) implements FabricPacket, HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "trigger_block_pattern_tip");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "trigger_block_pattern_tip");
     public static final PacketType<TriggerBlockPatternTipS2CPacket> TYPE = PacketType.create(ID, TriggerBlockPatternTipS2CPacket::new);
 
     public TriggerBlockPatternTipS2CPacket(PacketByteBuf buf) {

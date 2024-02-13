@@ -7,7 +7,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class CometWarpAnchorPlacedReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "focus/comet_warp/anchor_placed");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "focus/comet_warp/anchor_placed");
 
     @Override
     public Identifier getId() {

@@ -26,7 +26,7 @@ public class WizcraftEntities {
     }
 
     private static <T extends Entity> EntityType<T> r(String id, EntityType<T> entityType) {
-        TO_REGISTER.put(new Identifier(Wizcraft.MODID, id), entityType);
+        TO_REGISTER.put(new Identifier(Wizcraft.MOD_ID, id), entityType);
         return entityType;
     }
 

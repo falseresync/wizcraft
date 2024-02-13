@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class LensingPedestalBlock extends BlockWithEntity implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "lensing_pedestal");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "lensing_pedestal");
     public static final MapCodec<LensingPedestalBlock> CODEC = createCodec(LensingPedestalBlock::new);
     public static final VoxelShape SHAPE = createCuboidShape(4, 0, 4, 12, 16, 12);
 

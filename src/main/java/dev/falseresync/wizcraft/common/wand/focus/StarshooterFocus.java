@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class StarshooterFocus extends Focus {
     public static final int DEFAULT_COST = 2;
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "starshooter");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "starshooter");
 
     @Override
     public Identifier getId() {

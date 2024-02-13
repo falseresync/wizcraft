@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.common.report.wand;
 
-import dev.falseresync.wizcraft.api.client.hud.controller.WidgetInstancePriority;
+import dev.falseresync.wizcraft.api.WizcraftApi;
 import dev.falseresync.wizcraft.api.common.report.MultiplayerReport;
 import dev.falseresync.wizcraft.client.hud.WizcraftHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class WandSuccessfullyChargedReport implements MultiplayerReport {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand/successfully_charged");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "wand/successfully_charged");
 
     @Override
     public Identifier getId() {
@@ -30,9 +30,7 @@ public class WandSuccessfullyChargedReport implements MultiplayerReport {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSound(WizcraftSounds.Focus.SUCCESSFULLY_CHARGED, 1, 1);
-        WizcraftHud.STATUS_MESSAGE.override(
-                Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)),
-                WidgetInstancePriority.HIGH);
+        WizcraftApi.getHud().getMessageDisplay().postImportant(Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)));
     }
 
     @Override

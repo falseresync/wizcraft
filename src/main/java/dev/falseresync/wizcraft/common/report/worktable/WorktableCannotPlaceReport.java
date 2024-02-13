@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class WorktableCannotPlaceReport implements MultiplayerReport {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "worktable/cannot_place");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "worktable/cannot_place");
     @Override
     public Identifier getId() {
         return ID;

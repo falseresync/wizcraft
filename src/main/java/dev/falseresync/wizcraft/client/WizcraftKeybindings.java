@@ -1,7 +1,6 @@
 package dev.falseresync.wizcraft.client;
 
-import dev.falseresync.wizcraft.api.client.hud.controller.WidgetInstancePriority;
-import dev.falseresync.wizcraft.api.client.hud.controller.WidgetQueryResponse;
+import dev.falseresync.wizcraft.api.WizcraftApi;
 import dev.falseresync.wizcraft.client.hud.WizcraftHud;
 import dev.falseresync.wizcraft.common.item.FocusItem;
 import dev.falseresync.wizcraft.common.item.WizcraftItems;
@@ -55,16 +54,10 @@ public final class WizcraftKeybindings {
                 var activeFocusStack = wand.getFocusStack();
                 if (focuses.isEmpty()) {
                     if (activeFocusStack.getFocus().getType() == WizcraftFocuses.CHARGING) {
-                        WizcraftHud.Slots.UNDER_BOSS_BAR.clear();
-                        WizcraftHud.STATUS_MESSAGE.override(
-                                Text.translatable("hud.wizcraft.wand.no_focuses"),
-                                WidgetInstancePriority.HIGH);
+                        WizcraftApi.getHud().getMessageDisplay().postImportant(Text.translatable("hud.wizcraft.wand.no_focuses"));
                         return;
                     } else if (inventory.getEmptySlot() == -1) {
-                        WizcraftHud.Slots.UNDER_BOSS_BAR.clear();
-                        WizcraftHud.STATUS_MESSAGE.override(
-                                Text.translatable("hud.wizcraft.wand.full_inventory"),
-                                WidgetInstancePriority.HIGH);
+                        WizcraftApi.getHud().getMessageDisplay().postImportant(Text.translatable("hud.wizcraft.wand.full_inventory"));
                         return;
                     }
                 }
@@ -74,12 +67,7 @@ public final class WizcraftKeybindings {
                 }
                 focuses.offerFirst(activeFocusStack);
 
-                var focusPickerQuery = WizcraftHud.FOCUS_PICKER.getOrCreate(focuses);
-                if (focusPickerQuery.status() == WidgetQueryResponse.Status.EXISTS && focusPickerQuery.widget() != null) {
-                    WizcraftHud.FOCUS_PICKER.resetDisplayTicks();
-                    focusPickerQuery.widget().pickNext();
-                    ClientPlayNetworking.send(new UpdateWandFocusC2SPacket(focusPickerQuery.widget().getPicked().toItemVariant()));
-                }
+                ClientPlayNetworking.send(new UpdateWandFocusC2SPacket(WizcraftApi.getHud().getFocusPicker().update(focuses).toItemVariant()));
             }
         });
     }

@@ -13,7 +13,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
 public class DummyWorktableBlock extends Block implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "worktable");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "worktable");
     public static final MapCodec<DummyWorktableBlock> CODEC = createCodec(DummyWorktableBlock::new);
 
     public DummyWorktableBlock(Settings settings) {

@@ -15,10 +15,10 @@ import java.util.List;
 
 public class LensedWorktableEmiRecipe implements EmiRecipe {
     public static final EmiTexture WAND_TEX = new EmiTexture(
-            new Identifier(Wizcraft.MODID, "textures/item/wand.png"),
+            new Identifier(Wizcraft.MOD_ID, "textures/item/wand.png"),
             0, 0, 16, 16, 16, 16, 16, 16);
     public static final EmiTexture ARROW_TEX = new EmiTexture(
-            new Identifier(Wizcraft.MODID, "textures/hud/wand/focus_picker_hint_right.png"),
+            new Identifier(Wizcraft.MOD_ID, "textures/hud/wand/focus_picker_hint_right.png"),
             0, 0, 16, 16, 16, 16, 16, 16);
 
     protected final Identifier id;

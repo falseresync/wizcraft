@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 
 public class LightningFocus extends Focus {
     public static final int DEFAULT_COST = 10;
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "lightning");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "lightning");
 
     @Override
     public FocusType<LightningFocus> getType() {

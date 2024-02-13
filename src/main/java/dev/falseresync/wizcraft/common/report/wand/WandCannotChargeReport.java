@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.common.report.wand;
 
+import dev.falseresync.wizcraft.api.WizcraftApi;
 import dev.falseresync.wizcraft.api.common.report.Report;
-import dev.falseresync.wizcraft.client.hud.WizcraftHud;
 import dev.falseresync.wizcraft.common.Wizcraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class WandCannotChargeReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "wand/cannot_charge");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "wand/cannot_charge");
 
     @Override
     public Identifier getId() {
@@ -22,6 +22,6 @@ public class WandCannotChargeReport implements Report {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizcraftHud.STATUS_MESSAGE.getOrCreate(Text.translatable("hud.wizcraft.wand.cannot_charge"));
+        WizcraftApi.getHud().getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.cannot_charge"));
     }
 }

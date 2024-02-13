@@ -9,7 +9,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public record UpdateWandFocusC2SPacket(ItemVariant pickedFocus) implements FabricPacket, HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "update_wand_focus");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "update_wand_focus");
     public static final PacketType<UpdateWandFocusC2SPacket> TYPE = PacketType.create(ID, UpdateWandFocusC2SPacket::new);
 
     public UpdateWandFocusC2SPacket(PacketByteBuf buf) {

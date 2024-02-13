@@ -20,7 +20,7 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class FocusesBeltItem extends TrinketItem implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "focuses_belt");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "focuses_belt");
 
     public FocusesBeltItem(Item.Settings settings) {
         super(settings);

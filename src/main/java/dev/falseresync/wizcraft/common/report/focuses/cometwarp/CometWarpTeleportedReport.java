@@ -7,7 +7,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 public class CometWarpTeleportedReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "focus/comet_warp/teleported");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "focus/comet_warp/teleported");
 
     @Override
     public Identifier getId() {

@@ -10,7 +10,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public record TriggerMultiplayerReportS2CPacket(MultiplayerReport report) implements FabricPacket, HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "trigger_multiplayer_report");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "trigger_multiplayer_report");
     public static final PacketType<TriggerMultiplayerReportS2CPacket> TYPE = PacketType.create(ID, TriggerMultiplayerReportS2CPacket::new);
 
     public TriggerMultiplayerReportS2CPacket(PacketByteBuf buf) {

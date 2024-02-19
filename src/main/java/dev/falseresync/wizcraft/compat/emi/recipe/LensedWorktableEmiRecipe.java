@@ -14,11 +14,11 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public class LensedWorktableEmiRecipe implements EmiRecipe {
-    public static final EmiTexture SKY_WAND_TEX = new EmiTexture(
-            new Identifier(Wizcraft.MODID, "textures/item/sky_wand.png"),
+    public static final EmiTexture WAND_TEX = new EmiTexture(
+            new Identifier(Wizcraft.MOD_ID, "textures/item/wand.png"),
             0, 0, 16, 16, 16, 16, 16, 16);
     public static final EmiTexture ARROW_TEX = new EmiTexture(
-            new Identifier(Wizcraft.MODID, "textures/gui/hud/skywand/focus_picker_hint_right.png"),
+            new Identifier(Wizcraft.MOD_ID, "textures/hud/wand/focus_picker_hint_right.png"),
             0, 0, 16, 16, 16, 16, 16, 16);
 
     protected final Identifier id;
@@ -95,7 +95,7 @@ public class LensedWorktableEmiRecipe implements EmiRecipe {
                 widgets.addSlot(this.pedestalInputs.get(3),0, 27);
             }
         }
-        widgets.addTexture(SKY_WAND_TEX, 81, 9);
+        widgets.addTexture(WAND_TEX, 81, 9);
         widgets.addTexture(ARROW_TEX, 81, 27);
         widgets.addSlot(this.result, 108, 27);
     }

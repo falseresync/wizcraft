@@ -1,7 +1,7 @@
 package dev.falseresync.wizcraft.datagen;
 
-import dev.falseresync.wizcraft.common.block.WizBlocks;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 
@@ -12,7 +12,10 @@ public class WizBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        addDrop(WizBlocks.ENERGIZED_WORKTABLE, drops(WizItems.ENERGIZED_WORKTABLE));
-        addDrop(WizBlocks.LENSING_PEDESTAL, drops(WizItems.LENSING_PEDESTAL));
+        addDrop(WizcraftBlocks.LENS, drops(WizcraftItems.LENS));
+        addDrop(WizcraftBlocks.DUMMY_WORKTABLE, drops(WizcraftItems.WORKTABLE));
+        addDrop(WizcraftBlocks.CRAFTING_WORKTABLE, drops(WizcraftItems.WORKTABLE));
+        addDrop(WizcraftBlocks.CHARGING_WORKTABLE, drops(WizcraftItems.WORKTABLE));
+        addDrop(WizcraftBlocks.LENSING_PEDESTAL, drops(WizcraftItems.LENSING_PEDESTAL));
     }
 }

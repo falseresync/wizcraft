@@ -2,15 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "a": {
-      "item": "minecraft:amethyst_block"
-    },
     "b": {
       "item": "minecraft:stone_bricks"
+    },
+    "l": {
+      "item": "wizcraft:lens"
     }
   },
   "pattern": [
-    "a",
+    "l",
     "b",
     "b"
   ],

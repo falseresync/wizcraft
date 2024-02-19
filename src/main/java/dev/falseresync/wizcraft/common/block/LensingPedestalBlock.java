@@ -2,10 +2,9 @@ package dev.falseresync.wizcraft.common.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.block.entity.EnergizedWorktableBlockEntity;
 import dev.falseresync.wizcraft.common.block.entity.LensingPedestalBlockEntity;
 import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.common.WizUtil;
+import dev.falseresync.wizcraft.common.CommonUtils;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -24,7 +23,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class LensingPedestalBlock extends BlockWithEntity implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MODID, "lensing_pedestal");
+    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "lensing_pedestal");
     public static final MapCodec<LensingPedestalBlock> CODEC = createCodec(LensingPedestalBlock::new);
     public static final VoxelShape SHAPE = createCuboidShape(4, 0, 4, 12, 16, 12);
 
@@ -60,7 +59,7 @@ public class LensingPedestalBlock extends BlockWithEntity implements HasId {
                 return ActionResult.SUCCESS;
             }
 
-            var exchanged = WizUtil.exchangeStackInSlotWithHand(player, hand, pedestal.getStorage(), 0, 1, null);
+            var exchanged = CommonUtils.exchangeStackInSlotWithHand(player, hand, pedestal.getStorage(), 0, 1, null);
             if (exchanged == 1) {
                 return ActionResult.CONSUME;
             }

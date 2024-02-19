@@ -1,33 +1,36 @@
 package dev.falseresync.wizcraft.common.entity;
 
-import net.minecraft.entity.Entity;
+import dev.falseresync.wizcraft.common.WizcraftSounds;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
 public class StarProjectileEntity extends ExplosiveProjectileEntity {
+    public static final StarProjectileEntity.StarProjectileExplosionBehavior EXPLOSION_BEHAVIOR = new StarProjectileExplosionBehavior();
+
     /**
      * So, a bit of an explanation. If I try to remove the entity on the same tick as the collision
      * EVERYTHING breaks. I have no idea why. I guess world is processing particles/sounds/etc weirdly.
      * I couldn't find any reason as to why Dragon can do it on the same tick, but I don't
      * Explanations in a GitHub issue are welcome, if someone sees this rant.
      */
-    protected boolean shouldDiscardNextTick = false;
-
+//    protected boolean shouldDiscardNextTick = false;
     public StarProjectileEntity(EntityType<StarProjectileEntity> entityType, World world) {
         super(entityType, world);
     }
 
     public StarProjectileEntity(LivingEntity owner, World world) {
-        this(WizEntities.STAR_PROJECTILE, world);
+        this(WizcraftEntities.STAR_PROJECTILE, world);
         setOwner(owner);
         var rotation = owner.getRotationVec(1);
         var orthogonalDistance = 1;
@@ -47,12 +50,9 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
 
     @Override
     public void tick() {
-        if (!getWorld().isClient() && shouldDiscardNextTick) {
-            discard();
-        }
         super.tick();
-        if (getVelocity().lengthSquared() < 0.25 && getOwner() != null) {
-            pop();
+        if (!getWorld().isClient && isAlive() && getOwner() != null && getVelocity().lengthSquared() < 0.25) {
+            explode();
         }
     }
 
@@ -60,32 +60,35 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
         if (!getWorld().isClient) {
-            Entity other = entityHitResult.getEntity();
-            Entity owner = getOwner();
-            other.damage(getDamageSources().indirectMagic(this, owner), 3.0F);
+            var target = entityHitResult.getEntity();
+            var owner = getOwner();
+            target.damage(getDamageSources().indirectMagic(this, owner), 1.5F);
+            if (owner instanceof LivingEntity attacker) {
+                applyDamageEffects(attacker, target);
+            }
         }
     }
 
     @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        pop();
+        if (!getWorld().isClient) {
+            explode();
+        }
     }
 
-    protected void pop() {
-        getWorld().playSound(getOwner() instanceof PlayerEntity player ? player : null,
-                getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.75F, 1.25F);
+    protected void explode() {
+        getWorld().createExplosion(
+                this, getDamageSources().indirectMagic(this, getOwner()),
+                EXPLOSION_BEHAVIOR, getX(), getY(), getZ(), 1f, false, World.ExplosionSourceType.NONE,
+                ParticleTypes.FLAME, ParticleTypes.EXPLOSION_EMITTER, WizcraftSounds.Entity.STAR_PROJECTILE_EXPLODE);
+        discard();
+    }
 
-        var random = getWorld().getRandom();
-        for (int i = 0; i < random.nextBetween(5, 10); i++) {
-            getWorld().addParticle(
-                    ParticleTypes.FIREWORK,
-                    getParticleX(0.5), getRandomBodyY(), getParticleZ(0.5),
-                    (random.nextFloat() - 0.5) / 2,
-                    random.nextFloat() / 2,
-                    (random.nextFloat() - 0.5) / 2);
+    public static class StarProjectileExplosionBehavior extends ExplosionBehavior {
+        @Override
+        public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
+            return false;
         }
-
-        shouldDiscardNextTick = true;
     }
 }

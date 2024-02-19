@@ -1,7 +1,8 @@
 package dev.falseresync.wizcraft.datagen;
 
-import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.common.item.WizItems;
+import dev.falseresync.wizcraft.api.HasId;
+import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
+import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import dev.falseresync.wizcraft.datagen.recipe.LensedWorktableRecipeJsonBuilder;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -20,24 +21,24 @@ public class WizRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(RecipeExporter exporter) {
-        new LensedWorktableRecipeJsonBuilder(WizItems.STARSHOOTER_FOCUS, Ingredient.ofItems(Items.COPPER_BLOCK))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.STARSHOOTER_FOCUS, Ingredient.ofItems(Items.COPPER_BLOCK))
                 .pedestalInput(Ingredient.ofItems(Items.GOLD_INGOT))
                 .pedestalInput(Ingredient.ofItems(Items.FIRE_CHARGE))
-                .offerTo(exporter, new Identifier(Wizcraft.MODID, "skywand/starshooter_focus"));
+                .offerTo(exporter, lwPrefix(WizcraftItems.STARSHOOTER_FOCUS));
 
-        new LensedWorktableRecipeJsonBuilder(WizItems.LIGHTNING_FOCUS, Ingredient.ofItems(Items.DIAMOND_BLOCK))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.LIGHTNING_FOCUS, Ingredient.ofItems(Items.DIAMOND_BLOCK))
                 .pedestalInput(Ingredient.ofItems(Items.LIGHTNING_ROD))
                 .pedestalInput(Ingredient.ofItems(Items.IRON_INGOT))
-                .offerTo(exporter, new Identifier(Wizcraft.MODID, "skywand/lightning_focus"));
+                .offerTo(exporter, lwPrefix(WizcraftItems.LIGHTNING_FOCUS));
 
-        new LensedWorktableRecipeJsonBuilder(WizItems.COMET_WARP_FOCUS, Ingredient.ofItems(Items.SLIME_BLOCK))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.COMET_WARP_FOCUS, Ingredient.ofItems(Items.SLIME_BLOCK))
                 .pedestalInput(Ingredient.ofItems(Items.ENDER_PEARL))
                 .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
                 .pedestalInput(Ingredient.ofItems(Items.ENDER_PEARL))
                 .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
-                .offerTo(exporter, new Identifier(Wizcraft.MODID, "skywand/comet_warp_focus"));
+                .offerTo(exporter, lwPrefix(WizcraftItems.COMET_WARP_FOCUS));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.SKY_WAND)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND)
                 .input('d', Items.DIAMOND)
                 .input('g', Items.GOLD_INGOT)
                 .input('s', Items.STICK)
@@ -45,26 +46,41 @@ public class WizRecipeProvider extends FabricRecipeProvider {
                 .pattern(" gs")
                 .pattern("s  ")
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-                .offerTo(exporter, new Identifier(Wizcraft.MODID, "sky_wand"));
+                .offerTo(exporter, WizcraftItems.WAND.getId());
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.ENERGIZED_WORKTABLE)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, WizcraftItems.LENS)
                 .input('g', Items.GOLD_INGOT)
-                .input('c', Items.CRAFTING_TABLE)
                 .input('d', Items.DIAMOND)
-                .input('s', ItemTags.WOODEN_SLABS)
+                .input('a', Items.AMETHYST_SHARD)
+                .pattern("aaa")
                 .pattern("gdg")
-                .pattern("gcg")
-                .pattern("sss")
+                .pattern("aaa")
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-                .offerTo(exporter, new Identifier(Wizcraft.MODID, "energized_worktable"));
-
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizItems.LENSING_PEDESTAL)
-                .input('a', Items.AMETHYST_BLOCK)
-                .input('b', Items.STONE_BRICKS)
-                .pattern("a")
-                .pattern("b")
-                .pattern("b")
                 .criterion("has_amethyst", conditionsFromItem(Items.AMETHYST_SHARD))
-                .offerTo(exporter, new Identifier(Wizcraft.MODID, "lensing_pedestal"));
+                .offerTo(exporter, WizcraftBlocks.LENS.getId());
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.WORKTABLE)
+                .input('g', Items.GOLD_INGOT)
+                .input('l', Items.LAPIS_LAZULI)
+                .input('p', ItemTags.PLANKS)
+                .input('s', ItemTags.WOODEN_SLABS)
+                .pattern("glg")
+                .pattern(" p ")
+                .pattern("sss")
+                .criterion("has_gold", conditionsFromItem(Items.GOLD_INGOT))
+                .offerTo(exporter, WizcraftBlocks.DUMMY_WORKTABLE.getId());
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.LENSING_PEDESTAL)
+                .input('l', WizcraftItems.LENS)
+                .input('b', Items.STONE_BRICKS)
+                .pattern("l")
+                .pattern("b")
+                .pattern("b")
+                .criterion("has_lens", conditionsFromItem(WizcraftItems.LENS))
+                .offerTo(exporter, WizcraftBlocks.LENSING_PEDESTAL.getId());
+    }
+
+    private Identifier lwPrefix(HasId hasId) {
+        return hasId.getId().withPrefixedPath("lensed_worktable/");
     }
 }

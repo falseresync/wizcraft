@@ -1,5 +1,6 @@
 package dev.falseresync.wizcraft.client.hud.focuspicker;
 
+import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import dev.falseresync.wizcraft.api.client.BetterDrawContext;
@@ -111,9 +112,10 @@ public class FocusPicker implements HudItem {
     }
 
     public FocusStack update(Deque<FocusStack> focuses) {
+        Preconditions.checkArgument(!focuses.isEmpty(), "Focus picker expects at least one FocusStack, got none");
+        resetDisplayTicks();
         setFocusesIfDifferent(focuses);
         pickNext();
-        resetDisplayTicks();
         return getPicked();
     }
 
@@ -137,11 +139,9 @@ public class FocusPicker implements HudItem {
             return;
         }
 
-        var picked = this.focuses.peekFirst();
+        var previouslyPicked = getPicked();
         this.focuses = focuses;
-        if (picked == null) return;
-        // TODO: this does not work
-        while (!picked.equals(this.focuses.peekFirst())) {
+        while (previouslyPicked.getFocus().getType() != getPicked().getFocus().getType()) {
             pickNext();
         }
 

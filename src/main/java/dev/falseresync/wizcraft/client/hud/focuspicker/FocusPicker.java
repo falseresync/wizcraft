@@ -7,7 +7,8 @@ import dev.falseresync.wizcraft.api.client.HudItem;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayDeque;
@@ -30,7 +31,7 @@ public class FocusPicker implements HudItem {
     }
 
     @Override
-    public void render(BetterDrawContext context, float tickDelta) {
+    public void render(BetterDrawContext context, RenderTickCounter tickCounter) {
         if (isVisible()) {
             float opacity = Math.min(1, remainingDisplayTicks / 10f);
             var centerX = context.getScaledWindowWidth() / 2;
@@ -46,7 +47,7 @@ public class FocusPicker implements HudItem {
             var labelY = y + 18 + 4;
             context.drawCenteredTextWithShadow(textRenderer, getPicked().toItemStack().getName(), centerX, labelY, BetterDrawContext.NO_TINT);
 
-            var tooltip = getPicked().getFocus().getTooltip(client.player, TooltipContext.BASIC);
+            var tooltip = getPicked().getFocus().getTooltip(client.player, Item.TooltipContext.DEFAULT);
             var tooltipY = labelY + textRenderer.fontHeight + 2;
             for (int i = 0; i < tooltip.size(); i++) {
                 context.drawCenteredTextWithShadow(textRenderer, tooltip.get(i), centerX, tooltipY + i * textRenderer.fontHeight, BetterDrawContext.NO_TINT);

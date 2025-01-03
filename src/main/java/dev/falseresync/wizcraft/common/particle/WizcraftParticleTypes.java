@@ -16,7 +16,7 @@ public class WizcraftParticleTypes {
     private static final Map<Identifier, ParticleType<?>> TO_REGISTER = new HashMap<>();
 
     public static final ParticleType<ItemStackParticleEffect> SPAGHETTIFICATION =
-            r("spaghettification", FabricParticleTypes.complex(ItemStackParticleEffect.PARAMETERS_FACTORY));
+            r("spaghettification", FabricParticleTypes.complex(ItemStackParticleEffect::createCodec, ItemStackParticleEffect::createPacketCodec));
 
     private static <T extends ParticleEffect> ParticleType<T> r(String id, ParticleType<T> particleType) {
         TO_REGISTER.put(wid(id), particleType);

@@ -24,10 +24,10 @@ public class WizcraftHud {
     }
 
     private void initEventListeners() {
-        HudRenderCallback.EVENT.register((vanillaContext, tickDelta) -> {
+        HudRenderCallback.EVENT.register((vanillaContext, tickCounter) -> {
             var context = new BetterDrawContext(client, vanillaContext);
-            messageDisplay.render(context, tickDelta);
-            focusPicker.render(context, tickDelta);
+            messageDisplay.render(context, tickCounter);
+            focusPicker.render(context, tickCounter);
         });
 
         ClientTickEvents.START_WORLD_TICK.register(world -> {

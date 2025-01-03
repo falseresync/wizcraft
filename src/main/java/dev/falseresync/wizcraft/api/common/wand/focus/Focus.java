@@ -71,7 +71,7 @@ public abstract class Focus implements HasId {
 
     public final List<Text> getTooltip(@Nullable PlayerEntity player, Item.TooltipContext context) {
         List<Text> tooltip = new ArrayList<>();
-        appendTooltip(player == null ? null : player.getWorld(), tooltip, context);
+        appendTooltip(context, tooltip);
         return tooltip;
     }
 }

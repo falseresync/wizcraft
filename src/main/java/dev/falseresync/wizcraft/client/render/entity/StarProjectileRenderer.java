@@ -6,7 +6,6 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import static dev.falseresync.wizcraft.common.Wizcraft.wid;
@@ -20,26 +19,25 @@ public class StarProjectileRenderer extends EntityRenderer<StarProjectileEntity>
         renderLayer = RenderLayer.getEntityCutout(TEXTURE);
     }
 
-    protected static void vertices(VertexConsumer buffer, Matrix4f pm, Matrix3f nm) {
-        vertex(buffer, pm, nm, 1, 1, 0, 0, -1);
-        vertex(buffer, pm, nm, 1, 0, 0, 1, -1);
-        vertex(buffer, pm, nm, 0, 0, 1, 1, -1);
-        vertex(buffer, pm, nm, 0, 1, 1, 0, -1);
+    protected static void vertices(VertexConsumer buffer, Matrix4f pm, MatrixStack.Entry entry) {
+        vertex(buffer, pm, entry, 1, 1, 0, 0, -1);
+        vertex(buffer, pm, entry, 1, 0, 0, 1, -1);
+        vertex(buffer, pm, entry, 0, 0, 1, 1, -1);
+        vertex(buffer, pm, entry, 0, 1, 1, 0, -1);
 
-        vertex(buffer, pm, nm, 0, 1, 0, 0, 1);
-        vertex(buffer, pm, nm, 0, 0, 0, 1, 1);
-        vertex(buffer, pm, nm, 1, 0, 1, 1, 1);
-        vertex(buffer, pm, nm, 1, 1, 1, 0, 1);
+        vertex(buffer, pm, entry, 0, 1, 0, 0, 1);
+        vertex(buffer, pm, entry, 0, 0, 0, 1, 1);
+        vertex(buffer, pm, entry, 1, 0, 1, 1, 1);
+        vertex(buffer, pm, entry, 1, 1, 1, 0, 1);
     }
 
-    protected static void vertex(VertexConsumer buffer, Matrix4f positionMatrix, Matrix3f normalMatrix, int x, int y, float u, float v, int normal) {
+    protected static void vertex(VertexConsumer buffer, Matrix4f positionMatrix, MatrixStack.Entry entry, int x, int y, float u, float v, int normal) {
         buffer.vertex(positionMatrix, x, y, 0)
                 .color(255, 255, 255, 255)
                 .texture(u, v)
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(LightmapTextureManager.MAX_LIGHT_COORDINATE)
-                .normal(normalMatrix, 0, 0, normal)
-                .next();
+                .normal(entry, 0, 0, normal);
     }
 
     @Override
@@ -48,13 +46,12 @@ public class StarProjectileRenderer extends EntityRenderer<StarProjectileEntity>
 
         var entry = matrices.peek();
         var pm = entry.getPositionMatrix();
-        var nm = entry.getNormalMatrix();
         var buffer = vertexConsumers.getBuffer(renderLayer);
 
         matrices.multiply(dispatcher.getRotation());
         matrices.translate(-0.5f, 0, 0);
         matrices.scale(0.75f, 0.75f, 0.75f);
-        vertices(buffer, pm, nm);
+        vertices(buffer, pm, entry);
 
         matrices.pop();
 

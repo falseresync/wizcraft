@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
 
 import java.util.PriorityQueue;
@@ -57,7 +58,7 @@ public class MessageDisplay implements HudItem {
     }
 
     @Override
-    public void render(BetterDrawContext context, float tickDelta) {
+    public void render(BetterDrawContext context, RenderTickCounter tickCounter) {
         if (currentMessage == null) return;
 
         context.drawCenteredTextWithShadow(textRenderer, currentMessage.text(), context.getScaledWindowWidth() / 2, 20, 0xFF_FFFFFF);

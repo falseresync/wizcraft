@@ -1,6 +1,5 @@
 package dev.falseresync.wizcraft.datafixer;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.DataFixerBuilder;
@@ -24,8 +23,6 @@ import net.minecraft.nbt.NbtElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
 
 /**
@@ -37,14 +34,18 @@ public class WizcraftDataFixer {
     private static final int VANILLA_SCHEMA_VERSION = DataFixUtils.makeKey(SharedConstants.getGameVersion().getSaveVersion().getId());
     private static final BiFunction<Integer, Schema, Schema> EMPTY_SCHEMA = IdentifierNormalizingSchema::new;
     private static final String KEY_DATA_VERSION = "wizcraft:data_version";
-    public static final DataFixer FIXER = createFixer();
+    public static final DataFixerBuilder.Result BUILD_RESULT = create();
 
     private static Schema createInitialSchemaFromVanilla(int versionKey, Schema parent) {
         LOGGER.info("Started with a Vanilla Schema version of {}", VANILLA_SCHEMA_VERSION);
         return new Schema(0, Schemas.getFixer().getSchema(VANILLA_SCHEMA_VERSION));
     }
 
-    private static DataFixer createFixer() {
+    public static DataFixer getFixer() {
+        return BUILD_RESULT.fixer();
+    }
+
+    private static DataFixerBuilder.Result create() {
         LOGGER.info("Building for a Wizcraft Schema version of {}", DATA_VERSION);
         var builder = new DataFixerBuilder(DATA_VERSION);
 
@@ -71,15 +72,18 @@ public class WizcraftDataFixer {
         builder.addFixer(RenameBlockEntityFix.create(schema400, "Rename Worktable to Crafting worktable", id -> id.replace("worktable", "crafting_worktable")));
         builder.addFixer(BlockNameFix.create(schema400, "Rename Worktable to Crafting worktable", id -> id.replace("worktable", "crafting_worktable")));
 
+        // TODO: Componentization
+
         LOGGER.info("Bootstrapping an executor");
-        return builder.buildOptimized(
-                Set.of(),
-                Executors.newSingleThreadExecutor(
-                        new ThreadFactoryBuilder()
-                                .setNameFormat("Wizcraft/DataFixer Thread %d")
-                                .setDaemon(true)
-                                .setPriority(1)
-                                .build()));
+        return builder.build();
+//                .optimize(
+//                Set.of(),
+//                Executors.newSingleThreadExecutor(
+//                        new ThreadFactoryBuilder()
+//                                .setNameFormat("Wizcraft/DataFixer Thread %d")
+//                                .setDaemon(true)
+//                                .setPriority(1)
+//                                .build()));
     }
 
     public static int getDataVersion(NbtCompound nbt) {

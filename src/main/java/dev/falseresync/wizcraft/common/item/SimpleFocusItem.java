@@ -4,9 +4,9 @@ import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.api.common.wand.focus.Focus;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusType;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -52,8 +52,8 @@ public class SimpleFocusItem<T extends Focus> extends Item implements FocusItem,
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-        new FocusStack(stack).getFocus().appendTooltip(world, tooltip, context);
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
+        new FocusStack(stack).getFocus().appendTooltip(context, tooltip);
     }
 }

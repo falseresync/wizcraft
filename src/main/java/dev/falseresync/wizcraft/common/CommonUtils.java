@@ -15,7 +15,7 @@ public class CommonUtils {
     public static int findViewDistance(World world) {
         return world.isClient()
                 ? MinecraftClient.getInstance().options.getClampedViewDistance()
-                : ((ServerWorld) world).getChunkManager().threadedAnvilChunkStorage.watchDistance;
+                : ((ServerWorld) world).getChunkManager().chunkLoadingManager.watchDistance;
     }
 
     public static long exchangeStackInSlotWithHand(PlayerEntity player, Hand hand, InventoryStorage storage, int slot, int maxAmount, @Nullable TransactionContext transaction) {

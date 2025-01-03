@@ -6,8 +6,10 @@ import dev.falseresync.wizcraft.common.WizcraftSounds;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class CometWarpAnchorPlacedReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "focus/comet_warp/anchor_placed");
+    public static final Identifier ID = wid("focus/comet_warp/anchor_placed");
 
     @Override
     public Identifier getId() {

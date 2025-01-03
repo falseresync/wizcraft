@@ -22,7 +22,7 @@ public abstract class DataFixTypesMixin {
     private <T> Dynamic<T> wizcraft$update(DataFixer instance, DSL.TypeReference typeReference, Dynamic<T> dynamic, int oldVersion, int newVersion, Operation<Dynamic<T>> original) {
         var vanillaUpdated = original.call(instance, typeReference, dynamic, oldVersion, newVersion);
         if (dynamic.getOps() instanceof NbtOps) {
-            return WizcraftDataFixer.FIXER.update(
+            return WizcraftDataFixer.getFixer().update(
                     typeReference,
                     vanillaUpdated,
                     WizcraftDataFixer.getDataVersion((NbtCompound) dynamic.getValue()),

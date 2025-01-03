@@ -15,8 +15,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class WorktableSuccessReport implements MultiplayerReport {
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "worktable/success");
+    public static final Identifier ID = wid("worktable/success");
     @Override
     public Identifier getId() {
         return ID;

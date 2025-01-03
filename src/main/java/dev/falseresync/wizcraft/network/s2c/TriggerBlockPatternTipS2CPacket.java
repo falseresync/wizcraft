@@ -1,35 +1,24 @@
 package dev.falseresync.wizcraft.network.s2c;
 
-import dev.falseresync.wizcraft.api.HasId;
-import dev.falseresync.wizcraft.common.Wizcraft;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public record TriggerBlockPatternTipS2CPacket(List<BlockPos> missingBlocks) implements FabricPacket, HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "trigger_block_pattern_tip");
-    public static final PacketType<TriggerBlockPatternTipS2CPacket> TYPE = PacketType.create(ID, TriggerBlockPatternTipS2CPacket::new);
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
 
-    public TriggerBlockPatternTipS2CPacket(PacketByteBuf buf) {
-        this(buf.readList(PacketByteBuf::readBlockPos));
-    }
+public record TriggerBlockPatternTipS2CPacket(ArrayList<BlockPos> missingBlocks) implements CustomPayload {
+    public static final CustomPayload.Id<TriggerBlockPatternTipS2CPacket> ID = new Id<>(wid("trigger_block_pattern_tip"));
+    public static final PacketCodec<RegistryByteBuf, TriggerBlockPatternTipS2CPacket> PACKET_CODEC =
+            PacketCodecs.collection(ArrayList::new, BlockPos.PACKET_CODEC)
+                    .xmap(TriggerBlockPatternTipS2CPacket::new, TriggerBlockPatternTipS2CPacket::missingBlocks)
+                    .cast();
 
     @Override
-    public Identifier getId() {
+    public Id<TriggerBlockPatternTipS2CPacket> getId() {
         return ID;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeCollection(missingBlocks, PacketByteBuf::writeBlockPos);
-    }
-
-    @Override
-    public PacketType<TriggerBlockPatternTipS2CPacket> getType() {
-        return TYPE;
     }
 }

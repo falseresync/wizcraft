@@ -10,8 +10,10 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class WorktableIncompleteReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "worktable/incomplete");
+    public static final Identifier ID = wid("worktable/incomplete");
 
     @Override
     public Identifier getId() {

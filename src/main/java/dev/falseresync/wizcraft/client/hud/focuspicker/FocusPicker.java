@@ -2,10 +2,9 @@ package dev.falseresync.wizcraft.client.hud.focuspicker;
 
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import dev.falseresync.wizcraft.api.client.BetterDrawContext;
 import dev.falseresync.wizcraft.api.client.HudItem;
-import dev.falseresync.wizcraft.common.Wizcraft;
+import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.item.TooltipContext;
@@ -14,14 +13,16 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class FocusPicker implements HudItem {
-    protected static final Identifier SELECTION_TEX = new Identifier(Wizcraft.MOD_ID, "textures/hud/wand/focus_picker_selection.png");
-    protected static final Identifier HINT_LEFT_TEX = new Identifier(Wizcraft.MOD_ID, "textures/hud/wand/focus_picker_hint_left.png");
-    protected static final Identifier HINT_RIGHT_TEX = new Identifier(Wizcraft.MOD_ID, "textures/hud/wand/focus_picker_hint_right.png");
-    private Deque<FocusStack> focuses = new ArrayDeque<>();
-    private int remainingDisplayTicks = 0;
+    protected static final Identifier SELECTION_TEX = wid("textures/hud/wand/focus_picker_selection.png");
+    protected static final Identifier HINT_LEFT_TEX = wid("textures/hud/wand/focus_picker_hint_left.png");
+    protected static final Identifier HINT_RIGHT_TEX = wid("textures/hud/wand/focus_picker_hint_right.png");
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
+    private Deque<FocusStack> focuses = new ArrayDeque<>();
+    private int remainingDisplayTicks = 0;
 
     public FocusPicker(MinecraftClient client, TextRenderer textRenderer) {
         this.client = client;

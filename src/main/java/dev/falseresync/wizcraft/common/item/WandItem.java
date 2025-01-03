@@ -21,6 +21,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -33,8 +34,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class WandItem extends Item implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "wand");
+    public static final Identifier ID = wid("wand");
 
     public WandItem(Settings settings) {
         super(settings);
@@ -142,28 +145,22 @@ public class WandItem extends Item implements HasId {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    @Environment(EnvType.CLIENT)
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
         var wand = Wand.fromStack(stack);
         var activeFocus = wand.getFocus();
         tooltip.add(Text.translatable("tooltip.wizcraft.wand.active_focus", activeFocus.getName().getString())
                 .styled(style -> style.withColor(Formatting.GRAY)));
-        activeFocus.appendTooltip(world, tooltip, context);
-        if (world != null && world.isClient()) {
-            appendClientTooltip(wand, tooltip, context);
-        }
+        activeFocus.appendTooltip(context, tooltip);
+        tooltip.add(Text.translatable(
+                "tooltip.wizcraft.wand.change_focus",
+                KeyBindingHelper.getBoundKeyOf(WizcraftKeybindings.TOOL_CONTROL).getLocalizedText().getString()
+        ).styled(style -> style.withColor(Formatting.GRAY).withItalic(true)));
     }
 
     @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
         return false;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void appendClientTooltip(Wand wand, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.translatable(
-                "tooltip.wizcraft.wand.change_focus",
-                    KeyBindingHelper.getBoundKeyOf(WizcraftKeybindings.TOOL_CONTROL).getLocalizedText().getString()
-                ).styled(style -> style.withColor(Formatting.GRAY).withItalic(true)));
     }
 }

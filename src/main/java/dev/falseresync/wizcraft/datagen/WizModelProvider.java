@@ -1,20 +1,20 @@
 package dev.falseresync.wizcraft.datagen;
 
-import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
 import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.*;
-import net.minecraft.util.Identifier;
 
 import java.util.Optional;
+
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizModelProvider extends FabricModelProvider {
     public static final TextureKey KEY_OVERLAY = TextureKey.of("overlay");
     public static final Model MODEL_TEMPLATE_WORKTABLE = new Model(
-            Optional.of(new Identifier(Wizcraft.MOD_ID, "block/template_worktable")), Optional.empty(), KEY_OVERLAY);
+            Optional.of(wid("block/template_worktable")), Optional.empty(), KEY_OVERLAY);
     public static final TexturedModel.Factory WORKTABLE = TexturedModel.makeFactory(
             block -> new TextureMap().put(KEY_OVERLAY, TextureMap.getSubId(block, "_overlay")),
             MODEL_TEMPLATE_WORKTABLE);
@@ -25,7 +25,7 @@ public class WizModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-        var dummyWorktableModelId = new Identifier(Wizcraft.MOD_ID, "block/dummy_worktable");
+        var dummyWorktableModelId = wid("block/dummy_worktable");
         blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(
                 WizcraftBlocks.DUMMY_WORKTABLE,
                 BlockStateVariant.create().put(VariantSettings.MODEL, dummyWorktableModelId)));

@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public final class WizcraftItems {
     public static final WandItem WAND;
     public static final FocusesBeltItem FOCUSES_BELT;
@@ -33,29 +35,29 @@ public final class WizcraftItems {
     public static final BlockItem WORKTABLE;
     public static final BlockItem LENSING_PEDESTAL;
     public static final ItemGroup GROUP_GENERAL;
-    private static final FabricItemSettings SIMPLE_FOCUS_SETTINGS;
-    private static final FabricItemSettings SIMPLE_BLOCK_ITEM_SETTINGS;
+    private static final Item.Settings SIMPLE_FOCUS_SETTINGS;
+    private static final Item.Settings SIMPLE_BLOCK_ITEM_SETTINGS;
     private static final Map<Group, List<Item>> GROUP_ENTRIES = new HashMap<>();
     private static final Map<Identifier, Item> ITEMS_TO_REGISTER = new HashMap<>();
     private static final Map<Identifier, ItemGroup> ITEM_GROUPS_TO_REGISTER = new HashMap<>();
 
     static {
-        WAND = r(new WandItem(new FabricItemSettings().maxCount(1)));
-        FOCUSES_BELT = r(new FocusesBeltItem(new FabricItemSettings().maxCount(1)));
+        WAND = r(new WandItem(new Item.Settings().maxCount(1)));
+        FOCUSES_BELT = r(new FocusesBeltItem(new Item.Settings().maxCount(1)));
 
-        SIMPLE_FOCUS_SETTINGS = new FabricItemSettings().maxCount(1);
+        SIMPLE_FOCUS_SETTINGS = new Item.Settings().maxCount(1);
         var chargingFocusItem = new SimpleFocusItem<>(SIMPLE_FOCUS_SETTINGS, WizcraftFocuses.CHARGING);
         CHARGING_FOCUS = r(chargingFocusItem.getId(), chargingFocusItem, null); // charging focus item is only attainable by command
         STARSHOOTER_FOCUS = rSimpleFocus(WizcraftFocuses.STARSHOOTER);
         LIGHTNING_FOCUS = rSimpleFocus(WizcraftFocuses.LIGHTNING);
         COMET_WARP_FOCUS = rSimpleFocus(WizcraftFocuses.COMET_WARP);
 
-        SIMPLE_BLOCK_ITEM_SETTINGS = new FabricItemSettings();
+        SIMPLE_BLOCK_ITEM_SETTINGS = new Item.Settings();
         LENS = rBlockItem(WizcraftBlocks.LENS);
         WORKTABLE = rBlockItem(WizcraftBlocks.DUMMY_WORKTABLE);
         LENSING_PEDESTAL = rBlockItem(WizcraftBlocks.LENSING_PEDESTAL);
 
-        GROUP_GENERAL = r(new Identifier(Wizcraft.MOD_ID, "general"), FabricItemGroup.builder()
+        GROUP_GENERAL = r(wid("general"), FabricItemGroup.builder()
                 .icon(WAND::getDefaultStack)
                 .displayName(Text.translatable("itemGroup.wizcraft"))
                 .entries((displayContext, entries) -> GROUP_ENTRIES.get(Group.GENERAL).forEach(entries::add))

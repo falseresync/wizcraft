@@ -1,6 +1,5 @@
 package dev.falseresync.wizcraft.common.particle;
 
-import dev.falseresync.wizcraft.common.Wizcraft;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
@@ -11,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class WizcraftParticleTypes {
     private static final Map<Identifier, ParticleType<?>> TO_REGISTER = new HashMap<>();
 
@@ -18,7 +19,7 @@ public class WizcraftParticleTypes {
             r("spaghettification", FabricParticleTypes.complex(ItemStackParticleEffect.PARAMETERS_FACTORY));
 
     private static <T extends ParticleEffect> ParticleType<T> r(String id, ParticleType<T> particleType) {
-        TO_REGISTER.put(new Identifier(Wizcraft.MOD_ID, id), particleType);
+        TO_REGISTER.put(wid(id), particleType);
         return particleType;
     }
 

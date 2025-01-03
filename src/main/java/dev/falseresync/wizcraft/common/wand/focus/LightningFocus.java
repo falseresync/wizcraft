@@ -21,9 +21,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class LightningFocus extends Focus {
     public static final int DEFAULT_COST = 10;
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "lightning");
+    public static final Identifier ID = wid("lightning");
 
     @Override
     public FocusType<LightningFocus> getType() {

@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import dev.falseresync.wizcraft.api.HasId;
 import dev.falseresync.wizcraft.api.WizcraftRegistries;
 import dev.falseresync.wizcraft.api.common.wand.Wand;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -42,7 +41,7 @@ public abstract class Focus implements HasId {
     public void finish(World world, Wand wand, LivingEntity user) {
     }
 
-    public void appendTooltip(@Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(Item.TooltipContext context, List<Text> tooltip) {
     }
 
     public static final Codec<Focus> CODEC = WizcraftRegistries.FOCUS_TYPE.getCodec().dispatch(Focus::getType, FocusType::customDataCodec);
@@ -70,7 +69,7 @@ public abstract class Focus implements HasId {
         return Text.translatable(getTranslationKey());
     }
 
-    public final List<Text> getTooltip(@Nullable PlayerEntity player, TooltipContext context) {
+    public final List<Text> getTooltip(@Nullable PlayerEntity player, Item.TooltipContext context) {
         List<Text> tooltip = new ArrayList<>();
         appendTooltip(player == null ? null : player.getWorld(), tooltip, context);
         return tooltip;

@@ -6,19 +6,20 @@ import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
 import dev.falseresync.wizcraft.compat.emi.WizcraftEmiPlugin;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class LensedWorktableEmiRecipe implements EmiRecipe {
     public static final EmiTexture WAND_TEX = new EmiTexture(
-            new Identifier(Wizcraft.MOD_ID, "textures/item/wand.png"),
+            wid("textures/item/wand.png"),
             0, 0, 16, 16, 16, 16, 16, 16);
     public static final EmiTexture ARROW_TEX = new EmiTexture(
-            new Identifier(Wizcraft.MOD_ID, "textures/hud/wand/focus_picker_hint_right.png"),
+            wid("textures/hud/wand/focus_picker_hint_right.png"),
             0, 0, 16, 16, 16, 16, 16, 16);
 
     protected final Identifier id;
@@ -71,28 +72,28 @@ public class LensedWorktableEmiRecipe implements EmiRecipe {
         widgets.addSlot(this.worktableInput, 27, 27);
         switch (this.pedestalInputs.size()) {
             case 1 -> {
-                widgets.addSlot(this.pedestalInputs.get(0),27, 0);
+                widgets.addSlot(this.pedestalInputs.get(0), 27, 0);
                 widgets.addSlot(54, 27);
                 widgets.addSlot(27, 54);
                 widgets.addSlot(0, 27);
             }
             case 2 -> {
-                widgets.addSlot(this.pedestalInputs.get(0),27, 0);
+                widgets.addSlot(this.pedestalInputs.get(0), 27, 0);
                 widgets.addSlot(54, 27);
-                widgets.addSlot(this.pedestalInputs.get(1),27, 54);
+                widgets.addSlot(this.pedestalInputs.get(1), 27, 54);
                 widgets.addSlot(0, 27);
             }
             case 3 -> {
-                widgets.addSlot(this.pedestalInputs.get(0),27, 0);
-                widgets.addSlot(this.pedestalInputs.get(1),54, 27);
-                widgets.addSlot(this.pedestalInputs.get(2),27, 54);
+                widgets.addSlot(this.pedestalInputs.get(0), 27, 0);
+                widgets.addSlot(this.pedestalInputs.get(1), 54, 27);
+                widgets.addSlot(this.pedestalInputs.get(2), 27, 54);
                 widgets.addSlot(27, 0);
             }
             case 4 -> {
-                widgets.addSlot(this.pedestalInputs.get(0),27, 0);
-                widgets.addSlot(this.pedestalInputs.get(1),54, 27);
-                widgets.addSlot(this.pedestalInputs.get(2),27, 54);
-                widgets.addSlot(this.pedestalInputs.get(3),0, 27);
+                widgets.addSlot(this.pedestalInputs.get(0), 27, 0);
+                widgets.addSlot(this.pedestalInputs.get(1), 54, 27);
+                widgets.addSlot(this.pedestalInputs.get(2), 27, 54);
+                widgets.addSlot(this.pedestalInputs.get(3), 0, 27);
             }
         }
         widgets.addTexture(WAND_TEX, 81, 9);

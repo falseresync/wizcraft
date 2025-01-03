@@ -1,6 +1,5 @@
 package dev.falseresync.wizcraft.client.render.entity;
 
-import dev.falseresync.wizcraft.common.Wizcraft;
 import dev.falseresync.wizcraft.common.entity.StarProjectileEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -10,8 +9,10 @@ import net.minecraft.util.Identifier;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class StarProjectileRenderer extends EntityRenderer<StarProjectileEntity> {
-    protected static final Identifier TEXTURE = new Identifier(Wizcraft.MOD_ID, "textures/entity/star_projectile.png");
+    protected static final Identifier TEXTURE = wid("textures/entity/star_projectile.png");
     private final RenderLayer renderLayer;
 
     public StarProjectileRenderer(EntityRendererFactory.Context context) {

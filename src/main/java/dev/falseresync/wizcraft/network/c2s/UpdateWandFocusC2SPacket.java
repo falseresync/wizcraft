@@ -1,33 +1,34 @@
 package dev.falseresync.wizcraft.network.c2s;
 
-import dev.falseresync.wizcraft.common.Wizcraft;
-import dev.falseresync.wizcraft.api.HasId;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
 
-public record UpdateWandFocusC2SPacket(ItemVariant pickedFocus) implements FabricPacket, HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "update_wand_focus");
-    public static final PacketType<UpdateWandFocusC2SPacket> TYPE = PacketType.create(ID, UpdateWandFocusC2SPacket::new);
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
 
-    public UpdateWandFocusC2SPacket(PacketByteBuf buf) {
-        this(ItemVariant.fromPacket(buf));
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        this.pickedFocus.toPacket(buf);
-    }
+public record UpdateWandFocusC2SPacket(ItemVariant pickedFocus) implements CustomPayload {
+    public static final CustomPayload.Id<UpdateWandFocusC2SPacket> ID = new Id<>(wid("update_wand_focus"));
+    public static final PacketCodec<RegistryByteBuf, UpdateWandFocusC2SPacket> PACKET_CODEC = ItemVariant.PACKET_CODEC
+            .xmap(UpdateWandFocusC2SPacket::new, UpdateWandFocusC2SPacket::pickedFocus)
+            .cast();
 
     @Override
-    public PacketType<UpdateWandFocusC2SPacket> getType() {
-        return TYPE;
-    }
-
-    @Override
-    public Identifier getId() {
+    public Id<UpdateWandFocusC2SPacket> getId() {
         return ID;
     }
+
+//    public UpdateWandFocusC2SPacket(PacketByteBuf buf) {
+//        this(ItemVariant.fromPacket(buf));
+//    }
+//
+//    @Override
+//    public void write(PacketByteBuf buf) {
+//        this.pickedFocus.toPacket(buf);
+//    }
+//
+//    @Override
+//    public PacketType<UpdateWandFocusC2SPacket> getType() {
+//        return TYPE;
+//    }
 }

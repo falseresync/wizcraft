@@ -6,20 +6,18 @@ import dev.falseresync.wizcraft.api.common.wand.Wand;
 import dev.falseresync.wizcraft.api.common.wand.focus.FocusStack;
 import dev.falseresync.wizcraft.common.wand.focus.WizcraftFocuses;
 import dev.falseresync.wizcraft.network.c2s.UpdateWandFocusC2SPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.server.network.ServerPlayerEntity;
 
-public class WizServerNetworking {
+public class WizcraftServerNetworking {
     public static void registerReceivers() {
-        ServerPlayNetworking.registerGlobalReceiver(UpdateWandFocusC2SPacket.TYPE, WizServerNetworking::updateWandFocus);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateWandFocusC2SPacket.ID, WizcraftServerNetworking::updateWandFocus);
     }
 
-    private static void updateWandFocus(UpdateWandFocusC2SPacket packet, ServerPlayerEntity player, PacketSender responseSender) {
-        var inventory = player.getInventory();
+    private static void updateWandFocus(UpdateWandFocusC2SPacket packet, ServerPlayNetworking.Context context) {
+        var inventory = context.player().getInventory();
         var mainHandStack = inventory.getMainHandStack();
         Preconditions.checkState(mainHandStack.isOf(WizcraftItems.WAND), "Must not update wand if it's not in the main hand");
 

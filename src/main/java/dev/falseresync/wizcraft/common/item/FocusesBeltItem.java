@@ -19,8 +19,10 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class FocusesBeltItem extends TrinketItem implements HasId {
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "focuses_belt");
+    public static final Identifier ID = wid("focuses_belt");
 
     public FocusesBeltItem(Item.Settings settings) {
         super(settings);

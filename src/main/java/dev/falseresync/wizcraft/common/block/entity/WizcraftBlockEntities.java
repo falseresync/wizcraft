@@ -19,13 +19,13 @@ public class WizcraftBlockEntities {
     private static final Map<Identifier, BlockEntityType<?>> TO_REGISTER = new HashMap<>();
 
     static {
-        CRAFTING_WORKTABLE = r(WizcraftBlocks.CRAFTING_WORKTABLE.getId(), FabricBlockEntityTypeBuilder
+        CRAFTING_WORKTABLE = r(WizcraftBlocks.CRAFTING_WORKTABLE.getId(), BlockEntityType.Builder
                 .create(CraftingWorktableBlockEntity::new, WizcraftBlocks.CRAFTING_WORKTABLE)
                 .build());
-        CHARGING_WORKTABLE = r(WizcraftBlocks.CHARGING_WORKTABLE.getId(), FabricBlockEntityTypeBuilder
+        CHARGING_WORKTABLE = r(WizcraftBlocks.CHARGING_WORKTABLE.getId(), BlockEntityType.Builder
                 .create(ChargingWorktableBlockEntity::new, WizcraftBlocks.CHARGING_WORKTABLE)
                 .build());
-        LENSING_PEDESTAL = r(WizcraftBlocks.LENSING_PEDESTAL.getId(), FabricBlockEntityTypeBuilder
+        LENSING_PEDESTAL = r(WizcraftBlocks.LENSING_PEDESTAL.getId(), BlockEntityType.Builder
                 .create(LensingPedestalBlockEntity::new, WizcraftBlocks.LENSING_PEDESTAL)
                 .build());
     }

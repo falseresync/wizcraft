@@ -1,6 +1,6 @@
 package dev.falseresync.wizcraft.common.mixin;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.falseresync.wizcraft.common.wand.focus.LightningFocus;
@@ -48,8 +48,8 @@ public abstract class LightningEntityMixin implements LightningFocus.WizcraftLig
 
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
-    private void wizcraft$initDataTracker(CallbackInfo ci) {
-        ((LightningEntity) (Object) this).getDataTracker().startTracking(THUNDERLESS, false);
+    private void wizcraft$initDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
+        builder.add(THUNDERLESS, false);
     }
 
     @Override

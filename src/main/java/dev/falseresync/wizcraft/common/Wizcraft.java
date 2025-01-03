@@ -10,11 +10,13 @@ import dev.falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
 import dev.falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import dev.falseresync.wizcraft.common.report.WizcraftReports;
 import dev.falseresync.wizcraft.common.wand.focus.WizcraftFocuses;
-import dev.falseresync.wizcraft.network.WizServerNetworking;
+import dev.falseresync.wizcraft.network.WizcraftServerNetworking;
+import dev.falseresync.wizcraft.network.WizcraftNetworking;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +38,15 @@ public class Wizcraft implements ModInitializer {
         WizcraftRecipeSerializers.register((id, serializer) -> Registry.register(Registries.RECIPE_SERIALIZER, id, serializer));
         WizcraftRecipes.register((id, type) -> Registry.register(Registries.RECIPE_TYPE, id, type));
         WizcraftParticleTypes.register((id, type) -> Registry.register(Registries.PARTICLE_TYPE, id, type));
-        WizServerNetworking.registerReceivers();
+        WizcraftNetworking.registerPackets();
+        WizcraftServerNetworking.registerReceivers();
+    }
+
+    public static Identifier id(String id) {
+        return Identifier.of(id);
+    }
+
+    public static Identifier wid(String path) {
+        return Identifier.of(MOD_ID, path);
     }
 }

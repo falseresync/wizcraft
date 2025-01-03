@@ -22,8 +22,10 @@ import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public final class LensedWorktableRecipe implements Recipe<Inventory> {
-    public static final Identifier TYPE_ID = new Identifier(Wizcraft.MOD_ID, "lensed_worktable");
+    public static final Identifier TYPE_ID = wid("lensed_worktable");
     private final ItemStack result;
     private final int craftingTime;
     private final Ingredient worktableInput;

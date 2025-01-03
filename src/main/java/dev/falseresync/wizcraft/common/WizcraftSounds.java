@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class WizcraftSounds {
     private static final Map<Identifier, SoundEvent> TO_REGISTER = new HashMap<>();
 
     private static SoundEvent r(String id) {
-        var sound = SoundEvent.of(new Identifier(Wizcraft.MOD_ID, id));
+        var sound = SoundEvent.of(wid(id));
         TO_REGISTER.put(sound.getId(), sound);
         return sound;
     }

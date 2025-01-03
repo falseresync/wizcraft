@@ -9,8 +9,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import static dev.falseresync.wizcraft.common.Wizcraft.wid;
+
 public class WandInsufficientChargeReport implements Report {
-    public static final Identifier ID = new Identifier(Wizcraft.MOD_ID, "wand/insufficient_charge");
+    public static final Identifier ID = wid("wand/insufficient_charge");
     @Override
     public Identifier getId() {
         return ID;

@@ -2,11 +2,14 @@ package dev.falseresync.wizcraft.common.entity;
 
 import dev.falseresync.wizcraft.common.WizcraftSounds;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -62,10 +65,9 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
         if (!getWorld().isClient) {
             var target = entityHitResult.getEntity();
             var owner = getOwner();
-            target.damage(getDamageSources().indirectMagic(this, owner), 1.5F);
-            if (owner instanceof LivingEntity attacker) {
-                applyDamageEffects(attacker, target);
-            }
+            var source = getDamageSources().indirectMagic(this, owner);
+            target.damage(source, 1.5F);
+            EnchantmentHelper.onTargetDamaged((ServerWorld) getWorld(), target, source);
         }
     }
 
@@ -81,7 +83,7 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
         getWorld().createExplosion(
                 this, getDamageSources().indirectMagic(this, getOwner()),
                 EXPLOSION_BEHAVIOR, getX(), getY(), getZ(), 1f, false, World.ExplosionSourceType.NONE,
-                ParticleTypes.FLAME, ParticleTypes.EXPLOSION_EMITTER, WizcraftSounds.Entity.STAR_PROJECTILE_EXPLODE);
+                ParticleTypes.FLAME, ParticleTypes.EXPLOSION_EMITTER, Registries.SOUND_EVENT.getEntry(WizcraftSounds.Entity.STAR_PROJECTILE_EXPLODE));
         discard();
     }
 

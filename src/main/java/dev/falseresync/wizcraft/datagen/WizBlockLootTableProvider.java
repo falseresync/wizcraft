@@ -4,10 +4,13 @@ import dev.falseresync.wizcraft.common.block.WizcraftBlocks;
 import dev.falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.minecraft.registry.RegistryWrapper;
+
+import java.util.concurrent.CompletableFuture;
 
 public class WizBlockLootTableProvider extends FabricBlockLootTableProvider {
-    protected WizBlockLootTableProvider(FabricDataOutput dataOutput) {
-        super(dataOutput);
+    protected WizBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(dataOutput, registriesFuture);
     }
 
     @Override

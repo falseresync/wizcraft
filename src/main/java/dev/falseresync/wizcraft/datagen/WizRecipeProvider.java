@@ -11,12 +11,15 @@ import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 
+import java.util.concurrent.CompletableFuture;
+
 public class WizRecipeProvider extends FabricRecipeProvider {
-    public WizRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public WizRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override

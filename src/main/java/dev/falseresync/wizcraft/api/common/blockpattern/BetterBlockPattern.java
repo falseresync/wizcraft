@@ -12,6 +12,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.WorldView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class BetterBlockPattern {
@@ -59,8 +60,7 @@ public class BetterBlockPattern {
             }
         }
 
-        // Should be replaced by Objects.requireNonNull(results.firstEntry()).getValue() on Java 21
-        return results.int2ObjectEntrySet().first().getValue();
+        return Objects.requireNonNull(results.firstEntry()).getValue();
     }
 
     public Match test(BlockPos frontTopLeft, Direction forwards, Direction up, LoadingCache<BlockPos, CachedBlockPosition> cache) {

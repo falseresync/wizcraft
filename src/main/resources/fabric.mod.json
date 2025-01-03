@@ -17,24 +17,13 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"dev.falseresync.wizcraft.common.Wizcraft"
+			"falseresync.wizcraft.common.Wizcraft"
 		],
 		"client": [
-			"dev.falseresync.wizcraft.client.WizcraftClient"
-		],
-		"fabric-datagen": [
-			"dev.falseresync.wizcraft.datagen.WizcraftDatagen"
-		],
-		"emi": [
-			"dev.falseresync.wizcraft.compat.emi.WizcraftEmiPlugin"
-		],
-		"modmenu": [
-			"dev.falseresync.wizcraft.compat.modmenu.WizcraftModMenuCompat"
+			"falseresync.wizcraft.client.WizcraftClient"
 		]
 	},
 	"mixins": [
-		"wizcraft.common.mixins.json",
-		"wizcraft.datafix.mixins.json"
 	],
 	"accessWidener" : "wizcraft.accesswidener",
 	"depends": {
@@ -42,7 +31,6 @@
 		"minecraft": "~1.21",
 		"java": ">=21",
 		"fabric-api": "*",
-		"libhudcompat": "*",
 		"midnightlib": "*"
 	}
 }

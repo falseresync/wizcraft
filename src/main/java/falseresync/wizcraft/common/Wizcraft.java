@@ -5,6 +5,8 @@ import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.entity.WizcraftEntities;
 import falseresync.wizcraft.common.item.WizcraftItemGroups;
 import falseresync.wizcraft.common.item.WizcraftItems;
+import falseresync.wizcraft.networking.WizcraftNetworking;
+import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.Registries;
@@ -26,7 +28,9 @@ public class Wizcraft implements ModInitializer {
 //                .link(Focus.REGISTRY, WizcraftFocuses.class)
                 .link(Registries.ITEM_GROUP, WizcraftItemGroups.class)
                 .link(Registries.DATA_COMPONENT_TYPE, WizcraftDataComponents.class)
-                .link(Registries.ENTITY_TYPE, WizcraftEntities.class);
+                .link(Registries.ENTITY_TYPE, WizcraftEntities.class)
+                .link(WizcraftReports.REGISTRY, WizcraftReports.class);
+        WizcraftNetworking.registerPackets();
     }
 
     public static Identifier id(String id) {

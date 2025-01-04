@@ -1,6 +1,8 @@
 package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.networking.report.Report;
+import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -44,16 +46,16 @@ public class CometWarpFocusItem extends FocusItem {
         if (user instanceof ServerPlayerEntity player) {
             if (user.isSneaking()) {
                 if (!WizcraftItems.WAND.tryExpendCharge(wandStack, DEFAULT_PLACEMENT_COST)) {
-//                    Report.trigger(player, WizcraftReports.Wand.INSUFFICIENT_CHARGE);
+                    Report.trigger(player, WizcraftReports.WAND_INSUFFICIENT_CHARGE);
                     return TypedActionResult.fail(wandStack);
                 }
 
-//                Report.trigger(player, WizcraftReports.Focuses.ANCHOR_PLACED);
+                Report.trigger(player, WizcraftReports.COMET_WARP_ANCHOR_PLACED);
                 wandStack.set(WizcraftDataComponents.WARP_FOCUS_ANCHOR, GlobalPos.create(world.getRegistryKey(), user.getBlockPos()));
             } else {
                 var anchor = wandStack.get(WizcraftDataComponents.WARP_FOCUS_ANCHOR);
                 if (anchor == null) {
-//                    Report.trigger(player, WizcraftReports.Focuses.NO_ANCHOR);
+                    Report.trigger(player, WizcraftReports.COMET_WARP_NO_ANCHOR);
                     return TypedActionResult.fail(wandStack);
                 }
 
@@ -66,11 +68,11 @@ public class CometWarpFocusItem extends FocusItem {
                         ? DEFAULT_INTERDIMENSIONAL_COST
                         : DEFAULT_WARPING_COST;
                 if (!WizcraftItems.WAND.tryExpendCharge(wandStack, warpingCost)) {
-//                    Report.trigger(player, WizcraftReports.Wand.INSUFFICIENT_CHARGE);
+                    Report.trigger(player, WizcraftReports.WAND_INSUFFICIENT_CHARGE);
                     return TypedActionResult.fail(wandStack);
                 }
 
-//                Report.trigger(player, WizcraftReports.Focuses.TELEPORTED);
+                Report.trigger(player, WizcraftReports.COMET_WARP_TELEPORTED);
                 user.teleportTo(new TeleportTarget(destination, anchor.pos().toCenterPos(), Vec3d.ZERO, user.getYaw(), user.getPitch(), TeleportTarget.NO_OP));
                 wandStack.remove(WizcraftDataComponents.WARP_FOCUS_ANCHOR);
             }

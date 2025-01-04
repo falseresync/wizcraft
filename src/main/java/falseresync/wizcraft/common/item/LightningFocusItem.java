@@ -1,6 +1,8 @@
 package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.networking.report.Report;
+import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -39,7 +41,7 @@ public class LightningFocusItem extends FocusItem {
                 return TypedActionResult.success(wandStack);
             }
 
-//                Report.trigger(player, WizcraftReports.Wand.INSUFFICIENT_CHARGE);
+            Report.trigger(player, WizcraftReports.WAND_INSUFFICIENT_CHARGE);
             return TypedActionResult.fail(wandStack);
         }
 

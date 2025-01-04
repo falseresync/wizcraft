@@ -1,8 +1,11 @@
 package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.common.entity.StarProjectileEntity;
+import falseresync.wizcraft.networking.report.Report;
+import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -14,13 +17,13 @@ public class StarshooterFocusItem extends FocusItem {
 
     @Override
     public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient) {
+        if (user instanceof ServerPlayerEntity player) {
             if (WizcraftItems.WAND.tryExpendCharge(wandStack, 2)) {
                 world.spawnEntity(new StarProjectileEntity(user, world));
                 return TypedActionResult.success(wandStack);
             }
 
-//                Report.trigger(player, WizcraftReports.Wand.INSUFFICIENT_CHARGE);
+            Report.trigger(player, WizcraftReports.WAND_INSUFFICIENT_CHARGE);
             return TypedActionResult.fail(wandStack);
         }
 

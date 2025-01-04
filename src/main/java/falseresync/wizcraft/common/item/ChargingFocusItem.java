@@ -2,8 +2,6 @@ package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.networking.report.MultiplayerReport;
-import falseresync.wizcraft.networking.report.Report;
 import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,18 +26,18 @@ public class ChargingFocusItem extends FocusItem{
             if (!world.isNight()
                     || world.getRainGradient(1) > 0.75
                     || world.getLightLevel(LightType.SKY, user.getBlockPos()) < world.getMaxLightLevel() * 0.5) {
-                Report.trigger(player, WizcraftReports.WAND_CANNOT_CHARGE);
+                WizcraftReports.WAND_CANNOT_CHARGE.sendTo(player);
                 return TypedActionResult.fail(wandStack);
             }
 
             if (user.raycast(Wizcraft.findViewDistance(world) * 16, 0, true).getType()
                     != HitResult.Type.MISS) {
-                Report.trigger(player, WizcraftReports.WAND_CANNOT_CHARGE);
+                WizcraftReports.WAND_CANNOT_CHARGE.sendTo(player);
                 return TypedActionResult.fail(wandStack);
             }
 
             if (WizcraftItems.WAND.isFullyCharged(wandStack)) {
-                Report.trigger(player, WizcraftReports.WAND_ALREADY_FULLY_CHARGED);
+                WizcraftReports.WAND_ALREADY_FULLY_CHARGED.sendTo(player);
                 return TypedActionResult.pass(wandStack);
             }
 
@@ -65,7 +63,7 @@ public class ChargingFocusItem extends FocusItem{
         wandStack.remove(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS);
         wandStack.apply(WizcraftDataComponents.WAND_CHARGE, 0, current -> current + 40);
         if (user instanceof ServerPlayerEntity player) {
-            MultiplayerReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizcraftReports.WAND_SUCCESSFULLY_CHARGED);
+            WizcraftReports.WAND_SUCCESSFULLY_CHARGED.sendAround((ServerWorld) world, player.getBlockPos(), player);
         }
         return wandStack;
     }

@@ -18,13 +18,21 @@ public interface MultiplayerReport extends Report {
     @Environment(EnvType.CLIENT)
     default void executeOnNearbyClients(ClientPlayerEntity player) {}
 
-    static void trigger(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source, MultiplayerReport report) {
+    /**
+     * @deprecated Use {@link #sendAround(ServerWorld, BlockPos, ServerPlayerEntity)} instead
+     */
+    @Deprecated
+    default void sendTo(ServerPlayerEntity player) {
+        Report.super.sendTo(player);
+    }
+
+    default void sendAround(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source) {
         if (source != null) {
-            ServerPlayNetworking.send(source, new TriggerReportS2CPacket(report));
+            ServerPlayNetworking.send(source, new TriggerReportS2CPacket(this));
         }
         for (var player : PlayerLookup.tracking(world, pos)) {
-            ServerPlayNetworking.send(player, new TriggerMultiplayerReportS2CPacket(report));
+            ServerPlayNetworking.send(player, new TriggerMultiplayerReportS2CPacket(this));
         }
-        report.executeOnServer(world, pos, source);
+        executeOnServer(world, pos, source);
     }
 }

@@ -14,4 +14,8 @@ public interface Report {
     static void trigger(ServerPlayerEntity player, Report report) {
         ServerPlayNetworking.send(player, new TriggerReportS2CPacket(report));
     }
+
+    default void sendTo(ServerPlayerEntity player) {
+        ServerPlayNetworking.send(player, new TriggerReportS2CPacket(this));
+    }
 }

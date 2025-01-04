@@ -2,6 +2,7 @@ package falseresync.wizcraft.common;
 
 import falseresync.lib.registry.AutoRegistry;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.common.entity.WizcraftEntities;
 import falseresync.wizcraft.common.item.WizcraftItemGroups;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.api.ModInitializer;
@@ -20,10 +21,12 @@ public class Wizcraft implements ModInitializer {
     @Override
     public void onInitialize() {
         WizcraftItems.init();
+        WizcraftSounds.init();
         new AutoRegistry(MOD_ID, LOGGER)
 //                .link(Focus.REGISTRY, WizcraftFocuses.class)
                 .link(Registries.ITEM_GROUP, WizcraftItemGroups.class)
-                .link(Registries.DATA_COMPONENT_TYPE, WizcraftDataComponents.class);
+                .link(Registries.DATA_COMPONENT_TYPE, WizcraftDataComponents.class)
+                .link(Registries.ENTITY_TYPE, WizcraftEntities.class);
     }
 
     public static Identifier id(String id) {

@@ -21,6 +21,12 @@ public abstract class FocusItem extends Item {
         super(settings);
     }
 
+    public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack) {
+    }
+
+    public void focusOnUnequipped(ItemStack wandStack, ItemStack focusStack) {
+    }
+
     public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
         return TypedActionResult.pass(wandStack);
     }

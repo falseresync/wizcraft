@@ -58,7 +58,7 @@ public class ChargingFocusItem extends FocusItem{
 
     @Override
     public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user) {
-        System.out.println(wandStack.remove(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS));
+        wandStack.remove(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS);
         wandStack.apply(WizcraftDataComponents.WAND_CHARGE, 0, current -> current + 40);
         if (user instanceof ServerPlayerEntity player) {
 //            MultiplayerReport.trigger((ServerWorld) world, player.getBlockPos(), player, WizcraftReports.Wand.SUCCESSFULLY_CHARGED);

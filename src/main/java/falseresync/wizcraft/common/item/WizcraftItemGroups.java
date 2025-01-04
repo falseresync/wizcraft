@@ -13,6 +13,8 @@ public class WizcraftItemGroups {
                 entries.add(WizcraftItems.WAND);
                 entries.add(WizcraftItems.STARSHOOTER_FOCUS);
                 entries.add(WizcraftItems.CHARGING_FOCUS);
+                entries.add(WizcraftItems.LIGHTNING_FOCUS);
+                entries.add(WizcraftItems.COMET_WARP_FOCUS);
             })
             .build();
 }

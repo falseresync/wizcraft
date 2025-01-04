@@ -29,29 +29,41 @@ public class WandItem extends Item {
 
     @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-
         return false;
     }
 
     @Override
-    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
+    public boolean onStackClicked(ItemStack wandStack, Slot slot, ClickType clickType, PlayerEntity player) {
         if (clickType == ClickType.RIGHT) {
-            var stackInSlot = slot.getStack().copy();
-            var previousFocusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+            var newFocusStack = slot.getStack().copy();
+            var previousFocusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
 
             if (slot.canInsert(previousFocusStack)) {
-                if (!previousFocusStack.isEmpty() && stackInSlot.isEmpty()) {
+                if (previousFocusStack.getItem() instanceof FocusItem focusItem
+                        && newFocusStack.isEmpty()) {
                     slot.setStack(previousFocusStack.copy());
-                    stack.remove(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM);
+                    wandStack.remove(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM);
+                    focusItem.focusOnUnequipped(wandStack, previousFocusStack);
                     return true;
-                } else if (stackInSlot.getItem() instanceof FocusItem && slot.canTakeItems(player)) {
+                } else if (previousFocusStack.getItem() instanceof FocusItem previousFocusItem
+                        && newFocusStack.getItem() instanceof FocusItem newFocusItem
+                        && slot.canTakeItems(player)) {
                     slot.setStack(previousFocusStack.copy());
-                    stack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, stackInSlot);
+                    wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
+                    previousFocusItem.focusOnUnequipped(wandStack, previousFocusStack);
+                    newFocusItem.focusOnEquipped(wandStack, newFocusStack);
+                    return true;
+                } else if (previousFocusStack.isEmpty()
+                        && newFocusStack.getItem() instanceof FocusItem newFocusItem
+                        && slot.canTakeItems(player)) {
+                    slot.setStack(ItemStack.EMPTY);
+                    wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
+                    newFocusItem.focusOnEquipped(wandStack, newFocusStack);
                     return true;
                 }
             }
         }
-        return super.onStackClicked(stack, slot, clickType, player);
+        return super.onStackClicked(wandStack, slot, clickType, player);
     }
 
     @Override
@@ -229,5 +241,19 @@ public class WandItem extends Item {
 
     public boolean isFullyCharged(ItemStack stack) {
         return stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0) >= stack.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
+    }
+
+    public ActionResult tryExpendCharge(ItemStack stack) {
+        var cost = stack.get(WizcraftDataComponents.FOCUS_USE_COST);
+        if (cost == null) {
+            return ActionResult.PASS;
+        }
+
+        var charge = stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
+        if (charge >= cost) {
+            stack.apply(WizcraftDataComponents.WAND_CHARGE, charge, current -> current - cost);
+            return ActionResult.SUCCESS;
+        }
+        return ActionResult.FAIL;
     }
 }

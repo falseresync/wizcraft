@@ -21,8 +21,6 @@ public class WizcraftDataComponents {
             ComponentType.<Integer>builder().codec(Codecs.NONNEGATIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
     public static final @RegistryObject ComponentType<Integer> WAND_MAX_CHARGE =
             ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
-    public static final @RegistryObject ComponentType<Integer> FOCUS_USE_COST =
-            ComponentType.<Integer>builder().codec(Codecs.NONNEGATIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
     public static final @RegistryObject ComponentType<Integer> CHARGING_FOCUS_PROGRESS =
             ComponentType.<Integer>builder().codec(Codecs.NONNEGATIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
     public static final @RegistryObject ComponentType<GlobalPos> WARP_FOCUS_ANCHOR =

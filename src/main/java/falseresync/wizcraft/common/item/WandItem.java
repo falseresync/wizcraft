@@ -41,24 +41,24 @@ public class WandItem extends Item {
             if (slot.canInsert(previousFocusStack)) {
                 if (previousFocusStack.getItem() instanceof FocusItem focusItem
                         && newFocusStack.isEmpty()) {
-                    slot.setStack(previousFocusStack.copy());
-                    wandStack.remove(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM);
                     focusItem.focusOnUnequipped(wandStack, previousFocusStack);
+                    wandStack.remove(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM);
+                    slot.setStack(previousFocusStack.copy());
                     return true;
                 } else if (previousFocusStack.getItem() instanceof FocusItem previousFocusItem
                         && newFocusStack.getItem() instanceof FocusItem newFocusItem
                         && slot.canTakeItems(player)) {
-                    slot.setStack(previousFocusStack.copy());
-                    wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
                     previousFocusItem.focusOnUnequipped(wandStack, previousFocusStack);
                     newFocusItem.focusOnEquipped(wandStack, newFocusStack);
+                    wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
+                    slot.setStack(previousFocusStack.copy());
                     return true;
                 } else if (previousFocusStack.isEmpty()
                         && newFocusStack.getItem() instanceof FocusItem newFocusItem
                         && slot.canTakeItems(player)) {
-                    slot.setStack(ItemStack.EMPTY);
-                    wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
                     newFocusItem.focusOnEquipped(wandStack, newFocusStack);
+                    wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
+                    slot.setStack(ItemStack.EMPTY);
                     return true;
                 }
             }
@@ -243,17 +243,12 @@ public class WandItem extends Item {
         return stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0) >= stack.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
     }
 
-    public ActionResult tryExpendCharge(ItemStack stack) {
-        var cost = stack.get(WizcraftDataComponents.FOCUS_USE_COST);
-        if (cost == null) {
-            return ActionResult.PASS;
-        }
-
+    public boolean tryExpendCharge(ItemStack stack, int cost) {
         var charge = stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
         if (charge >= cost) {
             stack.apply(WizcraftDataComponents.WAND_CHARGE, charge, current -> current - cost);
-            return ActionResult.SUCCESS;
+            return true;
         }
-        return ActionResult.FAIL;
+        return false;
     }
 }

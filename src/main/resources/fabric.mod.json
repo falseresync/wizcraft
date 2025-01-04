@@ -24,6 +24,7 @@
 		]
 	},
 	"mixins": [
+		"wizcraft.common.mixins.json"
 	],
 	"accessWidener" : "wizcraft.accesswidener",
 	"depends": {

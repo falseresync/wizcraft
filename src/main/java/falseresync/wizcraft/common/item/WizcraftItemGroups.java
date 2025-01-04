@@ -12,6 +12,7 @@ public class WizcraftItemGroups {
             .entries((displayContext, entries) -> {
                 entries.add(WizcraftItems.WAND);
                 entries.add(WizcraftItems.STARSHOOTER_FOCUS);
+                entries.add(WizcraftItems.CHARGING_FOCUS);
             })
             .build();
 }

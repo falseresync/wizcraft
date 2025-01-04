@@ -22,6 +22,7 @@ public class StarshooterFocusItem extends FocusItem {
             fireball.setPosition(user.getX() + rotation.x * orthogonalDistance, user.getEyeY(), user.getZ() + rotation.z * orthogonalDistance);
             fireball.setVelocity(user, user.getPitch(), user.getYaw(), 0, 1.5F, 1F);
             world.spawnEntity(fireball);
+            return TypedActionResult.success(wandStack);
         }
         return super.focusUse(wandStack, focusStack, world, user, hand);
     }

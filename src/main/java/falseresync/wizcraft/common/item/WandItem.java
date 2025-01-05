@@ -1,6 +1,11 @@
 package falseresync.wizcraft.common.item;
 
+import falseresync.wizcraft.common.block.WizcraftBlocks;
+import falseresync.wizcraft.common.block.WorktableVariant;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.networking.report.WizcraftReports;
+import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPacket;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -11,11 +16,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class WandItem extends Item {
@@ -90,6 +98,35 @@ public class WandItem extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
+        var world = context.getWorld();
+        var pos = context.getBlockPos();
+        if (world.getBlockState(pos).isOf(WizcraftBlocks.DUMMY_WORKTABLE)) {
+            if (world.isClient() || context.getPlayer() == null) return ActionResult.CONSUME;
+
+            var player = (ServerPlayerEntity) context.getPlayer();
+            var matchedVariants = WorktableVariant
+                    .getForPlayerAndSearchAround((ServerWorld) world, player, pos);
+            var fullyCompletedVariant = matchedVariants.stream()
+                    .filter(variant -> variant.match().isCompleted())
+                    .findFirst();
+            if (fullyCompletedVariant.isPresent()) {
+                world.setBlockState(pos, fullyCompletedVariant.get().block().getDefaultState());
+                return ActionResult.SUCCESS;
+            }
+
+            var leastUncompletedVariant = matchedVariants.stream()
+                    .filter(variant -> variant.match().isHalfwayCompleted())
+                    .min(Comparator.comparingInt(variant -> variant.match().delta().size()));
+            if (leastUncompletedVariant.isPresent()) {
+                ServerPlayNetworking.send(player, new TriggerBlockPatternTipS2CPacket(leastUncompletedVariant.get().match().deltaAsBlockPos()));
+                WizcraftReports.WORKTABLE_INCOMPLETE.sendTo(player);
+
+                return ActionResult.FAIL;
+            }
+
+            return ActionResult.PASS;
+        }
+
         var wandStack = context.getStack();
         var focusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {

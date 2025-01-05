@@ -1,0 +1,18 @@
+{
+  "type": "wizcraft:lensed_worktable",
+  "pedestals": [
+    {
+      "item": "minecraft:lightning_rod"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "wizcraft:lightning_focus"
+  },
+  "worktable": {
+    "item": "minecraft:diamond_block"
+  }
+}

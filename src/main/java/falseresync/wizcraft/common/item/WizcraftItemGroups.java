@@ -11,10 +11,15 @@ public class WizcraftItemGroups {
             .displayName(Text.translatable("itemGroup.wizcraft"))
             .entries((displayContext, entries) -> {
                 entries.add(WizcraftItems.WAND);
+
                 entries.add(WizcraftItems.STARSHOOTER_FOCUS);
                 entries.add(WizcraftItems.CHARGING_FOCUS);
                 entries.add(WizcraftItems.LIGHTNING_FOCUS);
                 entries.add(WizcraftItems.COMET_WARP_FOCUS);
+
+                entries.add(WizcraftItems.LENS);
+                entries.add(WizcraftItems.WORKTABLE);
+                entries.add(WizcraftItems.LENSING_PEDESTAL);
             })
             .build();
 }

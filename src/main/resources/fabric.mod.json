@@ -21,6 +21,9 @@
 		],
 		"client": [
 			"falseresync.wizcraft.client.WizcraftClient"
+		],
+		"fabric-datagen": [
+			"falseresync.wizcraft.datagen.WizcraftDatagen"
 		]
 	},
 	"mixins": [

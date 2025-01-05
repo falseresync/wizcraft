@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "b": {
+      "item": "minecraft:stone_bricks"
+    },
+    "l": {
+      "item": "wizcraft:lens"
+    }
+  },
+  "pattern": [
+    "l",
+    "b",
+    "b"
+  ],
+  "result": {
+    "count": 1,
+    "id": "wizcraft:lensing_pedestal"
+  }
+}

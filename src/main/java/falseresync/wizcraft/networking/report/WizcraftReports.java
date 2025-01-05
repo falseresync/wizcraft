@@ -24,4 +24,10 @@ public class WizcraftReports {
     public static final @RegistryObject CometWarpAnchorPlacedReport COMET_WARP_ANCHOR_PLACED = new CometWarpAnchorPlacedReport();
     public static final @RegistryObject CometWarpTeleportedReport COMET_WARP_TELEPORTED = new CometWarpTeleportedReport();
 
+    public static final @RegistryObject WorktableIncompleteReport WORKTABLE_INCOMPLETE = new WorktableIncompleteReport();
+    public static final @RegistryObject WorktableCannotPlaceReport WORKTABLE_CANNOT_PLACE = new WorktableCannotPlaceReport();
+    public static final @RegistryObject WorktableSuccessReport WORKTABLE_SUCCESS = new WorktableSuccessReport();
+    public static final @RegistryObject WorktableInterruptedReport WORKTABLE_INTERRUPTED = new WorktableInterruptedReport();
+    public static final @RegistryObject WorktableCraftingReport WORKTABLE_CRAFTING = new WorktableCraftingReport();
+
 }

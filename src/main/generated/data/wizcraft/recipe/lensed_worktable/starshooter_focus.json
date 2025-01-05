@@ -1,0 +1,18 @@
+{
+  "type": "wizcraft:lensed_worktable",
+  "pedestals": [
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:fire_charge"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "wizcraft:starshooter_focus"
+  },
+  "worktable": {
+    "item": "minecraft:copper_block"
+  }
+}

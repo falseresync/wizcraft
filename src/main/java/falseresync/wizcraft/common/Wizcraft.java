@@ -3,11 +3,11 @@ package falseresync.wizcraft.common;
 import falseresync.lib.registry.AutoRegistry;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.entity.WizcraftEntities;
 import falseresync.wizcraft.common.item.WizcraftItemGroups;
 import falseresync.wizcraft.common.item.WizcraftItems;
+import falseresync.wizcraft.common.particle.WizcraftParticleTypes;
 import falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
 import falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import falseresync.wizcraft.networking.WizcraftNetworking;
@@ -31,23 +31,6 @@ import org.slf4j.LoggerFactory;
 public class Wizcraft implements ModInitializer {
     public static final String MOD_ID = "wizcraft";
     public static final Logger LOGGER = LoggerFactory.getLogger("Wizcraft");
-
-    @Override
-    public void onInitialize() {
-        WizcraftBlocks.init();
-        WizcraftItems.init();
-        new AutoRegistry(MOD_ID, LOGGER)
-                .link(Registries.BLOCK_ENTITY_TYPE, WizcraftBlockEntities.class)
-                .link(Registries.ITEM_GROUP, WizcraftItemGroups.class)
-                .link(Registries.DATA_COMPONENT_TYPE, WizcraftDataComponents.class)
-                .link(Registries.ENTITY_TYPE, WizcraftEntities.class)
-                .link(WizcraftReports.REGISTRY, WizcraftReports.class)
-                .link(Registries.RECIPE_TYPE, WizcraftRecipes.class)
-                .link(Registries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class);
-        WizcraftDataAttachments.init();
-        WizcraftSounds.init();
-        WizcraftNetworking.registerPackets();
-    }
 
     public static Identifier id(String id) {
         return Identifier.of(id);
@@ -76,5 +59,23 @@ public class Wizcraft implements ModInitializer {
         }
 
         return 0;
+    }
+
+    @Override
+    public void onInitialize() {
+        WizcraftBlocks.init();
+        WizcraftItems.init();
+        new AutoRegistry(MOD_ID, LOGGER)
+                .link(Registries.BLOCK_ENTITY_TYPE, WizcraftBlockEntities.class)
+                .link(Registries.ITEM_GROUP, WizcraftItemGroups.class)
+                .link(Registries.DATA_COMPONENT_TYPE, WizcraftDataComponents.class)
+                .link(Registries.ENTITY_TYPE, WizcraftEntities.class)
+                .link(WizcraftReports.REGISTRY, WizcraftReports.class)
+                .link(Registries.RECIPE_TYPE, WizcraftRecipes.class)
+                .link(Registries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class)
+                .link(Registries.PARTICLE_TYPE, WizcraftParticleTypes.class);
+//        WizcraftDataAttachments.init();
+        WizcraftSounds.init();
+        WizcraftNetworking.registerPackets();
     }
 }

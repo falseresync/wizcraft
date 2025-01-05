@@ -1,12 +1,20 @@
 package falseresync.wizcraft.common.blockentity;
 
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
+import falseresync.wizcraft.common.CommonKeys;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,13 +28,11 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         }
     };
     protected final InventoryStorage storage = InventoryStorage.of(inventory, null);
-//    protected @Nullable BlockPos linkedTo = null;
+    protected @Nullable BlockPos linkedTo = null;
 
     public LensingPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(WizcraftBlockEntities.LENSING_PEDESTAL, pos, state);
-        inventory.addListener(sender -> {
-            setAttached(WizcraftDataAttachments.LENSING_PEDESTAL_INVENTORY, inventory.getHeldStacks());
-        });
+        inventory.addListener(sender -> markDirty());
     }
 
     // PUBLIC INTERFACE
@@ -36,16 +42,16 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     }
 
     public void linkTo(@Nullable BlockEntity controller) {
-        setAttached(WizcraftDataAttachments.LENSING_PEDESTAL_LINKED_TO, controller != null ? controller.getPos() : null);
-//        markDirty();
+        linkedTo = controller != null ? controller.getPos() : null;
+        markDirty();
     }
 
     public boolean isLinked() {
-        return hasAttached(WizcraftDataAttachments.LENSING_PEDESTAL_LINKED_TO);
+        return linkedTo != null;
     }
 
     public boolean isLinkedTo(BlockEntity controller) {
-        return !isLinked() || controller.getPos().equals(getAttached(WizcraftDataAttachments.LENSING_PEDESTAL_LINKED_TO));
+        return !isLinked() || controller.getPos().equals(linkedTo);
     }
 
     public ItemStack getHeldStackCopy() {
@@ -67,51 +73,44 @@ public class LensingPedestalBlockEntity extends BlockEntity {
         super.markDirty();
         if (world != null) {
             world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-            Optional.ofNullable(getAttached(WizcraftDataAttachments.LENSING_PEDESTAL_LINKED_TO))
-                    .map(world::getBlockEntity)
-                    .ifPresent(BlockEntity::markDirty);
+            Optional.ofNullable(linkedTo).map(world::getBlockEntity).ifPresent(BlockEntity::markDirty);
         }
     }
 
-//    @Override
-//    protected void writeNbt(NbtCompound nbt) {
-//        super.writeNbt(nbt);
-//
-//        Inventories.writeNbt(nbt, inventory.getHeldStacks());
-//
-//        if (linkedTo != null) {
-//            nbt.put(CommonKeys.LINKED_TO, NbtHelper.fromBlockPos(linkedTo));
-//        } else {
-//            nbt.remove(CommonKeys.LINKED_TO);
-//        }
-//    }
-//
-//    @Override
-//    public void readNbt(NbtCompound nbt) {
-//        super.readNbt(nbt);
-//
-//        inventory.getHeldStacks().clear();
-//        Inventories.readNbt(nbt, inventory.getHeldStacks());
-//
-//        linkedTo = null;
-//        if (nbt.contains(CommonKeys.LINKED_TO, NbtElement.COMPOUND_TYPE)) {
-//            linkedTo = NbtHelper.toBlockPos(nbt.getCompound(CommonKeys.LINKED_TO));
-//        }
-//    }
-//
-//    @Nullable
-//    @Override
-//    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-//        return BlockEntityUpdateS2CPacket.create(this);
-//    }
-//
-//    @Override
-//    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-//        return super.toInitialChunkDataNbt(registryLookup);
-//    }
-//
-//    @Override
-//    public NbtCompound toInitialChunkDataNbt() {
-//        return createNbt();
-//    }
+    @Override
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+
+        Inventories.writeNbt(nbt, inventory.getHeldStacks(), registryLookup);
+
+        if (linkedTo != null) {
+            nbt.put(CommonKeys.LINKED_TO, NbtHelper.fromBlockPos(linkedTo));
+        } else {
+            nbt.remove(CommonKeys.LINKED_TO);
+        }
+    }
+
+    @Override
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
+
+        inventory.getHeldStacks().clear();
+        Inventories.readNbt(nbt, inventory.getHeldStacks(), registryLookup);
+
+        linkedTo = null;
+        if (nbt.contains(CommonKeys.LINKED_TO, NbtElement.COMPOUND_TYPE)) {
+            NbtHelper.toBlockPos(nbt, CommonKeys.LINKED_TO).ifPresent(it -> linkedTo = it);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
+    }
 }

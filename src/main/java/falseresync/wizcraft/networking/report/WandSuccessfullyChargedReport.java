@@ -1,5 +1,6 @@
 package falseresync.wizcraft.networking.report;
 
+import falseresync.wizcraft.client.WizcraftClient;
 import falseresync.wizcraft.common.WizcraftSounds;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.api.EnvType;
@@ -7,6 +8,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +19,7 @@ public class WandSuccessfullyChargedReport implements MultiplayerReport {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSound(WizcraftSounds.SUCCESSFULLY_CHARGED, 1, 1);
-//        WizcraftApi.getHud().getMessageDisplay().postImportant(Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)));
+        WizcraftClient.hud.getMessageDisplay().postImportant(Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)));
     }
 
     @Override

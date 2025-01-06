@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
-public class WizModelProvider extends FabricModelProvider {
+public class WizcraftModelProvider extends FabricModelProvider {
     public static final TextureKey KEY_OVERLAY = TextureKey.of("overlay");
     public static final Model MODEL_TEMPLATE_WORKTABLE = new Model(
             Optional.of(wid("block/template_worktable")), Optional.empty(), KEY_OVERLAY);
@@ -19,7 +19,7 @@ public class WizModelProvider extends FabricModelProvider {
             block -> new TextureMap().put(KEY_OVERLAY, TextureMap.getSubId(block, "_overlay")),
             MODEL_TEMPLATE_WORKTABLE);
 
-    public WizModelProvider(FabricDataOutput output) {
+    public WizcraftModelProvider(FabricDataOutput output) {
         super(output);
     }
 

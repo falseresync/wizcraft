@@ -8,8 +8,8 @@ import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
 
-public class WizBlockLootTableProvider extends FabricBlockLootTableProvider {
-    protected WizBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+public class WizcraftBlockLootTableProvider extends FabricBlockLootTableProvider {
+    protected WizcraftBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
         super(dataOutput, registriesFuture);
     }
 

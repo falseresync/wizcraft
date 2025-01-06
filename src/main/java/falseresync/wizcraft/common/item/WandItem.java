@@ -301,7 +301,7 @@ public class WandItem extends Item {
             return TypedActionResult.success(oldFocusStack);
         }
 
-        // newFocus is not empty, but not a focus item -> fail oldFocus
+        // newFocus is not empty, but not a focus item -> fail newFocus
         return TypedActionResult.fail(newFocusStack);
     }
 }

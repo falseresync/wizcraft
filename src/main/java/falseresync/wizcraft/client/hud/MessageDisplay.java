@@ -77,7 +77,7 @@ public class MessageDisplay implements HudItem {
                     if (message.important() && !it.message.important() || message.maxLifetime() > it.message.maxLifetime()) {
                         it.message = new Message(
                                 message.text(),
-                                (message.maxLifetime() > it.message.maxLifetime()) ? message.maxLifetime() : it.message.maxLifetime(),
+                                Math.max(message.maxLifetime(), it.message.maxLifetime()),
                                 message.important() || it.message.important());
                     }
                     messageQueue.add(it);

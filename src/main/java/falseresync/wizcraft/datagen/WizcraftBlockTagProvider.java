@@ -8,8 +8,8 @@ import net.minecraft.registry.tag.BlockTags;
 
 import java.util.concurrent.CompletableFuture;
 
-public class WizBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-    public WizBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+public class WizcraftBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+    public WizcraftBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
         super(output, registriesFuture);
     }
 

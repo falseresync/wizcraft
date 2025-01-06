@@ -6,6 +6,7 @@ import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.entity.WizcraftEntities;
 import falseresync.wizcraft.common.item.WizcraftItemGroups;
+import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.common.particle.WizcraftParticleTypes;
 import falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
@@ -75,6 +76,7 @@ public class Wizcraft implements ModInitializer {
                 .link(Registries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class)
                 .link(Registries.PARTICLE_TYPE, WizcraftParticleTypes.class);
 //        WizcraftDataAttachments.init();
+        WizcraftItemTags.init();
         WizcraftSounds.init();
         WizcraftNetworking.registerPackets();
     }

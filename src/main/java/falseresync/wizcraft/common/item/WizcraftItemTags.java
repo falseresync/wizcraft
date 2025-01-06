@@ -1,0 +1,14 @@
+package falseresync.wizcraft.common.item;
+
+import net.minecraft.item.Item;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
+
+import static falseresync.wizcraft.common.Wizcraft.wid;
+
+public class WizcraftItemTags {
+    public static final TagKey<Item> FOCUSES = TagKey.of(RegistryKeys.ITEM, wid("focuses"));
+
+    public static void init() {
+    }
+}

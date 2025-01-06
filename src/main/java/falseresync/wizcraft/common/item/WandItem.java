@@ -43,32 +43,10 @@ public class WandItem extends Item {
     @Override
     public boolean onStackClicked(ItemStack wandStack, Slot slot, ClickType clickType, PlayerEntity player) {
         if (clickType == ClickType.RIGHT) {
-            var newFocusStack = slot.getStack().copy();
-            var previousFocusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
-
-            if (slot.canInsert(previousFocusStack)) {
-                if (previousFocusStack.getItem() instanceof FocusItem focusItem
-                        && newFocusStack.isEmpty()) {
-                    focusItem.focusOnUnequipped(wandStack, previousFocusStack);
-                    wandStack.remove(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM);
-                    slot.setStack(previousFocusStack.copy());
-                    return true;
-                } else if (previousFocusStack.getItem() instanceof FocusItem previousFocusItem
-                        && newFocusStack.getItem() instanceof FocusItem newFocusItem
-                        && slot.canTakeItems(player)) {
-                    previousFocusItem.focusOnUnequipped(wandStack, previousFocusStack);
-                    newFocusItem.focusOnEquipped(wandStack, newFocusStack);
-                    wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
-                    slot.setStack(previousFocusStack.copy());
-                    return true;
-                } else if (previousFocusStack.isEmpty()
-                        && newFocusStack.getItem() instanceof FocusItem newFocusItem
-                        && slot.canTakeItems(player)) {
-                    newFocusItem.focusOnEquipped(wandStack, newFocusStack);
-                    wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
-                    slot.setStack(ItemStack.EMPTY);
-                    return true;
-                }
+            var exchange = exchangeFocuses(wandStack, slot.getStack().copy());
+            if (exchange.getResult().isAccepted()) {
+                slot.setStack(exchange.getValue());
+                return true;
             }
         }
         return super.onStackClicked(wandStack, slot, clickType, player);
@@ -292,40 +270,6 @@ public class WandItem extends Item {
     public TypedActionResult<ItemStack> exchangeFocuses(ItemStack wandStack, ItemStack newFocusStack) {
         var oldFocusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
 
-        // newFocus = empty, oldFocus = empty -> pass newFocus
-        if (newFocusStack.isEmpty() && oldFocusStack.isEmpty()) {
-            return TypedActionResult.pass(newFocusStack);
-        }
-
-        // newFocus = empty, oldFocus != empty -> success oldFocus
-        if (newFocusStack.isEmpty() && oldFocusStack.getItem() instanceof FocusItem oldFocusItem) {
-            oldFocusItem.focusOnUnequipped(wandStack, oldFocusStack);
-            wandStack.remove(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM);
-            return TypedActionResult.success(oldFocusStack);
-        }
-
-        // newFocus != empty, oldFocus == empty -> success oldFocus
-        if (newFocusStack.getItem() instanceof FocusItem newFocusItem && oldFocusStack.isEmpty()) {
-            newFocusItem.focusOnEquipped(wandStack, newFocusStack);
-            wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
-            return TypedActionResult.success(oldFocusStack);
-        }
-
-        // newFocus != empty, oldFocus != empty -> success oldFocus
-        if (newFocusStack.getItem() instanceof FocusItem newFocusItem && oldFocusStack.getItem() instanceof FocusItem oldFocusItem) {
-            oldFocusItem.focusOnUnequipped(wandStack, oldFocusStack);
-            newFocusItem.focusOnEquipped(wandStack, newFocusStack);
-            wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
-            return TypedActionResult.success(oldFocusStack);
-        }
-
-        // newFocus is not empty, but not a focus item -> fail oldFocus
-        return TypedActionResult.fail(newFocusStack);
-    }
-
-    public TypedActionResult<ItemStack> exchangeFocuses1(ItemStack wandStack, ItemStack newFocusStack) {
-        var oldFocusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
-
         var removeOld = false;
         var insertNew = false;
 
@@ -344,11 +288,14 @@ public class WandItem extends Item {
             newFocusItem.focusOnEquipped(wandStack, newFocusStack);
         }
 
+        // newFocus != empty, oldFocus == empty -> success oldFocus
+        // newFocus != empty, oldFocus != empty -> success oldFocus
         if (insertNew) {
             wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
             return TypedActionResult.success(oldFocusStack);
         }
 
+        // newFocus = empty, oldFocus != empty -> success oldFocus
         if (removeOld) {
             wandStack.remove(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM);
             return TypedActionResult.success(oldFocusStack);

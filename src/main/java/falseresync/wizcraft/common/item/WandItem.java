@@ -1,11 +1,13 @@
 package falseresync.wizcraft.common.item;
 
+import falseresync.wizcraft.client.WizcraftKeybindings;
 import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.block.WorktableVariant;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.networking.report.WizcraftReports;
 import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPacket;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -250,9 +252,16 @@ public class WandItem extends Item {
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
+            tooltip.add(Text
+                    .translatable("tooltip.wizcraft.wand.active_focus", focusStack.getName())
+                    .styled(style -> style.withColor(Formatting.GRAY)));
             focusItem.focusAppendTooltip(stack, focusStack, context, tooltip, type);
         }
+        tooltip.add(Text
+                .translatable("tooltip.wizcraft.wand.change_focus", KeyBindingHelper.getBoundKeyOf(WizcraftKeybindings.TOOL_CONTROL).getLocalizedText())
+                .styled(style -> style.withColor(Formatting.GRAY).withItalic(true)));
     }
+
 
     // Custom wand methods
 

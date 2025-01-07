@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class FocusManager {
     public FocusManager() {
-        ClientPlayerInventoryEvents.CHANGED.register(inventory -> {
+        ClientPlayerInventoryEvents.CONTENTS_CHANGED.register(inventory -> {
             manage(inventory, false);
         });
     }

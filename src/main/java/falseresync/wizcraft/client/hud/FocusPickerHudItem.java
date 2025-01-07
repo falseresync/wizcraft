@@ -2,6 +2,7 @@ package falseresync.wizcraft.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import falseresync.lib.client.BetterDrawContext;
+import falseresync.wizcraft.client.WizcraftClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderTickCounter;
@@ -13,23 +14,21 @@ import java.util.LinkedList;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
-public class FocusPicker implements HudItem {
+public class FocusPickerHudItem implements HudItem {
     protected static final Identifier SELECTION_TEX = wid("textures/hud/wand/focus_picker_selection.png");
-    protected static final Identifier HINT_LEFT_TEX = wid("textures/hud/wand/focus_picker_hint_left.png");
-    protected static final Identifier HINT_RIGHT_TEX = wid("textures/hud/wand/focus_picker_hint_right.png");
     private static final int MARGIN = 2;
     private static final int SEL_TEX_W = 22;
     private static final int SEL_TEX_H = 22;
     private static final int ITEM_W = 16;
     private static final int ITEM_H = 16;
-    private static final int TEXT_H = 16;
+    private static final int TEXT_H = 8;
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
     private LinkedList<ItemStack> focuses = new LinkedList<>();
     private int remainingDisplayTicks = 0;
     private float opacity = 1;
 
-    public FocusPicker(MinecraftClient client, TextRenderer textRenderer) {
+    public FocusPickerHudItem(MinecraftClient client, TextRenderer textRenderer) {
         this.client = client;
         this.textRenderer = textRenderer;
     }
@@ -42,7 +41,9 @@ public class FocusPicker implements HudItem {
             var yOffset = (Math.min(focuses.size(), 3) - 1) * yOffsetPerItem;
             var widgetW = SEL_TEX_W;
             var widgetH = SEL_TEX_H + yOffset;
-            var x = 4;
+
+            var chargeDisplay = WizcraftClient.getHud().getWandChargeDisplay();
+            var x = 4 + (chargeDisplay.isVisible() ? chargeDisplay.getWidth() : 0);
             var y = context.getScaledWindowHeight() / 2 - widgetH / 2;
 
             context.enableScissor(x, y, x + widgetW, y + widgetH);
@@ -80,7 +81,7 @@ public class FocusPicker implements HudItem {
         view.scaleAround(scale, scale, 1f, x + ITEM_W / 2f, y + ITEM_H / 2f, 0);
         RenderSystem.applyModelViewMatrix();
 
-        if (shouldTint) context.setShaderColor(161 / 256f, 158 / 256f, 170 / 256f, opacity / 2);
+        if (shouldTint) context.setShaderColor(161 / 255f, 158 / 255f, 170 / 255f, opacity / 2);
 
         context.drawItemWithoutEntity(stack, x, y);
 
@@ -92,11 +93,17 @@ public class FocusPicker implements HudItem {
 
     @Override
     public void tick() {
+        if (client.player == null) {
+            hide();
+            return;
+        }
+
         if (remainingDisplayTicks > 0) {
             remainingDisplayTicks -= 1;
 
             if (remainingDisplayTicks == 0) {
-                focuses.clear();
+                hide();
+                return;
             }
         }
     }
@@ -107,6 +114,7 @@ public class FocusPicker implements HudItem {
 
     public void hide() {
         remainingDisplayTicks = 0;
+        focuses.clear();
     }
 
     public void upload(LinkedList<ItemStack> newFocuses) {

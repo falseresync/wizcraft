@@ -12,7 +12,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 @Environment(EnvType.CLIENT)
-public class MessageDisplay implements HudItem {
+public class MessageDisplayHudItem implements HudItem {
     private final Queue<MessageRequest> messageQueue = new PriorityQueue<>((a, b) -> {
         final int diff = b.priority - a.priority;
         if (diff == 0) {
@@ -27,7 +27,7 @@ public class MessageDisplay implements HudItem {
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
 
-    public MessageDisplay(MinecraftClient client, TextRenderer textRenderer) {
+    public MessageDisplayHudItem(MinecraftClient client, TextRenderer textRenderer) {
         this.client = client;
         this.textRenderer = textRenderer;
     }

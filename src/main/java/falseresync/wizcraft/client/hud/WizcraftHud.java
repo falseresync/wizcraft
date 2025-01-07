@@ -10,13 +10,15 @@ import net.minecraft.client.MinecraftClient;
 @Environment(EnvType.CLIENT)
 public class WizcraftHud {
     private final MinecraftClient client;
-    private final MessageDisplay messageDisplay;
-    private final FocusPicker focusPicker;
+    private final MessageDisplayHudItem messageDisplay;
+    private final FocusPickerHudItem focusPicker;
+    private final WandChargeDisplayHudItem wandChargeDisplay;
 
     public WizcraftHud(MinecraftClient client) {
         this.client = client;
-        messageDisplay = new MessageDisplay(client, client.textRenderer);
-        focusPicker = new FocusPicker(client, client.textRenderer);
+        messageDisplay = new MessageDisplayHudItem(client, client.textRenderer);
+        focusPicker = new FocusPickerHudItem(client, client.textRenderer);
+        wandChargeDisplay = new WandChargeDisplayHudItem(client, client.textRenderer);
         initEventListeners();
     }
 
@@ -25,6 +27,7 @@ public class WizcraftHud {
             var context = new BetterDrawContext(client, vanillaContext);
             messageDisplay.render(context, tickCounter);
             focusPicker.render(context, tickCounter);
+            wandChargeDisplay.render(context, tickCounter);
         });
 
         ClientTickEvents.START_WORLD_TICK.register(world -> {
@@ -32,14 +35,19 @@ public class WizcraftHud {
 
             messageDisplay.tick();
             focusPicker.tick();
+            wandChargeDisplay.tick();
         });
     }
 
-    public MessageDisplay getMessageDisplay() {
+    public MessageDisplayHudItem getMessageDisplay() {
         return messageDisplay;
     }
 
-    public FocusPicker getFocusPicker() {
+    public FocusPickerHudItem getFocusPicker() {
         return focusPicker;
+    }
+
+    public WandChargeDisplayHudItem getWandChargeDisplay() {
+        return wandChargeDisplay;
     }
 }

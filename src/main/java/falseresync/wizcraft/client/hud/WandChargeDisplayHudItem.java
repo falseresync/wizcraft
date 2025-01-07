@@ -1,6 +1,8 @@
 package falseresync.wizcraft.client.hud;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import falseresync.lib.client.BetterDrawContext;
+import falseresync.lib.math.Easing;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -26,8 +28,9 @@ public class WandChargeDisplayHudItem implements HudItem {
     private int currentCharge = 0;
     private int maxCharge = 0;
     private int remainingDisplayTicks = 0;
-    private float opacity = 1;
     private ItemStack wand;
+    private boolean animatingHide = false;
+    private int remainingAnimationTicks = 0;
 
     public WandChargeDisplayHudItem(MinecraftClient client, TextRenderer textRenderer) {
         this.client = client;
@@ -36,22 +39,26 @@ public class WandChargeDisplayHudItem implements HudItem {
 
     @Override
     public void render(BetterDrawContext context, RenderTickCounter tickCounter) {
-        if (isVisible()) {
-            opacity = Math.min(1, remainingDisplayTicks / 10f);
-            var x = 2;
-            var y = context.getScaledWindowHeight() / 2 - TEX_H / 2;
+        if (isVisible() || animatingHide) {
+            float opacity = animatingHide
+                    ? remainingAnimationTicks / 10f
+                    : Math.min(1, remainingDisplayTicks / 10f);
+            float x = animatingHide
+                    ? (float) (2 - (10 - remainingAnimationTicks * Easing.easeInOutCubic(remainingAnimationTicks / 10d)))
+                    : 2;
+            float y = context.getScaledWindowHeight() / 2f - TEX_H / 2f;
 
-            context.enableScissor(x, y, x + TEX_W, y + TEX_H);
+            RenderSystem.enableBlend();
             context.setShaderColor(1, 1, 1, opacity);
 
-            context.drawRect(BAR_TEX, x, y, TEX_W, TEX_H, TEX_W, TEX_H);
+            context.drawNonDiscreteRect(BAR_TEX, x, y, TEX_W, TEX_H);
 
             var step = getStep();
             var v = OVERLAY_V + step;
             var h = OVERLAY_H - step;
-            context.drawTexture(OVERLAY_TEX, x + OVERLAY_U, y + v, OVERLAY_U, v, OVERLAY_W, h, TEX_W, TEX_H);
+            context.drawNonDiscreteRect(OVERLAY_TEX, x, y, OVERLAY_U, v, OVERLAY_W, h, TEX_W, TEX_H);
 
-            context.disableScissor();
+            RenderSystem.disableBlend();
         }
     }
 
@@ -62,7 +69,7 @@ public class WandChargeDisplayHudItem implements HudItem {
     @Override
     public void tick() {
         if (client.player == null) {
-            hide();
+            clear();
             return;
         }
 
@@ -70,7 +77,8 @@ public class WandChargeDisplayHudItem implements HudItem {
             remainingDisplayTicks -= 1;
 
             if (remainingDisplayTicks == 0) {
-                hide();
+                setAnimateHide();
+                clear();
                 return;
             }
         }
@@ -79,6 +87,14 @@ public class WandChargeDisplayHudItem implements HudItem {
             currentCharge = wand.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
             maxCharge = wand.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
         }
+
+        if (remainingAnimationTicks > 0) {
+            remainingAnimationTicks -= 1;
+
+            if (remainingAnimationTicks == 0) {
+                animatingHide = false;
+            }
+        }
     }
 
     public void show() {
@@ -86,8 +102,20 @@ public class WandChargeDisplayHudItem implements HudItem {
     }
 
     public void hide() {
+        if (isVisible()) {
+            setAnimateHide();
+        }
+        clear();
+    }
+
+    private void clear() {
         remainingDisplayTicks = 0;
         wand = null;
+    }
+
+    private void setAnimateHide() {
+        animatingHide = true;
+        remainingAnimationTicks = 10;
     }
 
     public void upload(ItemStack stack) {

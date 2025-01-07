@@ -46,7 +46,7 @@ public class FocusPickerHudItem implements HudItem {
             var x = 4 + (chargeDisplay.isVisible() ? chargeDisplay.getWidth() : 0);
             var y = context.getScaledWindowHeight() / 2 - widgetH / 2;
 
-            context.enableScissor(x, y, x + widgetW, y + widgetH);
+            RenderSystem.enableBlend();
             context.setShaderColor(1, 1, 1, opacity);
 
             var selTexX = x;
@@ -71,7 +71,7 @@ public class FocusPickerHudItem implements HudItem {
                 paintScaledTinted(context, next2, itemX, item3Y, 0.70f, true);
             }
 
-            context.disableScissor();
+            RenderSystem.disableBlend();
         }
     }
 

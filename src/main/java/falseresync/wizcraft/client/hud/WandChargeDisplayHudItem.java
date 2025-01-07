@@ -23,13 +23,14 @@ public class WandChargeDisplayHudItem implements HudItem {
     private static final int OVERLAY_V = 16;
     private static final int OVERLAY_W = 2;
     private static final int OVERLAY_H = 32;
+    private static final int ANIMATION_DURATION = 10;
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
     private int currentCharge = 0;
     private int maxCharge = 0;
-    private int remainingDisplayTicks = 0;
+    private boolean isVisible = false;
     private ItemStack wand;
-    private boolean animatingHide = false;
+    private boolean animating = false;
     private int remainingAnimationTicks = 0;
 
     public WandChargeDisplayHudItem(MinecraftClient client, TextRenderer textRenderer) {
@@ -39,13 +40,9 @@ public class WandChargeDisplayHudItem implements HudItem {
 
     @Override
     public void render(BetterDrawContext context, RenderTickCounter tickCounter) {
-        if (isVisible() || animatingHide) {
-            float opacity = animatingHide
-                    ? remainingAnimationTicks / 10f
-                    : Math.min(1, remainingDisplayTicks / 10f);
-            float x = animatingHide
-                    ? (float) (2 - (10 - remainingAnimationTicks * Easing.easeInOutCubic(remainingAnimationTicks / 10d)))
-                    : 2;
+        if (isVisible() || animating) {
+            float opacity = getAnimatedOpacity();
+            float x = getAnimatedX();
             float y = context.getScaledWindowHeight() / 2f - TEX_H / 2f;
 
             RenderSystem.enableBlend();
@@ -62,6 +59,25 @@ public class WandChargeDisplayHudItem implements HudItem {
         }
     }
 
+    private float getAnimatedOpacity() {
+        if (animating) {
+            return isVisible()
+                    ? 1 - (float) remainingAnimationTicks / ANIMATION_DURATION
+                    : (float) remainingAnimationTicks / ANIMATION_DURATION;
+        }
+        return 1;
+    }
+
+    private float getAnimatedX() {
+        if (animating) {
+            return isVisible()
+                    ? (float) (2 - remainingAnimationTicks * Easing.easeInOutCubic((double) remainingAnimationTicks / ANIMATION_DURATION))
+                    : (float) (2 - (ANIMATION_DURATION - remainingAnimationTicks * Easing.easeInOutCubic((double) remainingAnimationTicks / ANIMATION_DURATION)));
+        }
+
+        return 2;
+    }
+
     private int getStep() {
         return Math.clamp(Math.round(OVERLAY_H - (float) (currentCharge * OVERLAY_H) / maxCharge), 0, OVERLAY_H);
     }
@@ -73,16 +89,6 @@ public class WandChargeDisplayHudItem implements HudItem {
             return;
         }
 
-        if (remainingDisplayTicks > 0) {
-            remainingDisplayTicks -= 1;
-
-            if (remainingDisplayTicks == 0) {
-                setAnimateHide();
-                clear();
-                return;
-            }
-        }
-
         if (wand != null) {
             currentCharge = wand.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
             maxCharge = wand.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
@@ -92,30 +98,33 @@ public class WandChargeDisplayHudItem implements HudItem {
             remainingAnimationTicks -= 1;
 
             if (remainingAnimationTicks == 0) {
-                animatingHide = false;
+                animating = false;
             }
         }
     }
 
     public void show() {
-        remainingDisplayTicks = 80;
+        if (!isVisible) {
+            animate();
+        }
+        isVisible = true;
     }
 
     public void hide() {
         if (isVisible()) {
-            setAnimateHide();
+            animate();
         }
         clear();
     }
 
     private void clear() {
-        remainingDisplayTicks = 0;
+        isVisible = false;
         wand = null;
     }
 
-    private void setAnimateHide() {
-        animatingHide = true;
-        remainingAnimationTicks = 10;
+    private void animate() {
+        animating = true;
+        remainingAnimationTicks = ANIMATION_DURATION;
     }
 
     public void upload(ItemStack stack) {
@@ -123,7 +132,7 @@ public class WandChargeDisplayHudItem implements HudItem {
     }
 
     public boolean isVisible() {
-        return remainingDisplayTicks > 0 && wand != null;
+        return isVisible && wand != null;
     }
 
     public int getWidth() {

@@ -10,13 +10,11 @@ import net.minecraft.client.MinecraftClient;
 @Environment(EnvType.CLIENT)
 public class WizcraftHud {
     private final MinecraftClient client;
-    private final MessageDisplayHudItem messageDisplay;
     private final FocusPickerHudItem focusPicker;
     private final WandChargeDisplayHudItem wandChargeDisplay;
 
     public WizcraftHud(MinecraftClient client) {
         this.client = client;
-        messageDisplay = new MessageDisplayHudItem(client, client.textRenderer);
         focusPicker = new FocusPickerHudItem(client, client.textRenderer);
         wandChargeDisplay = new WandChargeDisplayHudItem(client, client.textRenderer);
         initEventListeners();
@@ -25,7 +23,6 @@ public class WizcraftHud {
     private void initEventListeners() {
         HudRenderCallback.EVENT.register((vanillaContext, tickCounter) -> {
             var context = new BetterDrawContext(client, vanillaContext);
-            messageDisplay.render(context, tickCounter);
             focusPicker.render(context, tickCounter);
             wandChargeDisplay.render(context, tickCounter);
         });
@@ -33,14 +30,9 @@ public class WizcraftHud {
         ClientTickEvents.START_WORLD_TICK.register(world -> {
             if (client.isPaused()) return;
 
-            messageDisplay.tick();
             focusPicker.tick();
             wandChargeDisplay.tick();
         });
-    }
-
-    public MessageDisplayHudItem getMessageDisplay() {
-        return messageDisplay;
     }
 
     public FocusPickerHudItem getFocusPicker() {

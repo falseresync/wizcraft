@@ -40,7 +40,7 @@ public class FocusManager {
         }
 
         if (focusStacks.isEmpty()) {
-            WizcraftClient.getHud().getMessageDisplay().postImportant(Text.translatable("hud.wizcraft.wand.no_focuses"));
+            MinecraftClient.getInstance().inGameHud.setOverlayMessage(Text.translatable("hud.wizcraft.wand.no_focuses"), false);
             return;
         }
         var focusPicker = WizcraftClient.getHud().getFocusPicker();

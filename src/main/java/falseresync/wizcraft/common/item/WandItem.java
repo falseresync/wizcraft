@@ -175,8 +175,8 @@ public class WandItem extends Item {
     }
 
 //    @Override
-//    public UseAction getUseAction(ItemStack stack) {
-//        return super.getUseAction(stack);
+//    public UseAction getUseAction(ItemStack focusStack) {
+//        return super.getUseAction(focusStack);
 //    }
 
     @Override

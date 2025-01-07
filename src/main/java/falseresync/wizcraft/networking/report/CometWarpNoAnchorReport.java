@@ -9,6 +9,6 @@ public class CometWarpNoAnchorReport implements Report {
     @Override
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizcraftClient.hud.getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.no_anchor"));
+        WizcraftClient.getHud().getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.no_anchor"));
     }
 }

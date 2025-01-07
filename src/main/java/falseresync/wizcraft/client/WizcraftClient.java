@@ -8,7 +8,16 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 
 public class WizcraftClient implements ClientModInitializer {
-    public static WizcraftHud hud;
+    private static WizcraftHud hud;
+    private static FocusManager focusManager;
+
+    public static WizcraftHud getHud() {
+        return hud;
+    }
+
+    public static FocusManager getFocusManager() {
+        return focusManager;
+    }
 
     @Override
     public void onInitializeClient() {
@@ -16,9 +25,12 @@ public class WizcraftClient implements ClientModInitializer {
         WizcraftRenderers.init();
         WizcraftKeybindings.init();
         WizcraftNetworkingClient.registerReceivers();
+        ClientPlayerInventoryEvents.init();
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             hud = new WizcraftHud(client);
         });
+
+        focusManager = new FocusManager();
     }
 }

@@ -13,6 +13,6 @@ public class WandAlreadyFullyChargedReport implements Report {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_AMETHYST_BLOCK_HIT);
-        WizcraftClient.hud.getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.already_charged"));
+        WizcraftClient.getHud().getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.already_charged"));
     }
 }

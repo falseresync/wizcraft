@@ -13,7 +13,7 @@ public final class CommonKeys {
     }
 
     public static final String ID = "id";
-    public static final String STACK = "stack";
+    public static final String STACK = "focusStack";
     public static final String WAND = "wand";
     public static final String MAX_CHARGE = "max_charge";
     public static final String CHARGE = "charge";

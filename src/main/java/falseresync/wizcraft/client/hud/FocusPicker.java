@@ -1,15 +1,15 @@
 package falseresync.wizcraft.client.hud;
 
-import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.systems.RenderSystem;
 import falseresync.lib.client.BetterDrawContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import org.joml.Matrix4fStack;
 
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
@@ -17,10 +17,17 @@ public class FocusPicker implements HudItem {
     protected static final Identifier SELECTION_TEX = wid("textures/hud/wand/focus_picker_selection.png");
     protected static final Identifier HINT_LEFT_TEX = wid("textures/hud/wand/focus_picker_hint_left.png");
     protected static final Identifier HINT_RIGHT_TEX = wid("textures/hud/wand/focus_picker_hint_right.png");
+    private static final int MARGIN = 2;
+    private static final int SEL_TEX_W = 22;
+    private static final int SEL_TEX_H = 22;
+    private static final int ITEM_W = 16;
+    private static final int ITEM_H = 16;
+    private static final int TEXT_H = 16;
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
-//    private Deque<FocusStack> focuses = new ArrayDeque<>();
+    private LinkedList<ItemStack> focuses = new LinkedList<>();
     private int remainingDisplayTicks = 0;
+    private float opacity = 1;
 
     public FocusPicker(MinecraftClient client, TextRenderer textRenderer) {
         this.client = client;
@@ -30,133 +37,103 @@ public class FocusPicker implements HudItem {
     @Override
     public void render(BetterDrawContext context, RenderTickCounter tickCounter) {
         if (isVisible()) {
-            float opacity = Math.min(1, remainingDisplayTicks / 10f);
-            var centerX = context.getScaledWindowWidth() / 2;
-            var x = centerX - 9;
-            var y = 4;
+            opacity = Math.min(1, remainingDisplayTicks / 10f);
+            var yOffsetPerItem = ITEM_H + MARGIN;
+            var yOffset = (Math.min(focuses.size(), 3) - 1) * yOffsetPerItem;
+            var widgetW = SEL_TEX_W;
+            var widgetH = SEL_TEX_H + yOffset;
+            var x = 4;
+            var y = context.getScaledWindowHeight() / 2 - widgetH / 2;
 
-            RenderSystem.enableDepthTest();
-            RenderSystem.enableBlend();
-            RenderSystem.setShaderColor(1, 1, 1, opacity);
+            context.enableScissor(x, y, x + widgetW, y + widgetH);
+            context.setShaderColor(1, 1, 1, opacity);
 
-            context.drawSquare(SELECTION_TEX, calcX(x, 22), calcY(y, 22), 22);
+            var selTexX = x;
+            var selTexY = y + yOffset;
+            context.drawSquare(SELECTION_TEX, selTexX, selTexY, 22);
 
-            var labelY = y + 18 + 4;
-//            context.drawCenteredTextWithShadow(textRenderer, getPicked().toItemStack().getName(), centerX, labelY, BetterDrawContext.NO_TINT);
-//
-//            var tooltip = getPicked().getFocus().getTooltip(client.player, Item.TooltipContext.DEFAULT);
-//            var tooltipY = labelY + textRenderer.fontHeight + 2;
-//            for (int i = 0; i < tooltip.size(); i++) {
-//                context.drawCenteredTextWithShadow(textRenderer, tooltip.get(i), centerX, tooltipY + i * textRenderer.fontHeight, BetterDrawContext.NO_TINT);
-//            }
-//
-//            switch (focuses.size()) {
-//                case 1 -> paint1(context, x, y);
-//                case 2 -> paint2(context, x, y);
-//                case 3 -> paint3(context, x, y);
-//                default -> paintMany(context, x, y);
-//            }
+            var itemX = x + widgetW / 2 - ITEM_W / 2;
 
-            RenderSystem.disableBlend();
+            var selected = focuses.peekFirst();
+            var item1Y = y + SEL_TEX_H / 2 - ITEM_H / 2 + yOffset;
+            context.drawItemWithoutEntity(selected, itemX, item1Y);
+
+            if (focuses.size() > 1) {
+                var next = focuses.get(1);
+                var item2Y = y + Math.min(focuses.size() - 2, 1) * yOffsetPerItem + yOffsetPerItem / 2 - ITEM_H / 2;
+                paintScaledTinted(context, next, itemX, item2Y, 0.85f, false);
+            }
+
+            if (focuses.size() > 2) {
+                var next2 = focuses.get(2);
+                var item3Y = y + yOffsetPerItem / 2 - ITEM_H / 2;
+                paintScaledTinted(context, next2, itemX, item3Y, 0.70f, true);
+            }
+
+            context.disableScissor();
         }
     }
 
-    protected int calcX(int x, int width) {
-        return x + 9 - (width / 2);
-    }
+    protected void paintScaledTinted(BetterDrawContext context, ItemStack stack, int x, int y, float scale, boolean shouldTint) {
+        Matrix4fStack view = RenderSystem.getModelViewStack();
+        view.pushMatrix();
+        view.scaleAround(scale, scale, 1f, x + ITEM_W / 2f, y + ITEM_H / 2f, 0);
+        RenderSystem.applyModelViewMatrix();
 
-    protected int calcY(int y, int height) {
-        return y + 9 - (height / 2);
-    }
+        if (shouldTint) context.setShaderColor(161 / 256f, 158 / 256f, 170 / 256f, opacity / 2);
 
-    protected void paint1(BetterDrawContext context, int x, int y) {
-//        var selected = focuses.peekFirst();
-//        //noinspection DataFlowIssue
-//        context.drawItemWithoutEntity(selected.toItemStack(), calcX(x, 16) - 20, calcY(y, 16));
-    }
+        context.drawItemWithoutEntity(stack, x, y);
 
-    protected void paint2(BetterDrawContext context, int x, int y) {
-//        // Polling here allows to peek the next focus
-//        var selected = focuses.pollFirst();
-//        //noinspection DataFlowIssue
-//        context.drawItemWithoutEntity(selected.toItemStack(), calcX(x, 16), calcY(y, 16));
-//
-//        var next = focuses.peekFirst();
-//        //noinspection DataFlowIssue
-//        context.drawItemWithoutEntity(next.toItemStack(), calcX(x, 16) + 20, calcY(y, 16));
-//
-//        // Reset the deque
-//        focuses.offerFirst(selected);
-    }
+        if (shouldTint) context.setShaderColor(1, 1, 1, opacity);
 
-    protected void paint3(BetterDrawContext context, int x, int y) {
-//        var last = focuses.peekLast();
-//        //noinspection DataFlowIssue
-//        context.drawItemWithoutEntity(last.toItemStack(), calcX(x, 16) - 20, calcY(y, 16));
-//
-//        paint2(context, x, y);
-    }
-
-    protected void paintMany(BetterDrawContext context, int x, int y) {
-        context.drawSquare(HINT_LEFT_TEX, calcX(x, 16) - 36, calcY(y, 16), 16);
-        context.drawSquare(HINT_RIGHT_TEX, calcX(x, 16) + 36, calcY(y, 16), 16);
-        paint3(context, x, y);
+        view.popMatrix();
+        RenderSystem.applyModelViewMatrix();
     }
 
     @Override
     public void tick() {
-        if (isVisible()) {
+        if (remainingDisplayTicks > 0) {
             remainingDisplayTicks -= 1;
+
+            if (remainingDisplayTicks == 0) {
+                focuses.clear();
+            }
         }
     }
 
-//    public FocusStack update(Deque<FocusStack> focuses) {
-//        Preconditions.checkArgument(!focuses.isEmpty(), "Focus picker expects at least one FocusStack, got none");
-//        resetDisplayTicks();
-//        setFocusesIfDifferent(focuses);
-//        pickNext();
-//        return getPicked();
-//    }
+    public void show() {
+        remainingDisplayTicks = 80;
+    }
 
-    public boolean isVisible() {
-        return remainingDisplayTicks > 0; //&& !focuses.isEmpty();
+    public void hide() {
+        remainingDisplayTicks = 0;
+    }
+
+    public void upload(LinkedList<ItemStack> newFocuses) {
+        if (focuses.isEmpty()) {
+            focuses = newFocuses;
+        } else if (newFocuses.size() != focuses.size()) {
+            var currentlyPicked = focuses.peekFirst();
+            focuses = newFocuses;
+            for (ItemStack focus : focuses) {
+                if (ItemStack.areItemsAndComponentsEqual(focus, currentlyPicked)) {
+                    focuses.remove(focus);
+                    break;
+                }
+            }
+            focuses.addFirst(currentlyPicked);
+        }
     }
 
     public void pickNext() {
-        if (isVisible()) {
-//            this.focuses.offerLast(this.focuses.pollFirst());
-        }
+        focuses.addLast(focuses.removeFirst());
     }
 
-//    public FocusStack getPicked() {
-//        return focuses.peekFirst();
-//    }
+    public ItemStack getCurrentlyPicked() {
+        return focuses.peekFirst();
+    }
 
-//    private void setFocusesIfDifferent(Deque<FocusStack> focuses) {
-//        if (this.focuses.isEmpty()) {
-//            this.focuses = focuses;
-//            return;
-//        }
-//
-//        var previouslyPicked = getPicked();
-//        this.focuses = focuses;
-//        while (previouslyPicked.getFocus().getType() != getPicked().getFocus().getType()) {
-//            pickNext();
-//        }
-//
-////        // If the player has picked up a focus while the picker was open, the deque should be updated
-////        // Assume that the focuses didn't change if their count didn't change
-////        if (this.focuses.size() != focuses.size()) {
-////            var picked = this.focuses.peekFirst();
-////            this.focuses = focuses;
-////            if (picked == null) return;
-////            while (picked.equals(this.focuses.peekFirst())) {
-////                pickNext();
-////            }
-////        }
-//    }
-
-    private void resetDisplayTicks() {
-        remainingDisplayTicks = 80;
+    public boolean isVisible() {
+        return remainingDisplayTicks > 0 && !focuses.isEmpty();
     }
 }

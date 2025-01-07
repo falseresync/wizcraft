@@ -13,6 +13,6 @@ public class WandCannotChargeReport implements Report {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizcraftClient.hud.getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.cannot_charge"));
+        WizcraftClient.getHud().getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.cannot_charge"));
     }
 }

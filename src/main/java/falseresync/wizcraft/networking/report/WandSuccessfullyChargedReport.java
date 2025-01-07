@@ -19,7 +19,7 @@ public class WandSuccessfullyChargedReport implements MultiplayerReport {
     @Environment(EnvType.CLIENT)
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSound(WizcraftSounds.SUCCESSFULLY_CHARGED, 1, 1);
-        WizcraftClient.hud.getMessageDisplay().postImportant(Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)));
+        WizcraftClient.getHud().getMessageDisplay().postImportant(Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)));
     }
 
     @Override

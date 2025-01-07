@@ -1,12 +1,9 @@
 package falseresync.wizcraft.client;
 
-import falseresync.wizcraft.common.item.WandItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -27,17 +24,9 @@ public final class WizcraftKeybindings {
                 return;
             }
 
-            handleToolControl(client, client.player);
-        });
-    }
-
-    private static void handleToolControl(MinecraftClient client, ClientPlayerEntity player) {
-        while (TOOL_CONTROL.wasPressed()) {
-            var wandStack = player.getMainHandStack();
-            if (!(wandStack.getItem() instanceof WandItem)) {
-                return;
+            while (TOOL_CONTROL.wasPressed()) {
+                WizcraftClient.getFocusManager().onKeyPressed(client, client.player);
             }
-
-        }
+        });
     }
 }

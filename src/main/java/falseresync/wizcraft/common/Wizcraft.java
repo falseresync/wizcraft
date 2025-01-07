@@ -12,6 +12,7 @@ import falseresync.wizcraft.common.particle.WizcraftParticleTypes;
 import falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
 import falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import falseresync.wizcraft.networking.WizcraftNetworking;
+import falseresync.wizcraft.networking.WizcraftNetworkingServer;
 import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
@@ -79,5 +80,6 @@ public class Wizcraft implements ModInitializer {
         WizcraftItemTags.init();
         WizcraftSounds.init();
         WizcraftNetworking.registerPackets();
+        WizcraftNetworkingServer.registerReceivers();
     }
 }

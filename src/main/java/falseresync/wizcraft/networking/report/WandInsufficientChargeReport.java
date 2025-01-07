@@ -10,6 +10,6 @@ public class WandInsufficientChargeReport implements Report {
     @Override
     public void executeOnClient(ClientPlayerEntity player) {
         player.playSoundIfNotSilent(SoundEvents.BLOCK_LEVER_CLICK);
-        WizcraftClient.hud.getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.insufficient_charge").styled(style -> style.withColor(Formatting.DARK_RED)));
+        WizcraftClient.getHud().getMessageDisplay().post(Text.translatable("hud.wizcraft.wand.insufficient_charge").styled(style -> style.withColor(Formatting.DARK_RED)));
     }
 }

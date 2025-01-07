@@ -1,9 +1,9 @@
 {
   "required": true,
-  "package": "falseresync.wizcraft.common.mixin",
+  "package": "falseresync.wizcraft.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "LightningEntityMixin"
+    "PlayerInventoryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

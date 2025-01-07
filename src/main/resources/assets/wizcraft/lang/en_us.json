@@ -7,6 +7,8 @@
   "item.wizcraft.comet_warp_focus": "Comet Warp focus",
   "block.wizcraft.worktable": "Worktable",
   "block.wizcraft.lensing_pedestal": "Lensing pedestal",
+  "tag.item.wizcraft.focuses": "Focuses",
+  "tag.item.wizcraft.wands": "Wands",
   "entity.wizcraft.star_projectile": "Star projectile",
   "tooltip.wizcraft.wand.active_focus": "Active focus: %s",
   "tooltip.wizcraft.wand.change_focus": "Press [%s] to change focus",

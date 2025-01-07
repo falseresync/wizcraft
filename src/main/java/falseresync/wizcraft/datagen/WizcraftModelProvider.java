@@ -13,11 +13,8 @@ import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftModelProvider extends FabricModelProvider {
     public static final TextureKey KEY_OVERLAY = TextureKey.of("overlay");
-    public static final Model MODEL_TEMPLATE_WORKTABLE = new Model(
-            Optional.of(wid("block/template_worktable")), Optional.empty(), KEY_OVERLAY);
-    public static final TexturedModel.Factory WORKTABLE = TexturedModel.makeFactory(
-            block -> new TextureMap().put(KEY_OVERLAY, TextureMap.getSubId(block, "_overlay")),
-            MODEL_TEMPLATE_WORKTABLE);
+    public static final Model MODEL_TEMPLATE_WORKTABLE = new Model(Optional.of(wid("block/template_worktable")), Optional.empty(), KEY_OVERLAY);
+    public static final TexturedModel.Factory WORKTABLE = TexturedModel.makeFactory(block -> new TextureMap().put(KEY_OVERLAY, TextureMap.getSubId(block, "_overlay")), MODEL_TEMPLATE_WORKTABLE);
 
     public WizcraftModelProvider(FabricDataOutput output) {
         super(output);
@@ -25,6 +22,9 @@ public class WizcraftModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+        createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.LENS);
+        createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.LENSING_PEDESTAL);
+
         var dummyWorktableModelId = wid("block/dummy_worktable");
         blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(
                 WizcraftBlocks.DUMMY_WORKTABLE,
@@ -33,13 +33,6 @@ public class WizcraftModelProvider extends FabricModelProvider {
 
         createWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CRAFTING_WORKTABLE);
         createWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CHARGING_WORKTABLE);
-
-        var lensingPedestalModelId = ModelIds.getBlockModelId(WizcraftBlocks.LENSING_PEDESTAL);
-        blockStateModelGenerator.blockStateCollector.accept(
-                VariantsBlockStateSupplier.create(
-                        WizcraftBlocks.LENSING_PEDESTAL,
-                        BlockStateVariant.create().put(VariantSettings.MODEL, lensingPedestalModelId)));
-        blockStateModelGenerator.registerParentedItemModel(WizcraftBlocks.LENSING_PEDESTAL, lensingPedestalModelId);
     }
 
     private void createWorktableVariant(BlockStateModelGenerator blockStateModelGenerator, Block block) {
@@ -49,6 +42,15 @@ public class WizcraftModelProvider extends FabricModelProvider {
                         BlockStateVariant.create().put(
                                 VariantSettings.MODEL,
                                 WORKTABLE.upload(block, blockStateModelGenerator.modelCollector))));
+    }
+
+    private void createBasicBlockWithItem(BlockStateModelGenerator blockStateModelGenerator, Block block) {
+        var blockModelId = ModelIds.getBlockModelId(block);
+        blockStateModelGenerator.blockStateCollector.accept(
+                VariantsBlockStateSupplier.create(
+                        block,
+                        BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId)));
+        blockStateModelGenerator.registerParentedItemModel(block, blockModelId);
     }
 
     @Override

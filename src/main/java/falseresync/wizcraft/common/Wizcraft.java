@@ -1,5 +1,6 @@
 package falseresync.wizcraft.common;
 
+import eu.midnightdust.lib.config.MidnightConfig;
 import falseresync.lib.registry.AutoRegistry;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
@@ -65,6 +66,7 @@ public class Wizcraft implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        MidnightConfig.init(MOD_ID, WizcraftConfig.class);
         WizcraftBlocks.init();
         WizcraftItems.init();
         new AutoRegistry(MOD_ID, LOGGER)

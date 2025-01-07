@@ -1,11 +1,10 @@
 {
   "itemGroup.wizcraft": "Wizcraft",
   "item.wizcraft.wand": "Wand",
-  "item.wizcraft.generic_simple_focus": "%s focus",
-  "focus.wizcraft.charging": "Charging",
-  "focus.wizcraft.starshooter": "Starshooter",
-  "focus.wizcraft.lightning": "Lightning",
-  "focus.wizcraft.comet_warp": "Comet Warp",
+  "item.wizcraft.charging_focus": "Charging focus",
+  "item.wizcraft.starshooter_focus": "Starshooter focus",
+  "item.wizcraft.lightning_focus": "Lightning focus",
+  "item.wizcraft.comet_warp_focus": "Comet Warp focus",
   "block.wizcraft.worktable": "Worktable",
   "block.wizcraft.lensing_pedestal": "Lensing pedestal",
   "entity.wizcraft.star_projectile": "Star projectile",
@@ -30,5 +29,6 @@
   "wizcraft.midnightconfig.title": "Wizcraft Config",
   "wizcraft.midnightconfig.category.cheats": "Cheats",
   "wizcraft.midnightconfig.expendWandChargeInSurvival": "Expend Wand charge in survival",
+  "wizcraft.midnightconfig.expendWandChargeInCreative": "Expend Wand charge in creative",
   "emi.category.wizcraft.lensed_worktable": "Lensed worktable"
 }

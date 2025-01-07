@@ -1,5 +1,6 @@
 package falseresync.wizcraft.common.item;
 
+import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.block.WorktableVariant;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
@@ -22,6 +23,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -258,7 +260,10 @@ public class WandItem extends Item {
         return stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0) >= stack.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
     }
 
-    public boolean tryExpendCharge(ItemStack stack, int cost) {
+    public boolean tryExpendCharge(ItemStack stack, int cost, @Nullable PlayerEntity user) {
+        if (user != null && (user.isCreative() && !WizcraftConfig.expendWandChargeInCreative || !WizcraftConfig.expendWandChargeInSurvival)) {
+            return true;
+        }
         var charge = stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
         if (charge >= cost) {
             stack.apply(WizcraftDataComponents.WAND_CHARGE, charge, current -> current - cost);

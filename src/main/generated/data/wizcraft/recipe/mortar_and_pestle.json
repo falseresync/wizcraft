@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "f": {
+      "item": "minecraft:flint"
+    },
+    "i": {
+      "item": "minecraft:iron_nugget"
+    },
+    "s": {
+      "item": "minecraft:smooth_stone_slab"
+    }
+  },
+  "pattern": [
+    "i",
+    "f",
+    "s"
+  ],
+  "result": {
+    "count": 1,
+    "id": "wizcraft:mortar_and_pestle"
+  }
+}

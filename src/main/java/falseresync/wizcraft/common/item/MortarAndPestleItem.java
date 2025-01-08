@@ -11,11 +11,11 @@ public class MortarAndPestleItem extends Item {
     @Override
     public ItemStack getRecipeRemainder(ItemStack stack) {
         var damage = stack.getDamage();
-        if (damage == 1) {
+        if (damage + 1 == stack.getMaxDamage()) {
             return ItemStack.EMPTY;
         } else {
-            stack.setDamage(damage - 1);
+            stack.setDamage(damage + 1);
+            return stack.copy();
         }
-        return super.getRecipeRemainder(stack);
     }
 }

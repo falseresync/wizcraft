@@ -5,6 +5,10 @@ import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.datagen.recipe.LensedWorktableRecipeJsonBuilder;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
+import net.minecraft.advancement.AdvancementCriterion;
+import net.minecraft.advancement.criterion.Criteria;
+import net.minecraft.advancement.criterion.TickCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -45,16 +49,25 @@ public class WizcraftRecipeProvider extends FabricRecipeProvider {
                 .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
                 .offerTo(exporter, lwPrefix(item(WizcraftItems.COMET_WARP_FOCUS)));
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.MORTAR_AND_PESTLE)
+                .input('i', Items.IRON_NUGGET)
+                .input('f', Items.FLINT)
+                .input('s', Items.SMOOTH_STONE_SLAB)
+                .pattern("i")
+                .pattern("f")
+                .pattern("s")
+                .criterion("unlock_right_away", TickCriterion.Conditions.createTick())
+                .offerTo(exporter, item(WizcraftItems.MORTAR_AND_PESTLE));
+
         ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND_CORE)
                 .input(Items.DIAMOND)
                 .input(Items.AMETHYST_SHARD)
                 .input(Items.REDSTONE)
                 .input(Ingredient.ofItems(Items.SLIME_BALL, Items.HONEY_BOTTLE))
-                .input(Items.FLINT)
-                .input(Items.BOWL)
+                .input(WizcraftItems.MORTAR_AND_PESTLE)
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
                 .criterion("has_amethyst", conditionsFromItem(Items.AMETHYST_SHARD))
-                .offerTo(exporter, item(WizcraftItems.WAND));
+                .offerTo(exporter, item(WizcraftItems.WAND_CORE));
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND)
                 .input('d', Items.DIAMOND)

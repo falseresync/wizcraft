@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    [
+      {
+        "item": "minecraft:slime_ball"
+      },
+      {
+        "item": "minecraft:honey_bottle"
+      }
+    ],
+    {
+      "item": "wizcraft:mortar_and_pestle"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "wizcraft:wand_core"
+  }
+}

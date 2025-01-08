@@ -14,7 +14,6 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
@@ -22,10 +21,7 @@ import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
-
 public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
-    public static final Identifier TYPE_ID = wid("lensed_worktable");
     private final ItemStack result;
     private final int craftingTime;
     private final Ingredient worktableInput;

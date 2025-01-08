@@ -8,9 +8,11 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
@@ -42,6 +44,17 @@ public class WizcraftRecipeProvider extends FabricRecipeProvider {
                 .pedestalInput(Ingredient.ofItems(Items.ENDER_PEARL))
                 .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
                 .offerTo(exporter, lwPrefix(item(WizcraftItems.COMET_WARP_FOCUS)));
+
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND_CORE)
+                .input(Items.DIAMOND)
+                .input(Items.AMETHYST_SHARD)
+                .input(Items.REDSTONE)
+                .input(Ingredient.ofItems(Items.SLIME_BALL, Items.HONEY_BOTTLE))
+                .input(Items.FLINT)
+                .input(Items.BOWL)
+                .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+                .criterion("has_amethyst", conditionsFromItem(Items.AMETHYST_SHARD))
+                .offerTo(exporter, item(WizcraftItems.WAND));
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND)
                 .input('d', Items.DIAMOND)

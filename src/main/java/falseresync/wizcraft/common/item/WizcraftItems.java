@@ -1,6 +1,7 @@
 package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.common.block.WizcraftBlocks;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -13,6 +14,8 @@ import java.util.function.Function;
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftItems {
+    public static final Item WAND_CORE = r("wand_core", Item::new, new Item.Settings());
+
     public static final WandItem WAND = r("wand", WandItem::new, new Item.Settings().maxCount(1));
 
     public static final Item.Settings FOCUS_SETTINGS = new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON);

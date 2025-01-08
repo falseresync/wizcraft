@@ -2,19 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "d": {
-      "item": "minecraft:diamond"
-    },
     "g": {
       "item": "minecraft:gold_ingot"
     },
     "s": {
-      "item": "minecraft:stick"
+      "item": "wizcraft:metallized_stick"
+    },
+    "w": {
+      "item": "wizcraft:wand_core"
     }
   },
   "pattern": [
-    " sd",
-    " gs",
+    "  w",
+    " g ",
     "s  "
   ],
   "result": {

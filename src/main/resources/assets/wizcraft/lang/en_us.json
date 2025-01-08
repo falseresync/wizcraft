@@ -1,5 +1,8 @@
 {
   "itemGroup.wizcraft": "Wizcraft",
+  "item.wizcraft.mortar_and_pestle": "Mortar and pestle",
+  "item.wizcraft.metallized_stick": "Metallized stick",
+  "item.wizcraft.wand_core": "Wand core",
   "item.wizcraft.wand": "Wand",
   "item.wizcraft.charging_focus": "Charging focus",
   "item.wizcraft.starshooter_focus": "Starshooter focus",
@@ -32,7 +35,7 @@
   "key.wizcraft.tool_control": "Tool control",
   "wizcraft.midnightconfig.title": "Wizcraft Config",
   "wizcraft.midnightconfig.category.cheats": "Cheats",
-  "wizcraft.midnightconfig.expendWandChargeInSurvival": "Expend Wand charge in survival",
-  "wizcraft.midnightconfig.expendWandChargeInCreative": "Expend Wand charge in creative",
+  "wizcraft.midnightconfig.freeChargeInSurvival": "Don't expend Wand charge in survival",
+  "wizcraft.midnightconfig.freeChargeInCreative": "Don't expend Wand charge in creative",
   "emi.category.wizcraft.lensed_worktable": "Lensed worktable"
 }

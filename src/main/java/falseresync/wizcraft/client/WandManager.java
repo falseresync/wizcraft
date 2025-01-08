@@ -10,12 +10,14 @@ import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.TypedActionResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -62,12 +64,24 @@ public class WandManager {
         });
 
         ClientPlayerInventoryEvents.CONTENTS_CHANGED.register(inventory -> {
-            scanInventoryAndSetupFocusPicker(inventory, false);
+            var wandStack = scanInventoryForWands(inventory);
+            if (wandStack != null) {
+                setupChargeDisplay(inventory.player, wandStack);
+                scanInventoryAndSetupFocusPicker(inventory, wandStack, false);
+            } else {
+                chargeDisplay.hide();
+                focusPicker.hide();
+            }
         });
     }
 
     public void onKeyPressed(MinecraftClient client, ClientPlayerEntity player) {
-        scanInventoryAndSetupFocusPicker(player.getInventory(), true);
+        var wandStack = scanInventoryForWands(player.getInventory());
+        if (wandStack == null) {
+            focusPicker.hide();
+            return;
+        }
+        scanInventoryAndSetupFocusPicker(player.getInventory(), wandStack, true);
     }
 
     @Nullable
@@ -89,13 +103,7 @@ public class WandManager {
         }
     }
 
-    private void scanInventoryAndSetupFocusPicker(PlayerInventory inventory, boolean shouldPickNext) {
-        var wandStack = scanInventoryForWands(inventory);
-        if (wandStack == null) {
-            focusPicker.hide();
-            return;
-        }
-
+    private void scanInventoryAndSetupFocusPicker(PlayerInventory inventory, ItemStack wandStack, boolean shouldPickNext) {
         var equippedFocusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
         var focusStacks = inventory.main.stream()
                 .filter(it -> it.isIn(WizcraftItemTags.FOCUSES))
@@ -129,7 +137,9 @@ public class WandManager {
             }
 
             var slot = inventory.getSlotWithStack(currentlyPickedFocusStack);
-            ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(slot));
+            if (slot != -1) {
+                ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(slot));
+            }
         }
     }
 }

@@ -10,6 +10,11 @@ public class WizcraftItemGroups {
             .icon(WizcraftItems.WAND::getDefaultStack)
             .displayName(Text.translatable("itemGroup.wizcraft"))
             .entries((displayContext, entries) -> {
+                entries.add(WizcraftItems.MORTAR_AND_PESTLE);
+
+                entries.add(WizcraftItems.METALLIZED_STICK);
+                entries.add(WizcraftItems.WAND_CORE);
+
                 entries.add(WizcraftItems.WAND);
 
                 entries.add(WizcraftItems.STARSHOOTER_FOCUS);

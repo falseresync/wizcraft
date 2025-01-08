@@ -59,7 +59,7 @@ public class WizcraftModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(WizcraftItems.WAND_CORE, Models.GENERATED);
 
-        itemModelGenerator.register(WizcraftItems.WAND, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.WAND, Models.HANDHELD_ROD);
 
         itemModelGenerator.register(WizcraftItems.CHARGING_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizcraftItems.STARSHOOTER_FOCUS, Models.GENERATED);

@@ -1,11 +1,9 @@
 package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.common.block.WizcraftBlocks;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Rarity;
@@ -17,6 +15,7 @@ import static falseresync.wizcraft.common.Wizcraft.wid;
 public class WizcraftItems {
     public static final Item MORTAR_AND_PESTLE = r("mortar_and_pestle", MortarAndPestleItem::new, new Item.Settings().maxCount(1).maxDamage(16));
 
+    public static final Item METALLIZED_STICK = r("metallized_stick", Item::new, new Item.Settings());
     public static final Item WAND_CORE = r("wand_core", Item::new, new Item.Settings());
 
     public static final WandItem WAND = r("wand", WandItem::new, new Item.Settings().maxCount(1));

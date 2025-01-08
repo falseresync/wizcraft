@@ -59,6 +59,12 @@ public class WizcraftRecipeProvider extends FabricRecipeProvider {
                 .criterion("unlock_right_away", TickCriterion.Conditions.createTick())
                 .offerTo(exporter, item(WizcraftItems.MORTAR_AND_PESTLE));
 
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.METALLIZED_STICK)
+                .input(Items.STICK)
+                .input(Items.COPPER_INGOT)
+                .criterion("has_copper", conditionsFromItem(Items.COPPER_INGOT))
+                .offerTo(exporter, item(WizcraftItems.METALLIZED_STICK));
+
         ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND_CORE)
                 .input(Items.DIAMOND)
                 .input(Items.AMETHYST_SHARD)
@@ -70,13 +76,14 @@ public class WizcraftRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, item(WizcraftItems.WAND_CORE));
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND)
-                .input('d', Items.DIAMOND)
+                .input('w', WizcraftItems.WAND_CORE)
                 .input('g', Items.GOLD_INGOT)
-                .input('s', Items.STICK)
-                .pattern(" sd")
-                .pattern(" gs")
+                .input('s', WizcraftItems.METALLIZED_STICK)
+                .pattern("  w")
+                .pattern(" g ")
                 .pattern("s  ")
                 .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+                .criterion("has_amethyst", conditionsFromItem(Items.AMETHYST_SHARD))
                 .offerTo(exporter, item(WizcraftItems.WAND));
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, WizcraftItems.LENS)

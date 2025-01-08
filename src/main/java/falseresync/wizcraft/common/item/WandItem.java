@@ -270,7 +270,7 @@ public class WandItem extends Item {
     }
 
     public boolean tryExpendCharge(ItemStack stack, int cost, @Nullable PlayerEntity user) {
-        if (user != null && (user.isCreative() && !WizcraftConfig.expendWandChargeInCreative || !WizcraftConfig.expendWandChargeInSurvival)) {
+        if (user != null && (user.isCreative() && WizcraftConfig.freeChargeInCreative || WizcraftConfig.freeChargeInSurvival)) {
             return true;
         }
         var charge = stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);

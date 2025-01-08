@@ -4,6 +4,7 @@ import eu.midnightdust.lib.config.MidnightConfig;
 import falseresync.lib.registry.AutoRegistry;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
+import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.entity.WizcraftEntities;
 import falseresync.wizcraft.common.item.WizcraftItemGroups;
@@ -78,7 +79,7 @@ public class Wizcraft implements ModInitializer {
                 .link(Registries.RECIPE_TYPE, WizcraftRecipes.class)
                 .link(Registries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class)
                 .link(Registries.PARTICLE_TYPE, WizcraftParticleTypes.class);
-//        WizcraftDataAttachments.init();
+        WizcraftDataAttachments.init();
         WizcraftItemTags.init();
         WizcraftSounds.init();
         WizcraftNetworking.registerPackets();

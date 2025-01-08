@@ -21,6 +21,9 @@ public class WizcraftItems {
     public static final LightningFocusItem LIGHTNING_FOCUS = r("lightning_focus", LightningFocusItem::new, FOCUS_SETTINGS);
     public static final CometWarpFocusItem COMET_WARP_FOCUS = r("comet_warp_focus", CometWarpFocusItem::new, FOCUS_SETTINGS);
 
+    public static final TrueseerGogglesItem TRUESEER_GOGGLES = r("trueseer_goggles", TrueseerGogglesItem::new, new Item.Settings().maxCount(1));
+    public static final FocusesBeltItem FOCUSES_BELT = r("focuses_belt", FocusesBeltItem::new, new Item.Settings().maxCount(1));
+
     public static final Item.Settings DEFAULT_BLOCK_ITEM_SETTINGS = new Item.Settings();
     public static final BlockItem LENS = rBlockItem("lens", WizcraftBlocks.LENS, DEFAULT_BLOCK_ITEM_SETTINGS);
     public static final BlockItem WORKTABLE = rBlockItem("worktable", WizcraftBlocks.DUMMY_WORKTABLE, DEFAULT_BLOCK_ITEM_SETTINGS);

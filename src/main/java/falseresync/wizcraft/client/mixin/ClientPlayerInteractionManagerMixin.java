@@ -24,6 +24,8 @@ public class ClientPlayerInteractionManagerMixin {
         if (client.player == null) {
             return;
         }
-        ClientPlayerInventoryEvents.SELECTED_SLOT_CHANGED.invoker().onChanged(client.player.getInventory(), lastSelectedSlot);
+        if (lastSelectedSlot != client.player.getInventory().selectedSlot) {
+            ClientPlayerInventoryEvents.SELECTED_SLOT_CHANGED.invoker().onChanged(client.player.getInventory(), lastSelectedSlot);
+        }
     }
 }

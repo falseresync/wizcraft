@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "wizcraft:item/trueseer_goggles"
+  }
+}

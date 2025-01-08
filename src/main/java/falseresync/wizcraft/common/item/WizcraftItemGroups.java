@@ -17,6 +17,9 @@ public class WizcraftItemGroups {
                 entries.add(WizcraftItems.LIGHTNING_FOCUS);
                 entries.add(WizcraftItems.COMET_WARP_FOCUS);
 
+                entries.add(WizcraftItems.TRUESEER_GOGGLES);
+                entries.add(WizcraftItems.FOCUSES_BELT);
+
                 entries.add(WizcraftItems.LENS);
                 entries.add(WizcraftItems.WORKTABLE);
                 entries.add(WizcraftItems.LENSING_PEDESTAL);

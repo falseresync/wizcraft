@@ -1,0 +1,26 @@
+{
+  "type": "wizcraft:crucible",
+  "ingredients": [
+    {
+      "fabric:type": "wizcraft:crucible_recipe_ingredient",
+      "count": 2,
+      "vanilla": {
+        "tag": "c:gems/diamond"
+      }
+    },
+    {
+      "fabric:type": "wizcraft:crucible_recipe_ingredient",
+      "count": 6,
+      "vanilla": {
+        "tag": "c:gems/amethyst"
+      }
+    },
+    {
+      "tag": "c:glass_blocks/colorless"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "wizcraft:lens"
+  }
+}

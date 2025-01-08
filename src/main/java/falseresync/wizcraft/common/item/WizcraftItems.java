@@ -16,7 +16,7 @@ public class WizcraftItems {
     public static final Item MORTAR_AND_PESTLE = r("mortar_and_pestle", MortarAndPestleItem::new, new Item.Settings().maxCount(1).maxDamage(16));
 
     public static final Item METALLIZED_STICK = r("metallized_stick", Item::new, new Item.Settings());
-    public static final Item WAND_CORE = r("wand_core", Item::new, new Item.Settings());
+    public static final Item WAND_CORE = r("wand_core", Item::new, new Item.Settings().maxCount(1));
 
     public static final WandItem WAND = r("wand", WandItem::new, new Item.Settings().maxCount(1));
 

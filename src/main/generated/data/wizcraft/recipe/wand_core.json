@@ -3,13 +3,13 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "minecraft:diamond"
+      "tag": "c:gems/diamond"
     },
     {
-      "item": "minecraft:amethyst_shard"
+      "tag": "c:gems/amethyst"
     },
     {
-      "item": "minecraft:redstone"
+      "tag": "c:dusts/redstone"
     },
     [
       {

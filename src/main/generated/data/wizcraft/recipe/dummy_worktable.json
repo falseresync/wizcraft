@@ -3,10 +3,10 @@
   "category": "building",
   "key": {
     "g": {
-      "item": "minecraft:gold_ingot"
+      "tag": "c:ingots/gold"
     },
     "l": {
-      "item": "minecraft:lapis_lazuli"
+      "tag": "c:gems/lapis"
     },
     "p": {
       "tag": "minecraft:planks"

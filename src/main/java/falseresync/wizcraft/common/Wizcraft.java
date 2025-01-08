@@ -11,8 +11,9 @@ import falseresync.wizcraft.common.item.WizcraftItemGroups;
 import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.common.particle.WizcraftParticleTypes;
+import falseresync.wizcraft.common.recipe.WizcraftRecipeCustomIngredients;
 import falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
-import falseresync.wizcraft.common.recipe.WizcraftRecipes;
+import falseresync.wizcraft.common.recipe.WizcraftRecipeTypes;
 import falseresync.wizcraft.networking.WizcraftNetworking;
 import falseresync.wizcraft.networking.WizcraftNetworkingServer;
 import falseresync.wizcraft.networking.report.WizcraftReports;
@@ -76,9 +77,10 @@ public class Wizcraft implements ModInitializer {
                 .link(Registries.DATA_COMPONENT_TYPE, WizcraftDataComponents.class)
                 .link(Registries.ENTITY_TYPE, WizcraftEntities.class)
                 .link(WizcraftReports.REGISTRY, WizcraftReports.class)
-                .link(Registries.RECIPE_TYPE, WizcraftRecipes.class)
+                .link(Registries.RECIPE_TYPE, WizcraftRecipeTypes.class)
                 .link(Registries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class)
                 .link(Registries.PARTICLE_TYPE, WizcraftParticleTypes.class);
+        WizcraftRecipeCustomIngredients.init();
         WizcraftDataAttachments.init();
         WizcraftItemTags.init();
         WizcraftSounds.init();

@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "g": {
-      "item": "minecraft:gold_ingot"
+      "tag": "c:ingots/gold"
     },
     "s": {
       "item": "wizcraft:metallized_stick"

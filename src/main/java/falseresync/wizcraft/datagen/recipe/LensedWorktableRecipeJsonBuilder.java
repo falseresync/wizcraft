@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 
@@ -30,5 +31,9 @@ public class LensedWorktableRecipeJsonBuilder {
         }
         var recipe = new LensedWorktableRecipe(new ItemStack(result), worktableInput, pedestalInputs);
         exporter.accept(id, recipe, null);
+    }
+
+    public void offerTo(RecipeExporter exporter) {
+        offerTo(exporter, Registries.ITEM.getId(result).withPrefixedPath("lensed_worktable/"));
     }
 }

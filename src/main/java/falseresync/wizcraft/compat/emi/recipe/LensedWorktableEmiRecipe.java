@@ -8,7 +8,9 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
 import falseresync.wizcraft.compat.emi.WizcraftEmiPlugin;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -22,14 +24,17 @@ public class LensedWorktableEmiRecipe implements EmiRecipe {
             wid("textures/gui/recipe/arrow_right.png"),
             0, 0, 16, 16, 16, 16, 16, 16);
 
+    protected final RecipeEntry<LensedWorktableRecipe> backingRecipe;
     protected final Identifier id;
     protected final EmiStack result;
     protected final EmiIngredient worktableInput;
     protected final List<EmiIngredient> pedestalInputs;
     protected final List<EmiIngredient> allInputs;
 
-    public LensedWorktableEmiRecipe(Identifier id, LensedWorktableRecipe recipe) {
-        this.id = id;
+    public LensedWorktableEmiRecipe(RecipeEntry<LensedWorktableRecipe> recipeEntry) {
+        this.backingRecipe = recipeEntry;
+        this.id = recipeEntry.id();
+        var recipe = recipeEntry.value();
         this.result = EmiStack.of(recipe.getResult());
         this.worktableInput = EmiIngredient.of(recipe.getWorktableInput());
         this.pedestalInputs = recipe.getPedestalInputs().stream().map(EmiIngredient::of).toList();
@@ -39,7 +44,7 @@ public class LensedWorktableEmiRecipe implements EmiRecipe {
 
     @Override
     public EmiRecipeCategory getCategory() {
-        return WizcraftEmiPlugin.LENSED_WORKTABLE;
+        return WizcraftEmiPlugin.CATEGORY_LENSED_WORKTABLE;
     }
 
     @Override
@@ -98,7 +103,12 @@ public class LensedWorktableEmiRecipe implements EmiRecipe {
         }
         widgets.addTexture(WAND_TEX, 81, 9);
         widgets.addTexture(ARROW_TEX, 81, 27);
-        var outputSlot = widgets.addSlot(this.result, 108, 27);
-        outputSlot.recipeContext(this);
+        widgets.addSlot(this.result, 108, 27).recipeContext(this);
+    }
+
+    @Nullable
+    @Override
+    public RecipeEntry<LensedWorktableRecipe> getBackingRecipe() {
+        return backingRecipe;
     }
 }

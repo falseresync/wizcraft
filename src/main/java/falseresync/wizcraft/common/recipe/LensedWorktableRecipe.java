@@ -44,7 +44,7 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
 
     @Override
     public DefaultedList<Ingredient> getIngredients() {
-        return this.allIngredients;
+        return allIngredients;
     }
 
     @Override
@@ -54,11 +54,11 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput input, World world) {
-        if (input.getSize() < this.allIngredients.size()) {
+        if (input.getSize() < allIngredients.size()) {
             return false;
         }
 
-        if (!this.worktableInput.test(input.getStackInSlot(0))) {
+        if (!worktableInput.test(input.getStackInSlot(0))) {
             return false;
         }
 
@@ -87,17 +87,17 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
 
     @Override
     public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return this.getResult(lookup).copy();
+        return getResult(lookup);
     }
 
     @Override
     public boolean fits(int width, int height) {
-        return width * height >= this.allIngredients.size();
+        return width * height >= allIngredients.size();
     }
 
     @Override
     public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
-        return result;
+        return result.copy();
     }
 
     @Override
@@ -111,7 +111,7 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
     }
 
     public ItemStack getResult() {
-        return this.result;
+        return result;
     }
 
     public int getCraftingTime() {
@@ -119,11 +119,11 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
     }
 
     public Ingredient getWorktableInput() {
-        return this.worktableInput;
+        return worktableInput;
     }
 
     public DefaultedList<Ingredient> getPedestalInputs() {
-        return this.pedestalInputs;
+        return pedestalInputs;
     }
 
     public static class Serializer implements RecipeSerializer<LensedWorktableRecipe> {

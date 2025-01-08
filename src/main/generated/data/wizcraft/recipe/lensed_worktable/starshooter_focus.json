@@ -2,7 +2,7 @@
   "type": "wizcraft:lensed_worktable",
   "pedestals": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "c:ingots/gold"
     },
     {
       "item": "minecraft:fire_charge"

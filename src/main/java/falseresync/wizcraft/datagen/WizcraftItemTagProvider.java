@@ -22,5 +22,7 @@ public class WizcraftItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(WizcraftItems.COMET_WARP_FOCUS);
         getOrCreateTagBuilder(WizcraftItemTags.WANDS)
                 .add(WizcraftItems.WAND);
+        getOrCreateTagBuilder(WizcraftItemTags.ACTIVATORS)
+                .addTag(WizcraftItemTags.WANDS);
     }
 }

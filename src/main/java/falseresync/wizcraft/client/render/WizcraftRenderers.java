@@ -1,12 +1,15 @@
 package falseresync.wizcraft.client.render;
 
+import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import falseresync.wizcraft.client.render.blockentity.ChargingWorktableRenderer;
 import falseresync.wizcraft.client.render.blockentity.CraftingWorktableRenderer;
 import falseresync.wizcraft.client.render.blockentity.LensingPedestalRenderer;
 import falseresync.wizcraft.client.render.entity.StarProjectileRenderer;
+import falseresync.wizcraft.client.render.trinket.TrueseerGogglesRenderer;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
 import falseresync.wizcraft.common.entity.WizcraftEntities;
+import falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.RenderLayer;
@@ -25,5 +28,7 @@ public class WizcraftRenderers {
                 WizcraftBlocks.DUMMY_WORKTABLE,
                 WizcraftBlocks.CRAFTING_WORKTABLE,
                 WizcraftBlocks.CHARGING_WORKTABLE);
+
+        TrinketRendererRegistry.registerRenderer(WizcraftItems.TRUESEER_GOGGLES, new TrueseerGogglesRenderer());
     }
 }

@@ -8,6 +8,7 @@ import falseresync.wizcraft.common.CommonKeys;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
@@ -106,7 +107,7 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
 
     @Override
     public RecipeType<LensedWorktableRecipe> getType() {
-        return WizcraftRecipes.LENSED_WORKTABLE;
+        return WizcraftRecipeTypes.LENSED_WORKTABLE;
     }
 
     public ItemStack getResult() {
@@ -153,7 +154,13 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
                         )
                         .forGetter(recipe -> recipe.pedestalInputs)
         ).apply(instance, LensedWorktableRecipe::new));
-        public static final PacketCodec<RegistryByteBuf, LensedWorktableRecipe> PACKET_CODEC = PacketCodec.ofStatic(Serializer::write, Serializer::read);
+        public static final PacketCodec<RegistryByteBuf, LensedWorktableRecipe> PACKET_CODEC = PacketCodec.tuple(
+                ItemStack.PACKET_CODEC, recipe -> recipe.result,
+                PacketCodecs.INTEGER, recipe -> recipe.craftingTime,
+                Ingredient.PACKET_CODEC, recipe -> recipe.worktableInput,
+                PacketCodecs.collection(DefaultedList::ofSize, Ingredient.PACKET_CODEC), recipe -> recipe.pedestalInputs,
+                LensedWorktableRecipe::new
+        );
 
         @Override
         public MapCodec<LensedWorktableRecipe> codec() {
@@ -163,28 +170,6 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
         @Override
         public PacketCodec<RegistryByteBuf, LensedWorktableRecipe> packetCodec() {
             return PACKET_CODEC;
-        }
-
-        public static LensedWorktableRecipe read(RegistryByteBuf buf) {
-            var result = ItemStack.PACKET_CODEC.decode(buf);
-            var craftingTime = buf.readVarInt();
-            var worktableInput = Ingredient.PACKET_CODEC.decode(buf);
-            var numberOfPedestalInputs = buf.readVarInt();
-            var pedestalInputs = DefaultedList.<Ingredient>ofSize(numberOfPedestalInputs);
-            for (int i = 0; i < numberOfPedestalInputs; i++) {
-                pedestalInputs.add(Ingredient.PACKET_CODEC.decode(buf));
-            }
-            return new LensedWorktableRecipe(result, craftingTime, worktableInput, pedestalInputs);
-        }
-
-        public static void write(RegistryByteBuf buf, LensedWorktableRecipe recipe) {
-            ItemStack.PACKET_CODEC.encode(buf, recipe.result);
-            buf.writeVarInt(recipe.craftingTime);
-            Ingredient.PACKET_CODEC.encode(buf, recipe.worktableInput);
-            buf.writeVarInt(recipe.pedestalInputs.size());
-            for (var pedestalInput : recipe.pedestalInputs) {
-                Ingredient.PACKET_CODEC.encode(buf, pedestalInput);
-            }
         }
     }
 }

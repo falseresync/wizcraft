@@ -18,11 +18,6 @@ import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class TrueseerGogglesRenderer implements TrinketRenderer {
     public static final Identifier TEX = wid("textures/item/trueseer_goggles.png");
-    private final ItemRenderer itemRenderer;
-
-    public TrueseerGogglesRenderer() {
-        itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-    }
 
     @Override
     public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
@@ -32,7 +27,7 @@ public class TrueseerGogglesRenderer implements TrinketRenderer {
             //noinspection unchecked
             TrinketRenderer.translateToFace(matrices, (PlayerEntityModel<AbstractClientPlayerEntity>) contextModel, player, headYaw, headPitch);
             matrices.scale(-0.6f, -0.6f, 1);
-            itemRenderer.renderItem(stack, ModelTransformationMode.FIXED, light, 0, matrices, vertexConsumers, null, 0);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.FIXED, light, 0, matrices, vertexConsumers, null, 0);
             matrices.pop();
         }
     }

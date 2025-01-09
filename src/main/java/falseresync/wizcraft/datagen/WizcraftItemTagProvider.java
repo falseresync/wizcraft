@@ -23,6 +23,7 @@ public class WizcraftItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(WizcraftItemTags.WANDS)
                 .add(WizcraftItems.WAND);
         getOrCreateTagBuilder(WizcraftItemTags.ACTIVATORS)
-                .addTag(WizcraftItemTags.WANDS);
+                .addTag(WizcraftItemTags.WANDS)
+                .add(WizcraftItems.GRIMOIRE);
     }
 }

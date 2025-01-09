@@ -14,8 +14,11 @@ import java.util.function.Function;
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftBlocks {
-    public static final Block LENS = r("lens", Block::new, AbstractBlock.Settings.copy(Blocks.GLASS).luminance(state -> 1));
+    public static final CrucibleBlock CRUCIBLE = r("crucible", CrucibleBlock::new, AbstractBlock.Settings.copy(Blocks.GLASS).luminance(state -> 1));
+
+    public static final LensBlock LENS = r("lens", LensBlock::new, AbstractBlock.Settings.copy(Blocks.GLASS).luminance(state -> 1));
     public static final LensingPedestalBlock LENSING_PEDESTAL = r("lensing_pedestal", LensingPedestalBlock::new, AbstractBlock.Settings.copy(Blocks.BRICK_WALL));
+
     public static final AbstractBlock.Settings WORKTABLE_SETTINGS = AbstractBlock.Settings.copy(Blocks.CRAFTING_TABLE).requiresTool();
     public static final DummyWorktableBlock DUMMY_WORKTABLE = r("dummy_worktable", DummyWorktableBlock::new, WORKTABLE_SETTINGS);
     public static final WorktableBlock<CraftingWorktableBlockEntity> CRAFTING_WORKTABLE =

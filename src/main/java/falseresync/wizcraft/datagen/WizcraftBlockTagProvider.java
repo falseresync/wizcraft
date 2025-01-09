@@ -20,6 +20,7 @@ public class WizcraftBlockTagProvider extends FabricTagProvider.BlockTagProvider
                 .add(WizcraftBlocks.CRAFTING_WORKTABLE)
                 .add(WizcraftBlocks.CHARGING_WORKTABLE);
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+                .add(WizcraftBlocks.CRUCIBLE)
                 .add(WizcraftBlocks.LENS)
                 .add(WizcraftBlocks.DUMMY_WORKTABLE)
                 .add(WizcraftBlocks.CRAFTING_WORKTABLE)

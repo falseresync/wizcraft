@@ -1,5 +1,6 @@
 package falseresync.wizcraft.common.blockentity;
 
+import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.BlockState;
@@ -29,6 +30,6 @@ public abstract class WorktableBlockEntity extends BlockEntity {
     }
 
     public boolean canBeActivatedBy(ItemStack stack) {
-        return stack.isOf(WizcraftItems.WAND);
+        return stack.isIn(WizcraftItemTags.WANDS);
     }
 }

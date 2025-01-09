@@ -15,6 +15,7 @@ public class WizcraftBlockLootTableProvider extends FabricBlockLootTableProvider
 
     @Override
     public void generate() {
+        addDrop(WizcraftBlocks.CRUCIBLE, drops(WizcraftItems.CRUCIBLE));
         addDrop(WizcraftBlocks.LENS, drops(WizcraftItems.LENS));
         addDrop(WizcraftBlocks.DUMMY_WORKTABLE, drops(WizcraftItems.WORKTABLE));
         addDrop(WizcraftBlocks.CRAFTING_WORKTABLE, drops(WizcraftItems.WORKTABLE));

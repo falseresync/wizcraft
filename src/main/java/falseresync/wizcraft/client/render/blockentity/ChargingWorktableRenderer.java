@@ -1,6 +1,7 @@
 package falseresync.wizcraft.client.render.blockentity;
 
 import falseresync.wizcraft.client.render.RenderingUtil;
+import falseresync.wizcraft.common.WizcraftParticleTypes;
 import falseresync.wizcraft.common.blockentity.ChargingWorktableBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -8,8 +9,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.particle.ParticleTypes;
 
 @Environment(EnvType.CLIENT)
 public class ChargingWorktableRenderer implements BlockEntityRenderer<ChargingWorktableBlockEntity> {
@@ -27,16 +28,16 @@ public class ChargingWorktableRenderer implements BlockEntityRenderer<ChargingWo
 
         matrices.push();
 
-        RenderingUtil.levitateItemAboveBlock(world, entity.getPos(), tickDelta, stack, this.itemRenderer, matrices, vertexConsumers);
+        RenderingUtil.levitateItemAboveBlock(
+                world, entity.getPos(), tickDelta, stack,
+                entity.isCharging() ? ModelTransformationMode.THIRD_PERSON_RIGHT_HAND : ModelTransformationMode.FIXED,
+                this.itemRenderer, matrices, vertexConsumers);
 
         if (entity.isCharging() && world.random.nextFloat() < 0.25) {
-            var itemPos = entity.getPos().toCenterPos().add(0, 0.5, 0);
-            var particlePos = itemPos.add(
-                    world.random.nextFloat() - 0.5,
-                    1,
-                    world.random.nextFloat() - 0.5);
-            var particleVelocity = itemPos.subtract(particlePos).normalize().multiply(100000);
-            RenderingUtil.addParticle(world, ParticleTypes.GLOW, particlePos, particleVelocity);
+            var itemPos = entity.getPos().toCenterPos().add(0, -0.5, 0);
+            var particlePos = itemPos.add(world.random.nextFloat() - 0.5, 2, world.random.nextFloat() - 0.5);
+            var particleVelocity = particlePos.relativize(itemPos).multiply(5);
+            RenderingUtil.addParticle(world, WizcraftParticleTypes.CHARGING, particlePos, particleVelocity);
         }
 
         matrices.pop();

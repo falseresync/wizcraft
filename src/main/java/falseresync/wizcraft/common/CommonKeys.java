@@ -21,6 +21,7 @@ public final class CommonKeys {
     public static final String FOCUS_TYPE = "focus_type";
     public static final String FOCUS_STACK = "focus_stack";
     public static final String CONTROLS_RENDERING = "controls_rendering";
+    public static final String ON = "on";
     public static final String LINKED_TO = "linked_to";
     public static final String NON_EMPTY_PEDESTALS = "non_empty_pedestals";
     public static final String CURRENT_RECIPE = "current_recipe";

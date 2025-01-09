@@ -22,20 +22,17 @@ public class WizcraftModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+        createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.CRUCIBLE);
+
         createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.LENS);
         createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.LENSING_PEDESTAL);
 
-        var dummyWorktableModelId = wid("block/dummy_worktable");
-        blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(
-                WizcraftBlocks.DUMMY_WORKTABLE,
-                BlockStateVariant.create().put(VariantSettings.MODEL, dummyWorktableModelId)));
-        blockStateModelGenerator.registerParentedItemModel(WizcraftBlocks.DUMMY_WORKTABLE, dummyWorktableModelId);
-
+        createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.DUMMY_WORKTABLE);
         createWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CRAFTING_WORKTABLE);
         createWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CHARGING_WORKTABLE);
     }
 
-    private void createWorktableVariant(BlockStateModelGenerator blockStateModelGenerator, Block block) {
+    private static void createWorktableVariant(BlockStateModelGenerator blockStateModelGenerator, Block block) {
         blockStateModelGenerator.blockStateCollector.accept(
                 VariantsBlockStateSupplier.create(
                         block,
@@ -44,7 +41,7 @@ public class WizcraftModelProvider extends FabricModelProvider {
                                 WORKTABLE.upload(block, blockStateModelGenerator.modelCollector))));
     }
 
-    private void createBasicBlockWithItem(BlockStateModelGenerator blockStateModelGenerator, Block block) {
+    private static void createBasicBlockWithItem(BlockStateModelGenerator blockStateModelGenerator, Block block) {
         var blockModelId = ModelIds.getBlockModelId(block);
         blockStateModelGenerator.blockStateCollector.accept(
                 VariantsBlockStateSupplier.create(

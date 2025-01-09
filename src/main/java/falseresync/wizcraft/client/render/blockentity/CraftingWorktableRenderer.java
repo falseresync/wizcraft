@@ -3,7 +3,7 @@ package falseresync.wizcraft.client.render.blockentity;
 import falseresync.wizcraft.client.render.RenderingUtil;
 import falseresync.wizcraft.common.blockentity.CraftingWorktableBlockEntity;
 import falseresync.wizcraft.common.blockentity.LensingPedestalBlockEntity;
-import falseresync.wizcraft.common.particle.WizcraftParticleTypes;
+import falseresync.wizcraft.common.WizcraftParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;

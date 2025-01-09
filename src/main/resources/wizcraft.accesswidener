@@ -1,5 +1,8 @@
 accessWidener v2 named
 
+accessible method net/minecraft/client/particle/GlowParticle <init> (Lnet/minecraft/client/world/ClientWorld;DDDDDDLnet/minecraft/client/particle/SpriteProvider;)V
+accessible field net/minecraft/client/particle/Particle velocityX D
+accessible field net/minecraft/client/particle/Particle velocityY D
+accessible field net/minecraft/client/particle/Particle velocityZ D
 accessible field net/minecraft/server/world/ServerChunkLoadingManager watchDistance I
-accessible field net/minecraft/client/gui/hud/BossBarHud bossBars Ljava/util/Map;
 accessible method net/minecraft/data/client/Models block (Ljava/lang/String;[Lnet/minecraft/data/client/TextureKey;)Lnet/minecraft/data/client/Model;

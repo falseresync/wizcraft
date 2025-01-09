@@ -10,7 +10,6 @@ import falseresync.wizcraft.common.entity.WizcraftEntities;
 import falseresync.wizcraft.common.item.WizcraftItemGroups;
 import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
-import falseresync.wizcraft.common.particle.WizcraftParticleTypes;
 import falseresync.wizcraft.common.recipe.WizcraftRecipeCustomIngredients;
 import falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
 import falseresync.wizcraft.common.recipe.WizcraftRecipeTypes;

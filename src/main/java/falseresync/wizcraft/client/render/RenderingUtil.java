@@ -27,7 +27,15 @@ public class RenderingUtil {
         levitateItemAboveBlock(world, pos, Vec3d.ZERO, RenderingUtil.UNIT_VEC3D, tickDelta, stack, itemRenderer, matrices, vertexConsumers);
     }
 
+    public static void levitateItemAboveBlock(World world, BlockPos pos, float tickDelta, ItemStack stack, ModelTransformationMode mode, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
+        levitateItemAboveBlock(world, pos, Vec3d.ZERO, RenderingUtil.UNIT_VEC3D, tickDelta, stack, mode, itemRenderer, matrices, vertexConsumers);
+    }
+
     public static void levitateItemAboveBlock(World world, BlockPos pos, Vec3d translation, Vec3d scale, float tickDelta, ItemStack stack, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
+        levitateItemAboveBlock(world, pos, translation, scale, tickDelta, stack, ModelTransformationMode.FIXED, itemRenderer, matrices, vertexConsumers);
+    }
+
+    public static void levitateItemAboveBlock(World world, BlockPos pos, Vec3d translation, Vec3d scale, float tickDelta, ItemStack stack, ModelTransformationMode mode, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
         if (stack.isEmpty()) return;
 
         matrices.push();
@@ -40,15 +48,7 @@ public class RenderingUtil {
         matrices.scale((float) scale.x, (float) scale.y, (float) scale.z);
 
         var lightAbove = WorldRenderer.getLightmapCoordinates(world, pos.up());
-        itemRenderer.renderItem(
-                stack,
-                ModelTransformationMode.FIXED,
-                lightAbove,
-                OverlayTexture.DEFAULT_UV,
-                matrices,
-                vertexConsumers,
-                world,
-                0);
+        itemRenderer.renderItem(stack, mode, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, world, 0);
 
         matrices.pop();
     }

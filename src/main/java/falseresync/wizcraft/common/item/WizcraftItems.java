@@ -30,6 +30,7 @@ public class WizcraftItems {
     public static final FocusesBeltItem FOCUSES_BELT = r("focuses_belt", FocusesBeltItem::new, new Item.Settings().maxCount(1));
 
     public static final Item.Settings DEFAULT_BLOCK_ITEM_SETTINGS = new Item.Settings();
+    public static final BlockItem CRUCIBLE = rBlockItem("crucible", WizcraftBlocks.CRUCIBLE, DEFAULT_BLOCK_ITEM_SETTINGS);
     public static final BlockItem LENS = rBlockItem("lens", WizcraftBlocks.LENS, DEFAULT_BLOCK_ITEM_SETTINGS);
     public static final BlockItem WORKTABLE = rBlockItem("worktable", WizcraftBlocks.DUMMY_WORKTABLE, DEFAULT_BLOCK_ITEM_SETTINGS);
     public static final BlockItem LENSING_PEDESTAL = rBlockItem("lensing_pedestal", WizcraftBlocks.LENSING_PEDESTAL, DEFAULT_BLOCK_ITEM_SETTINGS);

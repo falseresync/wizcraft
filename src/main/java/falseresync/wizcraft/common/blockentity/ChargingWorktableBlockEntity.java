@@ -73,7 +73,9 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
     }
 
     protected void tick(World world, BlockPos pos, BlockState state) {
-        if (world.isClient()) return;
+        if (world.isClient()) {
+            return;
+        }
 
         var heldStack = inventory.getStack(0);
         if (!heldStack.isOf(WizcraftItems.WAND)) {
@@ -102,6 +104,7 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
         super.markDirty();
         if (world != null) {
             world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+            world.getBlockEntity(pos.up(2), WizcraftBlockEntities.LENS).ifPresent(lens -> lens.setOn(charging));
         }
     }
 

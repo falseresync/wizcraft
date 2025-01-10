@@ -1,5 +1,6 @@
 package falseresync.wizcraft.client;
 
+import falseresync.wizcraft.client.gui.WizcraftGui;
 import falseresync.wizcraft.client.hud.WizcraftHud;
 import falseresync.wizcraft.client.particle.WizcraftParticleFactories;
 import falseresync.wizcraft.client.render.WizcraftRenderers;
@@ -23,6 +24,7 @@ public class WizcraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         WizcraftParticleFactories.init();
         WizcraftRenderers.init();
+        WizcraftGui.init();
         WizcraftKeybindings.init();
         WizcraftNetworkingClient.registerReceivers();
         ClientPlayerInventoryEvents.init();

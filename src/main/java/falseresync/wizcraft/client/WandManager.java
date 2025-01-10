@@ -1,5 +1,7 @@
 package falseresync.wizcraft.client;
 
+import dev.emi.trinkets.api.TrinketInventory;
+import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.api.event.TrinketDropCallback;
 import dev.emi.trinkets.api.event.TrinketEquipCallback;
 import dev.emi.trinkets.api.event.TrinketUnequipCallback;
@@ -8,6 +10,7 @@ import falseresync.wizcraft.client.hud.WandChargeDisplayHudItem;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.item.WizcraftItemTags;
+import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -21,6 +24,7 @@ import net.minecraft.util.TypedActionResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class WandManager {
@@ -108,6 +112,13 @@ public class WandManager {
         var focusStacks = inventory.main.stream()
                 .filter(it -> it.isIn(WizcraftItemTags.FOCUSES))
                 .collect(Collectors.toCollection(LinkedList::new));
+        // TODO: integrate focuses belt into selection
+//        var focusesBeltStacks = TrinketsApi.getTrinketComponent(inventory.player)
+//                .map(trinketComponent -> trinketComponent.getEquipped(WizcraftItems.FOCUSES_BELT).getFirst().getRight())
+//                .flatMap(stack -> Optional.ofNullable(stack.get(WizcraftDataComponents.FOCUSES_BELT)))
+//                .map(focusesBeltComponent -> new LinkedList<>(focusesBeltComponent.heldStacks))
+//                .orElseGet(LinkedList::new);
+
         if (!equippedFocusStack.isEmpty()) {
             focusStacks.addFirst(equippedFocusStack);
         }

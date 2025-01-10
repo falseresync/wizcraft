@@ -2,13 +2,8 @@ package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.client.WizcraftKeybindings;
 import falseresync.wizcraft.common.WizcraftConfig;
-import falseresync.wizcraft.common.block.WizcraftBlocks;
-import falseresync.wizcraft.common.block.WorktableVariant;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.networking.report.WizcraftReports;
-import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPacket;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -19,15 +14,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class WandItem extends Item implements ActivatorItem {

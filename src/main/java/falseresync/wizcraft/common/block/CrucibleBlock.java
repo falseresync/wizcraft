@@ -1,13 +1,18 @@
 package falseresync.wizcraft.common.block;
 
 import com.mojang.serialization.MapCodec;
+import falseresync.wizcraft.common.blockentity.CrucibleBlockEntity;
+import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class CrucibleBlock extends BlockWithEntity {
@@ -36,7 +41,13 @@ public class CrucibleBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return null;
+        return new CrucibleBlockEntity(pos, state);
+    }
+
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return validateTicker(type, WizcraftBlockEntities.CRUCIBLE, CrucibleBlockEntity::tick);
     }
 
 

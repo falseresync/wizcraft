@@ -234,6 +234,7 @@ public class WandItem extends Item implements ActivatorItem {
         tooltip.add(Text
                 .translatable("tooltip.wizcraft.wand.change_focus", KeyBindingHelper.getBoundKeyOf(WizcraftKeybindings.TOOL_CONTROL).getLocalizedText())
                 .styled(style -> style.withColor(Formatting.GRAY).withItalic(true)));
+        super.appendTooltip(stack, context, tooltip, type);
     }
 
 

@@ -22,6 +22,14 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
             return false;
         }
 
+        int nonEmptySize = 0;
+        for (int i = 0; i < inputStacksCount; i++) {
+            nonEmptySize += input.getStackInSlot(i).isEmpty() ? 0 : 1;
+        }
+        if (nonEmptySize < ingredients.size()) {
+            return false;
+        }
+
         var matchedSlots = new IntArraySet();
         for (var ingredient : ingredients) {
             for (int i = 0; i < inputStacksCount; i++) {
@@ -34,7 +42,7 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
                 }
             }
         }
-        return matchedSlots.size() == inputStacksCount;
+        return matchedSlots.size() == nonEmptySize;
     }
 
     @Override

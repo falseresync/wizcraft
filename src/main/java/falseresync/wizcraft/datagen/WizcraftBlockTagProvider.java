@@ -1,8 +1,10 @@
 package falseresync.wizcraft.datagen;
 
+import falseresync.wizcraft.common.block.WizcraftBlockTags;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 
@@ -26,5 +28,9 @@ public class WizcraftBlockTagProvider extends FabricTagProvider.BlockTagProvider
                 .add(WizcraftBlocks.CRAFTING_WORKTABLE)
                 .add(WizcraftBlocks.CHARGING_WORKTABLE)
                 .add(WizcraftBlocks.LENSING_PEDESTAL);
+        getOrCreateTagBuilder(WizcraftBlockTags.CRUCIBLE_HEAT_SOURCES)
+                .add(Blocks.FIRE)
+                .add(Blocks.SOUL_FIRE)
+                .addTag(BlockTags.CAMPFIRES);
     }
 }

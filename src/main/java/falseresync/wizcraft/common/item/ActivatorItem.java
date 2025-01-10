@@ -1,5 +1,6 @@
 package falseresync.wizcraft.common.item;
 
+import falseresync.wizcraft.common.block.WizcraftBlockTags;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.block.WorktableVariant;
 import falseresync.wizcraft.networking.report.WizcraftReports;
@@ -40,7 +41,7 @@ public interface ActivatorItem {
 
             var world = context.getWorld();
             var pos = context.getBlockPos();
-            if (world.getBlockState(pos.down()).isOf(Blocks.FIRE)) {
+            if (world.getBlockState(pos.down()).isIn(WizcraftBlockTags.CRUCIBLE_HEAT_SOURCES)) {
                 if (world.isClient) return ActionResult.CONSUME;
 
                 world.setBlockState(pos, WizcraftBlocks.CRUCIBLE.getDefaultState(), Block.NOTIFY_ALL);

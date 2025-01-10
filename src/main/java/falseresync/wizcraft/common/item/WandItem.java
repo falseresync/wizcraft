@@ -80,37 +80,8 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        var activationResult = activateBlock(context);
+        var activationResult = activateBlock(WAND_BEHAVIORS, context);
         if (activationResult.isAccepted()) return activationResult;
-
-        var world = context.getWorld();
-        var pos = context.getBlockPos();
-        if (world.getBlockState(pos).isOf(WizcraftBlocks.DUMMY_WORKTABLE)) {
-            if (world.isClient() || context.getPlayer() == null) return ActionResult.CONSUME;
-
-            var player = (ServerPlayerEntity) context.getPlayer();
-            var matchedVariants = WorktableVariant
-                    .getForPlayerAndSearchAround((ServerWorld) world, player, pos);
-            var fullyCompletedVariant = matchedVariants.stream()
-                    .filter(variant -> variant.match().isCompleted())
-                    .findFirst();
-            if (fullyCompletedVariant.isPresent()) {
-                world.setBlockState(pos, fullyCompletedVariant.get().block().getDefaultState());
-                return ActionResult.SUCCESS;
-            }
-
-            var leastUncompletedVariant = matchedVariants.stream()
-                    .filter(variant -> variant.match().isHalfwayCompleted())
-                    .min(Comparator.comparingInt(variant -> variant.match().delta().size()));
-            if (leastUncompletedVariant.isPresent()) {
-                ServerPlayNetworking.send(player, new TriggerBlockPatternTipS2CPacket(leastUncompletedVariant.get().match().deltaAsBlockPos()));
-                WizcraftReports.WORKTABLE_INCOMPLETE.sendTo(player);
-
-                return ActionResult.FAIL;
-            }
-
-            return ActionResult.PASS;
-        }
 
         var wandStack = context.getStack();
         var focusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);

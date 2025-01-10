@@ -22,17 +22,17 @@ public class WizcraftModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-        createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.CRUCIBLE);
+        addSimpleBlock(blockStateModelGenerator, WizcraftBlocks.CRUCIBLE);
 
-        createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.LENS);
-        createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.LENSING_PEDESTAL);
+        addSimpleBlockWithoutItem(blockStateModelGenerator, WizcraftBlocks.LENS);
+        addSimpleBlock(blockStateModelGenerator, WizcraftBlocks.LENSING_PEDESTAL);
 
-        createBasicBlockWithItem(blockStateModelGenerator, WizcraftBlocks.DUMMY_WORKTABLE);
-        createWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CRAFTING_WORKTABLE);
-        createWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CHARGING_WORKTABLE);
+        addSimpleBlock(blockStateModelGenerator, WizcraftBlocks.DUMMY_WORKTABLE);
+        addWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CRAFTING_WORKTABLE);
+        addWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CHARGING_WORKTABLE);
     }
 
-    private static void createWorktableVariant(BlockStateModelGenerator blockStateModelGenerator, Block block) {
+    private static void addWorktableVariant(BlockStateModelGenerator blockStateModelGenerator, Block block) {
         blockStateModelGenerator.blockStateCollector.accept(
                 VariantsBlockStateSupplier.create(
                         block,
@@ -41,13 +41,21 @@ public class WizcraftModelProvider extends FabricModelProvider {
                                 WORKTABLE.upload(block, blockStateModelGenerator.modelCollector))));
     }
 
-    private static void createBasicBlockWithItem(BlockStateModelGenerator blockStateModelGenerator, Block block) {
+    private static void addSimpleBlockWithoutItem(BlockStateModelGenerator blockStateModelGenerator, Block block) {
         var blockModelId = ModelIds.getBlockModelId(block);
         blockStateModelGenerator.blockStateCollector.accept(
                 VariantsBlockStateSupplier.create(
                         block,
                         BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId)));
-        blockStateModelGenerator.registerParentedItemModel(block, blockModelId);
+        blockStateModelGenerator.excludeFromSimpleItemModelGeneration(block);
+    }
+
+    private static void addSimpleBlock(BlockStateModelGenerator blockStateModelGenerator, Block block) {
+        var blockModelId = ModelIds.getBlockModelId(block);
+        blockStateModelGenerator.blockStateCollector.accept(
+                VariantsBlockStateSupplier.create(
+                        block,
+                        BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId)));
     }
 
     @Override

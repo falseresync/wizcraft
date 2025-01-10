@@ -3,16 +3,11 @@ package falseresync.wizcraft.common.block;
 import falseresync.wizcraft.common.blockentity.ChargingWorktableBlockEntity;
 import falseresync.wizcraft.common.blockentity.CraftingWorktableBlockEntity;
 import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
-import falseresync.wizcraft.common.item.WizcraftItemTags;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.ActionResult;
 
 import java.util.function.Function;
 

@@ -12,6 +12,7 @@ import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
 import falseresync.wizcraft.common.entity.WizcraftEntities;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.RenderLayer;
@@ -36,6 +37,8 @@ public class WizcraftRenderers {
                 WizcraftBlocks.CHARGING_WORKTABLE);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(),
                 WizcraftBlocks.LENS);
+
+        BuiltinItemRendererRegistry.INSTANCE.register(WizcraftItems.LENS, new LensRenderer.ItemRenderer());
 
         TrinketRendererRegistry.registerRenderer(WizcraftItems.TRUESEER_GOGGLES, new TrueseerGogglesRenderer());
     }

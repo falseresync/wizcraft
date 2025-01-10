@@ -10,6 +10,8 @@ public class WizcraftItemGroups {
             .icon(WizcraftItems.WAND::getDefaultStack)
             .displayName(Text.translatable("itemGroup.wizcraft"))
             .entries((displayContext, entries) -> {
+                entries.add(WizcraftItems.GRIMOIRE);
+
                 entries.add(WizcraftItems.MORTAR_AND_PESTLE);
 
                 entries.add(WizcraftItems.METALLIZED_STICK);
@@ -25,6 +27,7 @@ public class WizcraftItemGroups {
                 entries.add(WizcraftItems.TRUESEER_GOGGLES);
                 entries.add(WizcraftItems.FOCUSES_BELT);
 
+                entries.add(WizcraftItems.CRUCIBLE);
                 entries.add(WizcraftItems.LENS);
                 entries.add(WizcraftItems.WORKTABLE);
                 entries.add(WizcraftItems.LENSING_PEDESTAL);

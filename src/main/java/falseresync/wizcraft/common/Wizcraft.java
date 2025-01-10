@@ -7,6 +7,7 @@ import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.entity.WizcraftEntities;
+import falseresync.wizcraft.common.item.ActivatorItem;
 import falseresync.wizcraft.common.item.WizcraftItemGroups;
 import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
@@ -70,6 +71,7 @@ public class Wizcraft implements ModInitializer {
         MidnightConfig.init(MOD_ID, WizcraftConfig.class);
         WizcraftBlocks.init();
         WizcraftItems.init();
+        ActivatorItem.registerBehaviors();
         new AutoRegistry(MOD_ID, LOGGER)
                 .link(Registries.BLOCK_ENTITY_TYPE, WizcraftBlockEntities.class)
                 .link(Registries.ITEM_GROUP, WizcraftItemGroups.class)

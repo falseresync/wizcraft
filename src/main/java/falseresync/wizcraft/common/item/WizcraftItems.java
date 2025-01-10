@@ -14,7 +14,7 @@ import java.util.function.Function;
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftItems {
-    public static final LavenderBookItem GRIMOIRE = LavenderBookItem.registerForBook(wid("grimoire"), new Item.Settings().maxCount(1).rarity(Rarity.RARE));
+    public static final LavenderBookItem GRIMOIRE = LavenderBookItem.registerForBook(r("grimoire", GrimoireItem::new, new Item.Settings().maxCount(1).rarity(Rarity.RARE)));
 
     public static final Item MORTAR_AND_PESTLE = r("mortar_and_pestle", MortarAndPestleItem::new, new Item.Settings().maxCount(1).maxDamage(16));
 

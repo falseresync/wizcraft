@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.ActionResult;
@@ -55,21 +56,5 @@ public class WizcraftBlocks {
     }
 
     public static void init() {
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            if (world.isClient) {
-                return ActionResult.PASS;
-            }
-
-            if (!player.isSpectator() && player.getStackInHand(hand).isIn(WizcraftItemTags.ACTIVATORS)) {
-                var pos = hitResult.getBlockPos();
-                if (world.getBlockState(pos).isOf(Blocks.WATER_CAULDRON) && world.getBlockState(pos.down()).isOf(Blocks.FIRE)) {
-                    world.setBlockState(pos, CRUCIBLE.getDefaultState(), Block.NOTIFY_ALL);
-                }
-
-                return ActionResult.SUCCESS;
-            }
-
-            return ActionResult.PASS;
-        });
     }
 }

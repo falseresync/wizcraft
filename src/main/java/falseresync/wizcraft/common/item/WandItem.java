@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-public class WandItem extends Item {
+public class WandItem extends Item implements ActivatorItem {
     public WandItem(Settings settings) {
         super(settings
                 .component(WizcraftDataComponents.WAND_CHARGE, 0)
@@ -80,6 +80,9 @@ public class WandItem extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
+        var activationResult = activateBlock(context);
+        if (activationResult.isAccepted()) return activationResult;
+
         var world = context.getWorld();
         var pos = context.getBlockPos();
         if (world.getBlockState(pos).isOf(WizcraftBlocks.DUMMY_WORKTABLE)) {

@@ -14,8 +14,8 @@ import java.util.List;
 
 public final class FocusesBeltComponent extends SimpleInventory implements TooltipData {
     public static final FocusesBeltComponent DEFAULT = new FocusesBeltComponent(List.of());
-    public static final Codec<FocusesBeltComponent> CODEC = ItemStack.CODEC.listOf().xmap(FocusesBeltComponent::new, FocusesBeltComponent::getHeldStacks);
-    public static final PacketCodec<RegistryByteBuf, FocusesBeltComponent> PACKET_CODEC = ItemStack.LIST_PACKET_CODEC.xmap(FocusesBeltComponent::new, FocusesBeltComponent::getHeldStacks);
+    public static final Codec<FocusesBeltComponent> CODEC = ItemStack.OPTIONAL_CODEC.listOf().xmap(FocusesBeltComponent::new, FocusesBeltComponent::getHeldStacks);
+    public static final PacketCodec<RegistryByteBuf, FocusesBeltComponent> PACKET_CODEC = ItemStack.OPTIONAL_LIST_PACKET_CODEC.xmap(FocusesBeltComponent::new, FocusesBeltComponent::getHeldStacks);
 
     public FocusesBeltComponent(List<ItemStack> stacks) {
         super(12);

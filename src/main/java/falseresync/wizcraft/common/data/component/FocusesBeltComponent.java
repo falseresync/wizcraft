@@ -28,6 +28,16 @@ public final class FocusesBeltComponent extends SimpleInventory implements Toolt
         }
     }
 
+    public int getSlotWithStack(ItemStack stack) {
+        for (int i = 0; i < size(); i++) {
+            if (!heldStacks.get(i).isEmpty() && ItemStack.areItemsAndComponentsEqual(stack, heldStacks.get(i))) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     public String toString() {
         return "Focuses belt contents" + heldStacks;

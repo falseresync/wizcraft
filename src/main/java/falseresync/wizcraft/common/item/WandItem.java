@@ -4,6 +4,8 @@ import falseresync.wizcraft.client.WizcraftKeybindings;
 import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -62,7 +64,7 @@ public class WandItem extends Item implements ActivatorItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         var wandStack = user.getStackInHand(hand);
-        var focusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(wandStack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusUse(wandStack, focusStack, world, user, hand);
         }
@@ -76,7 +78,7 @@ public class WandItem extends Item implements ActivatorItem {
         if (activationResult.isAccepted()) return activationResult;
 
         var wandStack = context.getStack();
-        var focusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(wandStack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusUseOnBlock(wandStack, focusStack, context);
         }
@@ -87,7 +89,7 @@ public class WandItem extends Item implements ActivatorItem {
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         var wandStack = user.getStackInHand(hand);
-        var focusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(wandStack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusUseOnEntity(wandStack, focusStack, user, entity, hand);
         }
@@ -97,7 +99,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             focusItem.focusUsageTick(world, user, stack, focusStack, remainingUseTicks);
             return;
@@ -108,7 +110,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusFinishUsing(stack, focusStack, world, user);
         }
@@ -118,7 +120,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             focusItem.focusOnStoppedUsing(stack, focusStack, world, user, remainingUseTicks);
         }
@@ -126,7 +128,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             focusItem.focusInventoryTick(stack, focusStack, world, entity, slot, selected);
         }
@@ -136,7 +138,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public boolean isUsedOnRelease(ItemStack stack) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusIsUsedOnRelease(stack, focusStack);
         }
@@ -151,7 +153,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public int getMaxUseTime(ItemStack stack, LivingEntity user) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusGetMaxUseTime(stack, focusStack, user);
         }
@@ -163,7 +165,7 @@ public class WandItem extends Item implements ActivatorItem {
     public float getBonusAttackDamage(Entity target, float baseAttackDamage, DamageSource damageSource) {
         var weaponStack = damageSource.getWeaponStack();
         if (weaponStack != null && weaponStack.getItem() instanceof WandItem) {
-            var focusStack = weaponStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+            var focusStack = getEquipped(weaponStack);
             if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
                 return focusItem.focusGetBonusAttackDamage(weaponStack, focusStack, target, baseAttackDamage, damageSource);
             }
@@ -176,7 +178,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public boolean isItemBarVisible(ItemStack stack) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusIsItemBarVisible(stack, focusStack);
         }
@@ -186,7 +188,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public int getItemBarStep(ItemStack stack) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusGetItemBarStep(stack, focusStack);
         }
@@ -196,7 +198,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public int getItemBarColor(ItemStack stack) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusGetItemBarColor(stack, focusStack);
         }
@@ -206,7 +208,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             return focusItem.focusHasGlint(stack, focusStack);
         }
@@ -216,7 +218,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        var focusStack = stack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             tooltip.add(Text
                     .translatable("tooltip.wizcraft.wand.active_focus", focusStack.getName())
@@ -249,7 +251,7 @@ public class WandItem extends Item implements ActivatorItem {
     }
 
     public TypedActionResult<ItemStack> exchangeFocuses(ItemStack wandStack, ItemStack newFocusStack) {
-        var oldFocusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var oldFocusStack = getEquipped(wandStack);
 
         var removeOld = false;
         var insertNew = false;
@@ -284,5 +286,9 @@ public class WandItem extends Item implements ActivatorItem {
 
         // newFocus is not empty, but not a focus item -> fail newFocus
         return TypedActionResult.fail(newFocusStack);
+    }
+
+    public ItemStack getEquipped(ItemStack wandStack) {
+        return wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
     }
 }

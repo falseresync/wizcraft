@@ -1,7 +1,5 @@
 package falseresync.wizcraft.client;
 
-import dev.emi.trinkets.api.TrinketInventory;
-import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.api.event.TrinketDropCallback;
 import dev.emi.trinkets.api.event.TrinketEquipCallback;
 import dev.emi.trinkets.api.event.TrinketUnequipCallback;
@@ -12,15 +10,14 @@ import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
+import falseresync.wizcraft.networking.c2s.WandFocusDestination;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.util.TypedActionResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -108,19 +105,19 @@ public class WandManager {
     }
 
     private void scanInventoryAndSetupFocusPicker(PlayerInventory inventory, ItemStack wandStack, boolean shouldPickNext) {
-        var equippedFocusStack = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
-        var focusStacks = inventory.main.stream()
-                .filter(it -> it.isIn(WizcraftItemTags.FOCUSES))
-                .collect(Collectors.toCollection(LinkedList::new));
-        // TODO: integrate focuses belt into selection
-//        var focusesBeltStacks = TrinketsApi.getTrinketComponent(inventory.player)
-//                .map(trinketComponent -> trinketComponent.getEquipped(WizcraftItems.FOCUSES_BELT).getFirst().getRight())
-//                .flatMap(stack -> Optional.ofNullable(stack.get(WizcraftDataComponents.FOCUSES_BELT)))
-//                .map(focusesBeltComponent -> new LinkedList<>(focusesBeltComponent.heldStacks))
-//                .orElseGet(LinkedList::new);
+        var equipped = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var beltContents = WizcraftItems.FOCUSES_BELT.findTrinketContents(inventory.player);
+        var focusStacks = beltContents.isPresent()
+                ? beltContents.stream()
+                        .flatMap(focusesBeltComponent -> focusesBeltComponent.getHeldStacks().stream())
+                        .filter(stack -> !stack.isEmpty())
+                        .collect(Collectors.toCollection(LinkedList::new))
+                : inventory.main.stream()
+                        .filter(it -> it.isIn(WizcraftItemTags.FOCUSES))
+                        .collect(Collectors.toCollection(LinkedList::new));
 
-        if (!equippedFocusStack.isEmpty()) {
-            focusStacks.addFirst(equippedFocusStack);
+        if (!equipped.isEmpty()) {
+            focusStacks.addFirst(equipped);
         }
 
         if (focusStacks.isEmpty()) {
@@ -128,29 +125,45 @@ public class WandManager {
             return;
         }
 
-        setupFocusPicker(inventory, focusStacks, equippedFocusStack, shouldPickNext);
+        var destination = WandFocusDestination.PLAYER_INVENTORY;
+        if (beltContents.isPresent()) {
+            destination = WandFocusDestination.FOCUSES_BELT;
+        } // wand inventories go here
+
+        var picked = setupFocusPicker(focusStacks, equipped, shouldPickNext);
+        if (picked != null) {
+            sendChangeWandFocusPacket(inventory, destination, picked);
+        }
     }
 
-    private void setupFocusPicker(PlayerInventory inventory, LinkedList<ItemStack> focusStacks, ItemStack equippedFocusStack, boolean shouldPickNext) {
+    @Nullable
+    private ItemStack setupFocusPicker(LinkedList<ItemStack> focusStacks, ItemStack equipped, boolean shouldPickNext) {
         focusPicker.upload(focusStacks);
 
         if (shouldPickNext) {
             // First press opens the menu, following ones change the focus
             // But if there was no focus equipped, pick on first press anyway
-            if (focusPicker.isVisible() || equippedFocusStack.isEmpty()) {
+            if (focusPicker.isVisible() || equipped.isEmpty()) {
                 focusPicker.pickNext();
             }
             focusPicker.show();
 
-            var currentlyPickedFocusStack = focusPicker.getCurrentlyPicked();
-            if (ItemStack.areItemsAndComponentsEqual(equippedFocusStack, currentlyPickedFocusStack)) {
-                return;
-            }
+            var picked = focusPicker.getCurrentlyPicked();
+            return ItemStack.areItemsAndComponentsEqual(equipped, picked) ? null : picked;
+        }
 
-            var slot = inventory.getSlotWithStack(currentlyPickedFocusStack);
-            if (slot != -1) {
-                ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(slot));
-            }
+        return null;
+    }
+
+    private void sendChangeWandFocusPacket(PlayerInventory inventory, WandFocusDestination destination, ItemStack picked) {
+        if (destination == WandFocusDestination.PLAYER_INVENTORY) {
+            var slot = inventory.getSlotWithStack(picked);
+            ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(destination, slot));
+        } else if (destination == WandFocusDestination.FOCUSES_BELT) {
+            var slot = WizcraftItems.FOCUSES_BELT.findTrinketContents(inventory.player)
+                    .map(component -> component.getSlotWithStack(picked))
+                    .orElse(-1);
+            ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(destination, slot));
         }
     }
 }

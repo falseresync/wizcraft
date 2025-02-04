@@ -7,10 +7,15 @@ import net.minecraft.network.packet.CustomPayload;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
-public record ChangeWandFocusC2SPacket(int slot) implements CustomPayload {
-    public static final CustomPayload.Id<ChangeWandFocusC2SPacket> ID = new Id<>(wid("change_wand_focus"));
+
+public record ChangeWandFocusC2SPacket(WandFocusDestination destination, int slot) implements CustomPayload {
+    public static final Id<ChangeWandFocusC2SPacket> ID = new Id<>(wid("change_wand_focus"));
     public static final PacketCodec<RegistryByteBuf, ChangeWandFocusC2SPacket> PACKET_CODEC =
-            PacketCodecs.INTEGER.xmap(ChangeWandFocusC2SPacket::new, ChangeWandFocusC2SPacket::slot).cast();
+            PacketCodec.tuple(
+                    PacketCodecs.INTEGER.xmap(it -> WandFocusDestination.values[it], WandFocusDestination::ordinal).cast(), ChangeWandFocusC2SPacket::destination,
+                    PacketCodecs.INTEGER, ChangeWandFocusC2SPacket::slot,
+                    ChangeWandFocusC2SPacket::new
+            );
 
     @Override
     public Id<ChangeWandFocusC2SPacket> getId() {

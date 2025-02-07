@@ -4,8 +4,6 @@ import falseresync.wizcraft.client.WizcraftKeybindings;
 import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

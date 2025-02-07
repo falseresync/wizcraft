@@ -2,7 +2,7 @@ package falseresync.wizcraft.common.item;
 
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
-import falseresync.wizcraft.common.data.component.FocusesBeltComponent;
+import falseresync.wizcraft.common.data.component.InventoryComponentProvider;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -13,9 +13,11 @@ import net.minecraft.util.TypedActionResult;
 
 import java.util.Optional;
 
-public class FocusesBeltItem extends TrinketItem {
+public class FocusesBeltItem extends TrinketItem implements InventoryComponentProvider {
+    public static final int INVENTORY_SIZE = 12;
+
     public FocusesBeltItem(Settings settings) {
-        super(settings.component(WizcraftDataComponents.FOCUSES_BELT, FocusesBeltComponent.DEFAULT));
+        super(settings);
     }
 
     @Override
@@ -36,43 +38,36 @@ public class FocusesBeltItem extends TrinketItem {
                 .flatMap(equipped -> equipped.isEmpty() ? Optional.empty() : Optional.of(equipped.getFirst().getRight()));
     }
 
-    public Optional<FocusesBeltComponent> findTrinketContents(PlayerEntity player) {
-        return findTrinketStack(player).map(stack -> {
-            var contents = getContents(stack);
-            contents.addListener(changed -> stack.set(WizcraftDataComponents.FOCUSES_BELT, (FocusesBeltComponent) changed));
-            return contents;
-        });
-    }
-
     public TypedActionResult<ItemStack> exchangeStack(ItemStack beltStack, ItemStack stackInSlot) {
-        var contents = getContents(beltStack);
+        var inventory = getOrCreateInventoryComponent(beltStack).toModifiable();
         var remainder = ItemStack.EMPTY;
         var dirty = false;
         if (stackInSlot.isIn(WizcraftItemTags.FOCUSES)) {
-            remainder = contents.addStack(stackInSlot);
+            remainder = inventory.addStack(stackInSlot);
             dirty = true;
         } else if (stackInSlot.isEmpty()) {
-            for (int i = 0; i < contents.size(); i++) {
-                if (!contents.getStack(i).isEmpty()) {
-                    remainder = contents.removeStack(i);
+            for (int i = 0; i < inventory.size(); i++) {
+                if (!inventory.getStack(i).isEmpty()) {
+                    remainder = inventory.removeStack(i);
                     dirty = true;
                     break;
                 }
             }
         }
         if (dirty) {
-            beltStack.set(WizcraftDataComponents.FOCUSES_BELT, contents);
+            inventory.flush(beltStack);
             return TypedActionResult.success(remainder);
         }
         return TypedActionResult.fail(remainder);
     }
 
-    public FocusesBeltComponent getContents(ItemStack beltStack) {
-        return beltStack.getOrDefault(WizcraftDataComponents.FOCUSES_BELT, FocusesBeltComponent.DEFAULT);
+    @Override
+    public Optional<TooltipData> getTooltipData(ItemStack stack) {
+        return Optional.ofNullable(stack.get(WizcraftDataComponents.INVENTORY));
     }
 
     @Override
-    public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        return Optional.ofNullable(stack.get(WizcraftDataComponents.FOCUSES_BELT));
+    public int getInventorySize() {
+        return INVENTORY_SIZE;
     }
 }

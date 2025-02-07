@@ -21,7 +21,6 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class WandManager {
@@ -106,10 +105,11 @@ public class WandManager {
 
     private void scanInventoryAndSetupFocusPicker(PlayerInventory inventory, ItemStack wandStack, boolean shouldPickNext) {
         var equipped = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
-        var beltContents = WizcraftItems.FOCUSES_BELT.findTrinketContents(inventory.player);
-        var focusStacks = beltContents.isPresent()
-                ? beltContents.stream()
-                        .flatMap(focusesBeltComponent -> focusesBeltComponent.getHeldStacks().stream())
+        var belt = WizcraftItems.FOCUSES_BELT.findTrinketStack(inventory.player);
+        var focusStacks = belt.isPresent()
+                ? belt.stream()
+                        .map(WizcraftItems.FOCUSES_BELT::getOrCreateInventoryComponent)
+                        .flatMap(inventoryComponent -> inventoryComponent.stacks().stream())
                         .filter(stack -> !stack.isEmpty())
                         .collect(Collectors.toCollection(LinkedList::new))
                 : inventory.main.stream()
@@ -126,7 +126,7 @@ public class WandManager {
         }
 
         var destination = WandFocusDestination.PLAYER_INVENTORY;
-        if (beltContents.isPresent()) {
+        if (belt.isPresent()) {
             destination = WandFocusDestination.FOCUSES_BELT;
         } // wand inventories go here
 
@@ -160,7 +160,8 @@ public class WandManager {
             var slot = inventory.getSlotWithStack(picked);
             ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(destination, slot));
         } else if (destination == WandFocusDestination.FOCUSES_BELT) {
-            var slot = WizcraftItems.FOCUSES_BELT.findTrinketContents(inventory.player)
+            var slot = WizcraftItems.FOCUSES_BELT.findTrinketStack(inventory.player)
+                    .map(WizcraftItems.FOCUSES_BELT::getOrCreateInventoryComponent)
                     .map(component -> component.getSlotWithStack(picked))
                     .orElse(-1);
             ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(destination, slot));

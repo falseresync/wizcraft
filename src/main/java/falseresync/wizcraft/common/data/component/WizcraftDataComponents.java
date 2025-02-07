@@ -25,6 +25,6 @@ public class WizcraftDataComponents {
             ComponentType.<Integer>builder().codec(Codecs.NONNEGATIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
     public static final @RegistryObject ComponentType<GlobalPos> WARP_FOCUS_ANCHOR =
             ComponentType.<GlobalPos>builder().codec(GlobalPos.CODEC).packetCodec(GlobalPos.PACKET_CODEC).build();
-    public static final @RegistryObject ComponentType<FocusesBeltComponent> FOCUSES_BELT =
-            ComponentType.<FocusesBeltComponent>builder().codec(FocusesBeltComponent.CODEC).packetCodec(FocusesBeltComponent.PACKET_CODEC).build();
+    public static final @RegistryObject ComponentType<InventoryComponent> INVENTORY =
+            ComponentType.<InventoryComponent>builder().codec(InventoryComponent.CODEC).packetCodec(InventoryComponent.PACKET_CODEC).build();
 }

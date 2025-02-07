@@ -5,10 +5,6 @@ import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.item.ItemStack;
 
 public class WizcraftNetworkingServer {
@@ -46,17 +42,18 @@ public class WizcraftNetworkingServer {
                 // do nothing, yet
             }
             case FOCUSES_BELT -> {
-                WizcraftItems.FOCUSES_BELT.findTrinketContents(player).ifPresent(beltContents -> {
-                    if (packet.slot() > beltContents.size() - 1) {
+                WizcraftItems.FOCUSES_BELT.findTrinketStack(player).ifPresent(beltStack -> {
+                    var inventoryComponent = WizcraftItems.FOCUSES_BELT.getOrCreateInventoryComponent(beltStack);
+                    if (packet.slot() > inventoryComponent.size() - 1) {
                         return;
                     }
 
-                    var picked = beltContents.removeStack(packet.slot());
+                    var picked = inventoryComponent.stacks().get(packet.slot());
                     var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, picked);
                     if (exchange.getResult().isAccepted()) {
-                        beltContents.setStack(packet.slot(), exchange.getValue());
-                    } else {
-                        beltContents.setStack(packet.slot(), picked);
+                        var inventory = inventoryComponent.toModifiable();
+                        inventory.setStack(packet.slot(), exchange.getValue());
+                        inventory.flush(beltStack);
                     }
                 });
             }

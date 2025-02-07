@@ -1,9 +1,8 @@
 package falseresync.wizcraft.client.gui;
 
-import falseresync.wizcraft.common.data.component.FocusesBeltComponent;
+import falseresync.wizcraft.common.data.component.InventoryComponent;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -13,9 +12,9 @@ public class FocusesBeltTooltipComponent implements TooltipComponent {
     private static final int BOTTOM_MARGIN = 4;
     private static final int WIDTH_PER_COLUMN = 18;
     private static final int HEIGHT_PER_ROW = 20;
-    private final FocusesBeltComponent focusesBelt;
+    private final InventoryComponent focusesBelt;
 
-    public FocusesBeltTooltipComponent(FocusesBeltComponent container) {
+    public FocusesBeltTooltipComponent(InventoryComponent container) {
         this.focusesBelt = container;
     }
 
@@ -57,13 +56,10 @@ public class FocusesBeltTooltipComponent implements TooltipComponent {
         if (index >= focusesBelt.size()) {
             drawSprite(context, x, y, SlotSprite.SLOT);
         } else {
-            ItemStack itemStack = focusesBelt.getStack(index);
+            ItemStack itemStack = focusesBelt.stacks().get(index);
             drawSprite(context, x, y, SlotSprite.SLOT);
             context.drawItem(itemStack, x + 1, y + 1, index);
             context.drawItemInSlot(textRenderer, itemStack, x + 1, y + 1);
-            if (index == 0) {
-                HandledScreen.drawSlotHighlight(context, x + 1, y + 1, 0);
-            }
         }
     }
 

@@ -29,6 +29,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 public class Wizcraft implements ModInitializer {
     public static final String MOD_ID = "wizcraft";
     public static final Logger LOGGER = LoggerFactory.getLogger("Wizcraft");
+    private static ChargeManager chargeManager;
 
     public static Identifier id(String id) {
         return Identifier.of(id);
@@ -87,5 +89,11 @@ public class Wizcraft implements ModInitializer {
         WizcraftSounds.init();
         WizcraftNetworking.registerPackets();
         WizcraftNetworkingServer.registerReceivers();
+
+        chargeManager = new ChargeManager();
+    }
+
+    public static ChargeManager getChargeManager() {
+        return chargeManager;
     }
 }

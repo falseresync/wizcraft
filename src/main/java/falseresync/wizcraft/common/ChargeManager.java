@@ -1,7 +1,6 @@
-package falseresync.wizcraft.common.data;
+package falseresync.wizcraft.common;
 
 import com.google.common.base.Preconditions;
-import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import net.fabricmc.fabric.api.event.Event;
@@ -33,7 +32,7 @@ public class ChargeManager {
         void onWandOvercharged(ItemStack wandStack, int excess, @Nullable PlayerEntity user);
     }
 
-    static {
+    public ChargeManager() {
         WAND_CHARGE_SPENT.register((wandStack, cost, user) -> {
             if (user != null && user.hasAttached(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS)) {
                 var shellsCurrent = user.getAttachedOrCreate(WizcraftDataAttachments.CHARGE_IN_SHELLS);
@@ -47,12 +46,12 @@ public class ChargeManager {
 
         WAND_OVERCHARGED.register((wandStack, excess, user) -> {
             if (user != null && user.hasAttached(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS)) {
-                applyShellCharge(user, excess);
+                Wizcraft.getChargeManager().applyShellCharge(user, excess);
             }
         });
     }
 
-    public static boolean areShellsFull(PlayerEntity player) {
+    public boolean areShellsFull(PlayerEntity player) {
         if (player.hasAttached(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS)) {
             return player.getAttachedOrCreate(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS) <= player.getAttachedOrCreate(WizcraftDataAttachments.CHARGE_IN_SHELLS);
         }
@@ -60,7 +59,7 @@ public class ChargeManager {
         return true;
     }
 
-    public static void applyShellCharge(PlayerEntity player, int amount) {
+    public void applyShellCharge(PlayerEntity player, int amount) {
         var current = player.getAttachedOrCreate(WizcraftDataAttachments.CHARGE_IN_SHELLS);
         if (amount >= 0) {
             var max = player.getAttachedOrCreate(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS);
@@ -70,11 +69,11 @@ public class ChargeManager {
         }
     }
 
-    public static boolean isWandFullyCharged(ItemStack wandStack) {
+    public boolean isWandFullyCharged(ItemStack wandStack) {
         return wandStack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0) >= wandStack.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
     }
 
-    public static boolean tryExpendWandCharge(ItemStack wandStack, int cost, @Nullable PlayerEntity user) {
+    public boolean tryExpendWandCharge(ItemStack wandStack, int cost, @Nullable PlayerEntity user) {
         if (user != null && (user.isCreative() && WizcraftConfig.freeChargeInCreative || WizcraftConfig.freeChargeInSurvival)) {
             return true;
         }
@@ -87,7 +86,7 @@ public class ChargeManager {
         return false;
     }
 
-    public static void chargeWand(ItemStack wandStack, int amount, @Nullable PlayerEntity user) {
+    public void chargeWand(ItemStack wandStack, int amount, @Nullable PlayerEntity user) {
         Preconditions.checkArgument(amount > 0, "Use tryExpendCharge to subtract charge");
         var current = wandStack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
         var max = wandStack.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);

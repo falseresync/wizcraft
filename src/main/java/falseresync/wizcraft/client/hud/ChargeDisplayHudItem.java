@@ -14,7 +14,7 @@ import net.minecraft.util.math.ColorHelper;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
-public class WandChargeDisplayHudItem implements HudItem {
+public class ChargeDisplayHudItem implements HudItem {
     protected static final Identifier BAR_TEX = wid("textures/hud/wand/charge_bar.png");
     protected static final Identifier OVERLAY_TEX = wid("textures/hud/wand/charge_bar_overlay.png");
     protected static final Identifier SHELL_TEX = wid("textures/hud/wand/charge_shell.png");
@@ -42,7 +42,7 @@ public class WandChargeDisplayHudItem implements HudItem {
     private boolean animating = false;
     private int remainingAnimationTicks = 0;
 
-    public WandChargeDisplayHudItem(MinecraftClient client, TextRenderer textRenderer) {
+    public ChargeDisplayHudItem(MinecraftClient client, TextRenderer textRenderer) {
         this.client = client;
         this.textRenderer = textRenderer;
     }

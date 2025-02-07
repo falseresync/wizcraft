@@ -10,14 +10,14 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 
 public class WizcraftClient implements ClientModInitializer {
     private static WizcraftHud hud;
-    private static WandManager wandManager;
+    private static ToolManager toolManager;
 
     public static WizcraftHud getHud() {
         return hud;
     }
 
-    public static WandManager getWandManager() {
-        return wandManager;
+    public static ToolManager getToolManager() {
+        return toolManager;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class WizcraftClient implements ClientModInitializer {
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             hud = new WizcraftHud(client);
-            wandManager = new WandManager();
+            toolManager = new ToolManager();
         });
     }
 }

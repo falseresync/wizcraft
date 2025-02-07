@@ -1,8 +1,6 @@
 package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.client.WizcraftKeybindings;
-import falseresync.wizcraft.common.WizcraftConfig;
-import falseresync.wizcraft.common.data.ChargeManager;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.item.focus.FocusItem;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -20,7 +18,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 

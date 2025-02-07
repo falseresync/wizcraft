@@ -25,7 +25,7 @@ public final class WizcraftKeybindings {
             }
 
             while (TOOL_CONTROL.wasPressed()) {
-                WizcraftClient.getWandManager().onKeyPressed(client, client.player);
+                WizcraftClient.getToolManager().onKeyPressed(client, client.player);
             }
         });
     }

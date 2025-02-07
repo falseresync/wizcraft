@@ -4,7 +4,7 @@ import dev.emi.trinkets.api.event.TrinketDropCallback;
 import dev.emi.trinkets.api.event.TrinketEquipCallback;
 import dev.emi.trinkets.api.event.TrinketUnequipCallback;
 import falseresync.wizcraft.client.hud.FocusPickerHudItem;
-import falseresync.wizcraft.client.hud.WandChargeDisplayHudItem;
+import falseresync.wizcraft.client.hud.ChargeDisplayHudItem;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.item.WizcraftItemTags;
@@ -23,12 +23,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
-public class WandManager {
-    private final WandChargeDisplayHudItem chargeDisplay;
+public class ToolManager {
+    private final ChargeDisplayHudItem chargeDisplay;
     private final FocusPickerHudItem focusPicker;
 
-    public WandManager() {
-        chargeDisplay = WizcraftClient.getHud().getWandChargeDisplay();
+    public ToolManager() {
+        chargeDisplay = WizcraftClient.getHud().getChargeDisplay();
         focusPicker = WizcraftClient.getHud().getFocusPicker();
 
         TrinketEquipCallback.EVENT.register((stack, slot, entity) -> {

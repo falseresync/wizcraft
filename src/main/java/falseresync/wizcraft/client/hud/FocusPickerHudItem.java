@@ -51,7 +51,7 @@ public class FocusPickerHudItem implements HudItem {
             var widgetW = SEL_TEX_W;
             var widgetH = SEL_TEX_H + yOffset;
 
-            var chargeDisplay = WizcraftClient.getHud().getWandChargeDisplay();
+            var chargeDisplay = WizcraftClient.getHud().getChargeDisplay();
             var x = 4 + (chargeDisplay.isVisible() ? chargeDisplay.getWidth() : 0);
             var y = context.getScaledWindowHeight() / 2 - widgetH / 2;
 

@@ -11,36 +11,36 @@ import net.minecraft.util.collection.DefaultedList;
 
 import java.util.List;
 
-
 public record InventoryComponent(ImmutableList<ItemStack> stacks, int size) implements TooltipData {
-    public static final Codec<InventoryComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Slot.CODEC.listOf().xmap(InventoryComponent::fromSlots, InventoryComponent::toSlots)
-                    .fieldOf("slots").forGetter(InventoryComponent::stacks),
-            Codec.INT.fieldOf("size").forGetter(InventoryComponent::size)
-    ).apply(instance, InventoryComponent::new));
+    public static final Codec<InventoryComponent> CODEC =
+            Slot.CODEC.listOf().xmap(InventoryComponent::fromSlots, InventoryComponent::toSlots);
     public static final PacketCodec<RegistryByteBuf, InventoryComponent> PACKET_CODEC =
-            ItemStack.OPTIONAL_LIST_PACKET_CODEC.xmap(InventoryComponent::new, it -> it.stacks);
+            ItemStack.OPTIONAL_LIST_PACKET_CODEC.xmap(InventoryComponent::new, InventoryComponent::stacks);
+
+    public InventoryComponent(List<ItemStack> stacks, int size) {
+        this(ImmutableList.copyOf(stacks), size);
+    }
 
     public InventoryComponent(List<ItemStack> stacks) {
-        this(ImmutableList.copyOf(stacks), stacks.size());
+        this(stacks, stacks.size());
     }
 
     public static InventoryComponent createDefault(int size) {
-        return new InventoryComponent(DefaultedList.ofSize(size, ItemStack.EMPTY));
+        return new InventoryComponent(DefaultedList.ofSize(size, ItemStack.EMPTY), size);
     }
 
-    public static ImmutableList<ItemStack> fromSlots(List<Slot> slots) {
+    public static InventoryComponent fromSlots(List<Slot> slots) {
         var stacks = DefaultedList.ofSize(slots.size(), ItemStack.EMPTY);
         for (Slot slot : slots) {
             stacks.set(slot.index, slot.stack);
         }
-        return ImmutableList.copyOf(stacks);
+        return new InventoryComponent(stacks, slots.size());
     }
 
-    public static List<Slot> toSlots(ImmutableList<ItemStack> stacks) {
+    public static List<Slot> toSlots(InventoryComponent component) {
         var builder = ImmutableList.<Slot>builder();
-        for (int i = 0; i < stacks.size(); i++) {
-            var stack = stacks.get(i);
+        for (int i = 0; i < component.stacks.size(); i++) {
+            var stack = component.stacks.get(i);
             if (!stack.isEmpty()) {
                 builder.add(new Slot(i, stack));
             }

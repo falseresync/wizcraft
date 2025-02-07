@@ -7,15 +7,15 @@ import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-public class FocusesBeltTooltipComponent implements TooltipComponent {
+public class InventoryComponentTooltip implements TooltipComponent {
     private static final Identifier BACKGROUND_TEXTURE = Identifier.ofVanilla("container/bundle/background");
     private static final int BOTTOM_MARGIN = 4;
     private static final int WIDTH_PER_COLUMN = 18;
     private static final int HEIGHT_PER_ROW = 20;
-    private final InventoryComponent focusesBelt;
+    private final InventoryComponent inventoryComponent;
 
-    public FocusesBeltTooltipComponent(InventoryComponent container) {
-        this.focusesBelt = container;
+    public InventoryComponentTooltip(InventoryComponent inventoryComponent) {
+        this.inventoryComponent = inventoryComponent;
     }
 
     @Override
@@ -53,10 +53,10 @@ public class FocusesBeltTooltipComponent implements TooltipComponent {
     }
 
     private void drawSlot(int x, int y, int index, DrawContext context, TextRenderer textRenderer) {
-        if (index >= focusesBelt.size()) {
+        if (index >= inventoryComponent.size()) {
             drawSprite(context, x, y, SlotSprite.SLOT);
         } else {
-            ItemStack itemStack = focusesBelt.stacks().get(index);
+            ItemStack itemStack = inventoryComponent.stacks().get(index);
             drawSprite(context, x, y, SlotSprite.SLOT);
             context.drawItem(itemStack, x + 1, y + 1, index);
             context.drawItemInSlot(textRenderer, itemStack, x + 1, y + 1);
@@ -68,11 +68,11 @@ public class FocusesBeltTooltipComponent implements TooltipComponent {
     }
 
     private int getColumns() {
-        return Math.max(2, (int) Math.ceil(Math.sqrt((double) focusesBelt.size() + 1.0)));
+        return Math.max(2, (int) Math.ceil(Math.sqrt((double) inventoryComponent.size() + 1.0)));
     }
 
     private int getRows() {
-        return (int) Math.ceil((double) focusesBelt.size() / (double) getColumns());
+        return (int) Math.ceil((double) inventoryComponent.size() / (double) getColumns());
     }
 
     enum SlotSprite {

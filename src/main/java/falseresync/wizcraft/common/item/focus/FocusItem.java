@@ -1,4 +1,4 @@
-package falseresync.wizcraft.common.item;
+package falseresync.wizcraft.common.item.focus;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

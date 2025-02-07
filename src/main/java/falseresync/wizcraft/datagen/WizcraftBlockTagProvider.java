@@ -31,6 +31,6 @@ public class WizcraftBlockTagProvider extends FabricTagProvider.BlockTagProvider
         getOrCreateTagBuilder(WizcraftBlockTags.CRUCIBLE_HEAT_SOURCES)
                 .add(Blocks.FIRE)
                 .add(Blocks.SOUL_FIRE)
-                .addTag(BlockTags.CAMPFIRES);
+                .forceAddTag(BlockTags.CAMPFIRES);
     }
 }

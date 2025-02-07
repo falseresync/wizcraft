@@ -26,6 +26,7 @@ public class WizcraftItemGroups {
 
                 entries.add(WizcraftItems.TRUESEER_GOGGLES);
                 entries.add(WizcraftItems.FOCUSES_BELT);
+                entries.add(WizcraftItems.CHARGE_SHELL);
 
                 entries.add(WizcraftItems.CRUCIBLE);
                 entries.add(WizcraftItems.LENS);

@@ -1,7 +1,11 @@
-package falseresync.wizcraft.common.item;
+package falseresync.wizcraft.common.item.focus;
 
 import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.common.data.ChargeManager;
+import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.common.item.ChargeShellItem;
+import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +40,7 @@ public class ChargingFocusItem extends FocusItem{
                 return TypedActionResult.fail(wandStack);
             }
 
-            if (WizcraftItems.WAND.isFullyCharged(wandStack)) {
+            if (ChargeManager.isWandFullyCharged(wandStack) && ChargeManager.areShellsFull(player)) {
                 WizcraftReports.WAND_ALREADY_FULLY_CHARGED.sendTo(player);
                 return TypedActionResult.pass(wandStack);
             }
@@ -61,7 +65,7 @@ public class ChargingFocusItem extends FocusItem{
     @Override
     public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user) {
         wandStack.remove(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS);
-        wandStack.apply(WizcraftDataComponents.WAND_CHARGE, 0, current -> current + 40);
+        ChargeManager.chargeWand(wandStack, 40, user instanceof PlayerEntity player ? player : null);
         if (user instanceof ServerPlayerEntity player) {
             WizcraftReports.WAND_SUCCESSFULLY_CHARGED.sendAround((ServerWorld) world, player.getBlockPos(), player);
         }

@@ -1,6 +1,8 @@
-package falseresync.wizcraft.common.item;
+package falseresync.wizcraft.common.item.focus;
 
+import falseresync.wizcraft.common.data.ChargeManager;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -44,7 +46,7 @@ public class CometWarpFocusItem extends FocusItem {
     public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
         if (user instanceof ServerPlayerEntity player) {
             if (user.isSneaking()) {
-                if (!WizcraftItems.WAND.tryExpendCharge(wandStack, DEFAULT_PLACEMENT_COST, user)) {
+                if (!ChargeManager.tryExpendWandCharge(wandStack, DEFAULT_PLACEMENT_COST, user)) {
                     WizcraftReports.WAND_INSUFFICIENT_CHARGE.sendTo(player);
                     return TypedActionResult.fail(wandStack);
                 }
@@ -66,7 +68,7 @@ public class CometWarpFocusItem extends FocusItem {
                 var warpingCost = destination.getDimension() != world.getDimension()
                         ? DEFAULT_INTERDIMENSIONAL_COST
                         : DEFAULT_WARPING_COST;
-                if (!WizcraftItems.WAND.tryExpendCharge(wandStack, warpingCost, user)) {
+                if (!ChargeManager.tryExpendWandCharge(wandStack, warpingCost, user)) {
                     WizcraftReports.WAND_INSUFFICIENT_CHARGE.sendTo(player);
                     return TypedActionResult.fail(wandStack);
                 }

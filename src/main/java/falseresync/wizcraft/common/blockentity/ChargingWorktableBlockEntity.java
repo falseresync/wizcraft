@@ -1,6 +1,7 @@
 package falseresync.wizcraft.common.blockentity;
 
 import falseresync.wizcraft.common.CommonKeys;
+import falseresync.wizcraft.common.data.ChargeManager;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
@@ -86,12 +87,12 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
             return;
         }
 
-        if (WizcraftItems.WAND.isFullyCharged(heldStack)) return;
+        if (ChargeManager.isWandFullyCharged(heldStack)) return;
 
         if (world.isNight() && world.random.nextFloat() < 0.25 || world.random.nextFloat() < 0.0625) {
             heldStack.apply(WizcraftDataComponents.WAND_CHARGE, 0, current -> current + 1);
 
-            var isFullyCharged = WizcraftItems.WAND.isFullyCharged(heldStack);
+            var isFullyCharged = ChargeManager.isWandFullyCharged(heldStack);
             if (charging && isFullyCharged || !charging && !isFullyCharged) {
                 charging = !charging;
                 markDirty();

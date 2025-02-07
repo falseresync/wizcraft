@@ -75,5 +75,6 @@ public class WizcraftModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(WizcraftItems.TRUESEER_GOGGLES, Models.GENERATED);
         itemModelGenerator.register(WizcraftItems.FOCUSES_BELT, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.CHARGE_SHELL, Models.GENERATED);
     }
 }

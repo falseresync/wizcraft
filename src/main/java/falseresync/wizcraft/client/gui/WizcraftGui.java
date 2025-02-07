@@ -5,6 +5,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 
 public class WizcraftGui {
     public static void init() {
-        TooltipComponentCallback.EVENT.register(data -> data instanceof InventoryComponent component ? new FocusesBeltTooltipComponent(component) : null);
+        TooltipComponentCallback.EVENT.register(data -> data instanceof InventoryComponent component ? new InventoryComponentTooltip(component) : null);
     }
 }

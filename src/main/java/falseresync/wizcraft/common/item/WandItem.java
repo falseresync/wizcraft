@@ -2,7 +2,9 @@ package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.client.WizcraftKeybindings;
 import falseresync.wizcraft.common.WizcraftConfig;
+import falseresync.wizcraft.common.data.ChargeManager;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.common.item.focus.FocusItem;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -231,22 +233,6 @@ public class WandItem extends Item implements ActivatorItem {
 
 
     // Custom wand methods
-
-    public boolean isFullyCharged(ItemStack stack) {
-        return stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0) >= stack.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
-    }
-
-    public boolean tryExpendCharge(ItemStack stack, int cost, @Nullable PlayerEntity user) {
-        if (user != null && (user.isCreative() && WizcraftConfig.freeChargeInCreative || WizcraftConfig.freeChargeInSurvival)) {
-            return true;
-        }
-        var charge = stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
-        if (charge >= cost) {
-            stack.apply(WizcraftDataComponents.WAND_CHARGE, charge, current -> current - cost);
-            return true;
-        }
-        return false;
-    }
 
     public TypedActionResult<ItemStack> exchangeFocuses(ItemStack wandStack, ItemStack newFocusStack) {
         var oldFocusStack = getEquipped(wandStack);

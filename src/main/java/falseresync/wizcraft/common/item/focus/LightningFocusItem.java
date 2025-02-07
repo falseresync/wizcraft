@@ -1,6 +1,8 @@
-package falseresync.wizcraft.common.item;
+package falseresync.wizcraft.common.item.focus;
 
 import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.common.data.ChargeManager;
+import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +25,7 @@ public class LightningFocusItem extends FocusItem {
     @Override
     public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
         if (user instanceof ServerPlayerEntity player) {
-            if (WizcraftItems.WAND.tryExpendCharge(wandStack, 10, user)) {
+            if (ChargeManager.tryExpendWandCharge(wandStack, 10, user)) {
                 var lightning = EntityType.LIGHTNING_BOLT.create(world);
                 var maxDistance = MathHelper.clamp(Wizcraft.findViewDistance(world) * 16 / 4F, 32, 128);
                 var raycastResult = user.raycast(maxDistance, 0, true);

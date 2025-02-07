@@ -3,31 +3,40 @@ package falseresync.wizcraft.client.hud;
 import com.mojang.blaze3d.systems.RenderSystem;
 import falseresync.lib.client.BetterDrawContext;
 import falseresync.lib.math.Easing;
+import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WandChargeDisplayHudItem implements HudItem {
     protected static final Identifier BAR_TEX = wid("textures/hud/wand/charge_bar.png");
     protected static final Identifier OVERLAY_TEX = wid("textures/hud/wand/charge_bar_overlay.png");
+    protected static final Identifier SHELL_TEX = wid("textures/hud/wand/charge_shell.png");
     private static final int WIDGET_W = 16;
     private static final int WIDGET_H = 64;
     private static final int TEX_W = 16;
     private static final int TEX_H = 64;
+    private static final int SHELL_W = 16;
+    private static final int SHELL_H = 16;
     private static final int OVERLAY_U = 7;
     private static final int OVERLAY_V = 16;
     private static final int OVERLAY_W = 2;
     private static final int OVERLAY_H = 32;
     private static final int ANIMATION_DURATION = 10;
+    private static final int SHELL_NO_CHARGE_TINT = 0xAA_FF_FF_FF;
+    private static final int SHELL_FULL_CHARGE_TINT = 0xFF_00_BF_FF;
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
     private int currentCharge = 0;
     private int maxCharge = 0;
+    private int chargeInShells = 0;
+    private int maxChargeInShells = 0;
     private boolean isVisible = false;
     private ItemStack wand;
     private boolean animating = false;
@@ -47,6 +56,15 @@ public class WandChargeDisplayHudItem implements HudItem {
 
             RenderSystem.enableBlend();
             context.setShaderColor(1, 1, 1, opacity);
+
+            if (maxChargeInShells != 0) {
+                var tint = ColorHelper.Argb.lerp((float) chargeInShells / maxChargeInShells, SHELL_NO_CHARGE_TINT, SHELL_FULL_CHARGE_TINT);
+                context.setShaderColor(
+                        ColorHelper.Argb.getRed(tint) / 255f, ColorHelper.Argb.getGreen(tint) / 255f,
+                        ColorHelper.Argb.getBlue(tint) / 255f, ColorHelper.Argb.getAlpha(tint) / 255f * opacity);
+                context.drawNonDiscreteRect(SHELL_TEX, x, y - SHELL_H, SHELL_W, SHELL_H);
+                context.setShaderColor(1, 1, 1, opacity);
+            }
 
             context.drawNonDiscreteRect(BAR_TEX, x, y, TEX_W, TEX_H);
 
@@ -92,6 +110,11 @@ public class WandChargeDisplayHudItem implements HudItem {
         if (wand != null) {
             currentCharge = wand.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
             maxCharge = wand.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
+
+            if (client.player.hasAttached(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS)) {
+                chargeInShells = client.player.getAttachedOrCreate(WizcraftDataAttachments.CHARGE_IN_SHELLS);
+                maxChargeInShells = client.player.getAttachedOrGet(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS, () -> chargeInShells);
+            }
         }
 
         if (remainingAnimationTicks > 0) {
@@ -99,6 +122,9 @@ public class WandChargeDisplayHudItem implements HudItem {
 
             if (remainingAnimationTicks == 0) {
                 animating = false;
+                if (!isVisible()) {
+                    clear();
+                }
             }
         }
     }
@@ -114,12 +140,17 @@ public class WandChargeDisplayHudItem implements HudItem {
         if (isVisible()) {
             animate();
         }
-        clear();
+        isVisible = false;
+        wand = null;
     }
 
     private void clear() {
         isVisible = false;
         wand = null;
+        currentCharge = 0;
+        maxCharge = 0;
+        chargeInShells = 0;
+        maxChargeInShells = 0;
     }
 
     private void animate() {

@@ -67,7 +67,7 @@ public class FocusesBeltItem extends TrinketItem implements InventoryComponentPr
     }
 
     @Override
-    public int getInventorySize() {
+    public int getDefaultInventorySize() {
         return INVENTORY_SIZE;
     }
 }

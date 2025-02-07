@@ -7,40 +7,57 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.util.collection.DefaultedList;
 
 import java.util.List;
 
 public record InventoryComponent(ImmutableList<ItemStack> stacks, int size) implements TooltipData {
-    public static final Codec<InventoryComponent> CODEC =
-            Slot.CODEC.listOf().xmap(InventoryComponent::fromSlots, InventoryComponent::toSlots);
-    public static final PacketCodec<RegistryByteBuf, InventoryComponent> PACKET_CODEC =
-            ItemStack.OPTIONAL_LIST_PACKET_CODEC.xmap(InventoryComponent::new, InventoryComponent::stacks);
+    public static final Codec<InventoryComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Slot.CODEC.listOf().xmap(InventoryComponent::fromSlots, InventoryComponent::toSlots)
+                    .fieldOf("slots").forGetter(InventoryComponent::stacks),
+            Codec.INT.fieldOf("size").forGetter(InventoryComponent::size)
+    ).apply(instance, InventoryComponent::createRespectingSize));
+    public static final PacketCodec<RegistryByteBuf, InventoryComponent> PACKET_CODEC = PacketCodec.tuple(
+            ItemStack.OPTIONAL_LIST_PACKET_CODEC, InventoryComponent::stacks,
+            PacketCodecs.INTEGER, InventoryComponent::size,
+            InventoryComponent::new
+    );
 
     public InventoryComponent(List<ItemStack> stacks, int size) {
         this(ImmutableList.copyOf(stacks), size);
     }
 
-    public InventoryComponent(List<ItemStack> stacks) {
-        this(stacks, stacks.size());
+    private static InventoryComponent createRespectingSize(List<ItemStack> stacks, int size) {
+        if (size > stacks.size()) {
+            var builder = ImmutableList.<ItemStack>builder();
+            builder.addAll(stacks);
+            for (int i = stacks.size(); i < size; i++) {
+                builder.add(ItemStack.EMPTY);
+            }
+
+            return new InventoryComponent(builder.build(), size);
+        }
+
+        return new InventoryComponent(stacks, size);
     }
 
     public static InventoryComponent createDefault(int size) {
         return new InventoryComponent(DefaultedList.ofSize(size, ItemStack.EMPTY), size);
     }
 
-    public static InventoryComponent fromSlots(List<Slot> slots) {
-        var stacks = DefaultedList.ofSize(slots.size(), ItemStack.EMPTY);
+    public static List<ItemStack> fromSlots(List<Slot> slots) {
+        var stacks = DefaultedList.ofSize(slots.stream().mapToInt(Slot::index).max().orElseThrow() + 1, ItemStack.EMPTY);
         for (Slot slot : slots) {
             stacks.set(slot.index, slot.stack);
         }
-        return new InventoryComponent(stacks, slots.size());
+        return stacks;
     }
 
-    public static List<Slot> toSlots(InventoryComponent component) {
+    public static List<Slot> toSlots(List<ItemStack> stacks) {
         var builder = ImmutableList.<Slot>builder();
-        for (int i = 0; i < component.stacks.size(); i++) {
-            var stack = component.stacks.get(i);
+        for (int i = 0; i < stacks.size(); i++) {
+            var stack = stacks.get(i);
             if (!stack.isEmpty()) {
                 builder.add(new Slot(i, stack));
             }

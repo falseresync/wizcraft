@@ -1,10 +1,7 @@
 package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.common.block.WizcraftBlocks;
-import falseresync.wizcraft.common.item.focus.ChargingFocusItem;
-import falseresync.wizcraft.common.item.focus.CometWarpFocusItem;
-import falseresync.wizcraft.common.item.focus.LightningFocusItem;
-import falseresync.wizcraft.common.item.focus.StarshooterFocusItem;
+import falseresync.wizcraft.common.item.focus.*;
 import io.wispforest.lavender.book.LavenderBookItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -32,6 +29,7 @@ public class WizcraftItems {
     public static final ChargingFocusItem CHARGING_FOCUS = r("charging_focus", ChargingFocusItem::new, FOCUS_SETTINGS);
     public static final LightningFocusItem LIGHTNING_FOCUS = r("lightning_focus", LightningFocusItem::new, FOCUS_SETTINGS);
     public static final CometWarpFocusItem COMET_WARP_FOCUS = r("comet_warp_focus", CometWarpFocusItem::new, FOCUS_SETTINGS);
+    public static final EnergyVeilFocusItem ENERGY_VEIL_FOCUS = r("energy_veil_focus", EnergyVeilFocusItem::new, FOCUS_SETTINGS);
 
     public static final TrueseerGogglesItem TRUESEER_GOGGLES = r("trueseer_goggles", TrueseerGogglesItem::new, new Item.Settings().maxCount(1));
     public static final FocusesBeltItem FOCUSES_BELT = r("focuses_belt", FocusesBeltItem::new, new Item.Settings().maxCount(1));

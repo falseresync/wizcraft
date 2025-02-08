@@ -23,6 +23,7 @@ public class WizcraftItemGroups {
                 entries.add(WizcraftItems.CHARGING_FOCUS);
                 entries.add(WizcraftItems.LIGHTNING_FOCUS);
                 entries.add(WizcraftItems.COMET_WARP_FOCUS);
+                entries.add(WizcraftItems.ENERGY_VEIL_FOCUS);
 
                 entries.add(WizcraftItems.TRUESEER_GOGGLES);
                 entries.add(WizcraftItems.FOCUSES_BELT);

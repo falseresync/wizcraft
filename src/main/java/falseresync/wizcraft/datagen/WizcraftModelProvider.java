@@ -72,6 +72,7 @@ public class WizcraftModelProvider extends FabricModelProvider {
         itemModelGenerator.register(WizcraftItems.STARSHOOTER_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizcraftItems.LIGHTNING_FOCUS, Models.GENERATED);
         itemModelGenerator.register(WizcraftItems.COMET_WARP_FOCUS, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.ENERGY_VEIL_FOCUS, Models.GENERATED);
 
         itemModelGenerator.register(WizcraftItems.TRUESEER_GOGGLES, Models.GENERATED);
         itemModelGenerator.register(WizcraftItems.FOCUSES_BELT, Models.GENERATED);

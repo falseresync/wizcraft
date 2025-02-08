@@ -2,6 +2,8 @@ package falseresync.wizcraft.client.render;
 
 import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import falseresync.wizcraft.client.render.blockentity.*;
+import falseresync.wizcraft.client.render.entity.EnergyVeilModel;
+import falseresync.wizcraft.client.render.entity.EnergyVeilRenderer;
 import falseresync.wizcraft.client.render.entity.StarProjectileRenderer;
 import falseresync.wizcraft.client.render.trinket.TrueseerGogglesRenderer;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
@@ -18,8 +20,10 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 public class WizcraftRenderers {
     public static void init() {
         EntityRendererRegistry.register(WizcraftEntities.STAR_PROJECTILE, StarProjectileRenderer::new);
+        EntityRendererRegistry.register(WizcraftEntities.ENERGY_VEIL, EnergyVeilRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(LensRenderer.LAYER, LensRenderer::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(EnergyVeilRenderer.LAYER, EnergyVeilModel::getTexturedModelData);
 
         BlockEntityRendererFactories.register(WizcraftBlockEntities.LENS, LensRenderer::new);
         BlockEntityRendererFactories.register(WizcraftBlockEntities.CRAFTING_WORKTABLE, CraftingWorktableRenderer::new);

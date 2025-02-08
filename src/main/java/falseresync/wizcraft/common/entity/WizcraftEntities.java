@@ -12,4 +12,11 @@ public class WizcraftEntities {
             .disableSaving()
             .maxTrackingRange(16)
             .build();
+    public static final @RegistryObject EntityType<EnergyVeilEntity> ENERGY_VEIL = EntityType.Builder
+            .<EnergyVeilEntity>create(EnergyVeilEntity::new, SpawnGroup.MISC)
+            .dimensions(0F, 0F)
+            .makeFireImmune()
+            .disableSaving()
+            .maxTrackingRange(16)
+            .build();
 }

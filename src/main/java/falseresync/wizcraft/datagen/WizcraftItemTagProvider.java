@@ -19,7 +19,8 @@ public class WizcraftItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(WizcraftItems.STARSHOOTER_FOCUS)
                 .add(WizcraftItems.CHARGING_FOCUS)
                 .add(WizcraftItems.LIGHTNING_FOCUS)
-                .add(WizcraftItems.COMET_WARP_FOCUS);
+                .add(WizcraftItems.COMET_WARP_FOCUS)
+                .add(WizcraftItems.ENERGY_VEIL_FOCUS);
         getOrCreateTagBuilder(WizcraftItemTags.WANDS)
                 .add(WizcraftItems.WAND);
     }

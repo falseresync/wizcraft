@@ -2,7 +2,6 @@ package falseresync.wizcraft.client.render.blockentity;
 
 import falseresync.wizcraft.common.blockentity.LensBlockEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;

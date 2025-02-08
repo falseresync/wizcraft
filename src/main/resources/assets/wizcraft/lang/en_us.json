@@ -41,5 +41,7 @@
   "wizcraft.midnightconfig.category.cheats": "Cheats",
   "wizcraft.midnightconfig.freeChargeInSurvival": "Don't expend Wand charge in survival",
   "wizcraft.midnightconfig.freeChargeInCreative": "Don't expend Wand charge in creative",
+  "wizcraft.midnightconfig.category.performance": "Performance",
+  "wizcraft.midnightconfig.trueseerGogglesDisplayRange": "Trueseer goggles display range",
   "emi.category.wizcraft.lensed_worktable": "Lensed worktable"
 }

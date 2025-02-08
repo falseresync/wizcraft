@@ -7,4 +7,7 @@ public final class WizcraftConfig extends MidnightConfig {
     public static boolean freeChargeInSurvival = false;
     @Entry(category = "cheats")
     public static boolean freeChargeInCreative = true;
+
+    @Entry(category = "performance", min = 3)
+    public static int trueseerGogglesDisplayRange = 10;
 }

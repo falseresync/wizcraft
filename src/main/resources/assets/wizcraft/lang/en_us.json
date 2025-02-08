@@ -43,5 +43,8 @@
   "wizcraft.midnightconfig.freeChargeInCreative": "Don't expend Wand charge in creative",
   "wizcraft.midnightconfig.category.performance": "Performance",
   "wizcraft.midnightconfig.trueseerGogglesDisplayRange": "Trueseer goggles display range",
+  "wizcraft.midnightconfig.animationParticlesAmount": "Animation particles amount",
+  "wizcraft.midnightconfig.enum.ParticlesAmountModifier.DEFAULT": "Normal",
+  "wizcraft.midnightconfig.enum.ParticlesAmountModifier.REDUCED": "Reduced by 40%",
   "emi.category.wizcraft.lensed_worktable": "Lensed worktable"
 }

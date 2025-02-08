@@ -1,6 +1,7 @@
 package falseresync.wizcraft.client.render.blockentity;
 
 import falseresync.wizcraft.client.render.RenderingUtil;
+import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.blockentity.CraftingWorktableBlockEntity;
 import falseresync.wizcraft.common.blockentity.LensingPedestalBlockEntity;
 import falseresync.wizcraft.common.WizcraftParticleTypes;
@@ -100,11 +101,13 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
     protected static void addParticleBeam(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, RenderingData pedestal, World world, float tickDelta) {
         if (pedestal.stack.isEmpty()) return;
 
-        var temporalOffset = Math.abs(MathHelper.sin((progress.remainingCraftingTime() + tickDelta)));
-        var path = pedestal.above.relativize(worktable.above);
-        var pos = pedestal.above.add(path.multiply(Math.min(0.6, temporalOffset * progress.value())));
-        var velocity = path.normalize().multiply(getVelocityForProgress(progress.value()));
-        RenderingUtil.addParticle(world, pedestal.particle, pos, velocity);
+        if (world.random.nextFloat() < WizcraftConfig.animationParticlesAmount.modifier) {
+            var temporalOffset = Math.abs(MathHelper.sin((progress.remainingCraftingTime() + tickDelta)));
+            var path = pedestal.above.relativize(worktable.above);
+            var pos = pedestal.above.add(path.multiply(Math.min(0.6, temporalOffset * progress.value())));
+            var velocity = path.normalize().multiply(getVelocityForProgress(progress.value()));
+            RenderingUtil.addParticle(world, pedestal.particle, pos, velocity);
+        }
     }
 
     // ALL, and I mean - ALL parenthesis matter here
@@ -116,7 +119,7 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
         if (pedestal.stack.isEmpty()) return;
 
         var temporalOffset = Math.abs(MathHelper.sin((progress.remainingCraftingTime() + tickDelta)));
-        for (int i = 0; i < (1 - progress.value()) * 3; i++) {
+        for (int i = 0; i < (1 - progress.value()) * 3 * WizcraftConfig.animationParticlesAmount.modifier; i++) {
             var theta = 2f * MathHelper.PI * temporalOffset + i * temporalOffset;
             var r = getRadiusForProgress(progress.value());
             var hx = r * MathHelper.cos(theta);
@@ -136,7 +139,7 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
         if (renderingData.stack.isEmpty()) return;
 
         var velocity = new Vec3d((random.nextFloat() - 0.5) / 8, random.nextGaussian() / 16, (random.nextFloat() - 0.5) / 8);
-        var amount = progress.value() * 10 * (renderingData.stack.getItem() instanceof BlockItem ? 3 : 1);
+        var amount = progress.value() * 10 * WizcraftConfig.animationParticlesAmount.modifier * (renderingData.stack.getItem() instanceof BlockItem ? 3 : 1);
         for (int i = 0; i < amount; i++) {
             RenderingUtil.addParticle(world, renderingData.particle, renderingData.above, velocity);
         }

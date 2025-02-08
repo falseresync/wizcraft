@@ -1,6 +1,7 @@
 package falseresync.wizcraft.client.render.blockentity;
 
 import falseresync.wizcraft.client.render.RenderingUtil;
+import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.WizcraftParticleTypes;
 import falseresync.wizcraft.common.blockentity.ChargingWorktableBlockEntity;
 import net.fabricmc.api.EnvType;
@@ -33,7 +34,7 @@ public class ChargingWorktableRenderer implements BlockEntityRenderer<ChargingWo
                 entity.isCharging() ? ModelTransformationMode.THIRD_PERSON_RIGHT_HAND : ModelTransformationMode.FIXED,
                 this.itemRenderer, matrices, vertexConsumers);
 
-        if (entity.isCharging() && world.random.nextFloat() < 0.25) {
+        if (entity.isCharging() && world.random.nextFloat() < WizcraftConfig.animationParticlesAmount.modifier) {
             var itemPos = entity.getPos().toCenterPos().add(0, -0.5, 0);
             var particlePos = itemPos.add(world.random.nextFloat() - 0.5, 2, world.random.nextFloat() - 0.5);
             var particleVelocity = particlePos.relativize(itemPos).multiply(5);

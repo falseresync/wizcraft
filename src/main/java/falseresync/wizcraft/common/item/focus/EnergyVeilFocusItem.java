@@ -33,11 +33,11 @@ public class EnergyVeilFocusItem extends FocusItem {
     @Override
     public void focusUsageTick(World world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
         if (!world.isClient && user instanceof PlayerEntity player) {
-            Optional.ofNullable(wandStack.get(WizcraftDataComponents.ENTITY_VEIL_ID)).ifPresent(id -> {
-                if (world.getEntityById(id) instanceof EnergyVeilEntity veil) {
-                    veil.alignWithOwner();
-                }
-            });
+//            Optional.ofNullable(wandStack.get(WizcraftDataComponents.ENTITY_VEIL_ID)).ifPresent(id -> {
+//                if (world.getEntityById(id) instanceof EnergyVeilEntity veil) {
+//                    veil.alignWithOwner();
+//                }
+//            });
         }
         // TODO: if there's not enough charge - bite the user
     }

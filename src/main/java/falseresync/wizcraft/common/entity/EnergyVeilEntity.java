@@ -1,6 +1,7 @@
 package falseresync.wizcraft.common.entity;
 
 import falseresync.wizcraft.common.Wizcraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -35,7 +36,8 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         if (owner == null) return;
         var rotation = owner.getRotationVec(1);
         var orthogonalDistance = 2;
-        updatePosition(owner.getX() + rotation.x * orthogonalDistance, owner.getY(),owner.getZ() + rotation.z * orthogonalDistance);
+        var pos = owner.getPos();
+        updatePosition(pos.x + rotation.x * orthogonalDistance, pos.y,pos.z + rotation.z * orthogonalDistance);
     }
 
     @Override
@@ -50,6 +52,12 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         if (HEIGHT.equals(data) || WIDTH.equals(data)) {
             this.setBoundingBox(this.calculateBoundingBox());
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        alignWithOwner();
     }
 
     public final void setVeilWidth(float width) {

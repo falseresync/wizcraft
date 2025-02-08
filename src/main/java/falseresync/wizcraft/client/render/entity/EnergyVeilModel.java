@@ -42,7 +42,6 @@ public class EnergyVeilModel extends SinglePartEntityModel<EnergyVeilEntity> {
 
     @Override
     public void setAngles(EnergyVeilEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        root.setAngles(0, headYaw, 0);
 //        updateAnimation();
     }
 }

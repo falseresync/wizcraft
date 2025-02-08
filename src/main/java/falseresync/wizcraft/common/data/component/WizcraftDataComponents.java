@@ -1,13 +1,17 @@
 package falseresync.wizcraft.common.data.component;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import falseresync.lib.registry.RegistryObject;
 import falseresync.wizcraft.common.item.focus.FocusItem;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.util.Uuids;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.GlobalPos;
+
+import java.util.UUID;
 
 public class WizcraftDataComponents {
     public static final @RegistryObject ComponentType<ItemStack> EQUIPPED_FOCUS_ITEM =
@@ -29,6 +33,9 @@ public class WizcraftDataComponents {
 
     public static final @RegistryObject ComponentType<GlobalPos> WARP_FOCUS_ANCHOR =
             ComponentType.<GlobalPos>builder().codec(GlobalPos.CODEC).packetCodec(GlobalPos.PACKET_CODEC).build();
+
+    public static final @RegistryObject ComponentType<Integer> ENTITY_VEIL_ID =
+            ComponentType.<Integer>builder().codec(Codec.INT).packetCodec(PacketCodecs.INTEGER).build();
 
     public static final @RegistryObject ComponentType<InventoryComponent> INVENTORY =
             ComponentType.<InventoryComponent>builder().codec(InventoryComponent.CODEC).packetCodec(InventoryComponent.PACKET_CODEC).build();

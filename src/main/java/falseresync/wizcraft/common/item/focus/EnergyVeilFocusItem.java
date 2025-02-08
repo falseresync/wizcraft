@@ -1,5 +1,6 @@
 package falseresync.wizcraft.common.item.focus;
 
+import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.common.entity.EnergyVeilEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -7,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+
+import java.util.Optional;
 
 public class EnergyVeilFocusItem extends FocusItem {
     public EnergyVeilFocusItem(Settings settings) {
@@ -20,26 +23,46 @@ public class EnergyVeilFocusItem extends FocusItem {
             veil.setVeilWidth(4);
             veil.setVeilHeight(4);
             world.spawnEntity(veil);
+            wandStack.set(WizcraftDataComponents.ENTITY_VEIL_ID, veil.getId());
+            user.setCurrentHand(user.getActiveHand());
             return TypedActionResult.success(wandStack);
         }
-        return super.focusUse(wandStack, focusStack, world, user, hand);
+        return TypedActionResult.pass(wandStack);
     }
 
     @Override
     public void focusUsageTick(World world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
+        if (!world.isClient && user instanceof PlayerEntity player) {
+            Optional.ofNullable(wandStack.get(WizcraftDataComponents.ENTITY_VEIL_ID)).ifPresent(id -> {
+                if (world.getEntityById(id) instanceof EnergyVeilEntity veil) {
+                    veil.alignWithOwner();
+                }
+            });
+        }
+        // TODO: if there's not enough charge - bite the user
+    }
 
-        // if there's not enough charge - bite the user
-        super.focusUsageTick(world, user, wandStack, focusStack, remainingUseTicks);
+    @Override
+    public void focusOnStoppedUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user, int remainingUseTicks) {
+        focusFinishUsing(wandStack, focusStack, world, user);
     }
 
     @Override
     public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user) {
-        // if ran out of charge midway - explode the user
-        return super.focusFinishUsing(wandStack, focusStack, world, user);
+        if (!world.isClient) {
+            Optional.ofNullable(wandStack.get(WizcraftDataComponents.ENTITY_VEIL_ID)).ifPresent(id -> {
+                if (world.getEntityById(id) instanceof EnergyVeilEntity veil) {
+                    veil.discard();
+                }
+            });
+            wandStack.remove(WizcraftDataComponents.ENTITY_VEIL_ID);
+        }
+        // TODO: if ran out of charge midway - explode the user
+        return wandStack;
     }
 
     @Override
     public int focusGetMaxUseTime(ItemStack wandStack, ItemStack focusStack, LivingEntity user) {
-        return 1000;
+        return 200;
     }
 }

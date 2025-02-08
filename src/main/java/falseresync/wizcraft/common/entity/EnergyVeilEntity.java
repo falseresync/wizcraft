@@ -25,13 +25,17 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         super(type, world);
     }
 
-    public EnergyVeilEntity(PlayerEntity owner, World world) {
+    public EnergyVeilEntity(@Nullable PlayerEntity owner, World world) {
         this(WizcraftEntities.ENERGY_VEIL, world);
         this.owner = owner;
+        alignWithOwner();
+    }
+
+    public void alignWithOwner() {
+        if (owner == null) return;
         var rotation = owner.getRotationVec(1);
-        var orthogonalDistance = 1;
-        setPosition(owner.getX() + rotation.x * orthogonalDistance, owner.getEyeY(), owner.getZ() + rotation.z * orthogonalDistance);
-//        setVelocity(owner, owner.getPitch(), owner.getYaw(), 0, 1.5F, 1F);
+        var orthogonalDistance = 2;
+        updatePosition(owner.getX() + rotation.x * orthogonalDistance, owner.getY(),owner.getZ() + rotation.z * orthogonalDistance);
     }
 
     @Override
@@ -75,7 +79,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
 
     @Override
     protected Box calculateBoundingBox() {
-        return getDimensions().getBoxAt(getPos()).contract(getVeilWidth() / 2 - 0.01f, 0, 0);
+        return getDimensions().getBoxAt(getPos());//.contract(getVeilWidth() / 2 - 0.01f, 0, 0);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.ChargeManager;
 import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import falseresync.wizcraft.networking.report.WizcraftReports;

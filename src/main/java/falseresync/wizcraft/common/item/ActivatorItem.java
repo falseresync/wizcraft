@@ -72,7 +72,8 @@ public interface ActivatorItem {
 
             var leastUncompletedVariant = matchedVariants.stream()
                     .filter(variant -> variant.match().isHalfwayCompleted())
-                    .min(Comparator.comparingInt(variant -> variant.match().delta().size()));
+                    .max(Comparator.comparingInt(variant -> variant.match().size()));
+//                    .min(Comparator.comparingInt(variant -> variant.match().delta().size()));
             if (leastUncompletedVariant.isPresent()) {
                 ServerPlayNetworking.send(serverPlayer, new TriggerBlockPatternTipS2CPacket(leastUncompletedVariant.get().match().deltaAsBlockPos()));
                 WizcraftReports.WORKTABLE_INCOMPLETE.sendTo(serverPlayer);

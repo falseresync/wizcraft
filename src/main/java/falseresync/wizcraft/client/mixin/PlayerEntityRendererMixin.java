@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PlayerEntityRenderer.class)
+@Mixin(value = PlayerEntityRenderer.class, priority = 2000)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> implements EnergyVeilFeatureRenderer.Accessor {
     @Mutable
     @Unique
@@ -26,7 +26,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     @Inject(method = "<init>", at = @At("TAIL"))
     public void wizcraft$init(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo ci) {
         energyVeilFeatureRenderer = new EnergyVeilFeatureRenderer<>(this, ctx.getModelLoader());
-        addFeature(energyVeilFeatureRenderer);
+        features.addFirst(energyVeilFeatureRenderer);
     }
 
     @Override

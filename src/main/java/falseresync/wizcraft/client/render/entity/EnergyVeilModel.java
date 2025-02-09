@@ -1,14 +1,15 @@
 package falseresync.wizcraft.client.render.entity;
 
-import falseresync.wizcraft.common.entity.EnergyVeilEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
+import net.minecraft.entity.player.PlayerEntity;
 
-public class EnergyVeilModel extends SinglePartEntityModel<EnergyVeilEntity> {
+public class EnergyVeilModel extends SinglePartEntityModel<PlayerEntity> {
     private final ModelPart root;
     private final ModelPart screen1;
     private final ModelPart screen2;
     private final ModelPart screen3;
+
 
     public EnergyVeilModel(ModelPart root) {
         this.root = root;
@@ -41,7 +42,7 @@ public class EnergyVeilModel extends SinglePartEntityModel<EnergyVeilEntity> {
     }
 
     @Override
-    public void setAngles(EnergyVeilEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+    public void setAngles(PlayerEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 //        updateAnimation();
     }
 }

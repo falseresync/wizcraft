@@ -1,7 +1,6 @@
 package falseresync.wizcraft.common.entity;
 
 import falseresync.wizcraft.common.Wizcraft;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -24,6 +23,16 @@ public class EnergyVeilEntity extends Entity implements Ownable {
 
     public EnergyVeilEntity(EntityType<?> type, World world) {
         super(type, world);
+    }
+
+    @Override
+    public boolean shouldRender(double distance) {
+        return false;
+    }
+
+    @Override
+    public boolean shouldRender(double cameraX, double cameraY, double cameraZ) {
+        return false;
     }
 
     public EnergyVeilEntity(@Nullable PlayerEntity owner, World world) {
@@ -103,7 +112,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         if (nbt.contains("owner")) {
             Uuids.INT_STREAM_CODEC.decode(NbtOps.INSTANCE, nbt.get("owner"))
                     .resultOrPartial(Util.addPrefix("Could not decode a Player UUID of ", Wizcraft.LOGGER::error))
-                    .ifPresent(pair -> owner = getEntityWorld().getPlayerByUuid(pair.getFirst()));
+                    .ifPresent(pair -> owner = getEntityWorld().getPlayerByUuid(uuid));
         }
     }
 

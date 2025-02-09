@@ -6,7 +6,9 @@
     "defaultRequire": 1
   },
   "client": [
-    "PlayerInventoryMixin",
-    "ClientPlayerInteractionManagerMixin"
+    "ClientPlayerInteractionManagerMixin",
+    "HeldItemRendererMixin",
+    "PlayerEntityRendererMixin",
+    "PlayerInventoryMixin"
   ]
 }

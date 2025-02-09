@@ -2,8 +2,8 @@ package falseresync.wizcraft.client.render;
 
 import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import falseresync.wizcraft.client.render.blockentity.*;
+import falseresync.wizcraft.client.render.entity.EnergyVeilFeatureRenderer;
 import falseresync.wizcraft.client.render.entity.EnergyVeilModel;
-import falseresync.wizcraft.client.render.entity.EnergyVeilRenderer;
 import falseresync.wizcraft.client.render.entity.StarProjectileRenderer;
 import falseresync.wizcraft.client.render.trinket.TrueseerGogglesRenderer;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
@@ -16,14 +16,15 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.EmptyEntityRenderer;
 
 public class WizcraftRenderers {
     public static void init() {
         EntityRendererRegistry.register(WizcraftEntities.STAR_PROJECTILE, StarProjectileRenderer::new);
-        EntityRendererRegistry.register(WizcraftEntities.ENERGY_VEIL, EnergyVeilRenderer::new);
+        EntityRendererRegistry.register(WizcraftEntities.ENERGY_VEIL, EmptyEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(LensRenderer.LAYER, LensRenderer::getTexturedModelData);
-        EntityModelLayerRegistry.registerModelLayer(EnergyVeilRenderer.LAYER, EnergyVeilModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(EnergyVeilFeatureRenderer.LAYER, EnergyVeilModel::getTexturedModelData);
 
         BlockEntityRendererFactories.register(WizcraftBlockEntities.LENS, LensRenderer::new);
         BlockEntityRendererFactories.register(WizcraftBlockEntities.CRAFTING_WORKTABLE, CraftingWorktableRenderer::new);

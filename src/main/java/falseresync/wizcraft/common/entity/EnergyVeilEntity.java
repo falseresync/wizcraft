@@ -1,6 +1,7 @@
 package falseresync.wizcraft.common.entity;
 
 import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -12,12 +13,15 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.Util;
 import net.minecraft.util.Uuids;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergyVeilEntity extends Entity implements Ownable {
     private static final TrackedData<Float> WIDTH = DataTracker.registerData(EnergyVeilEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(EnergyVeilEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    public AnimationState slideAnimationState = new AnimationState();
+    private int lifeExpectancy;
     @Nullable
     private PlayerEntity owner;
 
@@ -25,28 +29,29 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         super(type, world);
     }
 
-    @Override
-    public boolean shouldRender(double distance) {
-        return false;
-    }
-
-    @Override
-    public boolean shouldRender(double cameraX, double cameraY, double cameraZ) {
-        return false;
-    }
-
     public EnergyVeilEntity(@Nullable PlayerEntity owner, World world) {
         this(WizcraftEntities.ENERGY_VEIL, world);
         this.owner = owner;
+
+        lifeExpectancy = 20;
+        noClip = true;
+        movementMultiplier = new Vec3d(1, 1, 1);
+        setNoGravity(true);
+
+        if (owner != null) {
+            setPosition(owner.getPos());
+            owner.setAttached(WizcraftDataAttachments.HAS_ENERGY_VEIL, true);
+        }
         alignWithOwner();
+    }
+
+    public void incrementLifeExpectancy(int by) {
+        lifeExpectancy += by;
     }
 
     public void alignWithOwner() {
         if (owner == null) return;
-        var rotation = owner.getRotationVec(1);
-        var orthogonalDistance = 2;
-        var pos = owner.getPos();
-        updatePosition(pos.x + rotation.x * orthogonalDistance, pos.y,pos.z + rotation.z * orthogonalDistance);
+        setVelocity(owner.getPos().subtract(getPos()));
     }
 
     @Override
@@ -66,7 +71,14 @@ public class EnergyVeilEntity extends Entity implements Ownable {
     @Override
     public void tick() {
         super.tick();
+        if (age == lifeExpectancy) {
+            discard();
+            if (owner != null) {
+                owner.removeAttached(WizcraftDataAttachments.HAS_ENERGY_VEIL);
+            }
+        }
         alignWithOwner();
+        move(MovementType.SELF, getMovement());
     }
 
     public final void setVeilWidth(float width) {
@@ -96,7 +108,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
 
     @Override
     protected Box calculateBoundingBox() {
-        return getDimensions().getBoxAt(getPos());//.contract(getVeilWidth() / 2 - 0.01f, 0, 0);
+        return getDimensions().getBoxAt(getPos());
     }
 
     @Override

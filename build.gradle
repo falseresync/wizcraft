@@ -89,6 +89,7 @@ dependencies {
 	modLocalRuntime "maven.modrinth:betterf3:$betterf3_version"
 	modLocalRuntime files("deps/componentviewer-fabric-1.1.2+1.21.4.jar")
 	modLocalRuntime files("deps/tooltip-scroll-1.4.0+1.21(1).jar")
+	modLocalRuntime "maven.modrinth:dev-tools-unlocker:$devtools_unlocker_version"
 }
 
 processResources {

@@ -33,11 +33,11 @@ public class EnergyVeilFocusItem extends FocusItem {
     @Override
     public void focusUsageTick(World world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
         if (!world.isClient && user instanceof PlayerEntity player) {
-//            Optional.ofNullable(wandStack.get(WizcraftDataComponents.ENTITY_VEIL_ID)).ifPresent(id -> {
-//                if (world.getEntityById(id) instanceof EnergyVeilEntity veil) {
-//                    veil.alignWithOwner();
-//                }
-//            });
+            Optional.ofNullable(wandStack.get(WizcraftDataComponents.ENTITY_VEIL_ID)).ifPresent(id -> {
+                if (world.getEntityById(id) instanceof EnergyVeilEntity veil) {
+                    veil.incrementLifeExpectancy(2);
+                }
+            });
         }
         // TODO: if there's not enough charge - bite the user
     }
@@ -50,11 +50,6 @@ public class EnergyVeilFocusItem extends FocusItem {
     @Override
     public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user) {
         if (!world.isClient) {
-            Optional.ofNullable(wandStack.get(WizcraftDataComponents.ENTITY_VEIL_ID)).ifPresent(id -> {
-                if (world.getEntityById(id) instanceof EnergyVeilEntity veil) {
-                    veil.discard();
-                }
-            });
             wandStack.remove(WizcraftDataComponents.ENTITY_VEIL_ID);
         }
         // TODO: if ran out of charge midway - explode the user

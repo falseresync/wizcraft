@@ -16,6 +16,11 @@ public class WizcraftDataAttachments {
             builder -> builder
                     .syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly())
                     .persistent(Codec.BOOL));
+    public static final AttachmentType<Boolean> HAS_ENERGY_VEIL = AttachmentRegistry.create(
+            wid("has_energy_veil"),
+            builder -> builder
+                    .syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly())
+                    .persistent(Codec.BOOL));
     public static final AttachmentType<Integer> CHARGE_IN_SHELLS = AttachmentRegistry.create(
             wid("charge_in_shells"),
             builder -> builder

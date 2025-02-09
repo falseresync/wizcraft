@@ -34,7 +34,7 @@
   "sound.wizcraft.block.worktable.success": "Worktable successfully crafts an item",
   "sound.wizcraft.entity.star_projectile.explode": "Star projectile explodes",
   "sound.wizcraft.focus.charging.successfully_charged": "Successfully charged a wand",
-  "sound.wizcraft.focus.comet_warp.anchor_placed": "Placed a Comet Wrap anchor",
+  "sound.wizcraft.focus.comet_warp.anchor_placed": "Placed a Comet Warp anchor",
   "keyCategory.wizcraft": "Wizcraft",
   "key.wizcraft.tool_control": "Tool control",
   "wizcraft.midnightconfig.title": "Wizcraft Config",
@@ -45,6 +45,10 @@
   "wizcraft.midnightconfig.trueseerGogglesDisplayRange": "Trueseer goggles display range",
   "wizcraft.midnightconfig.animationParticlesAmount": "Animation particles amount",
   "wizcraft.midnightconfig.enum.ParticlesAmountModifier.DEFAULT": "Normal",
-  "wizcraft.midnightconfig.enum.ParticlesAmountModifier.REDUCED": "Reduced by 40%",
+  "wizcraft.midnightconfig.enum.ParticlesAmountModifier.REDUCED": "Reduced",
+  "wizcraft.midnightconfig.category.accessibility": "Accessibility",
+  "wizcraft.midnightconfig.fullscreenEffectsTransparency": "Fullscreen effects transparency",
+  "wizcraft.midnightconfig.enum.TransparencyModifier.DEFAULT": "Normal",
+  "wizcraft.midnightconfig.enum.TransparencyModifier.INCREASED": "Increased",
   "emi.category.wizcraft.lensed_worktable": "Lensed worktable"
 }

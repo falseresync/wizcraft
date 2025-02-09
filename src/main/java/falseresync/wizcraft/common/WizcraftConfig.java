@@ -21,4 +21,16 @@ public final class WizcraftConfig extends MidnightConfig {
             this.modifier = modifier;
         }
     }
+
+    @Entry(category = "accessibility")
+    public static TransparencyModifier fullscreenEffectsTransparency = TransparencyModifier.DEFAULT;
+    public enum TransparencyModifier {
+        INCREASED(2f), DEFAULT(1);
+
+        public final float modifier;
+
+        TransparencyModifier(float modifier) {
+            this.modifier = modifier;
+        }
+    }
 }

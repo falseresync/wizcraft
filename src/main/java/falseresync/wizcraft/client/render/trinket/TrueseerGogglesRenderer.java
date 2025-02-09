@@ -11,13 +11,8 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-
-import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class TrueseerGogglesRenderer implements TrinketRenderer {
-    public static final Identifier TEX = wid("textures/item/trueseer_goggles.png");
-
     @Override
     public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity instanceof AbstractClientPlayerEntity player) {

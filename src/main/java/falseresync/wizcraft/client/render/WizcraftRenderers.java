@@ -20,11 +20,11 @@ import net.minecraft.client.render.entity.EmptyEntityRenderer;
 
 public class WizcraftRenderers {
     public static void init() {
-        EntityRendererRegistry.register(WizcraftEntities.STAR_PROJECTILE, StarProjectileRenderer::new);
-        EntityRendererRegistry.register(WizcraftEntities.ENERGY_VEIL, EmptyEntityRenderer::new);
-
         EntityModelLayerRegistry.registerModelLayer(LensRenderer.LAYER, LensRenderer::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(EnergyVeilFeatureRenderer.LAYER, EnergyVeilModel::getTexturedModelData);
+
+        EntityRendererRegistry.register(WizcraftEntities.STAR_PROJECTILE, StarProjectileRenderer::new);
+        EntityRendererRegistry.register(WizcraftEntities.ENERGY_VEIL, EmptyEntityRenderer::new);
 
         BlockEntityRendererFactories.register(WizcraftBlockEntities.LENS, LensRenderer::new);
         BlockEntityRendererFactories.register(WizcraftBlockEntities.CRAFTING_WORKTABLE, CraftingWorktableRenderer::new);

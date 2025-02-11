@@ -40,7 +40,6 @@ public class EnergyVeilEntity extends Entity implements Ownable {
 
         if (owner != null) {
             setPosition(owner.getPos());
-            owner.setAttached(WizcraftDataAttachments.HAS_ENERGY_VEIL, true);
         }
         alignWithOwner();
     }
@@ -66,15 +65,22 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         if (HEIGHT.equals(data) || WIDTH.equals(data)) {
             this.setBoundingBox(this.calculateBoundingBox());
         }
+        if (owner != null) {
+            owner.setAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID, getId());
+        }
+        if (getEntityWorld().isClient()) {
+            slideAnimationState.startIfNotRunning(age);
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
         if (age == lifeExpectancy) {
+            slideAnimationState.stop();
             discard();
             if (owner != null) {
-                owner.removeAttached(WizcraftDataAttachments.HAS_ENERGY_VEIL);
+                owner.removeAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID);
             }
         }
         alignWithOwner();

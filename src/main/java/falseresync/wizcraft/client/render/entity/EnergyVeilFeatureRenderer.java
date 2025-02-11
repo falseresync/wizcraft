@@ -2,6 +2,7 @@ package falseresync.wizcraft.client.render.entity;
 
 import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
+import falseresync.wizcraft.common.entity.EnergyVeilEntity;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -13,6 +14,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
+
+import java.util.Optional;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
@@ -30,10 +33,10 @@ public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRe
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        if (!entity.hasAttached(WizcraftDataAttachments.HAS_ENERGY_VEIL)) return;
+        if (!entity.hasAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID)) return;
 
         var buffer = vertexConsumers.getBuffer(renderLayer);
-        model.setAngles(entity, 0, 0, animationProgress, 0, 0);
+        model.animateModel(entity, limbAngle, limbDistance, tickDelta);
 
         for (int i = 0; i < 4; i++) {
             matrices.push();
@@ -47,10 +50,10 @@ public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRe
     }
 
     public void renderInFirstPerson(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float tickDelta, float animationProgress) {
-        if (!entity.hasAttached(WizcraftDataAttachments.HAS_ENERGY_VEIL)) return;
+        if (!entity.hasAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID)) return;
 
         var buffer = vertexConsumers.getBuffer(renderLayer);
-        model.setAngles(entity, 0, 0, animationProgress, 0, 0);
+        model.animateModel(entity, 0, 0, tickDelta);
 
         for (int i = 0; i < 3; i++) {
             matrices.push();

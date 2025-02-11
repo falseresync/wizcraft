@@ -13,14 +13,10 @@ import static falseresync.wizcraft.common.Wizcraft.wid;
 public class WizcraftDataAttachments {
     public static final AttachmentType<Boolean> HAS_TRUESEER_GOGGLES = AttachmentRegistry.create(
             wid("has_trueseer_goggles"),
-            builder -> builder
-                    .syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly())
-                    .persistent(Codec.BOOL));
-    public static final AttachmentType<Boolean> HAS_ENERGY_VEIL = AttachmentRegistry.create(
-            wid("has_energy_veil"),
-            builder -> builder
-                    .syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly())
-                    .persistent(Codec.BOOL));
+            builder -> builder.syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly()).persistent(Codec.BOOL));
+    public static final AttachmentType<Integer> ENERGY_VEIL_NETWORK_ID = AttachmentRegistry.create(
+            wid("energy_veil_id"),
+            builder -> builder.syncWith(PacketCodecs.INTEGER, AttachmentSyncPredicate.all()));
     public static final AttachmentType<Integer> CHARGE_IN_SHELLS = AttachmentRegistry.create(
             wid("charge_in_shells"),
             builder -> builder

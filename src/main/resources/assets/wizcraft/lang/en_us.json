@@ -19,6 +19,7 @@
   "tag.item.wizcraft.focuses": "Focuses",
   "tag.item.wizcraft.wands": "Wands",
   "entity.wizcraft.star_projectile": "Star projectile",
+  "entity.wizcraft.energy_veil": "Energy veil",
   "tooltip.wizcraft.wand.active_focus": "Active focus: %s",
   "tooltip.wizcraft.wand.change_focus": "Press [%s] to change focus",
   "tooltip.wizcraft.wand.setup_anchor": "Use while sneaking to setup an anchor",

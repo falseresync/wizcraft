@@ -1,5 +1,5 @@
 # Wizcraft
-![Wizcraft Banner](https://cdn.modrinth.com/data/F9eqqJxr/images/f5548ac2b96dca43a57a28c5c18dacd17dfb6a67.png)
+![Wizcraft Banner](https://cdn.modrinth.com/data/F9eqqJxr/images/1b4c639704932420f89b643f13d408c2f336154b.png)
 
 ## Wand and Focuses
 

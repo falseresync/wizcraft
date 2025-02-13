@@ -1,19 +1,23 @@
 package falseresync.wizcraft.datagen;
 
 import falseresync.wizcraft.common.block.WizcraftBlocks;
+import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
+import falseresync.wizcraft.common.item.focus.FocusPlating;
 import falseresync.wizcraft.common.recipe.CrucibleRecipeIngredient;
 import falseresync.wizcraft.datagen.recipe.CrucibleRecipeJsonBuilder;
+import falseresync.wizcraft.datagen.recipe.CustomSmithingTransformRecipeJsonBuilder;
 import falseresync.wizcraft.datagen.recipe.LensedWorktableRecipeJsonBuilder;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancement.criterion.TickCriterion;
 import net.minecraft.block.Block;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
+import net.minecraft.component.ComponentChanges;
+import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
@@ -22,7 +26,10 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
+
+import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftRecipeProvider extends FabricRecipeProvider {
     public WizcraftRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
@@ -34,6 +41,7 @@ public class WizcraftRecipeProvider extends FabricRecipeProvider {
         generateLensedWorktable(exporter);
         generateCrucible(exporter);
         generateCrafting(exporter);
+        generateFocusPlating(exporter);
     }
 
     private void generateLensedWorktable(RecipeExporter exporter) {
@@ -118,6 +126,22 @@ public class WizcraftRecipeProvider extends FabricRecipeProvider {
                 .pattern("b")
                 .criterion("has_lens", conditionsFromItem(WizcraftItems.LENS))
                 .offerTo(exporter, block(WizcraftBlocks.LENSING_PEDESTAL));
+    }
+
+    private void generateFocusPlating(RecipeExporter exporter) {
+        generateFocusPlating(exporter, FocusPlating.IRON, Ingredient.fromTag(ConventionalItemTags.IRON_INGOTS));
+        generateFocusPlating(exporter, FocusPlating.GOLD, Ingredient.fromTag(ConventionalItemTags.GOLD_INGOTS));
+        generateFocusPlating(exporter, FocusPlating.COPPER, Ingredient.fromTag(ConventionalItemTags.COPPER_INGOTS));
+    }
+
+    private void generateFocusPlating(RecipeExporter exporter, FocusPlating plating, Ingredient ingredient) {
+        var platingComponents = ComponentChanges.builder().add(WizcraftDataComponents.FOCUS_PLATING, plating.index).build();
+        for (var item : WizcraftItemTagProvider.FOCUSES) {
+            var stack = new ItemStack(item);
+            stack.applyChanges(platingComponents);
+            new CustomSmithingTransformRecipeJsonBuilder(Ingredient.EMPTY, Ingredient.ofItems(item), ingredient, stack)
+                    .offerTo(exporter, plating);
+        }
     }
 
     private Identifier block(Block block) {

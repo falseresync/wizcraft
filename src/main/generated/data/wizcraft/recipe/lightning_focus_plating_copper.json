@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "tag": "c:ingots/copper"
+  },
+  "base": {
+    "item": "wizcraft:lightning_focus"
+  },
+  "result": {
+    "components": {
+      "wizcraft:focus_plating": 2
+    },
+    "count": 1,
+    "id": "wizcraft:lightning_focus"
+  },
+  "template": []
+}

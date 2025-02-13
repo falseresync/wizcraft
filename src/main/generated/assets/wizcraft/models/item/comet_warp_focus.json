@@ -1,5 +1,25 @@
 {
   "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "wizcraft:item/comet_warp_focus_plating_iron",
+      "predicate": {
+        "wizcraft:focus_plating": 0
+      }
+    },
+    {
+      "model": "wizcraft:item/comet_warp_focus_plating_gold",
+      "predicate": {
+        "wizcraft:focus_plating": 1
+      }
+    },
+    {
+      "model": "wizcraft:item/comet_warp_focus_plating_copper",
+      "predicate": {
+        "wizcraft:focus_plating": 2
+      }
+    }
+  ],
   "textures": {
     "layer0": "wizcraft:item/comet_warp_focus"
   }

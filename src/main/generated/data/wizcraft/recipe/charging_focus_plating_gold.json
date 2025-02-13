@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "tag": "c:ingots/gold"
+  },
+  "base": {
+    "item": "wizcraft:charging_focus"
+  },
+  "result": {
+    "components": {
+      "wizcraft:focus_plating": 1
+    },
+    "count": 1,
+    "id": "wizcraft:charging_focus"
+  },
+  "template": []
+}

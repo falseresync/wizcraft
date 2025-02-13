@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "wizcraft:item/lightning_focus",
+    "layer1": "wizcraft:item/focus_plating_iron"
+  }
+}

@@ -3,6 +3,7 @@ package falseresync.wizcraft.common.data.component;
 import com.mojang.serialization.DataResult;
 import falseresync.lib.registry.RegistryObject;
 import falseresync.wizcraft.common.item.focus.FocusItem;
+import falseresync.wizcraft.common.item.focus.FocusPlating;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.codec.PacketCodecs;
@@ -26,6 +27,8 @@ public class WizcraftDataComponents {
             ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
     public static final @RegistryObject ComponentType<Integer> SHELL_CAPACITY =
             ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
+    public static final @RegistryObject ComponentType<Integer> FOCUS_PLATING =
+            ComponentType.<Integer>builder().codec(Codecs.rangedInt(0, FocusPlating.values().length - 1)).packetCodec(PacketCodecs.INTEGER).build();
 
     public static final @RegistryObject ComponentType<Integer> CHARGING_FOCUS_PROGRESS =
             ComponentType.<Integer>builder().codec(Codecs.NONNEGATIVE_INT).packetCodec(PacketCodecs.INTEGER).build();

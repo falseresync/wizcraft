@@ -1,5 +1,6 @@
 package falseresync.wizcraft.client.render;
 
+import falseresync.wizcraft.common.WizcraftConfig;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
@@ -38,19 +39,29 @@ public class RenderingUtil {
     public static void levitateItemAboveBlock(World world, BlockPos pos, Vec3d translation, Vec3d scale, float tickDelta, ItemStack stack, ModelTransformationMode mode, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
         if (stack.isEmpty()) return;
 
-        matrices.push();
+        switch (WizcraftConfig.animationQuality) {
+            case DEFAULT -> {
+                matrices.push();
 
-        var offset = MathHelper.sin((world.getTime() + tickDelta) / 16) / 16;
-        matrices.translate(0.5 + translation.x, 1.25 + offset + translation.y, 0.5 + translation.z);
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(world.getTime() + tickDelta));
+                var offset = MathHelper.sin((world.getTime() + tickDelta) / 16) / 16;
+                matrices.translate(0.5 + translation.x, 1.25 + offset + translation.y, 0.5 + translation.z);
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(world.getTime() + tickDelta));
 
-        scale = scale.multiply(stack.getItem() instanceof BlockItem ? 0.75 : 0.5);
-        matrices.scale((float) scale.x, (float) scale.y, (float) scale.z);
+                scale = scale.multiply(stack.getItem() instanceof BlockItem ? 0.75 : 0.5);
+                matrices.scale((float) scale.x, (float) scale.y, (float) scale.z);
 
-        var lightAbove = WorldRenderer.getLightmapCoordinates(world, pos.up());
-        itemRenderer.renderItem(stack, mode, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, world, 0);
+                var lightAbove = WorldRenderer.getLightmapCoordinates(world, pos.up());
+                itemRenderer.renderItem(stack, mode, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, world, 0);
 
-        matrices.pop();
+                matrices.pop();
+            }
+            case FAST -> {
+                matrices.push();
+                var lightAbove = WorldRenderer.getLightmapCoordinates(world, pos.up());
+                itemRenderer.renderItem(stack, mode, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, world, 0);
+                matrices.pop();
+            }
+        }
     }
 
     public static void addParticle(World world, @Nullable ParticleEffect parameters, Vec3d position, Vec3d velocity) {

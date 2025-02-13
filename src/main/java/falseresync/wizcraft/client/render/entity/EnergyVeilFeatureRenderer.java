@@ -54,11 +54,12 @@ public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRe
 
         var buffer = vertexConsumers.getBuffer(renderLayer);
         model.animateModel(entity, 0, 0, tickDelta);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
         for (int i = 0; i < 3; i++) {
             matrices.push();
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(45 + i * 45));
-            matrices.translate(2, -1.5, 0);
+            matrices.translate(2, -1, 0);
             model.render(matrices, buffer, light, OverlayTexture.DEFAULT_UV, ((int) (0x44 / WizcraftConfig.fullscreenEffectsTransparency.modifier)) << 24 | 0x00_FF_FF_FF);
             matrices.pop();
         }

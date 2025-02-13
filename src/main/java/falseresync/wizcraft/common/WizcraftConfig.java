@@ -21,6 +21,11 @@ public final class WizcraftConfig extends MidnightConfig {
             this.modifier = modifier;
         }
     }
+    @Entry(category = "performance")
+    public static AnimationQuality animationQuality = AnimationQuality.DEFAULT;
+    public enum AnimationQuality {
+        FAST, DEFAULT
+    }
 
     @Entry(category = "accessibility")
     public static TransparencyModifier fullscreenEffectsTransparency = TransparencyModifier.DEFAULT;

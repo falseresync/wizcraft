@@ -73,6 +73,7 @@ public class WizcraftModelProvider extends FabricModelProvider {
         itemModelGenerator.register(WizcraftItems.MORTAR_AND_PESTLE, Models.GENERATED);
 
         itemModelGenerator.register(WizcraftItems.WAND_CORE, Models.GENERATED);
+        itemModelGenerator.register(WizcraftItems.METALLIZED_STICK, Models.GENERATED);
 
         itemModelGenerator.register(WizcraftItems.WAND, Models.HANDHELD_ROD);
 

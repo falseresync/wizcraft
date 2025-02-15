@@ -1,9 +1,8 @@
 package falseresync.wizcraft.common.entity;
 
+import com.google.common.base.Preconditions;
 import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import net.minecraft.block.PressurePlateBlock;
-import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -11,14 +10,12 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.decoration.BlockAttachedEntity;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Util;
 import net.minecraft.util.Uuids;
 import net.minecraft.util.math.Box;
@@ -26,11 +23,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class EnergyVeilEntity extends Entity implements Ownable {
-    private static final TrackedData<Float> RADIUS = DataTracker.registerData(EnergyVeilEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public static final float SCREENS_OFFSET = 0.25f;
+    private static final TrackedData<Float> RADIUS = DataTracker.registerData(EnergyVeilEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public AnimationState slideAnimationState = new AnimationState();
     private int lifeExpectancy;
     @Nullable
@@ -99,10 +94,12 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         if (!getWorld().isClient) {
             var entities = getWorld().getOtherEntities(this, getBoundingBox(), EntityPredicates.EXCEPT_SPECTATOR
                     .and(it -> !it.equals(owner))
-                    .and(it -> !(it instanceof Ownable ownable && owner != null && owner.equals(ownable.getOwner())))
+                    .and(it -> !isOwnedByOwner(it))
                     .and(it -> !it.getType().isIn(WizcraftEntityTags.PASSES_THROUGH_ENERGY_VEIL))
                     .and(it -> !(it instanceof VehicleEntity vehicle && !vehicle.hasPassengers()))
-                    .and(it -> !(it instanceof DisplayEntity || it instanceof BlockAttachedEntity)));
+                    .and(it -> !(it instanceof DisplayEntity || it instanceof BlockAttachedEntity))
+                    .and(it -> !isComingFromAboveOrBelow(it))
+                    .and(it -> !isInside(it)));
             for (Entity entity : entities) {
                 if (entity.getPos().squaredDistanceTo(getPos()) <= Math.pow(getVeilRadius(), 2)) {
                     // dot product shows the direction. if it's negative - vectors are pointing opposite of each other
@@ -124,17 +121,30 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         }
     }
 
+    private boolean isComingFromAboveOrBelow(Entity entity) {
+        return entity.getY() > getY() + getVeilVisibleRadius() || entity.getEyeY() < getY();
+    }
+
+    private boolean isInside(Entity entity) {
+        return entity.getPos().squaredDistanceTo(getPos()) <= Math.pow(getVeilVisibleRadius(), 2);
+    }
+
+    private boolean isOwnedByOwner(Entity entity) {
+        return entity instanceof Ownable ownable && owner != null && owner.equals(ownable.getOwner());
+    }
+
     @Override
     public boolean canAvoidTraps() {
         return true;
     }
 
-    public final void setVeilRadius(float width) {
-        dataTracker.set(RADIUS, width);
-    }
-
     public final float getVeilRadius() {
         return dataTracker.get(RADIUS);
+    }
+
+    public final void setVeilRadius(float radius) {
+        Preconditions.checkArgument(radius >= 2 && radius <= 4, "Veil radius cannot be smaller than 2 or greater than 4");
+        dataTracker.set(RADIUS, radius);
     }
 
     public final float getVeilVisibleRadius() {

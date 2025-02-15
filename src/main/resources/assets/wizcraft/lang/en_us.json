@@ -8,7 +8,8 @@
   "item.wizcraft.charging_focus": "Charging focus",
   "item.wizcraft.starshooter_focus": "Starshooter focus",
   "item.wizcraft.lightning_focus": "Lightning focus",
-  "item.wizcraft.comet_warp_focus": "Comet Warp focus",
+  "item.wizcraft.comet_warp_focus": "Comet warp focus",
+  "item.wizcraft.energy_veil_focus": "Energy veil focus",
   "item.wizcraft.trueseer_goggles": "Trueseer goggles",
   "item.wizcraft.focuses_belt": "Focuses belt",
   "item.wizcraft.charge_shell": "Charge shell",
@@ -42,7 +43,7 @@
   "sound.wizcraft.block.worktable.success": "Worktable successfully crafts an item",
   "sound.wizcraft.entity.star_projectile.explode": "Star projectile explodes",
   "sound.wizcraft.focus.charging.successfully_charged": "Successfully charged a wand",
-  "sound.wizcraft.focus.comet_warp.anchor_placed": "Placed a Comet Warp anchor",
+  "sound.wizcraft.focus.comet_warp.anchor_placed": "Placed a Comet warp anchor",
 
   "keyCategory.wizcraft": "Wizcraft",
   "key.wizcraft.tool_control": "Tool control",

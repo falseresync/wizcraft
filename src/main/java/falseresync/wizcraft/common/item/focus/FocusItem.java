@@ -1,5 +1,7 @@
 package falseresync.wizcraft.common.item.focus;
 
+import falseresync.wizcraft.common.data.component.ItemBarComponent;
+import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -21,10 +23,10 @@ public abstract class FocusItem extends Item {
         super(settings);
     }
 
-    public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack) {
+    public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack, PlayerEntity user) {
     }
 
-    public void focusOnUnequipped(ItemStack wandStack, ItemStack focusStack) {
+    public void focusOnUnequipped(ItemStack wandStack, ItemStack focusStack, PlayerEntity user) {
     }
 
     public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
@@ -65,15 +67,15 @@ public abstract class FocusItem extends Item {
     }
 
     public boolean focusIsItemBarVisible(ItemStack wandStack, ItemStack focusStack) {
-        return false;
+        return wandStack.contains(WizcraftDataComponents.ITEM_BAR);
     }
 
     public int focusGetItemBarStep(ItemStack wandStack, ItemStack focusStack) {
-        return 0;
+        return wandStack.getOrDefault(WizcraftDataComponents.ITEM_BAR, ItemBarComponent.DEFAULT).step();
     }
 
     public int focusGetItemBarColor(ItemStack wandStack, ItemStack focusStack) {
-        return 0;
+        return wandStack.getOrDefault(WizcraftDataComponents.ITEM_BAR, ItemBarComponent.DEFAULT).color();
     }
 
     public boolean focusHasGlint(ItemStack wandStack, ItemStack focusStack) {

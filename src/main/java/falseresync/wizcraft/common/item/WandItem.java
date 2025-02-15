@@ -38,7 +38,7 @@ public class WandItem extends Item implements ActivatorItem {
     @Override
     public boolean onStackClicked(ItemStack wandStack, Slot slot, ClickType clickType, PlayerEntity player) {
         if (clickType == ClickType.RIGHT) {
-            var exchange = exchangeFocuses(wandStack, slot.getStack().copy());
+            var exchange = exchangeFocuses(wandStack, slot.getStack().copy(), player);
             if (exchange.getResult().isAccepted()) {
                 slot.setStack(exchange.getValue());
                 return true;
@@ -54,6 +54,11 @@ public class WandItem extends Item implements ActivatorItem {
         if (charge > maxCharge) {
             stack.set(WizcraftDataComponents.WAND_CHARGE, maxCharge);
         }
+    }
+
+    @Override
+    public boolean allowComponentsUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+        return false;
     }
 
     // Focus actions processing
@@ -231,7 +236,7 @@ public class WandItem extends Item implements ActivatorItem {
 
     // Custom wand methods
 
-    public TypedActionResult<ItemStack> exchangeFocuses(ItemStack wandStack, ItemStack newFocusStack) {
+    public TypedActionResult<ItemStack> exchangeFocuses(ItemStack wandStack, ItemStack newFocusStack, PlayerEntity user) {
         var oldFocusStack = getEquipped(wandStack);
 
         var removeOld = false;
@@ -244,12 +249,12 @@ public class WandItem extends Item implements ActivatorItem {
 
         if (oldFocusStack.getItem() instanceof FocusItem oldFocusItem) {
             removeOld = true;
-            oldFocusItem.focusOnUnequipped(wandStack, oldFocusStack);
+            oldFocusItem.focusOnUnequipped(wandStack, oldFocusStack, user);
         }
 
         if (newFocusStack.getItem() instanceof FocusItem newFocusItem) {
             insertNew = true;
-            newFocusItem.focusOnEquipped(wandStack, newFocusStack);
+            newFocusItem.focusOnEquipped(wandStack, newFocusStack, user);
         }
 
         // newFocus != empty, oldFocus == empty -> success oldFocus

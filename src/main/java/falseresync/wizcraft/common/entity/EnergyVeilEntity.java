@@ -3,6 +3,8 @@ package falseresync.wizcraft.common.entity;
 import com.google.common.base.Preconditions;
 import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
+import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.common.item.WizcraftItemTags;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -12,6 +14,7 @@ import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
@@ -25,21 +28,30 @@ import org.jetbrains.annotations.Nullable;
 
 public class EnergyVeilEntity extends Entity implements Ownable {
     public static final float SCREENS_OFFSET = 0.25f;
+    public static final int MINIMAL_LIFE_EXPECTANCY = 20;
     private static final TrackedData<Float> RADIUS = DataTracker.registerData(EnergyVeilEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public AnimationState slideAnimationState = new AnimationState();
     private int lifeExpectancy;
     @Nullable
     private PlayerEntity owner;
+    @Nullable
+    private ItemStack controllingStack;
 
     public EnergyVeilEntity(EntityType<?> type, World world) {
         super(type, world);
     }
 
-    public EnergyVeilEntity(@Nullable PlayerEntity owner, World world) {
+    public EnergyVeilEntity(@Nullable PlayerEntity owner, @Nullable ItemStack controllingStack, World world) {
         this(WizcraftEntities.ENERGY_VEIL, world);
+        Preconditions.checkArgument(controllingStack == null || owner != null,
+                "Owner must not be null if a controlling stack is present");
+        Preconditions.checkArgument(controllingStack == null || controllingStack.isIn(WizcraftItemTags.WANDS),
+                "A controlling stack must be a wand");
         this.owner = owner;
+        this.controllingStack = controllingStack;
 
-        lifeExpectancy = 20;
+        age = 0;
+        lifeExpectancy = MINIMAL_LIFE_EXPECTANCY;
         noClip = true;
         movementMultiplier = new Vec3d(1, 1, 1);
         setNoGravity(true);
@@ -81,15 +93,8 @@ public class EnergyVeilEntity extends Entity implements Ownable {
     @Override
     public void tick() {
         super.tick();
-        if (age == lifeExpectancy) {
-            slideAnimationState.stop();
-            discard();
-            if (owner != null) {
-                owner.removeAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID);
-            }
-        }
         alignWithOwner();
-        move(MovementType.SELF, getMovement());
+        move(MovementType.SELF, getVelocity());
 
         if (!getWorld().isClient) {
             var entities = getWorld().getOtherEntities(this, getBoundingBox(), EntityPredicates.EXCEPT_SPECTATOR
@@ -109,6 +114,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
                     var entityToOwner = entity.getPos().relativize(getPos());
                     var velocity = entity.getVelocity();
                     if (velocity.dotProduct(entityToOwner) >= 0) {
+                        // Deflect projectiles and fast-moving entities, push any other
                         if (velocity.lengthSquared() >= 0.75 || entity instanceof ProjectileEntity) {
                             entity.setVelocity(entity.getVelocity().negate().multiply(0.5));
                             entity.velocityDirty = true;
@@ -117,6 +123,16 @@ public class EnergyVeilEntity extends Entity implements Ownable {
                         }
                     }
                 }
+            }
+
+            if (age >= lifeExpectancy) {
+                if (owner != null) {
+                    owner.removeAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID);
+                    if (controllingStack != null) {
+                        controllingStack.remove(WizcraftDataComponents.ENERGY_VEIL_UUID);
+                    }
+                }
+                discard();
             }
         }
     }
@@ -157,6 +173,10 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         return owner;
     }
 
+    public int getLifeExpectancy() {
+        return lifeExpectancy;
+    }
+
     private EntityDimensions getDimensions() {
         return EntityDimensions.changing(getVeilRadius() * 2, getVeilRadius() * 2);
     }
@@ -176,19 +196,40 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         if (nbt.contains("radius", NbtElement.FLOAT_TYPE)) {
             setVeilRadius(nbt.getFloat("radius"));
         }
-
+        if (nbt.contains("age", NbtElement.INT_TYPE)) {
+            age = nbt.getInt("age");
+        }
+        if (nbt.contains("life_expectancy", NbtElement.INT_TYPE)) {
+            lifeExpectancy = nbt.getInt("life_expectancy");
+        }
         if (nbt.contains("owner")) {
             Uuids.INT_STREAM_CODEC.decode(NbtOps.INSTANCE, nbt.get("owner"))
                     .resultOrPartial(Util.addPrefix("Could not decode a Player UUID of ", Wizcraft.LOGGER::error))
                     .ifPresent(pair -> owner = getEntityWorld().getPlayerByUuid(uuid));
+            if (owner != null && nbt.contains("controlling_stack")) {
+                controllingStack = owner.getInventory().getStack(nbt.getInt("controlling_stack"));
+                if (controllingStack.isEmpty()) {
+                    controllingStack = null;
+                }
+            }
         }
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.putFloat("radius", getVeilRadius());
+        nbt.putInt("age", age);
+        nbt.putInt("life_expectancy", getLifeExpectancy());
         if (owner != null) {
             Uuids.INT_STREAM_CODEC.encodeStart(NbtOps.INSTANCE, owner.getUuid()).ifSuccess(it -> nbt.put("owner", it));
+            if (controllingStack != null) {
+                var slot = owner.getInventory().getSlotWithStack(controllingStack);
+                if (slot >= 0) {
+                    nbt.putInt("controlling_stack", slot);
+                } else {
+                    controllingStack.remove(WizcraftDataComponents.ENERGY_VEIL_UUID);
+                }
+            }
         }
     }
 }

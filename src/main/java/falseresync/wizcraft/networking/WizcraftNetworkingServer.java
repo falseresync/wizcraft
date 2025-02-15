@@ -27,12 +27,12 @@ public class WizcraftNetworkingServer {
             case PLAYER_INVENTORY -> {
                 if (packet.slot() < player.getInventory().size() - 1) {
                     var newFocusStack = player.getInventory().getStack(packet.slot());
-                    var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, newFocusStack);
+                    var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, newFocusStack, player);
                     if (exchange.getResult().isAccepted()) {
                         player.getInventory().setStack(packet.slot(), exchange.getValue());
                     }
                 } else {
-                    var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, ItemStack.EMPTY);
+                    var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, ItemStack.EMPTY, player);
                     if (exchange.getResult().isAccepted()) {
                         player.getInventory().offerOrDrop(exchange.getValue());
                     }
@@ -49,7 +49,7 @@ public class WizcraftNetworkingServer {
                     }
 
                     var picked = inventoryComponent.stacks().get(packet.slot());
-                    var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, picked);
+                    var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, picked, player);
                     if (exchange.getResult().isAccepted()) {
                         var inventory = inventoryComponent.toModifiable();
                         inventory.setStack(packet.slot(), exchange.getValue());

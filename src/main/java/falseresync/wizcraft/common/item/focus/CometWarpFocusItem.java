@@ -28,7 +28,7 @@ public class CometWarpFocusItem extends FocusItem {
     }
 
     @Override
-    public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack) {
+    public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack, PlayerEntity user) {
         var anchor = focusStack.remove(WizcraftDataComponents.WARP_FOCUS_ANCHOR);
         if (anchor != null) {
             wandStack.set(WizcraftDataComponents.WARP_FOCUS_ANCHOR, anchor);
@@ -36,7 +36,7 @@ public class CometWarpFocusItem extends FocusItem {
     }
 
     @Override
-    public void focusOnUnequipped(ItemStack wandStack, ItemStack focusStack) {
+    public void focusOnUnequipped(ItemStack wandStack, ItemStack focusStack, PlayerEntity user) {
         var anchor = wandStack.remove(WizcraftDataComponents.WARP_FOCUS_ANCHOR);
         focusStack.set(WizcraftDataComponents.WARP_FOCUS_ANCHOR, anchor);
     }

@@ -10,7 +10,9 @@ public class WizcraftDatagen implements DataGeneratorEntrypoint {
 		pack.addProvider(WizcraftBlockLootTableProvider::new);
 		pack.addProvider(WizcraftBlockTagProvider::new);
 		pack.addProvider(WizcraftItemTagProvider::new);
-		pack.addProvider(WizcraftRecipeProvider::new);
+		pack.addProvider(WizcraftEntityTagProvider::new);
+		pack.addProvider(WizcraftVanillaRecipeProvider::new);
+		pack.addProvider(WizcraftCustomRecipeProvider::new);
 		pack.addProvider(WizcraftModelProvider::new);
 	}
 }

@@ -34,11 +34,11 @@ public class EnergyVeilModel extends SinglePartEntityModel<PlayerEntity> {
         var modelPartData = modelData.getRoot();
         var cuboidBuilder = ModelPartBuilder.create()
                 .uv(0, 0)
-                .cuboid(0f, -8f, -8f, 0.1f, 16f, 16f, new Dilation(0, -2f, -2f));
-        modelPartData.addChild(SCREEN_LEFT_BOTTOM,  cuboidBuilder, ModelTransform.pivot(0, -4, -6.5f));
-        modelPartData.addChild(SCREEN_LEFT_MIDDLE,  cuboidBuilder, ModelTransform.pivot(0, 12, -6.5f));
-        modelPartData.addChild(SCREEN_RIGHT_BOTTOM, cuboidBuilder, ModelTransform.pivot(0, 16, 6.5f));
-        modelPartData.addChild(SCREEN_RIGHT_MIDDLE, cuboidBuilder, ModelTransform.pivot(0, 32, 6.5f));
+                .cuboid(0f, -8f, -8f, 0.1f, 16f, 16f, new Dilation(0, -2.5f, -2.5f));
+        modelPartData.addChild(SCREEN_LEFT_BOTTOM,  cuboidBuilder, ModelTransform.pivot(0, -4, -6f));
+        modelPartData.addChild(SCREEN_LEFT_MIDDLE,  cuboidBuilder, ModelTransform.pivot(0, 12, -6f));
+        modelPartData.addChild(SCREEN_RIGHT_BOTTOM, cuboidBuilder, ModelTransform.pivot(0, 16, 6f));
+        modelPartData.addChild(SCREEN_RIGHT_MIDDLE, cuboidBuilder, ModelTransform.pivot(0, 32, 6f));
         return TexturedModelData.of(modelData, 16, 16);
     }
 
@@ -53,14 +53,13 @@ public class EnergyVeilModel extends SinglePartEntityModel<PlayerEntity> {
 
     @Override
     public void animateModel(PlayerEntity entity, float limbAngle, float limbDistance, float tickDelta) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void animateModel(EnergyVeilEntity veil, float limbAngle, float limbDistance, float tickDelta) {
         if (WizcraftConfig.animationQuality == WizcraftConfig.AnimationQuality.DEFAULT) {
             getPart().traverse().forEach(ModelPart::resetTransform);
-            Optional.ofNullable(entity.getAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID))
-                    .map(id -> entity.getEntityWorld().getEntityById(id))
-                    .flatMap(foundEntity -> foundEntity instanceof EnergyVeilEntity veil ? Optional.of(veil) : Optional.empty())
-                    .ifPresent(veil -> {
-                        updateAnimation(veil.slideAnimationState, EnergyVeilAnimations.SLIDE.get(), veil.age + tickDelta);
-                    });
+            updateAnimation(veil.slideAnimationState, EnergyVeilAnimations.SLIDE.get(), veil.age + tickDelta);
         }
     }
 }

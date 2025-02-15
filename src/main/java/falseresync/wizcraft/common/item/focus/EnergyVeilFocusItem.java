@@ -22,8 +22,7 @@ public class EnergyVeilFocusItem extends FocusItem {
     public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
         if (!world.isClient() && !wandStack.contains(WizcraftDataComponents.ENERGY_VEIL_UUID) && !user.hasAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID)) {
             var veil = new EnergyVeilEntity(user, world);
-            veil.setVeilWidth(4);
-            veil.setVeilHeight(4);
+            veil.setVeilRadius(2);
             world.spawnEntity(veil);
             wandStack.set(WizcraftDataComponents.ENERGY_VEIL_UUID, veil.getUuid());
             user.setCurrentHand(user.getActiveHand());

@@ -1,8 +1,10 @@
 package falseresync.wizcraft.client.render.entity;
 
+import falseresync.lib.math.VectorMath;
 import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
 import falseresync.wizcraft.common.entity.EnergyVeilEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -13,8 +15,12 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Math;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.Optional;
 
@@ -37,6 +43,7 @@ public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRe
         var veil = findVeil(entity);
         if (veil == null) return;
 
+        matrices.push();
         var buffer = vertexConsumers.getBuffer(renderLayer);
         model.animateModel(veil, limbAngle, limbDistance, tickDelta);
 
@@ -49,15 +56,23 @@ public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRe
             model.render(matrices, buffer, light, OverlayTexture.DEFAULT_UV);
             matrices.pop();
         }
+        matrices.pop();
     }
 
     public void renderInFirstPerson(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float tickDelta, float animationProgress) {
         var veil = findVeil(entity);
         if (veil == null) return;
 
+        matrices.push();
+        matrices.loadIdentity();
+
         var buffer = vertexConsumers.getBuffer(renderLayer);
         model.animateModel(veil, 0, 0, tickDelta);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+
+        var rotation = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation();
+        var direction = Direction.UP.getUnitVector();
+        var swingAndTwist = VectorMath.swingTwistDecomposition(rotation, direction);
+        matrices.multiply(swingAndTwist.getRight());
 
         for (int i = 0; i < 3; i++) {
             matrices.push();
@@ -66,6 +81,8 @@ public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRe
             model.render(matrices, buffer, light, OverlayTexture.DEFAULT_UV, ((int) (0x44 / WizcraftConfig.fullscreenEffectsTransparency.modifier)) << 24 | 0x00_FF_FF_FF);
             matrices.pop();
         }
+
+        matrices.pop();
     }
 
     @Nullable

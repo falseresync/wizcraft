@@ -1,6 +1,7 @@
 package falseresync.wizcraft.common.entity;
 
 import falseresync.wizcraft.common.WizcraftSounds;
+import falseresync.wizcraft.common.world.WizcraftWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
@@ -18,10 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
-public class StarProjectileEntity extends ExplosiveProjectileEntity {
-    public static final StarProjectileEntity.StarProjectileExplosionBehavior EXPLOSION_BEHAVIOR = new StarProjectileExplosionBehavior();
-
-    /**
+public class StarProjectileEntity extends ExplosiveProjectileEntity {    /**
      * So, a bit of an explanation. If I try to remove the entity on the same tick as the collision
      * EVERYTHING breaks. I have no idea why. I guess world is processing particles/sounds/etc weirdly.
      * I couldn't find any reason as to why Dragon can do it on the same tick, but I don't
@@ -82,15 +80,9 @@ public class StarProjectileEntity extends ExplosiveProjectileEntity {
     protected void explode() {
         getWorld().createExplosion(
                 this, getDamageSources().indirectMagic(this, getOwner()),
-                EXPLOSION_BEHAVIOR, getX(), getY(), getZ(), 1f, false, World.ExplosionSourceType.NONE,
+                WizcraftWorld.MagicDischargeExplosionBehavior.INSTANCE,
+                getX(), getY(), getZ(), 1f, false, World.ExplosionSourceType.NONE,
                 ParticleTypes.FLAME, ParticleTypes.EXPLOSION_EMITTER, Registries.SOUND_EVENT.getEntry(WizcraftSounds.STAR_PROJECTILE_EXPLODE));
         discard();
-    }
-
-    public static class StarProjectileExplosionBehavior extends ExplosionBehavior {
-        @Override
-        public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
-            return false;
-        }
     }
 }

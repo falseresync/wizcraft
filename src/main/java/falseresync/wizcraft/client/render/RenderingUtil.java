@@ -1,21 +1,30 @@
 package falseresync.wizcraft.client.render;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import falseresync.lib.math.Color;
 import falseresync.wizcraft.common.WizcraftConfig;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class RenderingUtil {
     public static final Vec3d UNIT_VEC3D = RenderingUtil.getSymmetricVec3d(1);
@@ -68,5 +77,27 @@ public class RenderingUtil {
         if (parameters != null) {
             world.addParticle(parameters, position.x, position.y, position.z, velocity.x, velocity.y, velocity.z);
         }
+    }
+
+    public static void drawFluidOnBlockEntity(MatrixStack matrices, VertexConsumer buffer, BlockRenderView view, BlockPos pos, Fluid fluid, FluidState state, boolean still, int light, int overlay, float x, float width, float y, float height, float depth) {
+        var handler = Objects.requireNonNull(FluidRenderHandlerRegistry.INSTANCE.get(fluid));
+        var sprites = handler.getFluidSprites(view, pos, state);
+        var tint = handler.getFluidColor(view, pos, state);
+        RenderingUtil.drawSpriteOnBlockEntity(matrices, buffer, still ? sprites[0] : sprites[1], Color.ofRgb(tint).argb(), light, overlay, x, width, y, height, depth);
+    }
+
+    public static void drawSpriteOnBlockEntity(MatrixStack matrices, VertexConsumer buffer, Sprite sprite, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
+        drawTextureOnBlockEntity(matrices, buffer, sprite.getAtlasId(), tint, light, overlay,
+                x, x + width, y, y + height, depth,
+                sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+    }
+
+    public static void drawTextureOnBlockEntity(MatrixStack matrices, VertexConsumer buffer, Identifier texture, int tint, int light, int overlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
+        RenderSystem.setShaderTexture(0, texture);
+        var positionMatrix = matrices.peek().getPositionMatrix();
+        buffer.vertex(positionMatrix, x1, y1, z).texture(u1, v1).color(tint).overlay(overlay).light(light).normal(0, 1, 0);
+        buffer.vertex(positionMatrix, x1, y2, z).texture(u1, v2).color(tint).overlay(overlay).light(light).normal(0, 1, 0);
+        buffer.vertex(positionMatrix, x2, y2, z).texture(u2, v2).color(tint).overlay(overlay).light(light).normal(0, 1, 0);
+        buffer.vertex(positionMatrix, x2, y1, z).texture(u2, v1).color(tint).overlay(overlay).light(light).normal(0, 1, 0);
     }
 }

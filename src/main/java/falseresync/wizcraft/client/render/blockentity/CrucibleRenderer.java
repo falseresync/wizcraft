@@ -1,17 +1,23 @@
 package falseresync.wizcraft.client.render.blockentity;
 
+import falseresync.lib.math.Color;
+import falseresync.wizcraft.client.render.RenderingUtil;
 import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.blockentity.CrucibleBlockEntity;
 import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.RotationAxis;
+
+import java.util.Objects;
 
 public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
     private final ItemRenderer itemRenderer;
@@ -58,7 +64,15 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
                 matrices.pop();
             }
             matrices.pop();
-
         }
+
+        matrices.push();
+        matrices.translate(0, 1, 0);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
+        RenderingUtil.drawFluidOnBlockEntity(
+                matrices, vertexConsumers.getBuffer(RenderLayer.getTranslucent()),
+                entity.getWorld(), entity.getPos(), Fluids.WATER, Fluids.WATER.getDefaultState(), true,
+                light, overlay, 0.125f, 0.75f, 0.125f, 0.75f, 0.125f);
+        matrices.pop();
     }
 }

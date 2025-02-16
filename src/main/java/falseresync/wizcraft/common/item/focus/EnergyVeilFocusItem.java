@@ -124,7 +124,7 @@ public class EnergyVeilFocusItem extends FocusItem {
 
         findVeil(wandStack, world).ifPresent(veil -> {
             float delta = Math.clamp(2f * (float) (veil.getLifeExpectancy() - veil.age) / veil.getLifeExpectancy(), 0, 1);
-            if (delta < 1/13f) {
+            if (delta <= 1/13f) {
                 wandStack.remove(WizcraftDataComponents.ITEM_BAR);
             } else {
                 wandStack.set(WizcraftDataComponents.ITEM_BAR, new ItemBarComponent(Math.clamp(Math.round(delta * 13f), 0, 13), RED.interpolate(CYAN, delta).argb()));

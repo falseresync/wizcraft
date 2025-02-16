@@ -2,6 +2,7 @@ package falseresync.wizcraft.common.item.focus;
 
 import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -51,7 +52,8 @@ public class CometWarpFocusItem extends FocusItem {
                 }
 
                 WizcraftReports.COMET_WARP_ANCHOR_PLACED.sendTo(player);
-                wandStack.set(WizcraftDataComponents.WARP_FOCUS_ANCHOR, GlobalPos.create(world.getRegistryKey(), user.getBlockPos()));
+                var globalPos = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
+                wandStack.set(WizcraftDataComponents.WARP_FOCUS_ANCHOR, globalPos);
             } else {
                 var anchor = wandStack.get(WizcraftDataComponents.WARP_FOCUS_ANCHOR);
                 if (anchor == null) {

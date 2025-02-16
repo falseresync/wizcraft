@@ -7,6 +7,7 @@ import falseresync.wizcraft.client.WizcraftClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.joml.Matrix4f;
@@ -28,6 +29,7 @@ public class FocusPickerHudItem implements HudItem {
     private static final int ITEMS_ANIMATION_DURATION = 6;
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
+    private ItemStack wand;
     private LinkedList<ItemStack> focuses = new LinkedList<>();
     private float baseOpacity = 1;
     private boolean isVisible = false;
@@ -65,7 +67,7 @@ public class FocusPickerHudItem implements HudItem {
             var itemX = x + widgetW / 2 - ITEM_W / 2;
 
             if (animatingItems) {
-                var item1 = focuses.peekLast();
+                var item1 = addGlintIfNecessary(focuses.peekLast());
                 int item1Y = y + SEL_TEX_H / 2 - ITEM_H / 2 + yOffset;
                 float item1Scale = (float) Easing.easeOutCirc((double) (remainingItemsAnimationTicks) / ITEMS_ANIMATION_DURATION);
                 float item1Translation = (float) (SEL_TEX_H * Easing.easeInSine((double) (ITEMS_ANIMATION_DURATION - remainingItemsAnimationTicks) / ITEMS_ANIMATION_DURATION));
@@ -93,9 +95,8 @@ public class FocusPickerHudItem implements HudItem {
                     paintItem(context, item4, itemX, item4Y, item4Scale, 0f, baseOpacity / 2, true);
                 }
             } else {
-                var item1 = focuses.peekFirst();
+                var item1 = addGlintIfNecessary(focuses.peekFirst());
                 var item1Y = y + SEL_TEX_H / 2 - ITEM_H / 2 + yOffset;
-                context.drawItemWithoutEntity(item1, itemX, item1Y);
                 paintItem(context, item1, itemX, item1Y, 1f, 0f, baseOpacity,false);
 
                 if (focuses.size() > 1) {
@@ -113,6 +114,15 @@ public class FocusPickerHudItem implements HudItem {
 
             RenderSystem.disableBlend();
         }
+    }
+
+    protected ItemStack addGlintIfNecessary(ItemStack stack) {
+        ItemStack stackWithGlint = null;
+        if (wand.hasGlint() && stack != null) {
+            stackWithGlint = stack.copy();
+            stackWithGlint.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
+        }
+        return stackWithGlint == null ? stack : stackWithGlint;
     }
 
     protected void paintItem(BetterDrawContext context, ItemStack stack, int x, int y, float scale, float translation, float opacity, boolean shouldTint) {
@@ -207,7 +217,11 @@ public class FocusPickerHudItem implements HudItem {
         remainingItemsAnimationTicks = ITEMS_ANIMATION_DURATION;
     }
 
-    public void upload(LinkedList<ItemStack> newFocuses) {
+    /**
+     * @param wand has to be the same stack, not a copy
+     */
+    public void upload(ItemStack wand, LinkedList<ItemStack> newFocuses) {
+        this.wand = wand;
         if (focuses.isEmpty()) {
             focuses = newFocuses;
         } else if (newFocuses.size() != focuses.size()) {
@@ -235,6 +249,6 @@ public class FocusPickerHudItem implements HudItem {
     }
 
     public boolean isVisible() {
-        return isVisible && !focuses.isEmpty();
+        return isVisible && !focuses.isEmpty() && wand != null;
     }
 }

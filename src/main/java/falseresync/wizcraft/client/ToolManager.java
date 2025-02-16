@@ -130,15 +130,15 @@ public class ToolManager {
             destination = WandFocusDestination.FOCUSES_BELT;
         } // wand inventories go here
 
-        var picked = setupFocusPicker(focusStacks, equipped, shouldPickNext);
+        var picked = setupFocusPicker(wandStack, focusStacks, equipped, shouldPickNext);
         if (picked != null) {
             sendChangeWandFocusPacket(inventory, destination, picked);
         }
     }
 
     @Nullable
-    private ItemStack setupFocusPicker(LinkedList<ItemStack> focusStacks, ItemStack equipped, boolean shouldPickNext) {
-        focusPicker.upload(focusStacks);
+    private ItemStack setupFocusPicker(ItemStack wandStack, LinkedList<ItemStack> focusStacks, ItemStack equipped, boolean shouldPickNext) {
+        focusPicker.upload(wandStack, focusStacks);
 
         if (shouldPickNext) {
             // First press opens the menu, following ones change the focus

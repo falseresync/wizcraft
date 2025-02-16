@@ -18,7 +18,7 @@ import java.util.List;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
-public record CrucibleRecipeIngredient(Ingredient vanilla, int count) implements CustomIngredient {
+public record CountableIngredient(Ingredient vanilla, int count) implements CustomIngredient {
     @Override
     public boolean test(ItemStack stack) {
         return vanilla.test(stack) && stack.getCount() == count;
@@ -35,14 +35,14 @@ public record CrucibleRecipeIngredient(Ingredient vanilla, int count) implements
     }
 
     @Override
-    public CustomIngredientSerializer<CrucibleRecipeIngredient> getSerializer() {
-        return WizcraftRecipeCustomIngredients.CRUCIBLE_RECIPE_INGREDIENT_SERIALIZER;
+    public CustomIngredientSerializer<CountableIngredient> getSerializer() {
+        return WizcraftRecipeCustomIngredients.COUNTABLE_INGREDIENT_SERIALIZER;
     }
 
-    public static class Serializer implements CustomIngredientSerializer<CrucibleRecipeIngredient> {
-        public static final Identifier ID = wid("crucible_recipe_ingredient");
-        public static final MapCodec<CrucibleRecipeIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("vanilla").forGetter(CrucibleRecipeIngredient::vanilla),
+    public static class Serializer implements CustomIngredientSerializer<CountableIngredient> {
+        public static final Identifier ID = wid("countable_ingredient");
+        public static final MapCodec<CountableIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("vanilla").forGetter(CountableIngredient::vanilla),
                 Codec.INT.optionalFieldOf("count", 1).validate(amount -> {
                     if (amount < 1) {
                         return DataResult.error(() -> "A count of ingredient must not be lower than 1");
@@ -51,12 +51,12 @@ public record CrucibleRecipeIngredient(Ingredient vanilla, int count) implements
                     } else {
                         return DataResult.success(amount);
                     }
-                }).forGetter(CrucibleRecipeIngredient::count)
-        ).apply(instance, CrucibleRecipeIngredient::new));
-        public static final PacketCodec<RegistryByteBuf, CrucibleRecipeIngredient> PACKET_CODEC = PacketCodec.tuple(
-                Ingredient.PACKET_CODEC, CrucibleRecipeIngredient::vanilla,
-                PacketCodecs.INTEGER, CrucibleRecipeIngredient::count,
-                CrucibleRecipeIngredient::new
+                }).forGetter(CountableIngredient::count)
+        ).apply(instance, CountableIngredient::new));
+        public static final PacketCodec<RegistryByteBuf, CountableIngredient> PACKET_CODEC = PacketCodec.tuple(
+                Ingredient.PACKET_CODEC, CountableIngredient::vanilla,
+                PacketCodecs.INTEGER, CountableIngredient::count,
+                CountableIngredient::new
         );
 
         @Override
@@ -65,12 +65,12 @@ public record CrucibleRecipeIngredient(Ingredient vanilla, int count) implements
         }
 
         @Override
-        public MapCodec<CrucibleRecipeIngredient> getCodec(boolean allowEmpty) {
+        public MapCodec<CountableIngredient> getCodec(boolean allowEmpty) {
             return CODEC;
         }
 
         @Override
-        public PacketCodec<RegistryByteBuf, CrucibleRecipeIngredient> getPacketCodec() {
+        public PacketCodec<RegistryByteBuf, CountableIngredient> getPacketCodec() {
             return PACKET_CODEC;
         }
     }

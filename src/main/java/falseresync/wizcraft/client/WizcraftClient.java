@@ -4,6 +4,7 @@ import falseresync.wizcraft.client.gui.WizcraftGui;
 import falseresync.wizcraft.client.hud.WizcraftHud;
 import falseresync.wizcraft.client.particle.WizcraftParticleFactories;
 import falseresync.wizcraft.client.render.WizcraftRenderers;
+import falseresync.wizcraft.compat.lavender.WizcraftLavenderPlugin;
 import falseresync.wizcraft.networking.WizcraftNetworkingClient;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -33,5 +34,7 @@ public class WizcraftClient implements ClientModInitializer {
             hud = new WizcraftHud(client);
             toolManager = new ToolManager();
         });
+
+        WizcraftLavenderPlugin.init();
     }
 }

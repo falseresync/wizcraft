@@ -1,0 +1,10 @@
+{
+  "keys": {
+    "c": "minecraft:water_cauldron",
+    "f": "minecraft:fire"
+  },
+  "layers": [
+    ["f"],
+    ["c"]
+  ]
+}

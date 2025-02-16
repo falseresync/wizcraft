@@ -7,17 +7,13 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import falseresync.wizcraft.common.recipe.CrucibleRecipe;
-import falseresync.wizcraft.common.recipe.CrucibleRecipeIngredient;
-import falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
+import falseresync.wizcraft.common.recipe.CountableIngredient;
 import falseresync.wizcraft.compat.emi.WizcraftEmiPlugin;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
@@ -39,8 +35,8 @@ public class CrucibleEmiRecipe implements EmiRecipe {
         this.result = EmiStack.of(recipe.result());
         this.inputs = recipe.ingredients().stream().map(it -> {
             var emiIngredient = EmiIngredient.of(it);
-            if (it.getCustomIngredient() instanceof CrucibleRecipeIngredient crucibleRecipeIngredient) {
-                return emiIngredient.setAmount(crucibleRecipeIngredient.count());
+            if (it.getCustomIngredient() instanceof CountableIngredient countableIngredient) {
+                return emiIngredient.setAmount(countableIngredient.count());
             }
             return emiIngredient;
         }).toList();

@@ -1,10 +1,13 @@
 ```json
 {
-  "title": "A Category",
-  "icon": "minecraft:dirt"
+  "title": "Basics",
+  "icon": "wizcraft:wand",
+  "ordinal": 0
 }
 ```
 
-Just like __entries__, categories fully support **markdown formatting**.
-Be careful when writing their descriptions however, as you only get a
-single page to work with.
+*The cover states Grimoire - the weird word doesn't tell you much, but the
+sparkles coming off of it when you open the first page are certainly intriguing.*
+
+
+*The introduction chapter winks at you, or maybe you're just seeing things*

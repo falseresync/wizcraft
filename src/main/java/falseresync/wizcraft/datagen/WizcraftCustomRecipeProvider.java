@@ -1,7 +1,7 @@
 package falseresync.wizcraft.datagen;
 
 import falseresync.wizcraft.common.item.WizcraftItems;
-import falseresync.wizcraft.common.recipe.CrucibleRecipeIngredient;
+import falseresync.wizcraft.common.recipe.CountableIngredient;
 import falseresync.wizcraft.datagen.recipe.CrucibleRecipeJsonBuilder;
 import falseresync.wizcraft.datagen.recipe.LensedWorktableRecipeJsonBuilder;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -65,8 +65,8 @@ public class WizcraftCustomRecipeProvider extends FabricRecipeProvider {
                 .input(Ingredient.fromTag(ConventionalItemTags.COPPER_INGOTS))
                 .offerTo(exporter);
         new CrucibleRecipeJsonBuilder(WizcraftItems.LENS)
-                .input(new CrucibleRecipeIngredient(Ingredient.fromTag(ConventionalItemTags.DIAMOND_GEMS), 2).toVanilla())
-                .input(new CrucibleRecipeIngredient(Ingredient.fromTag(ConventionalItemTags.AMETHYST_GEMS), 6).toVanilla())
+                .input(new CountableIngredient(Ingredient.fromTag(ConventionalItemTags.DIAMOND_GEMS), 2).toVanilla())
+                .input(new CountableIngredient(Ingredient.fromTag(ConventionalItemTags.AMETHYST_GEMS), 6).toVanilla())
                 .input(Ingredient.fromTag(ConventionalItemTags.GLASS_BLOCKS_COLORLESS))
                 .offerTo(exporter);
         new CrucibleRecipeJsonBuilder(WizcraftItems.CHARGE_SHELL)

@@ -1,0 +1,57 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20.3/owo-ui.xsd">
+    <templates>
+        <template name="crucible-recipe">
+            <flow-layout direction="vertical">
+                <children>
+                    <flow-layout direction="horizontal" id="ingredients">
+                        <children>
+                            <wizcraft.countable-item-list />
+                            <wizcraft.countable-item-list />
+                            <wizcraft.countable-item-list />
+                            <wizcraft.countable-item-list />
+                            <wizcraft.countable-item-list />
+                        </children>
+
+                        <horizontal-alignment>center</horizontal-alignment>
+                        <gap>2</gap>
+                    </flow-layout>
+
+                    <stack-layout>
+                        <children>
+                            <texture row="0" column="1" texture="{{crucible-tex}}" texture-width="32" texture-height="32"
+                                     u="0" v="0" region-width="32" region-height="32">
+                                <blend>true</blend>
+                            </texture>
+
+                            <texture texture="{{arrow-tex}}" texture-width="16" texture-height="16"
+                                     u="16" v="16" region-width="16" region-height="16">
+                                <blend>true</blend>
+                                <positioning type="relative">76,50</positioning>
+                            </texture>
+
+                            <item id="result">
+                                <set-tooltip-from-stack>true</set-tooltip-from-stack>
+                                <show-overlay>true</show-overlay>
+                                <positioning type="relative">94,50</positioning>
+                            </item>
+                        </children>
+
+                        <horizontal-alignment>center</horizontal-alignment>
+
+                        <sizing>
+                            <horizontal method="fill">100</horizontal>
+                        </sizing>
+                    </stack-layout>
+                </children>
+
+                <horizontal-alignment>center</horizontal-alignment>
+
+                <gap>2</gap>
+                <sizing>
+                    <horizontal method="fill">90</horizontal>
+                </sizing>
+            </flow-layout>
+        </template>
+    </templates>
+</owo-ui>

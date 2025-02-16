@@ -50,7 +50,7 @@ public class WorktableBuilder<B extends WorktableBlockEntity> {
         Objects.requireNonNull(pattern, "Pattern cannot be null");
         preconditions = preconditions == null ? (world, player) -> true : preconditions;
 
-        return settings -> new WorktableBlock<>(settings)  {
+        return settings -> new WorktableBlock<>(settings) {
             private WorktableVariant<B> VARIANT;
 
             @Override

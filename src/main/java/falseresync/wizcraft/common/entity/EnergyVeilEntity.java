@@ -97,33 +97,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         move(MovementType.SELF, getVelocity());
 
         if (!getWorld().isClient) {
-            var entities = getWorld().getOtherEntities(this, getBoundingBox(), EntityPredicates.EXCEPT_SPECTATOR
-                    .and(it -> !it.equals(owner))
-                    .and(it -> !isOwnedByOwner(it))
-                    .and(it -> !it.getType().isIn(WizcraftEntityTags.PASSES_THROUGH_ENERGY_VEIL))
-                    .and(it -> !(it instanceof VehicleEntity vehicle && !vehicle.hasPassengers()))
-                    .and(it -> !(it instanceof DisplayEntity || it instanceof BlockAttachedEntity))
-                    .and(it -> !isComingFromAboveOrBelow(it))
-                    .and(it -> !isInside(it)));
-            for (Entity entity : entities) {
-                if (entity.getPos().squaredDistanceTo(getPos()) <= Math.pow(getVeilRadius(), 2)) {
-                    // dot product shows the direction. if it's negative - vectors are pointing opposite of each other
-                    // if it's 0 - they point orthogonally, and if it's positive - more or less in the same direction
-                    // compare the entity velocity and the entity-to-veil-center vectors
-                    // if they point to the same direction - repel the incoming entity
-                    var entityToOwner = entity.getPos().relativize(getPos());
-                    var velocity = entity.getVelocity();
-                    if (velocity.dotProduct(entityToOwner) >= 0) {
-                        // Deflect projectiles and fast-moving entities, push any other
-                        if (velocity.lengthSquared() >= 0.75 || entity instanceof ProjectileEntity) {
-                            entity.setVelocity(entity.getVelocity().negate().multiply(0.5));
-                            entity.velocityDirty = true;
-                        } else {
-                            entity.move(MovementType.PISTON, entityToOwner.negate());
-                        }
-                    }
-                }
-            }
+            repelOutsiders();
 
             if (age >= lifeExpectancy) {
                 if (owner != null) {
@@ -137,16 +111,50 @@ public class EnergyVeilEntity extends Entity implements Ownable {
         }
     }
 
+    private void repelOutsiders() {
+        var entities = getWorld().getOtherEntities(this, getBoundingBox(), EntityPredicates.EXCEPT_SPECTATOR
+                .and(it -> !it.equals(owner))
+                .and(it -> !isOwnedByOwner(it))
+                .and(it -> !it.getType().isIn(WizcraftEntityTags.PASSES_THROUGH_ENERGY_VEIL))
+                .and(it -> !(it instanceof VehicleEntity vehicle && !vehicle.hasPassengers()))
+                .and(it -> !(it instanceof DisplayEntity || it instanceof BlockAttachedEntity))
+                .and(it -> !isComingFromAboveOrBelow(it))
+                .and(it -> !isInside(it)));
+        for (Entity entity : entities) {
+            if (isOnTheEdge(entity)) {
+                // dot product shows the direction. if it's negative - vectors are pointing opposite of each other
+                // if it's 0 - they point orthogonally, and if it's positive - more or less in the same direction
+                // compare the entity velocity and the entity-to-veil-center vectors
+                // if they point to the same direction - repel the incoming entity
+                var entityToOwner = entity.getPos().relativize(getPos());
+                var velocity = entity.getVelocity();
+                if (velocity.dotProduct(entityToOwner) >= 0) {
+                    // Deflect projectiles and fast-moving entities, push any other
+                    if (velocity.lengthSquared() >= 0.75 || entity instanceof ProjectileEntity) {
+                        entity.setVelocity(entity.getVelocity().negate().multiply(0.5));
+                        entity.velocityDirty = true;
+                    } else {
+                        entity.move(MovementType.PISTON, entityToOwner.negate().multiply(1.5));
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isOwnedByOwner(Entity entity) {
+        return entity instanceof Ownable ownable && owner != null && owner.equals(ownable.getOwner());
+    }
+
     private boolean isComingFromAboveOrBelow(Entity entity) {
-        return entity.getY() > getY() + getVeilVisibleRadius() || entity.getEyeY() < getY();
+        return entity.getY() > (getY() + getVeilVisibleRadius() + 0.25) || entity.getEyeY() < (getY() - 0.25);
     }
 
     private boolean isInside(Entity entity) {
         return entity.getPos().squaredDistanceTo(getPos()) <= Math.pow(getVeilVisibleRadius(), 2);
     }
 
-    private boolean isOwnedByOwner(Entity entity) {
-        return entity instanceof Ownable ownable && owner != null && owner.equals(ownable.getOwner());
+    private boolean isOnTheEdge(Entity entity) {
+        return entity.getPos().squaredDistanceTo(getPos()) <= Math.pow(getVeilRadius(), 2);
     }
 
     @Override

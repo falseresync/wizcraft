@@ -3,7 +3,7 @@
 	"id": "wizcraft",
 	"version": "${version}",
 	"name": "Wizcraft",
-	"description": "Credits for many of the textures go to: Devillas @itch.io, ElvGames @itch.io \nThanks go to Falkreon, FoundationGames and other folks in ModFest Discord and elsewhere, who have helped me immensely to debug and develop this mod <3",
+	"description": "Credits for many of the textures go to: Devillas @itch.io, ElvGames @itch.io \nCredits for some code go to Easings.net, to oωo-lib and others \nThanks go to folks in ModFest and Fabric Discord servers and elsewhere, who have helped me immensely to debug and develop this mod <3",
 	"authors": [
 		"falseresync"
 	],

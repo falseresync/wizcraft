@@ -40,6 +40,7 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
         this.pedestalInputs = pedestalInputs;
         this.allIngredients = DefaultedList.ofSize(pedestalInputs.size() + 1);
         this.allIngredients.add(worktableInput);
+        this.allIngredients.addAll(pedestalInputs);
     }
 
     @Override

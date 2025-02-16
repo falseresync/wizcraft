@@ -1,0 +1,24 @@
+{
+  "type": "wizcraft:lensed_worktable",
+  "pedestals": [
+    {
+      "tag": "c:tools/shield"
+    },
+    {
+      "item": "minecraft:phantom_membrane"
+    },
+    {
+      "tag": "c:tools/shield"
+    },
+    {
+      "item": "minecraft:phantom_membrane"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "wizcraft:energy_veil_focus"
+  },
+  "worktable": {
+    "item": "minecraft:diamond_block"
+  }
+}

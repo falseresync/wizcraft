@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:gems/amethyst"
+    },
+    {
+      "tag": "c:dusts/redstone"
+    },
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "wizcraft:mortar_and_pestle"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "wizcraft:grimoire"
+  }
+}

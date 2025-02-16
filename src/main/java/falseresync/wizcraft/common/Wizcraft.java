@@ -18,16 +18,20 @@ import falseresync.wizcraft.networking.WizcraftNetworking;
 import falseresync.wizcraft.networking.WizcraftNetworkingServer;
 import falseresync.wizcraft.networking.report.WizcraftReports;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.world.World;
 import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
@@ -91,6 +95,13 @@ public class Wizcraft implements ModInitializer {
         WizcraftNetworkingServer.registerReceivers();
 
         chargeManager = new ChargeManager();
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            if (!handler.player.hasAttached(WizcraftDataAttachments.INTRODUCED_TO_WIZCRAFT)) {
+                handler.player.getInventory().offerOrDrop(new ItemStack(WizcraftItems.GRIMOIRE));
+                handler.player.setAttached(WizcraftDataAttachments.INTRODUCED_TO_WIZCRAFT, true);
+            }
+        });
     }
 
     public static ChargeManager getChargeManager() {

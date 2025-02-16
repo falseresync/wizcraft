@@ -51,6 +51,12 @@ public class WizcraftCustomRecipeProvider extends FabricRecipeProvider {
                 .pedestalInput(Ingredient.fromTag(ConventionalItemTags.ENDER_PEARLS))
                 .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
                 .offerTo(exporter);
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.ENERGY_VEIL_FOCUS, Ingredient.ofItems(Items.DIAMOND_BLOCK))
+                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.SHIELD_TOOLS))
+                .pedestalInput(Ingredient.ofItems(Items.PHANTOM_MEMBRANE))
+                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.SHIELD_TOOLS))
+                .pedestalInput(Ingredient.ofItems(Items.PHANTOM_MEMBRANE))
+                .offerTo(exporter);
     }
 
     private void generateCrucible(RecipeExporter exporter) {
@@ -62,6 +68,13 @@ public class WizcraftCustomRecipeProvider extends FabricRecipeProvider {
                 .input(new CrucibleRecipeIngredient(Ingredient.fromTag(ConventionalItemTags.DIAMOND_GEMS), 2).toVanilla())
                 .input(new CrucibleRecipeIngredient(Ingredient.fromTag(ConventionalItemTags.AMETHYST_GEMS), 6).toVanilla())
                 .input(Ingredient.fromTag(ConventionalItemTags.GLASS_BLOCKS_COLORLESS))
+                .offerTo(exporter);
+        new CrucibleRecipeJsonBuilder(WizcraftItems.CHARGE_SHELL)
+                .input(Ingredient.fromTag(ConventionalItemTags.DIAMOND_GEMS))
+                .input(Ingredient.fromTag(ConventionalItemTags.AMETHYST_GEMS))
+                .input(Ingredient.fromTag(ConventionalItemTags.REDSTONE_DUSTS))
+                .input(Ingredient.ofItems(Items.GHAST_TEAR))
+                .input(Ingredient.ofItems(Items.NAUTILUS_SHELL))
                 .offerTo(exporter);
     }
 }

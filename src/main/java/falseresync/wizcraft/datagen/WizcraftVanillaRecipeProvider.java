@@ -50,6 +50,14 @@ public class WizcraftVanillaRecipeProvider extends FabricRecipeProvider {
                 .pattern("s")
                 .criterion("unlock_right_away", TickCriterion.Conditions.createTick())
                 .offerTo(exporter, item(WizcraftItems.MORTAR_AND_PESTLE));
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.GRIMOIRE)
+                .input(ConventionalItemTags.DIAMOND_GEMS)
+                .input(ConventionalItemTags.AMETHYST_GEMS)
+                .input(ConventionalItemTags.REDSTONE_DUSTS)
+                .input(Items.BOOK)
+                .input(WizcraftItems.MORTAR_AND_PESTLE)
+                .criterion("unlock_right_away", TickCriterion.Conditions.createTick())
+                .offerTo(exporter, item(WizcraftItems.GRIMOIRE));
         ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND_CORE)
                 .input(ConventionalItemTags.DIAMOND_GEMS)
                 .input(ConventionalItemTags.AMETHYST_GEMS)
@@ -59,6 +67,7 @@ public class WizcraftVanillaRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_diamond", conditionsFromTag(ConventionalItemTags.DIAMOND_GEMS))
                 .criterion("has_amethyst", conditionsFromTag(ConventionalItemTags.AMETHYST_GEMS))
                 .offerTo(exporter, item(WizcraftItems.WAND_CORE));
+
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND)
                 .input('w', WizcraftItems.WAND_CORE)
                 .input('g', ConventionalItemTags.GOLD_INGOTS)
@@ -69,6 +78,26 @@ public class WizcraftVanillaRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_diamond", conditionsFromTag(ConventionalItemTags.DIAMOND_GEMS))
                 .criterion("has_amethyst", conditionsFromTag(ConventionalItemTags.AMETHYST_GEMS))
                 .offerTo(exporter, item(WizcraftItems.WAND));
+        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.TRUESEER_GOGGLES)
+                .input('g', ConventionalItemTags.GOLD_NUGGETS)
+                .input('h', Items.CHAINMAIL_HELMET)
+                .input('p', Items.PHANTOM_MEMBRANE)
+                .input('c', ConventionalItemTags.PRISMARINE_GEMS)
+                .pattern("g g")
+                .pattern("php")
+                .pattern("c c")
+                .criterion("has_phantom_membrane", conditionsFromItem(Items.PHANTOM_MEMBRANE))
+                .criterion("has_prismarine", conditionsFromTag(ConventionalItemTags.PRISMARINE_GEMS))
+                .offerTo(exporter, item(WizcraftItems.TRUESEER_GOGGLES));
+        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.FOCUSES_BELT)
+                .input('l', ConventionalItemTags.LEATHERS)
+                .input('t', Items.TURTLE_HELMET)
+                .pattern("ltl")
+                .pattern("l l")
+                .pattern("lll")
+                .criterion("has_turtle_shell", conditionsFromItem(Items.TURTLE_HELMET))
+                .offerTo(exporter, item(WizcraftItems.FOCUSES_BELT));
+
         ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.WORKTABLE)
                 .input('g', ConventionalItemTags.GOLD_INGOTS)
                 .input('l', ConventionalItemTags.LAPIS_GEMS)

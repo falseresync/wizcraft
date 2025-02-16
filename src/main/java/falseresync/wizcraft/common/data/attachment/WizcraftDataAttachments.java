@@ -11,6 +11,9 @@ import net.minecraft.util.dynamic.Codecs;
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftDataAttachments {
+    public static final AttachmentType<Boolean> INTRODUCED_TO_WIZCRAFT = AttachmentRegistry.create(
+            wid("introduced_to_wizcraft"),
+            builder -> builder.syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly()).persistent(Codec.BOOL).copyOnDeath());
     public static final AttachmentType<Boolean> HAS_TRUESEER_GOGGLES = AttachmentRegistry.create(
             wid("has_trueseer_goggles"),
             builder -> builder.syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly()).persistent(Codec.BOOL));

@@ -83,6 +83,11 @@ public class CometWarpFocusItem extends FocusItem {
     }
 
     @Override
+    public boolean focusHasGlint(ItemStack wandStack, ItemStack focusStack) {
+        return hasGlint(wandStack);
+    }
+
+    @Override
     public void focusAppendTooltip(ItemStack wandStack, ItemStack focusStack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         var anchor = wandStack.get(WizcraftDataComponents.WARP_FOCUS_ANCHOR);
         if (anchor == null) {
@@ -95,6 +100,11 @@ public class CometWarpFocusItem extends FocusItem {
                             anchor.pos().toShortString())
                     .styled(style -> style.withColor(Formatting.GRAY)));
         }
+    }
+
+    @Override
+    public boolean hasGlint(ItemStack stack) {
+        return stack.contains(WizcraftDataComponents.WARP_FOCUS_ANCHOR);
     }
 
     @Override

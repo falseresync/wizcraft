@@ -1,17 +1,14 @@
 package falseresync.wizcraft.common.item;
 
-import dev.emi.trinkets.api.TrinketItem;
-import dev.emi.trinkets.api.TrinketsApi;
-import falseresync.wizcraft.common.data.component.InventoryComponentProvider;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipData;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.TypedActionResult;
+import dev.emi.trinkets.api.*;
+import falseresync.wizcraft.common.data.component.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.item.tooltip.*;
+import net.minecraft.screen.slot.*;
+import net.minecraft.util.*;
 
-import java.util.Optional;
+import java.util.*;
 
 public class FocusesBeltItem extends TrinketItem implements InventoryComponentProvider {
     public static final int INVENTORY_SIZE = 12;
@@ -63,7 +60,7 @@ public class FocusesBeltItem extends TrinketItem implements InventoryComponentPr
 
     @Override
     public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        return Optional.ofNullable(stack.get(WizcraftDataComponents.INVENTORY));
+        return Optional.ofNullable(stack.get(WizcraftComponents.INVENTORY));
     }
 
     @Override

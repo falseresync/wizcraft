@@ -1,31 +1,28 @@
 package falseresync.wizcraft.common.item;
 
-import falseresync.wizcraft.client.WizcraftKeybindings;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.common.item.focus.FocusItem;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
+import falseresync.wizcraft.client.*;
+import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.item.focus.*;
+import net.fabricmc.fabric.api.client.keybinding.v1.*;
+import net.minecraft.block.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.damage.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.item.tooltip.*;
+import net.minecraft.screen.slot.*;
+import net.minecraft.text.*;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
-import java.util.List;
+import java.util.*;
 
 public class WandItem extends Item implements ActivatorItem {
     public WandItem(Settings settings) {
         super(settings
-                .component(WizcraftDataComponents.WAND_CHARGE, 0)
-                .component(WizcraftDataComponents.WAND_MAX_CHARGE, 100));
+                .component(WizcraftComponents.WAND_CHARGE, 0)
+                .component(WizcraftComponents.WAND_MAX_CHARGE, 100));
     }
 
     // Wand as an item
@@ -49,10 +46,10 @@ public class WandItem extends Item implements ActivatorItem {
 
     @Override
     public void postProcessComponents(ItemStack stack) {
-        var charge = stack.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
-        var maxCharge = stack.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
+        var charge = stack.getOrDefault(WizcraftComponents.WAND_CHARGE, 0);
+        var maxCharge = stack.getOrDefault(WizcraftComponents.WAND_MAX_CHARGE, 0);
         if (charge > maxCharge) {
-            stack.set(WizcraftDataComponents.WAND_CHARGE, maxCharge);
+            stack.set(WizcraftComponents.WAND_CHARGE, maxCharge);
         }
     }
 
@@ -260,13 +257,13 @@ public class WandItem extends Item implements ActivatorItem {
         // newFocus != empty, oldFocus == empty -> success oldFocus
         // newFocus != empty, oldFocus != empty -> success oldFocus
         if (insertNew) {
-            wandStack.set(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
+            wandStack.set(WizcraftComponents.EQUIPPED_FOCUS_ITEM, newFocusStack);
             return TypedActionResult.success(oldFocusStack);
         }
 
         // newFocus = empty, oldFocus != empty -> success oldFocus
         if (removeOld) {
-            wandStack.remove(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM);
+            wandStack.remove(WizcraftComponents.EQUIPPED_FOCUS_ITEM);
             return TypedActionResult.success(oldFocusStack);
         }
 
@@ -275,6 +272,6 @@ public class WandItem extends Item implements ActivatorItem {
     }
 
     public ItemStack getEquipped(ItemStack wandStack) {
-        return wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        return wandStack.getOrDefault(WizcraftComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
     }
 }

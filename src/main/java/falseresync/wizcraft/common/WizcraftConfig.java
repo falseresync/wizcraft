@@ -1,6 +1,6 @@
 package falseresync.wizcraft.common;
 
-import eu.midnightdust.lib.config.MidnightConfig;
+import eu.midnightdust.lib.config.*;
 
 public final class WizcraftConfig extends MidnightConfig {
     @Entry(category = "cheats")
@@ -12,6 +12,12 @@ public final class WizcraftConfig extends MidnightConfig {
     public static int trueseerGogglesDisplayRange = 10;
     @Entry(category = "performance")
     public static ParticlesAmountModifier animationParticlesAmount = ParticlesAmountModifier.DEFAULT;
+    @Entry(category = "performance")
+    public static AnimationQuality animationQuality = AnimationQuality.DEFAULT;
+
+    @Entry(category = "accessibility")
+    public static TransparencyModifier fullscreenEffectsTransparency = TransparencyModifier.DEFAULT;
+
     public enum ParticlesAmountModifier {
         REDUCED(0.6f), DEFAULT(1);
 
@@ -21,14 +27,11 @@ public final class WizcraftConfig extends MidnightConfig {
             this.modifier = modifier;
         }
     }
-    @Entry(category = "performance")
-    public static AnimationQuality animationQuality = AnimationQuality.DEFAULT;
+
     public enum AnimationQuality {
         FAST, DEFAULT
     }
 
-    @Entry(category = "accessibility")
-    public static TransparencyModifier fullscreenEffectsTransparency = TransparencyModifier.DEFAULT;
     public enum TransparencyModifier {
         INCREASED(2f), DEFAULT(1);
 

@@ -1,30 +1,23 @@
 package falseresync.wizcraft.common.entity;
 
-import com.google.common.base.Preconditions;
-import falseresync.wizcraft.common.Wizcraft;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.common.item.WizcraftItemTags;
+import com.google.common.base.*;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.item.*;
 import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.decoration.BlockAttachedEntity;
-import net.minecraft.entity.decoration.DisplayEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.vehicle.VehicleEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.Util;
-import net.minecraft.util.Uuids;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.entity.data.*;
+import net.minecraft.entity.decoration.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.entity.projectile.*;
+import net.minecraft.entity.vehicle.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.predicate.entity.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
 public class EnergyVeilEntity extends Entity implements Ownable {
     public static final float SCREENS_OFFSET = 0.25f;
@@ -83,7 +76,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
             setBoundingBox(calculateBoundingBox());
         }
         if (owner != null) {
-            owner.setAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID, getId());
+            owner.setAttached(WizcraftAttachments.ENERGY_VEIL_NETWORK_ID, getId());
         }
         if (getEntityWorld().isClient()) {
             slideAnimationState.startIfNotRunning(age);
@@ -101,9 +94,9 @@ public class EnergyVeilEntity extends Entity implements Ownable {
 
             if (age >= lifeExpectancy) {
                 if (owner != null) {
-                    owner.removeAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID);
+                    owner.removeAttached(WizcraftAttachments.ENERGY_VEIL_NETWORK_ID);
                     if (controllingStack != null) {
-                        controllingStack.remove(WizcraftDataComponents.ENERGY_VEIL_UUID);
+                        controllingStack.remove(WizcraftComponents.ENERGY_VEIL_UUID);
                     }
                 }
                 discard();
@@ -235,7 +228,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
                 if (slot >= 0) {
                     nbt.putInt("controlling_stack", slot);
                 } else {
-                    controllingStack.remove(WizcraftDataComponents.ENERGY_VEIL_UUID);
+                    controllingStack.remove(WizcraftComponents.ENERGY_VEIL_UUID);
                 }
             }
         }

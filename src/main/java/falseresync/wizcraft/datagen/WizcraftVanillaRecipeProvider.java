@@ -1,7 +1,7 @@
 package falseresync.wizcraft.datagen;
 
 import falseresync.wizcraft.common.block.WizcraftBlocks;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
+import falseresync.wizcraft.common.data.component.WizcraftComponents;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.common.item.focus.FocusPlating;
 import falseresync.wizcraft.datagen.recipe.CustomSmithingTransformRecipeJsonBuilder;
@@ -125,7 +125,7 @@ public class WizcraftVanillaRecipeProvider extends FabricRecipeProvider {
     }
 
     private void generateFocusPlating(RecipeExporter exporter, FocusPlating plating, Ingredient ingredient) {
-        var platingComponents = ComponentChanges.builder().add(WizcraftDataComponents.FOCUS_PLATING, plating.index).build();
+        var platingComponents = ComponentChanges.builder().add(WizcraftComponents.FOCUS_PLATING, plating.index).build();
         for (var item : WizcraftItemTagProvider.FOCUSES) {
             var stack = new ItemStack(item);
             stack.applyChanges(platingComponents);

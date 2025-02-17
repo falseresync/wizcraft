@@ -1,22 +1,17 @@
 package falseresync.wizcraft.common.block;
 
-import falseresync.lib.blockpattern.BetterBlockPattern;
-import falseresync.wizcraft.common.blockentity.WorktableBlockEntity;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import falseresync.lib.blockpattern.*;
+import falseresync.wizcraft.common.blockentity.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.server.network.*;
+import net.minecraft.server.world.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Objects;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.*;
+import java.util.function.*;
 
 public class WorktableBuilder<B extends WorktableBlockEntity> {
     protected Supplier<BlockEntityType<B>> type;

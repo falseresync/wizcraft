@@ -1,22 +1,17 @@
 package falseresync.wizcraft.common.recipe;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.Identifier;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.*;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.*;
+import net.minecraft.item.*;
+import net.minecraft.network.*;
+import net.minecraft.network.codec.*;
+import net.minecraft.recipe.*;
+import net.minecraft.util.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public record CountableIngredient(Ingredient vanilla, int count) implements CustomIngredient {
     @Override
@@ -36,7 +31,7 @@ public record CountableIngredient(Ingredient vanilla, int count) implements Cust
 
     @Override
     public CustomIngredientSerializer<CountableIngredient> getSerializer() {
-        return WizcraftRecipeCustomIngredients.COUNTABLE_INGREDIENT_SERIALIZER;
+        return WizcraftCustomIngredients.COUNTABLE_INGREDIENT_SERIALIZER;
     }
 
     public static class Serializer implements CustomIngredientSerializer<CountableIngredient> {

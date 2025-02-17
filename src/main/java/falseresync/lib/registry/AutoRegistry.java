@@ -1,14 +1,13 @@
 package falseresync.lib.registry;
 
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-import org.slf4j.Logger;
+import net.minecraft.registry.*;
+import net.minecraft.util.*;
+import org.slf4j.*;
 
-import java.lang.reflect.InaccessibleObjectException;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 
 /**
- * <h2>USAGE EXAMPLE</h2>
+ * <h2>Usage</h2>
  *
  * <p>In your ModInitializer:
  * <pre>{@code
@@ -40,6 +39,7 @@ public class AutoRegistry {
      *     <li>The ID is formed by lower-casing the field name</li>
      *     <li>Null fields are discarded with a warning message</li>
      * </ul>
+     *
      * @param <T> type parameter must match the type of the fields
      * @implNote help
      */

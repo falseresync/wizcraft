@@ -1,29 +1,22 @@
 package falseresync.wizcraft.common.blockentity;
 
-import falseresync.wizcraft.common.recipe.CrucibleRecipe;
-import falseresync.wizcraft.common.recipe.SimpleInventoryRecipeInput;
-import falseresync.wizcraft.common.recipe.WizcraftRecipeTypes;
-import falseresync.wizcraft.networking.report.WizcraftReports;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import falseresync.wizcraft.common.recipe.*;
+import falseresync.wizcraft.networking.report.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.entity.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.network.listener.*;
+import net.minecraft.network.packet.*;
+import net.minecraft.network.packet.s2c.play.*;
+import net.minecraft.recipe.*;
+import net.minecraft.registry.*;
+import net.minecraft.server.world.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
 
 public class CrucibleBlockEntity extends BlockEntity {
@@ -39,14 +32,10 @@ public class CrucibleBlockEntity extends BlockEntity {
         inventory.addListener(change -> markDirty());
     }
 
-    public SimpleInventory getInventory() {
-        return inventory;
-    }
-
     public static void tick(World world, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         if (world.isClient) return;
 
-        world.getEntitiesByClass(ItemEntity.class, Box.enclosing(pos, pos.up()).contract(2 / 16f,0.75, 2 / 16f), entity -> true).forEach(entity -> {
+        world.getEntitiesByClass(ItemEntity.class, Box.enclosing(pos, pos.up()).contract(2 / 16f, 0.75, 2 / 16f), entity -> true).forEach(entity -> {
             var stack = entity.getStack();
             var inventory = crucible.inventory;
             var max = inventory.getMaxCount(stack);
@@ -68,7 +57,11 @@ public class CrucibleBlockEntity extends BlockEntity {
             entity.discard();
         });
 
-        world.getRecipeManager().getFirstMatch(WizcraftRecipeTypes.CRUCIBLE, crucible.inventory, world).ifPresent(crucible::craft);
+        world.getRecipeManager().getFirstMatch(WizcraftRecipes.CRUCIBLE, crucible.inventory, world).ifPresent(crucible::craft);
+    }
+
+    public SimpleInventory getInventory() {
+        return inventory;
     }
 
     public void craft(RecipeEntry<CrucibleRecipe> recipeEntry) {

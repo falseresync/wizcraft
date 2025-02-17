@@ -1,18 +1,18 @@
 package falseresync.wizcraft.client.hud;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import falseresync.lib.client.BetterDrawContext;
-import falseresync.lib.math.Easing;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.ColorHelper;
+import com.mojang.blaze3d.systems.*;
+import falseresync.lib.client.*;
+import falseresync.lib.math.*;
+import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.data.component.*;
+import net.minecraft.client.*;
+import net.minecraft.client.font.*;
+import net.minecraft.client.render.*;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class ChargeDisplayHudItem implements HudItem {
     protected static final Identifier BAR_TEX = wid("textures/hud/wand/charge_bar.png");
@@ -108,12 +108,12 @@ public class ChargeDisplayHudItem implements HudItem {
         }
 
         if (wand != null) {
-            currentCharge = wand.getOrDefault(WizcraftDataComponents.WAND_CHARGE, 0);
-            maxCharge = wand.getOrDefault(WizcraftDataComponents.WAND_MAX_CHARGE, 0);
+            currentCharge = wand.getOrDefault(WizcraftComponents.WAND_CHARGE, 0);
+            maxCharge = wand.getOrDefault(WizcraftComponents.WAND_MAX_CHARGE, 0);
 
-            if (client.player.hasAttached(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS)) {
-                chargeInShells = client.player.getAttachedOrCreate(WizcraftDataAttachments.CHARGE_IN_SHELLS);
-                maxChargeInShells = client.player.getAttachedOrGet(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS, () -> chargeInShells);
+            if (client.player.hasAttached(WizcraftAttachments.MAX_CHARGE_IN_SHELLS)) {
+                chargeInShells = client.player.getAttachedOrCreate(WizcraftAttachments.CHARGE_IN_SHELLS);
+                maxChargeInShells = client.player.getAttachedOrGet(WizcraftAttachments.MAX_CHARGE_IN_SHELLS, () -> chargeInShells);
             }
         }
 

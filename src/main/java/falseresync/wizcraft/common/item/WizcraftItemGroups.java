@@ -1,9 +1,9 @@
 package falseresync.wizcraft.common.item;
 
-import falseresync.lib.registry.RegistryObject;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.text.Text;
+import falseresync.lib.registry.*;
+import net.fabricmc.fabric.api.itemgroup.v1.*;
+import net.minecraft.item.*;
+import net.minecraft.text.*;
 
 public class WizcraftItemGroups {
     public static final @RegistryObject ItemGroup GENERAL = FabricItemGroup.builder()

@@ -1,9 +1,8 @@
 package falseresync.wizcraft.client.particle;
 
-import falseresync.wizcraft.common.WizcraftParticleTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import falseresync.wizcraft.common.*;
+import net.fabricmc.api.*;
+import net.fabricmc.fabric.api.client.particle.v1.*;
 
 @Environment(EnvType.CLIENT)
 public class WizcraftParticleFactories {

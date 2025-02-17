@@ -1,11 +1,10 @@
 package falseresync.wizcraft.common.item;
 
-import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketItem;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import dev.emi.trinkets.api.*;
+import falseresync.wizcraft.common.data.attachment.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
 
 public class TrueseerGogglesItem extends TrinketItem {
     public TrueseerGogglesItem(Settings settings) {
@@ -16,7 +15,7 @@ public class TrueseerGogglesItem extends TrinketItem {
     public void onEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
         super.onEquip(stack, slot, entity);
         if (entity instanceof PlayerEntity player) {
-            player.setAttached(WizcraftDataAttachments.HAS_TRUESEER_GOGGLES, true);
+            player.setAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES, true);
         }
     }
 
@@ -24,7 +23,7 @@ public class TrueseerGogglesItem extends TrinketItem {
     public void onUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
         super.onUnequip(stack, slot, entity);
         if (entity instanceof PlayerEntity player) {
-            player.removeAttached(WizcraftDataAttachments.HAS_TRUESEER_GOGGLES);
+            player.removeAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES);
         }
     }
 }

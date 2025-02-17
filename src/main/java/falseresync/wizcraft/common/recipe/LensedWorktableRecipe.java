@@ -1,26 +1,19 @@
 package falseresync.wizcraft.common.recipe;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import falseresync.wizcraft.common.CommonKeys;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.*;
+import falseresync.wizcraft.common.*;
+import net.minecraft.item.*;
+import net.minecraft.network.*;
+import net.minecraft.network.codec.*;
+import net.minecraft.recipe.*;
+import net.minecraft.recipe.input.*;
+import net.minecraft.registry.*;
+import net.minecraft.util.collection.*;
+import net.minecraft.world.*;
 
-import java.util.ArrayDeque;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.*;
+import java.util.stream.*;
 
 public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
     private final ItemStack result;
@@ -108,7 +101,7 @@ public final class LensedWorktableRecipe implements Recipe<RecipeInput> {
 
     @Override
     public RecipeType<LensedWorktableRecipe> getType() {
-        return WizcraftRecipeTypes.LENSED_WORKTABLE;
+        return WizcraftRecipes.LENSED_WORKTABLE;
     }
 
     public ItemStack getResult() {

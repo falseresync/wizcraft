@@ -1,8 +1,8 @@
 package falseresync.wizcraft.common.recipe;
 
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.*;
 
-public class WizcraftRecipeCustomIngredients {
+public class WizcraftCustomIngredients {
     public static final CountableIngredient.Serializer COUNTABLE_INGREDIENT_SERIALIZER = new CountableIngredient.Serializer();
 
     public static void init() {

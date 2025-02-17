@@ -1,20 +1,16 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.Wizcraft;
-import falseresync.wizcraft.common.ChargeManager;
-import falseresync.wizcraft.networking.report.WizcraftReports;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.World;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.networking.report.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.server.network.*;
+import net.minecraft.server.world.*;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
 public class LightningFocusItem extends FocusItem {
     public LightningFocusItem(Settings settings) {

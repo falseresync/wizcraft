@@ -1,27 +1,21 @@
 package falseresync.wizcraft.client;
 
-import dev.emi.trinkets.api.event.TrinketDropCallback;
-import dev.emi.trinkets.api.event.TrinketEquipCallback;
-import dev.emi.trinkets.api.event.TrinketUnequipCallback;
-import falseresync.wizcraft.client.hud.FocusPickerHudItem;
-import falseresync.wizcraft.client.hud.ChargeDisplayHudItem;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.common.item.WizcraftItemTags;
-import falseresync.wizcraft.common.item.WizcraftItems;
-import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
-import falseresync.wizcraft.networking.c2s.WandFocusDestination;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import org.jetbrains.annotations.Nullable;
+import dev.emi.trinkets.api.event.*;
+import falseresync.wizcraft.client.hud.*;
+import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.item.*;
+import falseresync.wizcraft.networking.c2s.*;
+import net.fabricmc.fabric.api.client.networking.v1.*;
+import net.minecraft.client.*;
+import net.minecraft.client.network.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.text.*;
+import org.jetbrains.annotations.*;
 
-import java.util.LinkedList;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
 public class ToolManager {
     private final ChargeDisplayHudItem chargeDisplay;
@@ -91,30 +85,30 @@ public class ToolManager {
     }
 
     private void setupChargeDisplay(PlayerEntity player, ItemStack wandStack) {
-        if (player.hasAttached(WizcraftDataAttachments.HAS_TRUESEER_GOGGLES)) {
+        if (player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)) {
             chargeDisplay.upload(wandStack);
             chargeDisplay.show();
         }
     }
 
     private void hideChargeDisplay(PlayerEntity player) {
-        if (chargeDisplay.isVisible() && !player.hasAttached(WizcraftDataAttachments.HAS_TRUESEER_GOGGLES)) {
+        if (chargeDisplay.isVisible() && !player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)) {
             chargeDisplay.hide();
         }
     }
 
     private void scanInventoryAndSetupFocusPicker(PlayerInventory inventory, ItemStack wandStack, boolean shouldPickNext) {
-        var equipped = wandStack.getOrDefault(WizcraftDataComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
+        var equipped = wandStack.getOrDefault(WizcraftComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
         var belt = WizcraftItems.FOCUSES_BELT.findTrinketStack(inventory.player);
         var focusStacks = belt.isPresent()
                 ? belt.stream()
-                        .map(WizcraftItems.FOCUSES_BELT::getOrCreateInventoryComponent)
-                        .flatMap(inventoryComponent -> inventoryComponent.stacks().stream())
-                        .filter(stack -> !stack.isEmpty())
-                        .collect(Collectors.toCollection(LinkedList::new))
+                .map(WizcraftItems.FOCUSES_BELT::getOrCreateInventoryComponent)
+                .flatMap(inventoryComponent -> inventoryComponent.stacks().stream())
+                .filter(stack -> !stack.isEmpty())
+                .collect(Collectors.toCollection(LinkedList::new))
                 : inventory.main.stream()
-                        .filter(it -> it.isIn(WizcraftItemTags.FOCUSES))
-                        .collect(Collectors.toCollection(LinkedList::new));
+                .filter(it -> it.isIn(WizcraftItemTags.FOCUSES))
+                .collect(Collectors.toCollection(LinkedList::new));
 
         if (!equipped.isEmpty()) {
             focusStacks.addFirst(equipped);

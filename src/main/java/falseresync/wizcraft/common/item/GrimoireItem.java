@@ -1,10 +1,10 @@
 package falseresync.wizcraft.common.item;
 
-import io.wispforest.lavender.book.LavenderBookItem;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.util.ActionResult;
+import io.wispforest.lavender.book.*;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class GrimoireItem extends LavenderBookItem implements ActivatorItem {
     protected GrimoireItem(Settings settings) {

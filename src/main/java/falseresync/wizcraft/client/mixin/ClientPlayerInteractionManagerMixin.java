@@ -1,14 +1,11 @@
 package falseresync.wizcraft.client.mixin;
 
-import falseresync.wizcraft.client.ClientPlayerInventoryEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import falseresync.wizcraft.client.*;
+import net.minecraft.client.*;
+import net.minecraft.client.network.*;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.*;
 
 @Mixin(ClientPlayerInteractionManager.class)
 public class ClientPlayerInteractionManagerMixin {

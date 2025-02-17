@@ -1,22 +1,19 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.Wizcraft;
-import falseresync.wizcraft.common.ChargeManager;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.networking.report.WizcraftReports;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.networking.report.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.server.network.*;
+import net.minecraft.server.world.*;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
-public class ChargingFocusItem extends FocusItem{
+public class ChargingFocusItem extends FocusItem {
     public ChargingFocusItem(Settings settings) {
         super(settings);
     }
@@ -43,7 +40,7 @@ public class ChargingFocusItem extends FocusItem{
             }
 
             user.setCurrentHand(user.getActiveHand());
-            wandStack.set(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS, 0);
+            wandStack.set(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0);
             return TypedActionResult.success(wandStack);
         }
         return super.focusUse(wandStack, focusStack, world, user, hand);
@@ -51,17 +48,17 @@ public class ChargingFocusItem extends FocusItem{
 
     @Override
     public void focusUsageTick(World world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
-        wandStack.apply(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS, 0, current -> current + 1);
+        wandStack.apply(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0, current -> current + 1);
     }
 
     @Override
     public void focusOnStoppedUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user, int remainingUseTicks) {
-        wandStack.remove(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS);
+        wandStack.remove(WizcraftComponents.CHARGING_FOCUS_PROGRESS);
     }
 
     @Override
     public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user) {
-        wandStack.remove(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS);
+        wandStack.remove(WizcraftComponents.CHARGING_FOCUS_PROGRESS);
         Wizcraft.getChargeManager().chargeWand(wandStack, 40, user instanceof PlayerEntity player ? player : null);
         if (user instanceof ServerPlayerEntity player) {
             WizcraftReports.WAND_SUCCESSFULLY_CHARGED.sendAround((ServerWorld) world, player.getBlockPos(), player);
@@ -76,12 +73,12 @@ public class ChargingFocusItem extends FocusItem{
 
     @Override
     public boolean focusIsItemBarVisible(ItemStack wandStack, ItemStack focusStack) {
-        return wandStack.getOrDefault(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS, 0) > 0;
+        return wandStack.getOrDefault(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0) > 0;
     }
 
     @Override
     public int focusGetItemBarStep(ItemStack wandStack, ItemStack focusStack) {
-        return Math.round(wandStack.getOrDefault(WizcraftDataComponents.CHARGING_FOCUS_PROGRESS, 0) * 13f / focusGetMaxUseTime(wandStack, focusStack, null));
+        return Math.round(wandStack.getOrDefault(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0) * 13f / focusGetMaxUseTime(wandStack, focusStack, null));
     }
 
     @Override

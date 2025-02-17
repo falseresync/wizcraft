@@ -1,38 +1,29 @@
 package falseresync.wizcraft.common.blockentity;
 
-import falseresync.wizcraft.common.CommonKeys;
-import falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
-import falseresync.wizcraft.common.recipe.SimpleInventoryRecipeInput;
-import falseresync.wizcraft.common.recipe.WizcraftRecipeTypes;
-import falseresync.wizcraft.networking.report.WizcraftReports;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.recipe.*;
+import falseresync.wizcraft.networking.report.*;
+import net.fabricmc.fabric.api.transfer.v1.item.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.network.listener.*;
+import net.minecraft.network.packet.*;
+import net.minecraft.network.packet.s2c.play.*;
+import net.minecraft.recipe.*;
+import net.minecraft.registry.*;
+import net.minecraft.server.network.*;
+import net.minecraft.server.world.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
 public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     public static final int IDLE_SEARCH_COOLDOWN = 5;
@@ -65,6 +56,10 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
 
     // PUBLIC INTERFACE
 
+    public static void tick(World world, BlockPos pos, BlockState state, CraftingWorktableBlockEntity worktable) {
+        worktable.tick(world, pos, state);
+    }
+
     @Override
     public void activate(@Nullable PlayerEntity player) {
         if (world == null || world.isClient()) return;
@@ -79,7 +74,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
 
         updateVirtualCombinedInventory();
         world.getRecipeManager()
-                .getFirstMatch(WizcraftRecipeTypes.LENSED_WORKTABLE, virtualCombinedInventory, world)
+                .getFirstMatch(WizcraftRecipes.LENSED_WORKTABLE, virtualCombinedInventory, world)
                 .ifPresent(this::beginCrafting);
     }
 
@@ -109,15 +104,11 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         return inventory;
     }
 
+    // TICKERS
+
     @Override
     public InventoryStorage getStorage() {
         return storage;
-    }
-
-    // TICKERS
-
-    public static void tick(World world, BlockPos pos, BlockState state, CraftingWorktableBlockEntity worktable) {
-        worktable.tick(world, pos, state);
     }
 
     protected void tick(World world, BlockPos pos, BlockState state) {

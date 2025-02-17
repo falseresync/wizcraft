@@ -17,7 +17,6 @@ import net.minecraft.util.ActionResult;
 
 import java.util.Comparator;
 
-
 public interface ActivatorItem {
     Object2ObjectMap<Block, ActivationBehavior> ANY_BEHAVIORS = new Object2ObjectArrayMap<>();
     Object2ObjectMap<Block, ActivationBehavior> WAND_BEHAVIORS = new Object2ObjectArrayMap<>();

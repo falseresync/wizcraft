@@ -1,16 +1,14 @@
 package falseresync.wizcraft.common.blockentity;
 
-import falseresync.wizcraft.common.item.WizcraftItemTags;
-import falseresync.wizcraft.common.item.WizcraftItems;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import falseresync.wizcraft.common.item.*;
+import net.fabricmc.fabric.api.transfer.v1.item.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
 public abstract class WorktableBlockEntity extends BlockEntity {
     public WorktableBlockEntity(BlockEntityType<? extends WorktableBlockEntity> type, BlockPos pos, BlockState state) {

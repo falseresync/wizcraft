@@ -1,8 +1,8 @@
 package falseresync.wizcraft.common.recipe;
 
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.recipe.input.*;
 
 public class SimpleInventoryRecipeInput extends SimpleInventory implements RecipeInput {
     public SimpleInventoryRecipeInput(int size) {

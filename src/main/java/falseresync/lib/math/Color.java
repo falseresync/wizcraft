@@ -23,15 +23,13 @@
  */
 package falseresync.lib.math;
 
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.NotNull;
+import com.google.common.collect.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.stream.*;
 
 /**
  * @author <a href="https://github.com/wisp-forest/owo-lib">oωo contributors</a>
@@ -92,6 +90,7 @@ public record Color(float red, float green, float blue, float alpha) {
 
     /**
      * Generates a random color
+     *
      * @apiNote Don't tell glisco about this
      * @author chyzman
      */

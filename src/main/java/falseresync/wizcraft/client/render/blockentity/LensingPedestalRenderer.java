@@ -1,14 +1,12 @@
 package falseresync.wizcraft.client.render.blockentity;
 
-import falseresync.wizcraft.client.render.RenderingUtil;
-import falseresync.wizcraft.common.blockentity.LensingPedestalBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import falseresync.wizcraft.client.render.*;
+import falseresync.wizcraft.common.blockentity.*;
+import net.fabricmc.api.*;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.entity.*;
+import net.minecraft.client.render.item.*;
+import net.minecraft.client.util.math.*;
 
 @Environment(EnvType.CLIENT)
 public class LensingPedestalRenderer implements BlockEntityRenderer<LensingPedestalBlockEntity> {

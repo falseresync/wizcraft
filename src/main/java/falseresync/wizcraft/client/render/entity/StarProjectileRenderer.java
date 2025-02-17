@@ -1,14 +1,13 @@
 package falseresync.wizcraft.client.render.entity;
 
-import falseresync.wizcraft.common.entity.StarProjectileEntity;
+import falseresync.wizcraft.common.entity.*;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import org.joml.Matrix4f;
+import net.minecraft.client.render.entity.*;
+import net.minecraft.client.util.math.*;
+import net.minecraft.util.*;
+import org.joml.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class StarProjectileRenderer extends EntityRenderer<StarProjectileEntity> {
     protected static final Identifier TEXTURE = wid("textures/entity/star_projectile.png");

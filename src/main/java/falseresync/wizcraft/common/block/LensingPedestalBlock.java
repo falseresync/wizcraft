@@ -1,22 +1,18 @@
 package falseresync.wizcraft.common.block;
 
-import com.mojang.serialization.MapCodec;
-import falseresync.wizcraft.common.Wizcraft;
-import falseresync.wizcraft.common.blockentity.LensingPedestalBlockEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import com.mojang.serialization.*;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.blockentity.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
 import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.hit.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
 public class LensingPedestalBlock extends BlockWithEntity {
     public static final MapCodec<LensingPedestalBlock> CODEC = createCodec(LensingPedestalBlock::new);

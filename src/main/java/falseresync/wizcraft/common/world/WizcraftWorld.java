@@ -1,10 +1,9 @@
 package falseresync.wizcraft.common.world;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
+import net.minecraft.block.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import net.minecraft.world.explosion.*;
 
 public class WizcraftWorld {
     public static class MagicDischargeExplosionBehavior extends ExplosionBehavior {

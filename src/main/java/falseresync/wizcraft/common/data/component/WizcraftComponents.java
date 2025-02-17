@@ -1,20 +1,18 @@
 package falseresync.wizcraft.common.data.component;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import falseresync.lib.registry.RegistryObject;
-import falseresync.wizcraft.common.item.focus.FocusItem;
-import falseresync.wizcraft.common.item.focus.FocusPlating;
-import net.minecraft.component.ComponentType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.util.Uuids;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.GlobalPos;
+import com.mojang.serialization.*;
+import falseresync.lib.registry.*;
+import falseresync.wizcraft.common.item.focus.*;
+import net.minecraft.component.*;
+import net.minecraft.item.*;
+import net.minecraft.network.codec.*;
+import net.minecraft.util.*;
+import net.minecraft.util.dynamic.*;
+import net.minecraft.util.math.*;
 
-import java.util.UUID;
+import java.util.*;
 
-public class WizcraftDataComponents {
+public class WizcraftComponents {
     // Generic
     public static final @RegistryObject ComponentType<ItemBarComponent> ITEM_BAR =
             ComponentType.<ItemBarComponent>builder().codec(ItemBarComponent.CODEC).packetCodec(ItemBarComponent.PACKET_CODEC).build();

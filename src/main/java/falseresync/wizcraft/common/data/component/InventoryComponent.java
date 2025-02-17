@@ -1,16 +1,15 @@
 package falseresync.wizcraft.common.data.component;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipData;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.util.collection.DefaultedList;
+import com.google.common.collect.*;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.*;
+import net.minecraft.item.*;
+import net.minecraft.item.tooltip.*;
+import net.minecraft.network.*;
+import net.minecraft.network.codec.*;
+import net.minecraft.util.collection.*;
 
-import java.util.List;
+import java.util.*;
 
 public record InventoryComponent(ImmutableList<ItemStack> stacks, int size) implements TooltipData {
     public static final Codec<InventoryComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(

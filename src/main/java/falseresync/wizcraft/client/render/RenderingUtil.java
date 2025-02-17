@@ -1,30 +1,23 @@
 package falseresync.wizcraft.client.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import falseresync.lib.math.Color;
-import falseresync.wizcraft.common.WizcraftConfig;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import com.mojang.blaze3d.systems.*;
+import falseresync.lib.math.*;
+import falseresync.wizcraft.common.*;
+import net.fabricmc.fabric.api.client.render.fluid.v1.*;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.render.item.*;
+import net.minecraft.client.render.model.json.*;
+import net.minecraft.client.texture.*;
+import net.minecraft.client.util.math.*;
+import net.minecraft.fluid.*;
+import net.minecraft.item.*;
+import net.minecraft.particle.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Objects;
+import java.util.*;
 
 public class RenderingUtil {
     public static final Vec3d UNIT_VEC3D = RenderingUtil.getSymmetricVec3d(1);

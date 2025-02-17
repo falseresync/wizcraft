@@ -1,30 +1,23 @@
 package falseresync.wizcraft.client.render.entity;
 
-import falseresync.lib.math.VectorMath;
-import falseresync.wizcraft.common.WizcraftConfig;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import falseresync.wizcraft.common.entity.EnergyVeilEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
+import falseresync.lib.math.*;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.entity.*;
+import net.minecraft.client.*;
+import net.minecraft.client.network.*;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.entity.model.EntityModelLoader;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Math;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import net.minecraft.client.render.entity.feature.*;
+import net.minecraft.client.render.entity.model.*;
+import net.minecraft.client.util.math.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Optional;
+import java.util.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRenderer<T, PlayerEntityModel<T>> {
     public static final Identifier TEXTURE = wid("textures/entity/energy_veil.png");
@@ -87,7 +80,7 @@ public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRe
 
     @Nullable
     private EnergyVeilEntity findVeil(T entity) {
-        return Optional.ofNullable(entity.getAttached(WizcraftDataAttachments.ENERGY_VEIL_NETWORK_ID))
+        return Optional.ofNullable(entity.getAttached(WizcraftAttachments.ENERGY_VEIL_NETWORK_ID))
                 .map(id -> entity.getEntityWorld().getEntityById(id))
                 .flatMap(foundEntity -> foundEntity instanceof EnergyVeilEntity veil ? Optional.of(veil) : Optional.empty())
                 .orElse(null);

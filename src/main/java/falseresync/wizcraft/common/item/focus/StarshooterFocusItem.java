@@ -1,15 +1,13 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.ChargeManager;
-import falseresync.wizcraft.common.Wizcraft;
-import falseresync.wizcraft.common.entity.StarProjectileEntity;
-import falseresync.wizcraft.networking.report.WizcraftReports;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.entity.*;
+import falseresync.wizcraft.networking.report.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.server.network.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
 
 public class StarshooterFocusItem extends FocusItem {
     public StarshooterFocusItem(Settings settings) {

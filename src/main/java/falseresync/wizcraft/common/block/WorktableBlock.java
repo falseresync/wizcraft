@@ -1,29 +1,19 @@
 package falseresync.wizcraft.common.block;
 
-import com.mojang.serialization.MapCodec;
-import falseresync.wizcraft.common.Wizcraft;
-import falseresync.wizcraft.common.item.WizcraftItems;
-import falseresync.wizcraft.common.blockentity.WorktableBlockEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.Nullable;
+import com.mojang.serialization.*;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.blockentity.*;
+import falseresync.wizcraft.common.item.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
 public abstract class WorktableBlock<B extends WorktableBlockEntity> extends BlockWithEntity {
     public static final VoxelShape SHAPE = VoxelShapes.union(
@@ -64,7 +54,7 @@ public abstract class WorktableBlock<B extends WorktableBlockEntity> extends Blo
 
     @Nullable
     @Override
-    public abstract  <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type);
+    public abstract <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type);
 
     public abstract WorktableVariant<B> getVariant();
 

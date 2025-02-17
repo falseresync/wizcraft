@@ -1,15 +1,10 @@
 package falseresync.wizcraft.client.particle;
 
-import net.minecraft.client.particle.GlowParticle;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.particle.SpriteProvider;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.particle.*;
+import net.minecraft.client.world.*;
+import net.minecraft.particle.*;
 
 public class ChargingParticleFactory implements ParticleFactory<SimpleParticleType> {
-    static final Random RANDOM = Random.create();
     private final SpriteProvider spriteProvider;
 
     public ChargingParticleFactory(SpriteProvider spriteProvider) {
@@ -25,7 +20,7 @@ public class ChargingParticleFactory implements ParticleFactory<SimpleParticleTy
             glowParticle.setColor(0.08F, 0.4F, 0.4F);
         }
 
-        glowParticle.setMaxAge((int)(16.0 / (clientWorld.random.nextDouble() * 0.8 + 0.2)));
+        glowParticle.setMaxAge((int) (16.0 / (clientWorld.random.nextDouble() * 0.8 + 0.2)));
         return glowParticle;
     }
 }

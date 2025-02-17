@@ -1,12 +1,9 @@
 package falseresync.lib.blockpattern;
 
-import com.google.common.base.Preconditions;
-import net.minecraft.block.pattern.CachedBlockPosition;
+import com.google.common.base.*;
+import net.minecraft.block.pattern.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class BetterBlockPatternBuilder {

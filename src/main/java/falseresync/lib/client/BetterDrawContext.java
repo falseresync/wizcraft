@@ -1,15 +1,13 @@
 package falseresync.lib.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
+import com.mojang.blaze3d.systems.*;
+import net.minecraft.client.*;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.render.*;
-import net.minecraft.util.Identifier;
-import org.joml.Matrix4f;
+import net.minecraft.util.*;
+import org.joml.*;
 
 public class BetterDrawContext extends DrawContext {
-    public static final int NO_TINT = 0xFF_FFFFFF;
-
     public BetterDrawContext(MinecraftClient client, DrawContext context) {
         super(client, context.getVertexConsumers());
     }

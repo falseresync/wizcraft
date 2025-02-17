@@ -1,13 +1,10 @@
 package falseresync.wizcraft.client.render.entity;
 
-import falseresync.wizcraft.common.WizcraftConfig;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import falseresync.wizcraft.common.entity.EnergyVeilEntity;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.entity.*;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.SinglePartEntityModel;
-import net.minecraft.entity.player.PlayerEntity;
-
-import java.util.Optional;
+import net.minecraft.client.render.entity.model.*;
+import net.minecraft.entity.player.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class EnergyVeilModel extends SinglePartEntityModel<PlayerEntity> {
@@ -35,8 +32,8 @@ public class EnergyVeilModel extends SinglePartEntityModel<PlayerEntity> {
         var cuboidBuilder = ModelPartBuilder.create()
                 .uv(0, 0)
                 .cuboid(0f, -8f, -8f, 0.1f, 16f, 16f, new Dilation(0, -2.5f, -2.5f));
-        modelPartData.addChild(SCREEN_LEFT_BOTTOM,  cuboidBuilder, ModelTransform.pivot(0, -4, -6f));
-        modelPartData.addChild(SCREEN_LEFT_MIDDLE,  cuboidBuilder, ModelTransform.pivot(0, 12, -6f));
+        modelPartData.addChild(SCREEN_LEFT_BOTTOM, cuboidBuilder, ModelTransform.pivot(0, -4, -6f));
+        modelPartData.addChild(SCREEN_LEFT_MIDDLE, cuboidBuilder, ModelTransform.pivot(0, 12, -6f));
         modelPartData.addChild(SCREEN_RIGHT_BOTTOM, cuboidBuilder, ModelTransform.pivot(0, 16, 6f));
         modelPartData.addChild(SCREEN_RIGHT_MIDDLE, cuboidBuilder, ModelTransform.pivot(0, 32, 6f));
         return TexturedModelData.of(modelData, 16, 16);

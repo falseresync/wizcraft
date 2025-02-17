@@ -1,19 +1,14 @@
 package falseresync.wizcraft.common.block;
 
-import com.mojang.serialization.MapCodec;
-import falseresync.wizcraft.common.blockentity.CrucibleBlockEntity;
-import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
+import com.mojang.serialization.*;
+import falseresync.wizcraft.common.blockentity.*;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.function.BooleanBiFunction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.block.entity.*;
+import net.minecraft.util.function.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
 public class CrucibleBlock extends BlockWithEntity {
     public static final MapCodec<CrucibleBlock> CODEC = createCodec(CrucibleBlock::new);

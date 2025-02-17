@@ -1,16 +1,14 @@
 package falseresync.wizcraft.common.data.attachment;
 
-import com.mojang.serialization.Codec;
-import falseresync.wizcraft.common.item.ChargeShellItem;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.util.dynamic.Codecs;
+import com.mojang.serialization.*;
+import falseresync.wizcraft.common.item.*;
+import net.fabricmc.fabric.api.attachment.v1.*;
+import net.minecraft.network.codec.*;
+import net.minecraft.util.dynamic.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
-public class WizcraftDataAttachments {
+public class WizcraftAttachments {
     public static final AttachmentType<Boolean> INTRODUCED_TO_WIZCRAFT = AttachmentRegistry.create(
             wid("introduced_to_wizcraft"),
             builder -> builder.syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly()).persistent(Codec.BOOL).copyOnDeath());

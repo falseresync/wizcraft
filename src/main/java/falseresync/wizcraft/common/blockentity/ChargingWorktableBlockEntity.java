@@ -1,26 +1,21 @@
 package falseresync.wizcraft.common.blockentity;
 
-import falseresync.wizcraft.common.CommonKeys;
-import falseresync.wizcraft.common.ChargeManager;
-import falseresync.wizcraft.common.Wizcraft;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.common.item.WizcraftItems;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.item.*;
+import net.fabricmc.fabric.api.transfer.v1.item.*;
+import net.minecraft.block.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.network.listener.*;
+import net.minecraft.network.packet.*;
+import net.minecraft.network.packet.s2c.play.*;
+import net.minecraft.registry.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
 public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
     protected final SimpleInventory inventory = new SimpleInventory(1) {
@@ -35,6 +30,10 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
     public ChargingWorktableBlockEntity(BlockPos pos, BlockState state) {
         super(WizcraftBlockEntities.CHARGING_WORKTABLE, pos, state);
         inventory.addListener(sender -> markDirty());
+    }
+
+    public static void tick(World world, BlockPos pos, BlockState state, ChargingWorktableBlockEntity worktable) {
+        worktable.tick(world, pos, state);
     }
 
     @Override
@@ -70,10 +69,6 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
 
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, ChargingWorktableBlockEntity worktable) {
-        worktable.tick(world, pos, state);
-    }
-
     protected void tick(World world, BlockPos pos, BlockState state) {
         if (world.isClient()) {
             return;
@@ -91,7 +86,7 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
         if (Wizcraft.getChargeManager().isWandFullyCharged(heldStack)) return;
 
         if (world.isNight() && world.random.nextFloat() < 0.25 || world.random.nextFloat() < 0.0625) {
-            heldStack.apply(WizcraftDataComponents.WAND_CHARGE, 0, current -> current + 1);
+            heldStack.apply(WizcraftComponents.WAND_CHARGE, 0, current -> current + 1);
 
             var isFullyCharged = Wizcraft.getChargeManager().isWandFullyCharged(heldStack);
             if (charging && isFullyCharged || !charging && !isFullyCharged) {

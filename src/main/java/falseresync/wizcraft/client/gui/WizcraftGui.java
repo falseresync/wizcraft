@@ -1,7 +1,7 @@
 package falseresync.wizcraft.client.gui;
 
-import falseresync.wizcraft.common.data.component.InventoryComponent;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
+import falseresync.wizcraft.common.data.component.*;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 
 public class WizcraftGui {
     public static void init() {

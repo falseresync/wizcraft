@@ -1,16 +1,13 @@
 package falseresync.wizcraft.common.block;
 
-import com.mojang.serialization.MapCodec;
-import falseresync.wizcraft.common.blockentity.LensBlockEntity;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import org.jetbrains.annotations.Nullable;
+import com.mojang.serialization.*;
+import falseresync.wizcraft.common.blockentity.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
 
 public class LensBlock extends BlockWithEntity {
     public static final MapCodec<LensBlock> CODEC = createCodec(LensBlock::new);

@@ -1,13 +1,12 @@
 package falseresync.wizcraft.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
+import net.fabricmc.api.*;
+import net.minecraft.client.network.*;
+import net.minecraft.client.world.*;
+import net.minecraft.particle.*;
+import net.minecraft.util.math.*;
 
-import java.util.List;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class BlockPatternTip {

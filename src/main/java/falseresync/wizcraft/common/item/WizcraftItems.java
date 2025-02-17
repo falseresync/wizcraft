@@ -1,18 +1,16 @@
 package falseresync.wizcraft.common.item;
 
-import falseresync.wizcraft.common.block.WizcraftBlocks;
+import falseresync.wizcraft.common.block.*;
 import falseresync.wizcraft.common.item.focus.*;
-import io.wispforest.lavender.book.LavenderBookItem;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Rarity;
+import io.wispforest.lavender.book.*;
+import net.minecraft.block.*;
+import net.minecraft.item.*;
+import net.minecraft.registry.*;
+import net.minecraft.util.*;
 
-import java.util.function.Function;
+import java.util.function.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class WizcraftItems {
     public static final LavenderBookItem GRIMOIRE = LavenderBookItem.registerForBook(r("grimoire", GrimoireItem::new, new Item.Settings().maxCount(1).rarity(Rarity.RARE)));

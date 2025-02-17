@@ -1,15 +1,15 @@
 package falseresync.wizcraft.common.data.component;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 
 public interface InventoryComponentProvider {
     int getDefaultInventorySize();
 
     default int getInventorySize(ItemStack stack) {
-        return stack.getOrDefault(WizcraftDataComponents.INVENTORY_SIZE, getDefaultInventorySize());
+        return stack.getOrDefault(WizcraftComponents.INVENTORY_SIZE, getDefaultInventorySize());
     }
 
     default InventoryComponent getOrCreateInventoryComponent(ItemStack stack) {
-        return stack.getOrDefault(WizcraftDataComponents.INVENTORY, InventoryComponent.createDefault(getInventorySize(stack)));
+        return stack.getOrDefault(WizcraftComponents.INVENTORY, InventoryComponent.createDefault(getInventorySize(stack)));
     }
 }

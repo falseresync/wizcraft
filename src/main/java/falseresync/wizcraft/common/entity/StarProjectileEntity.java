@@ -1,25 +1,18 @@
 package falseresync.wizcraft.common.entity;
 
-import falseresync.wizcraft.common.WizcraftSounds;
-import falseresync.wizcraft.common.world.WizcraftWorld;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.world.*;
+import net.minecraft.enchantment.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.projectile.*;
+import net.minecraft.particle.*;
+import net.minecraft.registry.*;
+import net.minecraft.server.world.*;
+import net.minecraft.util.hit.*;
+import net.minecraft.world.*;
 
-public class StarProjectileEntity extends ExplosiveProjectileEntity {    /**
+public class StarProjectileEntity extends ExplosiveProjectileEntity {
+    /**
      * So, a bit of an explanation. If I try to remove the entity on the same tick as the collision
      * EVERYTHING breaks. I have no idea why. I guess world is processing particles/sounds/etc weirdly.
      * I couldn't find any reason as to why Dragon can do it on the same tick, but I don't

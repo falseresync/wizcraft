@@ -1,8 +1,7 @@
 package falseresync.wizcraft.client;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.player.PlayerInventory;
+import net.fabricmc.fabric.api.event.*;
+import net.minecraft.entity.player.*;
 
 public class ClientPlayerInventoryEvents {
     public static final Event<ContentsChanged> CONTENTS_CHANGED = EventFactory.createArrayBacked(

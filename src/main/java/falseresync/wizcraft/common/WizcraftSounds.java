@@ -1,10 +1,9 @@
 package falseresync.wizcraft.common;
 
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.registry.*;
+import net.minecraft.sound.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class WizcraftSounds {
     public static final SoundEvent WORKTABLE_SUCCESS = r("block.worktable.success");

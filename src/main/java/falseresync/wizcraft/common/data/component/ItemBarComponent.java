@@ -1,11 +1,10 @@
 package falseresync.wizcraft.common.data.component;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.util.dynamic.Codecs;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.*;
+import net.minecraft.network.*;
+import net.minecraft.network.codec.*;
+import net.minecraft.util.dynamic.*;
 
 public record ItemBarComponent(int step, int color) {
     public static final ItemBarComponent DEFAULT = new ItemBarComponent(0, 0);

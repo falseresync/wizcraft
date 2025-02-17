@@ -1,18 +1,15 @@
 package falseresync.lib.blockpattern;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import it.unimi.dsi.fastutil.ints.Int2ObjectRBTreeMap;
-import net.minecraft.block.pattern.CachedBlockPosition;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.WorldView;
+import com.github.benmanes.caffeine.cache.*;
+import com.google.common.base.*;
+import com.google.common.collect.*;
+import it.unimi.dsi.fastutil.ints.*;
+import net.minecraft.block.pattern.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class BetterBlockPattern {
@@ -86,7 +83,7 @@ public class BetterBlockPattern {
      */
     // https://stackoverflow.com/q/19621069
     // https://youtu.be/P2LTAUO1TdA
-    protected static BlockPos changeBasis(BlockPos origin, Direction forwards, Direction up, int x, int y, int z) {
+    protected BlockPos changeBasis(BlockPos origin, Direction forwards, Direction up, int x, int y, int z) {
         Preconditions.checkArgument(up != forwards && up != forwards.getOpposite(), "Invalid combination of forwards and up: %s and %s", forwards, up);
         var localOZ = forwards.getVector();
         var localOY = up.getVector();

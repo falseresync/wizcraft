@@ -1,26 +1,22 @@
 package falseresync.wizcraft.client.render;
 
-import dev.emi.trinkets.api.client.TrinketRendererRegistry;
+import dev.emi.trinkets.api.client.*;
 import falseresync.wizcraft.client.render.blockentity.*;
-import falseresync.wizcraft.client.render.entity.EnergyVeilFeatureRenderer;
-import falseresync.wizcraft.client.render.entity.EnergyVeilModel;
-import falseresync.wizcraft.client.render.entity.StarProjectileRenderer;
-import falseresync.wizcraft.client.render.trinket.TrueseerGogglesRenderer;
-import falseresync.wizcraft.common.block.WizcraftBlocks;
-import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.common.entity.WizcraftEntities;
-import falseresync.wizcraft.common.item.WizcraftItems;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.entity.EmptyEntityRenderer;
+import falseresync.wizcraft.client.render.entity.*;
+import falseresync.wizcraft.client.render.trinket.*;
+import falseresync.wizcraft.common.block.*;
+import falseresync.wizcraft.common.blockentity.*;
+import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.entity.*;
+import falseresync.wizcraft.common.item.*;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.*;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.minecraft.client.item.*;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.entity.*;
+import net.minecraft.client.render.entity.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class WizcraftRenderers {
     public static void init() {
@@ -47,7 +43,7 @@ public class WizcraftRenderers {
 
         BuiltinItemRendererRegistry.INSTANCE.register(WizcraftItems.LENS, new LensRenderer.ItemRenderer());
 
-        ModelPredicateProviderRegistry.GLOBAL.put(wid("focus_plating"), (stack, world, entity, seed) -> stack.getOrDefault(WizcraftDataComponents.FOCUS_PLATING, -1));
+        ModelPredicateProviderRegistry.GLOBAL.put(wid("focus_plating"), (stack, world, entity, seed) -> stack.getOrDefault(WizcraftComponents.FOCUS_PLATING, -1));
 
         TrinketRendererRegistry.registerRenderer(WizcraftItems.TRUESEER_GOGGLES, new TrueseerGogglesRenderer());
     }

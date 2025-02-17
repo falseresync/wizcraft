@@ -1,18 +1,16 @@
 package falseresync.wizcraft.common.recipe;
 
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.ints.IntArraySet;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.*;
+import it.unimi.dsi.fastutil.ints.*;
+import net.minecraft.item.*;
+import net.minecraft.network.*;
+import net.minecraft.network.codec.*;
 import net.minecraft.recipe.*;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.recipe.input.*;
+import net.minecraft.registry.*;
+import net.minecraft.util.collection.*;
+import net.minecraft.world.*;
 
 public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredients) implements Recipe<RecipeInput> {
     @Override
@@ -72,7 +70,7 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
 
     @Override
     public RecipeType<CrucibleRecipe> getType() {
-        return WizcraftRecipeTypes.CRUCIBLE;
+        return WizcraftRecipes.CRUCIBLE;
     }
 
     @Override
@@ -81,6 +79,11 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
     }
 
     public static class Serializer implements RecipeSerializer<CrucibleRecipe> {
+        public static final PacketCodec<RegistryByteBuf, CrucibleRecipe> PACKET_CODEC = PacketCodec.tuple(
+                ItemStack.PACKET_CODEC, CrucibleRecipe::result,
+                PacketCodecs.collection(DefaultedList::ofSize, Ingredient.PACKET_CODEC), CrucibleRecipe::ingredients,
+                CrucibleRecipe::new
+        );
         private static final MapCodec<CrucibleRecipe> CODEC = RecordCodecBuilder.mapCodec(
                 instance -> instance.group(
                                 ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(CrucibleRecipe::result),
@@ -103,11 +106,6 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
                                         .forGetter(CrucibleRecipe::ingredients)
                         )
                         .apply(instance, CrucibleRecipe::new)
-        );
-        public static final PacketCodec<RegistryByteBuf, CrucibleRecipe> PACKET_CODEC = PacketCodec.tuple(
-                ItemStack.PACKET_CODEC, CrucibleRecipe::result,
-                PacketCodecs.collection(DefaultedList::ofSize, Ingredient.PACKET_CODEC), CrucibleRecipe::ingredients,
-                CrucibleRecipe::new
         );
 
         @Override

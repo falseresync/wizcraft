@@ -1,42 +1,30 @@
 package falseresync.wizcraft.common;
 
-import eu.midnightdust.lib.config.MidnightConfig;
-import falseresync.lib.registry.AutoRegistry;
-import falseresync.wizcraft.common.block.WizcraftBlocks;
-import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import falseresync.wizcraft.common.entity.WizcraftEntities;
-import falseresync.wizcraft.common.item.ActivatorItem;
-import falseresync.wizcraft.common.item.WizcraftItemGroups;
-import falseresync.wizcraft.common.item.WizcraftItemTags;
-import falseresync.wizcraft.common.item.WizcraftItems;
-import falseresync.wizcraft.common.recipe.WizcraftRecipeCustomIngredients;
-import falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
-import falseresync.wizcraft.common.recipe.WizcraftRecipeTypes;
-import falseresync.wizcraft.networking.WizcraftNetworking;
-import falseresync.wizcraft.networking.WizcraftNetworkingServer;
-import falseresync.wizcraft.networking.report.WizcraftReports;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-import net.minecraft.world.World;
-import org.checkerframework.checker.units.qual.C;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import eu.midnightdust.lib.config.*;
+import falseresync.lib.registry.*;
+import falseresync.wizcraft.common.block.*;
+import falseresync.wizcraft.common.blockentity.*;
+import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.entity.*;
+import falseresync.wizcraft.common.item.*;
+import falseresync.wizcraft.common.recipe.*;
+import falseresync.wizcraft.networking.*;
+import falseresync.wizcraft.networking.report.*;
+import net.fabricmc.api.*;
+import net.fabricmc.fabric.api.networking.v1.*;
+import net.fabricmc.fabric.api.transfer.v1.item.*;
+import net.fabricmc.fabric.api.transfer.v1.storage.*;
+import net.fabricmc.fabric.api.transfer.v1.transaction.*;
+import net.minecraft.client.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.registry.*;
+import net.minecraft.server.world.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
+import org.slf4j.*;
 
 public class Wizcraft implements ModInitializer {
     public static final String MOD_ID = "wizcraft";
@@ -81,14 +69,14 @@ public class Wizcraft implements ModInitializer {
         new AutoRegistry(MOD_ID, LOGGER)
                 .link(Registries.BLOCK_ENTITY_TYPE, WizcraftBlockEntities.class)
                 .link(Registries.ITEM_GROUP, WizcraftItemGroups.class)
-                .link(Registries.DATA_COMPONENT_TYPE, WizcraftDataComponents.class)
+                .link(Registries.DATA_COMPONENT_TYPE, WizcraftComponents.class)
                 .link(Registries.ENTITY_TYPE, WizcraftEntities.class)
                 .link(WizcraftReports.REGISTRY, WizcraftReports.class)
-                .link(Registries.RECIPE_TYPE, WizcraftRecipeTypes.class)
+                .link(Registries.RECIPE_TYPE, WizcraftRecipes.class)
                 .link(Registries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class)
                 .link(Registries.PARTICLE_TYPE, WizcraftParticleTypes.class);
-        WizcraftRecipeCustomIngredients.init();
-        WizcraftDataAttachments.init();
+        WizcraftCustomIngredients.init();
+        WizcraftAttachments.init();
         WizcraftItemTags.init();
         WizcraftSounds.init();
         WizcraftNetworking.registerPackets();
@@ -97,9 +85,9 @@ public class Wizcraft implements ModInitializer {
         chargeManager = new ChargeManager();
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            if (!handler.player.hasAttached(WizcraftDataAttachments.INTRODUCED_TO_WIZCRAFT)) {
+            if (!handler.player.hasAttached(WizcraftAttachments.INTRODUCED_TO_WIZCRAFT)) {
                 handler.player.getInventory().offerOrDrop(new ItemStack(WizcraftItems.GRIMOIRE));
-                handler.player.setAttached(WizcraftDataAttachments.INTRODUCED_TO_WIZCRAFT, true);
+                handler.player.setAttached(WizcraftAttachments.INTRODUCED_TO_WIZCRAFT, true);
             }
         });
     }

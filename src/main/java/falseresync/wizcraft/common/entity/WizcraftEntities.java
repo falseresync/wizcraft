@@ -1,8 +1,7 @@
 package falseresync.wizcraft.common.entity;
 
-import falseresync.lib.registry.RegistryObject;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
+import falseresync.lib.registry.*;
+import net.minecraft.entity.*;
 
 public class WizcraftEntities {
     public static final @RegistryObject EntityType<StarProjectileEntity> STAR_PROJECTILE = EntityType.Builder

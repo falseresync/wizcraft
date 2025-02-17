@@ -1,15 +1,14 @@
 package falseresync.wizcraft.common.block;
 
-import falseresync.lib.blockpattern.BetterBlockPattern;
-import falseresync.wizcraft.common.blockentity.WorktableBlockEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import falseresync.lib.blockpattern.*;
+import falseresync.wizcraft.common.blockentity.*;
+import net.minecraft.server.network.*;
+import net.minecraft.server.world.*;
+import net.minecraft.util.math.*;
 
 import java.util.*;
-import java.util.function.BiPredicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.function.*;
+import java.util.stream.*;
 
 public record WorktableVariant<T extends WorktableBlockEntity>(
         Supplier<WorktableBlock<T>> block,

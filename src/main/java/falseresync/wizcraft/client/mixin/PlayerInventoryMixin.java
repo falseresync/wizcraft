@@ -1,11 +1,10 @@
 package falseresync.wizcraft.client.mixin;
 
-import falseresync.wizcraft.client.ClientPlayerInventoryEvents;
-import net.minecraft.entity.player.PlayerInventory;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import falseresync.wizcraft.client.*;
+import net.minecraft.entity.player.*;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.*;
 
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryMixin {

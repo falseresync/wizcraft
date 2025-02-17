@@ -1,12 +1,10 @@
 package falseresync.wizcraft.common.block;
 
-import com.mojang.serialization.MapCodec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
+import com.mojang.serialization.*;
+import net.minecraft.block.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.*;
+import net.minecraft.world.*;
 
 public class DummyWorktableBlock extends Block {
     public static final String TRANSLATION_KEY = "block.wizcraft.worktable";

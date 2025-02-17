@@ -1,23 +1,20 @@
 package falseresync.wizcraft.common.item;
 
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
-import net.minecraft.world.World;
+import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.data.component.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.server.network.*;
+import net.minecraft.sound.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
 
 public class ChargeShellItem extends Item {
     public static final int DEFAULT_CAPACITY = 100;
 
     public ChargeShellItem(Settings settings) {
-        super(settings.component(WizcraftDataComponents.SHELL_CAPACITY, DEFAULT_CAPACITY));
+        super(settings.component(WizcraftComponents.SHELL_CAPACITY, DEFAULT_CAPACITY));
     }
 
     @Override
@@ -40,8 +37,8 @@ public class ChargeShellItem extends Item {
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         if (user instanceof ServerPlayerEntity player) {
-            var capacity = stack.getOrDefault(WizcraftDataComponents.SHELL_CAPACITY, DEFAULT_CAPACITY);
-            player.modifyAttached(WizcraftDataAttachments.MAX_CHARGE_IN_SHELLS, it -> it == null ? capacity : it + capacity);
+            var capacity = stack.getOrDefault(WizcraftComponents.SHELL_CAPACITY, DEFAULT_CAPACITY);
+            player.modifyAttached(WizcraftAttachments.MAX_CHARGE_IN_SHELLS, it -> it == null ? capacity : it + capacity);
             player.playSound(SoundEvents.ITEM_TRIDENT_RETURN);
             return ItemStack.EMPTY;
         }

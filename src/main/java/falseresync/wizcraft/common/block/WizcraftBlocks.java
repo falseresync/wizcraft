@@ -1,17 +1,12 @@
 package falseresync.wizcraft.common.block;
 
-import falseresync.wizcraft.common.blockentity.ChargingWorktableBlockEntity;
-import falseresync.wizcraft.common.blockentity.CraftingWorktableBlockEntity;
-import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import falseresync.wizcraft.common.blockentity.*;
+import net.minecraft.block.*;
+import net.minecraft.registry.*;
 
-import java.util.function.Function;
+import java.util.function.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class WizcraftBlocks {
     public static final CrucibleBlock CRUCIBLE = r("crucible", CrucibleBlock::new, AbstractBlock.Settings.copy(Blocks.CAULDRON));

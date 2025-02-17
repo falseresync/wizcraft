@@ -1,9 +1,9 @@
 package falseresync.wizcraft.client.render.entity;
 
 import net.minecraft.client.render.entity.animation.*;
-import org.joml.Vector3f;
+import org.joml.*;
 
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import static falseresync.wizcraft.client.render.entity.EnergyVeilModel.*;
 

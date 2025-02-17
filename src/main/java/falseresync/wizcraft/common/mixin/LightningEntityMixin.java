@@ -1,21 +1,15 @@
 package falseresync.wizcraft.common.mixin;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import falseresync.wizcraft.common.item.focus.LightningFocusItem;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.llamalad7.mixinextras.injector.v2.*;
+import com.llamalad7.mixinextras.injector.wrapoperation.*;
+import falseresync.wizcraft.common.item.focus.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.data.*;
+import net.minecraft.sound.*;
+import net.minecraft.world.*;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.*;
 
 @Mixin(LightningEntity.class)
 public abstract class LightningEntityMixin implements LightningFocusItem.WizcraftLightning {

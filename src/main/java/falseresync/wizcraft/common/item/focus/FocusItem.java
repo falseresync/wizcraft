@@ -1,22 +1,16 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.data.component.ItemBarComponent;
-import falseresync.wizcraft.common.data.component.WizcraftDataComponents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import falseresync.wizcraft.common.data.component.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.damage.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.item.tooltip.*;
+import net.minecraft.text.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
 
-import java.util.List;
+import java.util.*;
 
 public abstract class FocusItem extends Item {
     public FocusItem(Settings settings) {
@@ -67,15 +61,15 @@ public abstract class FocusItem extends Item {
     }
 
     public boolean focusIsItemBarVisible(ItemStack wandStack, ItemStack focusStack) {
-        return wandStack.contains(WizcraftDataComponents.ITEM_BAR);
+        return wandStack.contains(WizcraftComponents.ITEM_BAR);
     }
 
     public int focusGetItemBarStep(ItemStack wandStack, ItemStack focusStack) {
-        return wandStack.getOrDefault(WizcraftDataComponents.ITEM_BAR, ItemBarComponent.DEFAULT).step();
+        return wandStack.getOrDefault(WizcraftComponents.ITEM_BAR, ItemBarComponent.DEFAULT).step();
     }
 
     public int focusGetItemBarColor(ItemStack wandStack, ItemStack focusStack) {
-        return wandStack.getOrDefault(WizcraftDataComponents.ITEM_BAR, ItemBarComponent.DEFAULT).color();
+        return wandStack.getOrDefault(WizcraftComponents.ITEM_BAR, ItemBarComponent.DEFAULT).color();
     }
 
     public boolean focusHasGlint(ItemStack wandStack, ItemStack focusStack) {

@@ -1,7 +1,6 @@
 package falseresync.wizcraft.common.block;
 
-import falseresync.lib.blockpattern.BetterBlockPattern;
-import falseresync.lib.blockpattern.BetterBlockPatternBuilder;
+import falseresync.lib.blockpattern.*;
 
 public class WorktablePatterns {
     public static BetterBlockPattern crafting() {

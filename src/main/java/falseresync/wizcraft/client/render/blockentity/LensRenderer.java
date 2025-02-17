@@ -1,20 +1,18 @@
 package falseresync.wizcraft.client.render.blockentity;
 
-import falseresync.wizcraft.common.blockentity.LensBlockEntity;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
+import falseresync.wizcraft.common.blockentity.*;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.entity.*;
+import net.minecraft.client.render.entity.model.*;
+import net.minecraft.client.render.model.json.*;
+import net.minecraft.client.texture.*;
+import net.minecraft.client.util.*;
+import net.minecraft.client.util.math.*;
+import net.minecraft.item.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
 
 public class LensRenderer implements BlockEntityRenderer<LensBlockEntity> {
     public static final SpriteIdentifier ON_TEX = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, wid("block/lens_on"));

@@ -1,8 +1,7 @@
 package falseresync.wizcraft.common.data.component;
 
-import net.minecraft.inventory.InventoryChangedListener;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
 
 public class EphemeralInventory extends SimpleInventory {
     private final InventoryComponent backingComponent;
@@ -17,7 +16,7 @@ public class EphemeralInventory extends SimpleInventory {
     }
 
     public void flush(ItemStack stack) {
-        stack.set(WizcraftDataComponents.INVENTORY, toImmutable());
+        stack.set(WizcraftComponents.INVENTORY, toImmutable());
     }
 
     @Override

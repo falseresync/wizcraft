@@ -2,7 +2,7 @@ package falseresync.wizcraft.compat.lavender;
 
 import falseresync.wizcraft.common.recipe.CountableIngredient;
 import falseresync.wizcraft.common.recipe.CrucibleRecipe;
-import falseresync.wizcraft.common.recipe.WizcraftRecipeTypes;
+import falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import io.wispforest.lavender.client.LavenderBookScreen;
 import io.wispforest.lavender.md.compiler.BookCompiler;
 import io.wispforest.lavender.md.features.RecipeFeature;
@@ -39,7 +39,7 @@ public class WizcraftLavenderPlugin {
                 "crucible-tex", CRUCIBLE_TEX.toString()
         );
 
-        LavenderBookScreen.registerRecipePreviewBuilder(GRIMOIRE_ID, WizcraftRecipeTypes.CRUCIBLE, new RecipeFeature.RecipePreviewBuilder<>() {
+        LavenderBookScreen.registerRecipePreviewBuilder(GRIMOIRE_ID, WizcraftRecipes.CRUCIBLE, new RecipeFeature.RecipePreviewBuilder<>() {
             @Override
             public @NotNull Component buildRecipePreview(BookCompiler.ComponentSource componentSource, RecipeEntry<CrucibleRecipe> recipeEntry) {
                 var recipe = recipeEntry.value();

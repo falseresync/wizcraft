@@ -6,7 +6,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
 import falseresync.wizcraft.common.item.WizcraftItems;
-import falseresync.wizcraft.common.recipe.WizcraftRecipeTypes;
+import falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import falseresync.wizcraft.compat.emi.recipe.CrucibleEmiRecipe;
 import falseresync.wizcraft.compat.emi.recipe.LensedWorktableEmiRecipe;
 import net.minecraft.item.Items;
@@ -34,10 +34,10 @@ public class WizcraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(CATEGORY_CRUCIBLE, WORKSTATION_CRUCIBLE);
 
         var recipeManager = registry.getRecipeManager();
-        for (var recipeEntry : recipeManager.listAllOfType(WizcraftRecipeTypes.LENSED_WORKTABLE)) {
+        for (var recipeEntry : recipeManager.listAllOfType(WizcraftRecipes.LENSED_WORKTABLE)) {
             registry.addRecipe(new LensedWorktableEmiRecipe(recipeEntry));
         }
-        for (var recipeEntry : recipeManager.listAllOfType(WizcraftRecipeTypes.CRUCIBLE)) {
+        for (var recipeEntry : recipeManager.listAllOfType(WizcraftRecipes.CRUCIBLE)) {
             registry.addRecipe(new CrucibleEmiRecipe(recipeEntry));
         }
     }

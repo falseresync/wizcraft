@@ -1,11 +1,9 @@
 package falseresync.wizcraft.client.render.blockentity;
 
-import falseresync.lib.math.Color;
 import falseresync.wizcraft.client.render.RenderingUtil;
 import falseresync.wizcraft.common.WizcraftConfig;
 import falseresync.wizcraft.common.blockentity.CrucibleBlockEntity;
-import falseresync.wizcraft.common.data.attachment.WizcraftDataAttachments;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import falseresync.wizcraft.common.data.attachment.WizcraftAttachments;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
@@ -16,8 +14,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.RotationAxis;
-
-import java.util.Objects;
 
 public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
     private final ItemRenderer itemRenderer;
@@ -33,7 +29,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     @Override
     public void render(CrucibleBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (client.player != null
-                && client.player.hasAttached(WizcraftDataAttachments.HAS_TRUESEER_GOGGLES)
+                && client.player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)
                 && client.player.getPos().isInRange(entity.getPos().toCenterPos(), WizcraftConfig.trueseerGogglesDisplayRange)) {
             var stacks = entity.getInventory().getHeldStacks();
             matrices.push();

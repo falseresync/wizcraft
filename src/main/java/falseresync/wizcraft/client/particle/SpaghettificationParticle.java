@@ -1,11 +1,11 @@
 package falseresync.wizcraft.client.particle;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+
+import net.fabricmc.api.*;
+import net.minecraft.client.*;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ItemStackParticleEffect;
+import net.minecraft.client.world.*;
+import net.minecraft.item.*;
+import net.minecraft.particle.*;
 
 /**
  * A mimic of {@link CrackParticle}
@@ -14,11 +14,6 @@ import net.minecraft.particle.ItemStackParticleEffect;
 public class SpaghettificationParticle extends SpriteBillboardParticle {
     private final float sampleU;
     private final float sampleV;
-
-    @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.TERRAIN_SHEET;
-    }
 
     protected SpaghettificationParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, ItemStack stack) {
         super(world, x, y, z, 0, 0, 0);
@@ -32,6 +27,16 @@ public class SpaghettificationParticle extends SpriteBillboardParticle {
         this.scale /= 4.0F;
         this.sampleU = world.random.nextFloat() * 3.0F;
         this.sampleV = world.random.nextFloat() * 3.0F;
+    }
+
+    public static ParticleFactory<ItemStackParticleEffect> getFactory() {
+        return (particle, world, x, y, z, velocityX, velocityY, velocityZ) ->
+                new SpaghettificationParticle(world, x, y, z, velocityX, velocityY, velocityZ, particle.getItemStack());
+    }
+
+    @Override
+    public ParticleTextureSheet getType() {
+        return ParticleTextureSheet.TERRAIN_SHEET;
     }
 
     @Override
@@ -52,10 +57,5 @@ public class SpaghettificationParticle extends SpriteBillboardParticle {
     @Override
     protected float getMaxV() {
         return this.sprite.getFrameV((this.sampleV + 1.0F) / 4.0F);
-    }
-
-    public static ParticleFactory<ItemStackParticleEffect> getFactory() {
-        return (particle, world, x, y, z, velocityX, velocityY, velocityZ) ->
-                new SpaghettificationParticle(world, x, y, z, velocityX, velocityY, velocityZ, particle.getItemStack());
     }
 }

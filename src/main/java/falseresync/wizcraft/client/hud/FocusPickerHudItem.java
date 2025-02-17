@@ -1,20 +1,22 @@
 package falseresync.wizcraft.client.hud;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import falseresync.lib.client.BetterDrawContext;
-import falseresync.lib.math.Easing;
-import falseresync.wizcraft.client.WizcraftClient;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import org.joml.Matrix4f;
+import com.mojang.blaze3d.systems.*;
+import falseresync.lib.client.*;
+import falseresync.lib.math.*;
+import falseresync.wizcraft.client.*;
+import net.minecraft.client.*;
+import net.minecraft.client.font.*;
+import net.minecraft.client.render.*;
+import net.minecraft.component.*;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
+import org.joml.*;
 
-import java.util.LinkedList;
+import java.util.*;
 
-import static falseresync.wizcraft.common.Wizcraft.wid;
+import static falseresync.wizcraft.common.Wizcraft.*;
+
+import java.lang.Math;
 
 public class FocusPickerHudItem implements HudItem {
     protected static final Identifier SELECTION_TEX = wid("textures/hud/wand/focus_picker_selection.png");
@@ -97,12 +99,12 @@ public class FocusPickerHudItem implements HudItem {
             } else {
                 var item1 = addGlintIfNecessary(focuses.peekFirst());
                 var item1Y = y + SEL_TEX_H / 2 - ITEM_H / 2 + yOffset;
-                paintItem(context, item1, itemX, item1Y, 1f, 0f, baseOpacity,false);
+                paintItem(context, item1, itemX, item1Y, 1f, 0f, baseOpacity, false);
 
                 if (focuses.size() > 1) {
                     var item2 = focuses.get(1);
                     var item2Y = y + Math.min(focuses.size() - 2, 1) * yOffsetPerItem + yOffsetPerItem / 2 - ITEM_H / 2;
-                    paintItem(context, item2, itemX, item2Y, 0.85f, 0f, baseOpacity,false);
+                    paintItem(context, item2, itemX, item2Y, 0.85f, 0f, baseOpacity, false);
                 }
 
                 if (focuses.size() > 2) {

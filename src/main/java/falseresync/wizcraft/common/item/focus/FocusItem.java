@@ -6,15 +6,30 @@ import net.minecraft.entity.damage.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
 import net.minecraft.item.tooltip.*;
+import net.minecraft.registry.*;
 import net.minecraft.text.*;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
 
 import java.util.*;
+import java.util.function.*;
 
 public abstract class FocusItem extends Item {
+    private final Function<Item, Integer> rawIdGetter = Util.memoize(Registries.ITEM::getRawIdOrThrow);
+
     public FocusItem(Settings settings) {
         super(settings);
+    }
+
+    public int getRawId() {
+        return rawIdGetter.apply(this);
+    }
+
+    @Override
+    public void postProcessComponents(ItemStack stack) {
+        if (!stack.contains(WizcraftComponents.FOCUS_STACK_UUID)) {
+            stack.set(WizcraftComponents.FOCUS_STACK_UUID, UUID.randomUUID());
+        }
     }
 
     public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack, PlayerEntity user) {

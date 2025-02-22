@@ -23,10 +23,12 @@ public class ClientPlayerInventoryEvents {
     public static void init() {
     }
 
+    @FunctionalInterface
     public interface ContentsChanged {
         void onChanged(PlayerInventory inventory);
     }
 
+    @FunctionalInterface
     public interface SelectedSlotChanged {
         void onChanged(PlayerInventory inventory, int lastSelectedSlot);
     }

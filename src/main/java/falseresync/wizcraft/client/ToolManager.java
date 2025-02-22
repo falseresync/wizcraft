@@ -36,14 +36,14 @@ public class ToolManager {
 
         TrinketDropCallback.EVENT.register((rule, stack, ref, entity) -> {
             if (entity instanceof PlayerEntity player) {
-                hideChargeDisplay(player);
+                hideChargeDisplayIfShould(player);
             }
             return rule;
         });
 
         TrinketUnequipCallback.EVENT.register((stack, slot, entity) -> {
             if (entity instanceof PlayerEntity player) {
-                hideChargeDisplay(player);
+                hideChargeDisplayIfShould(player);
             }
         });
 
@@ -91,7 +91,7 @@ public class ToolManager {
         }
     }
 
-    private void hideChargeDisplay(PlayerEntity player) {
+    private void hideChargeDisplayIfShould(PlayerEntity player) {
         if (chargeDisplay.isVisible() && !player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)) {
             chargeDisplay.hide();
         }
@@ -100,14 +100,9 @@ public class ToolManager {
     private void scanInventoryAndSetupFocusPicker(PlayerInventory inventory, ItemStack wandStack, boolean shouldPickNext) {
         var equipped = wandStack.getOrDefault(WizcraftComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
         var belt = WizcraftItems.FOCUSES_BELT.findTrinketStack(inventory.player);
-        var focusStacks = belt.isPresent()
-                ? belt.stream()
-                .map(WizcraftItems.FOCUSES_BELT::getOrCreateInventoryComponent)
-                .flatMap(inventoryComponent -> inventoryComponent.stacks().stream())
-                .filter(stack -> !stack.isEmpty())
-                .collect(Collectors.toCollection(LinkedList::new))
-                : inventory.main.stream()
-                .filter(it -> it.isIn(WizcraftItemTags.FOCUSES))
+        var focusStacks = belt
+                .map(it -> WizcraftItems.FOCUSES_BELT.getOrCreateInventoryComponent(it).stacks().stream().filter(stack -> !stack.isEmpty()))
+                .orElseGet(() -> inventory.main.stream().filter(it -> it.isIn(WizcraftItemTags.FOCUSES)))
                 .collect(Collectors.toCollection(LinkedList::new));
 
         if (!equipped.isEmpty()) {
@@ -119,14 +114,18 @@ public class ToolManager {
             return;
         }
 
-        var destination = WandFocusDestination.PLAYER_INVENTORY;
-        if (belt.isPresent()) {
-            destination = WandFocusDestination.FOCUSES_BELT;
-        } // wand inventories go here
-
         var picked = setupFocusPicker(wandStack, focusStacks, equipped, shouldPickNext);
         if (picked != null) {
-            sendChangeWandFocusPacket(inventory, destination, picked);
+            if (belt.isPresent()) {
+                var slot = belt
+                        .map(WizcraftItems.FOCUSES_BELT::getOrCreateInventoryComponent)
+                        .map(component -> component.getSlotWithStack(picked))
+                        .orElse(-1);
+                ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(WandFocusDestination.FOCUSES_BELT, slot));
+            } else {
+                var slot = inventory.getSlotWithStack(picked);
+                ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(WandFocusDestination.PLAYER_INVENTORY, slot));
+            }
         }
     }
 
@@ -147,18 +146,5 @@ public class ToolManager {
         }
 
         return null;
-    }
-
-    private void sendChangeWandFocusPacket(PlayerInventory inventory, WandFocusDestination destination, ItemStack picked) {
-        if (destination == WandFocusDestination.PLAYER_INVENTORY) {
-            var slot = inventory.getSlotWithStack(picked);
-            ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(destination, slot));
-        } else if (destination == WandFocusDestination.FOCUSES_BELT) {
-            var slot = WizcraftItems.FOCUSES_BELT.findTrinketStack(inventory.player)
-                    .map(WizcraftItems.FOCUSES_BELT::getOrCreateInventoryComponent)
-                    .map(component -> component.getSlotWithStack(picked))
-                    .orElse(-1);
-            ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(destination, slot));
-        }
     }
 }

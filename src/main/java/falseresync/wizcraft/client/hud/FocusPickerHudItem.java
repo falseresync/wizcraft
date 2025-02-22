@@ -4,6 +4,8 @@ import com.mojang.blaze3d.systems.*;
 import falseresync.lib.client.*;
 import falseresync.lib.math.*;
 import falseresync.wizcraft.client.*;
+import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.item.focus.*;
 import net.minecraft.client.*;
 import net.minecraft.client.font.*;
 import net.minecraft.client.render.*;
@@ -12,11 +14,10 @@ import net.minecraft.item.*;
 import net.minecraft.util.*;
 import org.joml.*;
 
+import java.lang.Math;
 import java.util.*;
 
 import static falseresync.wizcraft.common.Wizcraft.*;
-
-import java.lang.Math;
 
 public class FocusPickerHudItem implements HudItem {
     protected static final Identifier SELECTION_TEX = wid("textures/hud/wand/focus_picker_selection.png");
@@ -29,10 +30,15 @@ public class FocusPickerHudItem implements HudItem {
     private static final int DISPLAY_DURATION = 60;
     private static final int PARENT_ANIMATION_DURATION = 8;
     private static final int ITEMS_ANIMATION_DURATION = 6;
+    // Order focuses by registry order, and then their variants first by plating, then by UUID to allow for the highest flexibility
+    private static final Comparator<ItemStack> FOCUS_ORDERING = Comparator
+            .<ItemStack>comparingInt(stack -> ((FocusItem) stack.getItem()).getRawId())
+            .thenComparingInt(stack -> stack.getOrDefault(WizcraftComponents.FOCUS_PLATING, -1))
+            .thenComparing(stack -> stack.getOrDefault(WizcraftComponents.FOCUS_STACK_UUID, UUID.randomUUID()));
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
+    private final LinkedList<ItemStack> focuses = new LinkedList<>();
     private ItemStack wand;
-    private LinkedList<ItemStack> focuses = new LinkedList<>();
     private float baseOpacity = 1;
     private boolean isVisible = false;
     private int remainingDisplayTicks = 0;
@@ -77,7 +83,7 @@ public class FocusPickerHudItem implements HudItem {
                 paintItem(context, item1, itemX, item1Y, item1Scale, item1Translation, item1Opacity, false);
 
                 if (focuses.size() > 1) {
-                    var item2 = focuses.peekFirst();
+                    var item2 = addGlintIfNecessary(focuses.getFirst());
                     int item2Y = y + Math.min(focuses.size() - 2, 1) * yOffsetPerItem + yOffsetPerItem / 2 - ITEM_H / 2;
                     float item2Scale = 0.85f + (1 - 0.85f) * (float) Easing.easeOutSine((double) (ITEMS_ANIMATION_DURATION - remainingItemsAnimationTicks) / ITEMS_ANIMATION_DURATION);
                     float item2Translation = (float) (yOffsetPerItem * Easing.easeInOutSine((double) (ITEMS_ANIMATION_DURATION - remainingItemsAnimationTicks) / ITEMS_ANIMATION_DURATION));
@@ -97,7 +103,7 @@ public class FocusPickerHudItem implements HudItem {
                     paintItem(context, item4, itemX, item4Y, item4Scale, 0f, baseOpacity / 2, true);
                 }
             } else {
-                var item1 = addGlintIfNecessary(focuses.peekFirst());
+                var item1 = addGlintIfNecessary(focuses.getFirst());
                 var item1Y = y + SEL_TEX_H / 2 - ITEM_H / 2 + yOffset;
                 paintItem(context, item1, itemX, item1Y, 1f, 0f, baseOpacity, false);
 
@@ -206,6 +212,7 @@ public class FocusPickerHudItem implements HudItem {
 
     private void clear() {
         isVisible = false;
+        wand = null;
         focuses.clear();
     }
 
@@ -224,18 +231,16 @@ public class FocusPickerHudItem implements HudItem {
      */
     public void upload(ItemStack wand, LinkedList<ItemStack> newFocuses) {
         this.wand = wand;
-        if (focuses.isEmpty()) {
-            focuses = newFocuses;
-        } else if (newFocuses.size() != focuses.size()) {
-            var currentlyPicked = focuses.peekFirst();
-            focuses = newFocuses;
-            for (ItemStack focus : focuses) {
-                if (ItemStack.areItemsAndComponentsEqual(focus, currentlyPicked)) {
-                    focuses.remove(focus);
-                    break;
-                }
-            }
-            focuses.addFirst(currentlyPicked);
+
+        var currentlyPicked = (focuses.isEmpty() ? newFocuses : focuses).getFirst();
+        focuses.clear();
+        focuses.addAll(newFocuses);
+        focuses.sort(FOCUS_ORDERING);
+        // Scroll to the currently picked focus
+        while (!Objects.equals(
+                currentlyPicked.get(WizcraftComponents.FOCUS_STACK_UUID),
+                focuses.getFirst().get(WizcraftComponents.FOCUS_STACK_UUID))) {
+            focuses.addLast(focuses.removeFirst());
         }
     }
 
@@ -247,7 +252,7 @@ public class FocusPickerHudItem implements HudItem {
     }
 
     public ItemStack getCurrentlyPicked() {
-        return focuses.peekFirst();
+        return focuses.getFirst();
     }
 
     public boolean isVisible() {

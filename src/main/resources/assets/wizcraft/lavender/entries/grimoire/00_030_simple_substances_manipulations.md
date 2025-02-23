@@ -13,8 +13,7 @@ channeling energy.
 
 
 This tool is called a Wand, and it consists of two primary parts - a Metallized
-stick to provide a sturdy and durable handle for you to hold onto, and a Wand
-core.
+stick to provide a sturdy handle for you to hold onto, and a Wand core.
 
 ;;;;;
 

@@ -14,7 +14,7 @@ public record ChargeShellsAttachment(int currentCharge, IntList shells, int maxC
     public static final int MAX_CHARGE = 1000;
 
     public static final Codec<ChargeShellsAttachment> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codecs.NONNEGATIVE_INT.fieldOf("maxCharge").forGetter(ChargeShellsAttachment::currentCharge),
+            Codecs.NONNEGATIVE_INT.fieldOf("currentCharge").forGetter(ChargeShellsAttachment::currentCharge),
             Codecs.NONNEGATIVE_INT.sizeLimitedListOf(MAX_SHELLS)
                     .xmap(it -> (IntList) new IntImmutableList(it), it -> it)
                     .fieldOf("shells").forGetter(ChargeShellsAttachment::shells),

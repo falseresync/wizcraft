@@ -1,6 +1,7 @@
 package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.client.*;
+import falseresync.wizcraft.common.*;
 import falseresync.wizcraft.common.data.component.*;
 import falseresync.wizcraft.common.item.focus.*;
 import net.fabricmc.fabric.api.client.keybinding.v1.*;
@@ -11,6 +12,7 @@ import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
 import net.minecraft.item.tooltip.*;
 import net.minecraft.screen.slot.*;
+import net.minecraft.server.network.*;
 import net.minecraft.text.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
@@ -131,7 +133,11 @@ public class WandItem extends Item implements ActivatorItem {
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
             focusItem.focusInventoryTick(stack, focusStack, world, entity, slot, selected);
         }
+        if (entity instanceof ServerPlayerEntity player) {
+            Wizcraft.getChargeManager().tryChargeWandPassively(stack, world, player);
+        }
     }
+
 
     // Focus properties processing
 

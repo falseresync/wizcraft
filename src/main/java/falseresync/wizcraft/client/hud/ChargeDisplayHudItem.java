@@ -35,8 +35,8 @@ public class ChargeDisplayHudItem implements HudItem {
     private final TextRenderer textRenderer;
     private int currentCharge = 0;
     private int maxCharge = 0;
-    private int chargeInShells = 0;
-    private int maxChargeInShells = 0;
+    private int chargeInShells = -1;
+    private int maxChargeInShells = -1;
     private boolean isVisible = false;
     private ItemStack wand;
     private boolean animating = false;
@@ -57,7 +57,7 @@ public class ChargeDisplayHudItem implements HudItem {
             RenderSystem.enableBlend();
             context.setShaderColor(1, 1, 1, opacity);
 
-            if (maxChargeInShells != 0) {
+            if (maxChargeInShells >= 0) {
                 var tint = ColorHelper.Argb.lerp((float) chargeInShells / maxChargeInShells, SHELL_NO_CHARGE_TINT, SHELL_FULL_CHARGE_TINT);
                 context.setShaderColor(
                         ColorHelper.Argb.getRed(tint) / 255f, ColorHelper.Argb.getGreen(tint) / 255f,
@@ -111,8 +111,8 @@ public class ChargeDisplayHudItem implements HudItem {
             currentCharge = wand.getOrDefault(WizcraftComponents.WAND_CHARGE, 0);
             maxCharge = wand.getOrDefault(WizcraftComponents.WAND_MAX_CHARGE, 0);
 
-            var shells = client.player.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS);
-            if (shells.maxCharge() > 0) {
+            var shells = client.player.getAttached(WizcraftAttachments.CHARGE_SHELLS);
+            if (shells != null) {
                 chargeInShells = shells.currentCharge();
                 maxChargeInShells = shells.maxCharge();
             }

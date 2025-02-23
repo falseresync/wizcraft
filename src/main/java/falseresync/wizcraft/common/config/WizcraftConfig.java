@@ -12,6 +12,10 @@ public final class WizcraftConfig implements ConfigData {
     public InfiniteCharge infiniteCharge = InfiniteCharge.CREATIVE_ONLY;
 
     @ConfigEntry.Category("general")
+    @TranslatableEnum
+    public PassiveCharge passiveCharge = PassiveCharge.DEFAULT;
+
+    @ConfigEntry.Category("general")
     @ConfigEntry.Gui.Tooltip(count = 3)
     @ConfigEntry.Gui.CollapsibleObject
     public Transmutation transmutation = new Transmutation();
@@ -28,7 +32,7 @@ public final class WizcraftConfig implements ConfigData {
 
     @ConfigEntry.Category("performance")
     @TranslatableEnum
-    public ParticlesAmountModifier animationParticlesAmount = ParticlesAmountModifier.DEFAULT;
+    public ParticlesAmount animationParticlesAmount = ParticlesAmount.DEFAULT;
 
     @ConfigEntry.Category("performance")
     @TranslatableEnum
@@ -36,7 +40,7 @@ public final class WizcraftConfig implements ConfigData {
 
     @ConfigEntry.Category("accessibility")
     @TranslatableEnum
-    public TransparencyModifier fullscreenEffectsTransparency = TransparencyModifier.DEFAULT;
+    public Transparency fullscreenEffectsTransparency = Transparency.DEFAULT;
 
     public enum InfiniteCharge {
         NEVER, CREATIVE_ONLY, ALWAYS;
@@ -50,12 +54,12 @@ public final class WizcraftConfig implements ConfigData {
         }
     }
 
-    public enum ParticlesAmountModifier {
+    public enum ParticlesAmount {
         REDUCED(0.6f), DEFAULT(1);
 
         public final float modifier;
 
-        ParticlesAmountModifier(float modifier) {
+        ParticlesAmount(float modifier) {
             this.modifier = modifier;
         }
     }
@@ -64,13 +68,23 @@ public final class WizcraftConfig implements ConfigData {
         FAST, DEFAULT
     }
 
-    public enum TransparencyModifier {
+    public enum Transparency {
         INCREASED(2f), DEFAULT(1);
 
         public final float modifier;
 
-        TransparencyModifier(float modifier) {
+        Transparency(float modifier) {
             this.modifier = modifier;
+        }
+    }
+
+    public enum PassiveCharge {
+        DISABLED(0), DEFAULT(1), FASTER(2);
+
+        public final float coefficient;
+
+        PassiveCharge(float modifier) {
+            this.coefficient = modifier;
         }
     }
 }

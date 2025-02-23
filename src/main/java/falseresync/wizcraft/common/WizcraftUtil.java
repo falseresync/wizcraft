@@ -14,8 +14,13 @@ import net.minecraft.world.*;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
+import java.util.function.*;
 
 public class WizcraftUtil {
+    private static final Function<World, Integer> memo$findViewDistance = Util.memoize((World world) -> world.isClient()
+            ? MinecraftClient.getInstance().options.getClampedViewDistance()
+            : ((ServerWorld) world).getChunkManager().chunkLoadingManager.watchDistance);
+
     public static <T> Optional<T> nextRandomEntry(ServerWorld world, TagKey<T> tag, Random random) {
         return world.getRegistryManager()
                 .getOptional(tag.registry())
@@ -23,10 +28,11 @@ public class WizcraftUtil {
                 .flatMap(entries -> entries.getRandom(random).map(RegistryEntry::value));
     }
 
+    /**
+     * @return memoized(!) view distance
+     */
     public static int findViewDistance(World world) {
-        return world.isClient()
-                ? MinecraftClient.getInstance().options.getClampedViewDistance()
-                : ((ServerWorld) world).getChunkManager().chunkLoadingManager.watchDistance;
+        return memo$findViewDistance.apply(world);
     }
 
     public static long exchangeStackInSlotWithHand(PlayerEntity player, Hand hand, InventoryStorage storage, int slot, int maxAmount, @Nullable TransactionContext transaction) {

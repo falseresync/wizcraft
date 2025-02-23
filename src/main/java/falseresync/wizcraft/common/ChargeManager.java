@@ -1,11 +1,13 @@
 package falseresync.wizcraft.common;
 
 import com.google.common.base.*;
+import falseresync.wizcraft.common.config.*;
 import falseresync.wizcraft.common.data.attachment.*;
 import falseresync.wizcraft.common.data.component.*;
 import net.fabricmc.fabric.api.event.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
+import net.minecraft.world.*;
 import org.jetbrains.annotations.*;
 
 public class ChargeManager {
@@ -24,7 +26,12 @@ public class ChargeManager {
     public ChargeManager() {
         WAND_CHARGE_SPENT.register((wandStack, cost, user) -> {
             if (user != null) {
-                var chargeShells = user.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS);
+                // Maybe only compensate the cost? But that would be confusing
+                var chargeShells = user.getAttached(WizcraftAttachments.CHARGE_SHELLS);
+                if (chargeShells == null) {
+                    return;
+                }
+
                 var wandCurrent = wandStack.getOrDefault(WizcraftComponents.WAND_CHARGE, 0);
                 var wandMax = wandStack.getOrDefault(WizcraftComponents.WAND_MAX_CHARGE, 0);
                 var compensation = wandMax - wandCurrent;
@@ -44,11 +51,17 @@ public class ChargeManager {
     }
 
     public boolean areShellsFull(PlayerEntity player) {
-        return player.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS).areShellsFull();
+        //noinspection DataFlowIssue
+        return player.hasAttached(WizcraftAttachments.CHARGE_SHELLS)
+                && player.getAttached(WizcraftAttachments.CHARGE_SHELLS).areShellsFull();
     }
 
     public void applyShellCharge(PlayerEntity player, int amount) {
-        var newShells = player.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS).withChargeChange(amount);
+        var shells = player.getAttached(WizcraftAttachments.CHARGE_SHELLS);
+        if (shells == null) {
+            return;
+        }
+        var newShells = shells.withChargeChange(amount);
         if (newShells != null) {
             player.setAttached(WizcraftAttachments.CHARGE_SHELLS, newShells);
         }
@@ -56,6 +69,10 @@ public class ChargeManager {
 
     public boolean isWandFullyCharged(ItemStack wandStack) {
         return wandStack.getOrDefault(WizcraftComponents.WAND_CHARGE, 0) >= wandStack.getOrDefault(WizcraftComponents.WAND_MAX_CHARGE, 0);
+    }
+
+    public boolean cannotAddAnyCharge(ItemStack wandStack, PlayerEntity player) {
+        return isWandFullyCharged(wandStack) && areShellsFull(player);
     }
 
     public boolean tryExpendWandCharge(ItemStack wandStack, int cost, @Nullable PlayerEntity user) {
@@ -78,6 +95,36 @@ public class ChargeManager {
         wandStack.apply(WizcraftComponents.WAND_CHARGE, 0, it -> Math.min(it + amount, max));
         if (current + amount > max) {
             ChargeManager.WAND_OVERCHARGED.invoker().onWandOvercharged(wandStack, current + amount - max, user);
+        }
+    }
+
+    public void tryChargeWandPassively(ItemStack wandStack, World world, PlayerEntity player) {
+        if (Wizcraft.getChargeManager().cannotAddAnyCharge(wandStack, player)) {
+            return;
+        }
+
+        var config = Wizcraft.getConfig().passiveCharge;
+        if (config == WizcraftConfig.PassiveCharge.DISABLED) {
+            return;
+        }
+
+        var environmentCoefficient = 1f;
+        var worldType = world.getRegistryKey();
+        if (worldType == World.NETHER) {
+            environmentCoefficient *= 0.1f;
+        } else if (worldType == World.END) {
+            environmentCoefficient *= 3f;
+        } else {
+            environmentCoefficient *= world.isNight() ? 1 : 0.5f;
+            environmentCoefficient *= 1 - world.getRainGradient(1);
+            environmentCoefficient *= world.getLightLevel(LightType.SKY, player.getBlockPos()) / (world.getMaxLightLevel() * 0.5f);
+        }
+
+        var usageCoefficient = ItemStack.areEqual(player.getMainHandStack(), wandStack) ? 1f : 0.25f;
+
+        // At most 10% of the time, i.e. up to 2 times per second
+        if (world.random.nextFloat() < Math.clamp(0.005f * environmentCoefficient * config.coefficient * usageCoefficient, 0, 0.1f)) {
+            Wizcraft.getChargeManager().chargeWand(wandStack, 1, player);
         }
     }
 

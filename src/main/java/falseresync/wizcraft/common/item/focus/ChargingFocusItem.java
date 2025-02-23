@@ -34,7 +34,7 @@ public class ChargingFocusItem extends FocusItem {
                 return TypedActionResult.fail(wandStack);
             }
 
-            if (Wizcraft.getChargeManager().isWandFullyCharged(wandStack) && Wizcraft.getChargeManager().areShellsFull(player)) {
+            if (Wizcraft.getChargeManager().cannotAddAnyCharge(wandStack, player)) {
                 WizcraftReports.WAND_ALREADY_FULLY_CHARGED.sendTo(player);
                 return TypedActionResult.pass(wandStack);
             }

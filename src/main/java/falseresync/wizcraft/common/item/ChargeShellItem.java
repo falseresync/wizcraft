@@ -20,7 +20,8 @@ public class ChargeShellItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         var stack = user.getStackInHand(hand);
-        if (user.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS).canAddShell(DEFAULT_CAPACITY)) {
+        var chargeShells = user.getAttached(WizcraftAttachments.CHARGE_SHELLS);
+        if (chargeShells == null || chargeShells.canAddShell(DEFAULT_CAPACITY)) {
             user.setCurrentHand(hand);
             return TypedActionResult.consume(stack);
         }

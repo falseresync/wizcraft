@@ -232,14 +232,14 @@ public class FocusPickerHudItem implements HudItem {
     public void upload(ItemStack wand, LinkedList<ItemStack> newFocuses) {
         this.wand = wand;
 
-        var currentlyPicked = (focuses.isEmpty() ? newFocuses : focuses).getFirst();
         focuses.clear();
         focuses.addAll(newFocuses);
         focuses.sort(FOCUS_ORDERING);
         // Scroll to the currently picked focus
         while (!Objects.equals(
-                currentlyPicked.get(WizcraftComponents.FOCUS_STACK_UUID),
-                focuses.getFirst().get(WizcraftComponents.FOCUS_STACK_UUID))) {
+                newFocuses.getFirst().get(WizcraftComponents.FOCUS_STACK_UUID),
+                focuses.getFirst().get(WizcraftComponents.FOCUS_STACK_UUID))
+        ) {
             focuses.addLast(focuses.removeFirst());
         }
     }

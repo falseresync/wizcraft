@@ -33,7 +33,7 @@ public class LightningFocusItem extends FocusItem {
                 lightning.setChanneler(player);
                 ((WizcraftLightning) lightning).wizcraft$setThunderless();
                 world.spawnEntity(lightning);
-
+                focusStack.damage(1, user, EquipmentSlot.MAINHAND);
                 return TypedActionResult.success(wandStack);
             }
 

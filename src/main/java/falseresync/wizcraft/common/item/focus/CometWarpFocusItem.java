@@ -3,6 +3,7 @@ package falseresync.wizcraft.common.item.focus;
 import falseresync.wizcraft.common.*;
 import falseresync.wizcraft.common.data.component.*;
 import falseresync.wizcraft.networking.report.*;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
 import net.minecraft.item.tooltip.*;
@@ -50,6 +51,9 @@ public class CometWarpFocusItem extends FocusItem {
                 WizcraftReports.COMET_WARP_ANCHOR_PLACED.sendTo(player);
                 var globalPos = GlobalPos.create(world.getRegistryKey(), user.getBlockPos());
                 wandStack.set(WizcraftComponents.WARP_FOCUS_ANCHOR, globalPos);
+                if (world.random.nextFloat() < 0.1f) {
+                    focusStack.damage(1, player, EquipmentSlot.MAINHAND);
+                }
             } else {
                 var anchor = wandStack.get(WizcraftComponents.WARP_FOCUS_ANCHOR);
                 if (anchor == null) {
@@ -73,6 +77,7 @@ public class CometWarpFocusItem extends FocusItem {
                 WizcraftReports.COMET_WARP_TELEPORTED.sendTo(player);
                 user.teleportTo(new TeleportTarget(destination, anchor.pos().toCenterPos(), Vec3d.ZERO, user.getYaw(), user.getPitch(), TeleportTarget.NO_OP));
                 wandStack.remove(WizcraftComponents.WARP_FOCUS_ANCHOR);
+                focusStack.damage(1, player, EquipmentSlot.MAINHAND);
             }
             return TypedActionResult.success(wandStack);
         }

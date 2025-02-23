@@ -3,6 +3,7 @@ package falseresync.wizcraft.common.item.focus;
 import falseresync.wizcraft.common.*;
 import falseresync.wizcraft.common.entity.*;
 import falseresync.wizcraft.networking.report.*;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
 import net.minecraft.server.network.*;
@@ -19,6 +20,7 @@ public class StarshooterFocusItem extends FocusItem {
         if (user instanceof ServerPlayerEntity player) {
             if (Wizcraft.getChargeManager().tryExpendWandCharge(wandStack, 2, user)) {
                 world.spawnEntity(new StarProjectileEntity(user, world));
+                focusStack.damage(1, user, EquipmentSlot.MAINHAND);
                 return TypedActionResult.success(wandStack);
             }
 

@@ -61,6 +61,7 @@ public class ChargingFocusItem extends FocusItem {
         wandStack.remove(WizcraftComponents.CHARGING_FOCUS_PROGRESS);
         Wizcraft.getChargeManager().chargeWand(wandStack, 40, user instanceof PlayerEntity player ? player : null);
         if (user instanceof ServerPlayerEntity player) {
+            focusStack.damage(1, player, EquipmentSlot.MAINHAND);
             WizcraftReports.WAND_SUCCESSFULLY_CHARGED.sendAround((ServerWorld) world, player.getBlockPos(), player);
         }
         return wandStack;

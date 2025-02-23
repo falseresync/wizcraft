@@ -145,6 +145,7 @@ public class FocusPickerHudItem implements HudItem {
         }
 
         context.drawItemWithoutEntity(stack, x, y);
+        context.drawItemInSlot(textRenderer, stack, x, y);
 
         context.setShaderColor(1, 1, 1, baseOpacity);
         matrices.pop();

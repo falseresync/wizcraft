@@ -23,11 +23,11 @@ public class WizcraftItems {
     public static final WandItem WAND = r("wand", WandItem::new, new Item.Settings().maxCount(1));
 
     public static final Item.Settings FOCUS_SETTINGS = new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON);
-    public static final StarshooterFocusItem STARSHOOTER_FOCUS = r("starshooter_focus", StarshooterFocusItem::new, FOCUS_SETTINGS);
-    public static final ChargingFocusItem CHARGING_FOCUS = r("charging_focus", ChargingFocusItem::new, FOCUS_SETTINGS);
-    public static final LightningFocusItem LIGHTNING_FOCUS = r("lightning_focus", LightningFocusItem::new, FOCUS_SETTINGS);
-    public static final CometWarpFocusItem COMET_WARP_FOCUS = r("comet_warp_focus", CometWarpFocusItem::new, FOCUS_SETTINGS);
-    public static final EnergyVeilFocusItem ENERGY_VEIL_FOCUS = r("energy_veil_focus", EnergyVeilFocusItem::new, FOCUS_SETTINGS);
+    public static final StarshooterFocusItem STARSHOOTER_FOCUS = r("starshooter_focus", StarshooterFocusItem::new, FOCUS_SETTINGS.maxDamage(512));
+    public static final ChargingFocusItem CHARGING_FOCUS = r("charging_focus", ChargingFocusItem::new, FOCUS_SETTINGS.maxDamage(128));
+    public static final LightningFocusItem LIGHTNING_FOCUS = r("lightning_focus", LightningFocusItem::new, FOCUS_SETTINGS.maxDamage(128));
+    public static final CometWarpFocusItem COMET_WARP_FOCUS = r("comet_warp_focus", CometWarpFocusItem::new, FOCUS_SETTINGS.maxDamage(16));
+    public static final EnergyVeilFocusItem ENERGY_VEIL_FOCUS = r("energy_veil_focus", EnergyVeilFocusItem::new, FOCUS_SETTINGS.maxDamage(64));
 
     public static final TrueseerGogglesItem TRUESEER_GOGGLES = r("trueseer_goggles", TrueseerGogglesItem::new, new Item.Settings().maxCount(1));
     public static final FocusesBeltItem FOCUSES_BELT = r("focuses_belt", FocusesBeltItem::new, new Item.Settings().maxCount(1));

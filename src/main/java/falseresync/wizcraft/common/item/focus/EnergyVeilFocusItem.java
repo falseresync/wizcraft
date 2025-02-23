@@ -75,11 +75,18 @@ public class EnergyVeilFocusItem extends FocusItem {
                     if (previousDeficit != null && previousDeficit % (CONTINUOUS_COST * 35) == 0) {
                         EntityType.VEX.spawn((ServerWorld) world, fuzzyPos(world.random, 1, player.getBlockPos()), SpawnReason.TRIGGERED);
                     }
+                    if (world.random.nextFloat() < 0.1f) {
+                        focusStack.damage(1, user, EquipmentSlot.MAINHAND);
+                    }
                 }
                 veil.incrementLifeExpectancy(2);
                 var maxUseTicks = focusGetMaxUseTime(wandStack, focusStack, user);
                 wandStack.set(WizcraftComponents.ITEM_BAR,
                         new ItemBarComponent(Math.clamp(Math.round((maxUseTicks - remainingUseTicks) * 13f / maxUseTicks), 0, 13), CYAN_ARGB));
+
+                if (world.random.nextFloat() < 0.01f) {
+                    focusStack.damage(1, user, EquipmentSlot.MAINHAND);
+                }
             }
         });
     }
@@ -106,6 +113,7 @@ public class EnergyVeilFocusItem extends FocusItem {
                 }
             });
             resetWand(wandStack);
+            focusStack.damage(1, user, EquipmentSlot.MAINHAND);
         }
         return wandStack;
     }

@@ -23,38 +23,34 @@ public class ChargeManager {
 
     public ChargeManager() {
         WAND_CHARGE_SPENT.register((wandStack, cost, user) -> {
-            if (user != null && user.hasAttached(WizcraftAttachments.MAX_CHARGE_IN_SHELLS)) {
-                var shellsCurrent = user.getAttachedOrCreate(WizcraftAttachments.CHARGE_IN_SHELLS);
+            if (user != null) {
+                var chargeShells = user.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS);
                 var wandCurrent = wandStack.getOrDefault(WizcraftComponents.WAND_CHARGE, 0);
                 var wandMax = wandStack.getOrDefault(WizcraftComponents.WAND_MAX_CHARGE, 0);
-                var transferred = Math.min(shellsCurrent, wandMax - wandCurrent);
-                user.modifyAttached(WizcraftAttachments.CHARGE_IN_SHELLS, it -> it - transferred);
-                wandStack.apply(WizcraftComponents.WAND_CHARGE, 0, it -> it + transferred);
+                var compensation = wandMax - wandCurrent;
+                var newShells = chargeShells.withChargeChange(-compensation);
+                if (newShells != null) {
+                    user.setAttached(WizcraftAttachments.CHARGE_SHELLS, newShells);
+                    wandStack.apply(WizcraftComponents.WAND_CHARGE, 0, it -> it + compensation);
+                }
             }
         });
 
         WAND_OVERCHARGED.register((wandStack, excess, user) -> {
-            if (user != null && user.hasAttached(WizcraftAttachments.MAX_CHARGE_IN_SHELLS)) {
+            if (user != null) {
                 Wizcraft.getChargeManager().applyShellCharge(user, excess);
             }
         });
     }
 
     public boolean areShellsFull(PlayerEntity player) {
-        if (player.hasAttached(WizcraftAttachments.MAX_CHARGE_IN_SHELLS)) {
-            return player.getAttachedOrCreate(WizcraftAttachments.MAX_CHARGE_IN_SHELLS) <= player.getAttachedOrCreate(WizcraftAttachments.CHARGE_IN_SHELLS);
-        }
-
-        return true;
+        return player.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS).areShellsFull();
     }
 
     public void applyShellCharge(PlayerEntity player, int amount) {
-        var current = player.getAttachedOrCreate(WizcraftAttachments.CHARGE_IN_SHELLS);
-        if (amount >= 0) {
-            var max = player.getAttachedOrCreate(WizcraftAttachments.MAX_CHARGE_IN_SHELLS);
-            player.setAttached(WizcraftAttachments.CHARGE_IN_SHELLS, Math.min(current + amount, max));
-        } else {
-            player.setAttached(WizcraftAttachments.CHARGE_IN_SHELLS, Math.min(current + amount, 0));
+        var newShells = player.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS).withChargeChange(amount);
+        if (newShells != null) {
+            player.setAttached(WizcraftAttachments.CHARGE_SHELLS, newShells);
         }
     }
 
@@ -63,7 +59,7 @@ public class ChargeManager {
     }
 
     public boolean tryExpendWandCharge(ItemStack wandStack, int cost, @Nullable PlayerEntity user) {
-        if (user != null && (user.isCreative() && WizcraftConfig.freeChargeInCreative || WizcraftConfig.freeChargeInSurvival)) {
+        if (user != null && (user.isCreative() && Wizcraft.getConfig().infiniteCharge.isCreativeOnly() || Wizcraft.getConfig().infiniteCharge.isAlways())) {
             return true;
         }
         var charge = wandStack.getOrDefault(WizcraftComponents.WAND_CHARGE, 0);

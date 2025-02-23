@@ -4,8 +4,10 @@ import falseresync.wizcraft.client.gui.*;
 import falseresync.wizcraft.client.hud.*;
 import falseresync.wizcraft.client.particle.*;
 import falseresync.wizcraft.client.render.*;
+import falseresync.wizcraft.common.config.*;
 import falseresync.wizcraft.compat.lavender.*;
 import falseresync.wizcraft.networking.*;
+import me.shedaniel.autoconfig.*;
 import net.fabricmc.api.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.*;
 
@@ -23,6 +25,11 @@ public class WizcraftClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        AutoConfig.getGuiRegistry(WizcraftConfig.class).registerPredicateProvider(
+                new TranslatableEnumGuiProvider<>(),
+                field -> field.getType().isEnum() && field.isAnnotationPresent(TranslatableEnum.class)
+        );
+
         WizcraftParticleFactories.init();
         WizcraftRenderers.init();
         WizcraftGui.init();

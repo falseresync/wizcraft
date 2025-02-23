@@ -41,7 +41,7 @@ public class RenderingUtil {
     public static void levitateItemAboveBlock(World world, BlockPos pos, Vec3d translation, Vec3d scale, float tickDelta, ItemStack stack, ModelTransformationMode mode, ItemRenderer itemRenderer, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
         if (stack.isEmpty()) return;
 
-        switch (WizcraftConfig.animationQuality) {
+        switch (Wizcraft.getConfig().animationQuality) {
             case DEFAULT -> {
                 matrices.push();
 

@@ -31,7 +31,7 @@ public class WizcraftItems {
 
     public static final TrueseerGogglesItem TRUESEER_GOGGLES = r("trueseer_goggles", TrueseerGogglesItem::new, new Item.Settings().maxCount(1));
     public static final FocusesBeltItem FOCUSES_BELT = r("focuses_belt", FocusesBeltItem::new, new Item.Settings().maxCount(1));
-    public static final ChargeShellItem CHARGE_SHELL = r("charge_shell", ChargeShellItem::new, new Item.Settings().maxCount(4));
+    public static final ChargeShellItem CHARGE_SHELL = r("charge_shell", ChargeShellItem::new, new Item.Settings().maxCount(1));
 
     public static final Item.Settings DEFAULT_BLOCK_ITEM_SETTINGS = new Item.Settings();
     public static final BlockItem CRUCIBLE = rBlockItem("crucible", WizcraftBlocks.CRUCIBLE, DEFAULT_BLOCK_ITEM_SETTINGS);

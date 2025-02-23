@@ -111,9 +111,10 @@ public class ChargeDisplayHudItem implements HudItem {
             currentCharge = wand.getOrDefault(WizcraftComponents.WAND_CHARGE, 0);
             maxCharge = wand.getOrDefault(WizcraftComponents.WAND_MAX_CHARGE, 0);
 
-            if (client.player.hasAttached(WizcraftAttachments.MAX_CHARGE_IN_SHELLS)) {
-                chargeInShells = client.player.getAttachedOrCreate(WizcraftAttachments.CHARGE_IN_SHELLS);
-                maxChargeInShells = client.player.getAttachedOrGet(WizcraftAttachments.MAX_CHARGE_IN_SHELLS, () -> chargeInShells);
+            var shells = client.player.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS);
+            if (shells.maxCharge() > 0) {
+                chargeInShells = shells.currentCharge();
+                maxChargeInShells = shells.maxCharge();
             }
         }
 

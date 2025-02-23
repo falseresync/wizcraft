@@ -1,6 +1,7 @@
 package falseresync.wizcraft.client.render.entity;
 
 import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.config.*;
 import falseresync.wizcraft.common.entity.*;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.*;
@@ -54,7 +55,7 @@ public class EnergyVeilModel extends SinglePartEntityModel<PlayerEntity> {
     }
 
     public void animateModel(EnergyVeilEntity veil, float limbAngle, float limbDistance, float tickDelta) {
-        if (WizcraftConfig.animationQuality == WizcraftConfig.AnimationQuality.DEFAULT) {
+        if (Wizcraft.getConfig().animationQuality == WizcraftConfig.AnimationQuality.DEFAULT) {
             getPart().traverse().forEach(ModelPart::resetTransform);
             updateAnimation(veil.slideAnimationState, EnergyVeilAnimations.SLIDE.get(), veil.age + tickDelta);
         }

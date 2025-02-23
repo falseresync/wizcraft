@@ -69,7 +69,7 @@ public abstract class WorktableBlock<B extends WorktableBlockEntity> extends Blo
             if (world.isClient()) return ItemActionResult.CONSUME;
 
             if (worktable.shouldExchangeFor(stack)) {
-                var exchanged = Wizcraft.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
+                var exchanged = WizcraftUtil.exchangeStackInSlotWithHand(player, hand, worktable.getStorage(), 0, 1, null);
                 if (exchanged == 1) {
                     return ItemActionResult.CONSUME;
                 }

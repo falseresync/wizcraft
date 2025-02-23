@@ -1,19 +1,18 @@
 package falseresync.wizcraft.client.render.blockentity;
 
-import falseresync.wizcraft.client.render.RenderingUtil;
-import falseresync.wizcraft.common.WizcraftConfig;
-import falseresync.wizcraft.common.blockentity.CrucibleBlockEntity;
-import falseresync.wizcraft.common.data.attachment.WizcraftAttachments;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
+import falseresync.wizcraft.client.render.*;
+import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.blockentity.*;
+import falseresync.wizcraft.common.data.attachment.*;
+import net.minecraft.client.*;
+import net.minecraft.client.font.*;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.render.block.entity.*;
+import net.minecraft.client.render.item.*;
+import net.minecraft.client.render.model.json.*;
+import net.minecraft.client.util.math.*;
+import net.minecraft.fluid.*;
+import net.minecraft.util.math.*;
 
 public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
     private final ItemRenderer itemRenderer;
@@ -30,7 +29,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     public void render(CrucibleBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (client.player != null
                 && client.player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)
-                && client.player.getPos().isInRange(entity.getPos().toCenterPos(), WizcraftConfig.trueseerGogglesDisplayRange)) {
+                && client.player.getPos().isInRange(entity.getPos().toCenterPos(), Wizcraft.getConfig().trueseerGogglesDisplayRange)) {
             var stacks = entity.getInventory().getHeldStacks();
             matrices.push();
             matrices.translate(0.5, 1.25, 0.5);
@@ -46,7 +45,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
 
                 matrices.push();
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
-                var textScale = 0.5f /* block sizing [-0.5,0.5] */ * 1/9f /* text sizing [1,9] */ * 0.3f /* actual scale */;
+                var textScale = 0.5f /* block sizing [-0.5,0.5] */ * 1 / 9f /* text sizing [1,9] */ * 0.3f /* actual scale */;
                 matrices.scale(textScale, textScale, textScale);
                 textRenderer.draw(
                         stack.getCount() + "", 16, -4, 0xFF_FF_FF, true,

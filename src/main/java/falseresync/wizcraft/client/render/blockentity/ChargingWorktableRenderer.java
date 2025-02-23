@@ -31,7 +31,7 @@ public class ChargingWorktableRenderer implements BlockEntityRenderer<ChargingWo
                 entity.isCharging() ? ModelTransformationMode.THIRD_PERSON_RIGHT_HAND : ModelTransformationMode.FIXED,
                 this.itemRenderer, matrices, vertexConsumers);
 
-        if (entity.isCharging() && world.random.nextFloat() < WizcraftConfig.animationParticlesAmount.modifier) {
+        if (entity.isCharging() && world.random.nextFloat() < Wizcraft.getConfig().animationParticlesAmount.modifier) {
             var itemPos = entity.getPos().toCenterPos().add(0, -0.5, 0);
             var particlePos = itemPos.add(world.random.nextFloat() - 0.5, 2, world.random.nextFloat() - 0.5);
             var particleVelocity = particlePos.relativize(itemPos).multiply(5);

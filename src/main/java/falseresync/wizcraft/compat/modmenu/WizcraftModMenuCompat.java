@@ -2,12 +2,12 @@ package falseresync.wizcraft.compat.modmenu;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import eu.midnightdust.lib.config.MidnightConfig;
-import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.common.config.*;
+import me.shedaniel.autoconfig.*;
 
 public class WizcraftModMenuCompat implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> MidnightConfig.getScreen(parent, Wizcraft.MOD_ID);
+        return parent -> AutoConfig.getConfigScreen(WizcraftConfig.class, parent).get();
     }
 }

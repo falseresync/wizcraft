@@ -22,7 +22,7 @@ public class LightningFocusItem extends FocusItem {
         if (user instanceof ServerPlayerEntity player) {
             if (Wizcraft.getChargeManager().tryExpendWandCharge(wandStack, 10, user)) {
                 var lightning = EntityType.LIGHTNING_BOLT.create(world);
-                var maxDistance = MathHelper.clamp(Wizcraft.findViewDistance(world) * 16 / 4F, 32, 128);
+                var maxDistance = MathHelper.clamp(WizcraftUtil.findViewDistance(world) * 16 / 4F, 32, 128);
                 var raycastResult = user.raycast(maxDistance, 0, true);
                 var pos = raycastResult.getType() == HitResult.Type.MISS
                         ? findGroundPos((ServerWorld) world, raycastResult.getPos())

@@ -71,7 +71,7 @@ public class EnergyVeilFeatureRenderer<T extends PlayerEntity> extends FeatureRe
             matrices.push();
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(45 + i * 45));
             matrices.translate(veil.getVeilVisibleRadius(), -1, 0);
-            model.render(matrices, buffer, light, OverlayTexture.DEFAULT_UV, ((int) (0x44 / WizcraftConfig.fullscreenEffectsTransparency.modifier)) << 24 | 0x00_FF_FF_FF);
+            model.render(matrices, buffer, light, OverlayTexture.DEFAULT_UV, ((int) (0x44 / Wizcraft.getConfig().fullscreenEffectsTransparency.modifier)) << 24 | 0x00_FF_FF_FF);
             matrices.pop();
         }
 

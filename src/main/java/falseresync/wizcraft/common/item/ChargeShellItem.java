@@ -20,8 +20,11 @@ public class ChargeShellItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         var stack = user.getStackInHand(hand);
-        user.setCurrentHand(hand);
-        return TypedActionResult.consume(stack);
+        if (user.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS).canAddShell(DEFAULT_CAPACITY)) {
+            user.setCurrentHand(hand);
+            return TypedActionResult.consume(stack);
+        }
+        return super.use(world, user, hand);
     }
 
     @Override
@@ -38,9 +41,12 @@ public class ChargeShellItem extends Item {
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         if (user instanceof ServerPlayerEntity player) {
             var capacity = stack.getOrDefault(WizcraftComponents.SHELL_CAPACITY, DEFAULT_CAPACITY);
-            player.modifyAttached(WizcraftAttachments.MAX_CHARGE_IN_SHELLS, it -> it == null ? capacity : it + capacity);
-            player.playSound(SoundEvents.ITEM_TRIDENT_RETURN);
-            return ItemStack.EMPTY;
+            var chargeShells = player.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS).withShell(capacity);
+            if (chargeShells != null) {
+                player.setAttached(WizcraftAttachments.CHARGE_SHELLS, chargeShells);
+                player.playSound(SoundEvents.ITEM_TRIDENT_RETURN);
+                return ItemStack.EMPTY;
+            }
         }
         return super.finishUsing(stack, world, user);
     }

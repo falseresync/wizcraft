@@ -28,7 +28,7 @@ public class ChargingFocusItem extends FocusItem {
                 return TypedActionResult.fail(wandStack);
             }
 
-            if (user.raycast(Wizcraft.findViewDistance(world) * 16, 0, true).getType()
+            if (user.raycast(WizcraftUtil.findViewDistance(world) * 16, 0, true).getType()
                     != HitResult.Type.MISS) {
                 WizcraftReports.WAND_CANNOT_CHARGE.sendTo(player);
                 return TypedActionResult.fail(wandStack);

@@ -31,17 +31,16 @@ public class WizcraftClient implements ClientModInitializer {
         );
 
         WizcraftParticleFactories.init();
-        WizcraftRenderers.init();
+        WizcraftRendering.init();
         WizcraftGui.init();
         WizcraftKeybindings.init();
         WizcraftNetworkingClient.registerReceivers();
         ClientPlayerInventoryEvents.init();
+        WizcraftLavenderPlugin.init();
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             hud = new WizcraftHud(client);
             toolManager = new ToolManager();
         });
-
-        WizcraftLavenderPlugin.init();
     }
 }

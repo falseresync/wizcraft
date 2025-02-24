@@ -4,6 +4,7 @@ import dev.emi.trinkets.api.client.*;
 import falseresync.wizcraft.client.render.blockentity.*;
 import falseresync.wizcraft.client.render.entity.*;
 import falseresync.wizcraft.client.render.trinket.*;
+import falseresync.wizcraft.client.render.world.*;
 import falseresync.wizcraft.common.block.*;
 import falseresync.wizcraft.common.blockentity.*;
 import falseresync.wizcraft.common.data.component.*;
@@ -16,9 +17,9 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.*;
 import net.minecraft.client.render.entity.*;
 
-import static falseresync.wizcraft.common.Wizcraft.*;
+import static falseresync.wizcraft.common.Wizcraft.wid;
 
-public class WizcraftRenderers {
+public class WizcraftRendering {
     public static void init() {
         EntityModelLayerRegistry.registerModelLayer(LensRenderer.LAYER, LensRenderer::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(EnergyVeilFeatureRenderer.LAYER, EnergyVeilModel::getTexturedModelData);
@@ -46,5 +47,7 @@ public class WizcraftRenderers {
         ModelPredicateProviderRegistry.GLOBAL.put(wid("focus_plating"), (stack, world, entity, seed) -> stack.getOrDefault(WizcraftComponents.FOCUS_PLATING, -1));
 
         TrinketRendererRegistry.registerRenderer(WizcraftItems.TRUESEER_GOGGLES, new TrueseerGogglesRenderer());
+
+        WorldRenderEvents.AFTER_ENTITIES.register(new CometWarpBeaconRenderer());
     }
 }

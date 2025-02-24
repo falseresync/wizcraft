@@ -64,7 +64,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         matrices.push();
         matrices.translate(0, 1, 0);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
-        RenderingUtil.drawFluidOnBlockEntity(
+        RenderingUtil.drawFluid(
                 matrices, vertexConsumers.getBuffer(RenderLayer.getTranslucent()),
                 entity.getWorld(), entity.getPos(), Fluids.WATER, Fluids.WATER.getDefaultState(), true,
                 light, overlay, 0.125f, 0.75f, 0.125f, 0.75f, 0.125f);

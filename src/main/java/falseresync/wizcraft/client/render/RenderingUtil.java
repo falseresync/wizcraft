@@ -1,6 +1,5 @@
 package falseresync.wizcraft.client.render;
 
-import com.mojang.blaze3d.systems.*;
 import falseresync.lib.math.*;
 import falseresync.wizcraft.common.*;
 import net.fabricmc.fabric.api.client.render.fluid.v1.*;
@@ -12,7 +11,6 @@ import net.minecraft.client.util.math.*;
 import net.minecraft.fluid.*;
 import net.minecraft.item.*;
 import net.minecraft.particle.*;
-import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.*;
@@ -72,21 +70,32 @@ public class RenderingUtil {
         }
     }
 
-    public static void drawFluidOnBlockEntity(MatrixStack matrices, VertexConsumer buffer, BlockRenderView view, BlockPos pos, Fluid fluid, FluidState state, boolean still, int light, int overlay, float x, float width, float y, float height, float depth) {
+    public static void drawFluid(MatrixStack matrices, VertexConsumer buffer, BlockRenderView view, BlockPos pos, Fluid fluid, FluidState state, boolean still, int light, int overlay, float x, float width, float y, float height, float depth) {
         var handler = Objects.requireNonNull(FluidRenderHandlerRegistry.INSTANCE.get(fluid));
         var sprites = handler.getFluidSprites(view, pos, state);
         var tint = handler.getFluidColor(view, pos, state);
-        RenderingUtil.drawSpriteOnBlockEntity(matrices, buffer, still ? sprites[0] : sprites[1], Color.ofRgb(tint).argb(), light, overlay, x, width, y, height, depth);
+        drawTexturedSprite(matrices, buffer, still ? sprites[0] : sprites[1], Color.ofRgb(tint).argb(), light, overlay, x, width, y, height, depth);
     }
 
-    public static void drawSpriteOnBlockEntity(MatrixStack matrices, VertexConsumer buffer, Sprite sprite, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
-        drawTextureOnBlockEntity(matrices, buffer, sprite.getAtlasId(), tint, light, overlay,
-                x, x + width, y, y + height, depth,
-                sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+    /**
+     * Use when RenderLayer requires a texture input (e.g. entity_* ones)
+     */
+    public static void drawSprite(MatrixStack matrices, VertexConsumer buffer, Sprite sprite, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
+        drawTexture(matrices, buffer, tint, light, overlay, x, x + width, y, y + height, depth, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
     }
 
-    public static void drawTextureOnBlockEntity(MatrixStack matrices, VertexConsumer buffer, Identifier texture, int tint, int light, int overlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
-        RenderSystem.setShaderTexture(0, texture);
+    /**
+     * Use when RenderLayer doesn't require a texture input (e.g. cutout or translucent)
+     */
+    public static void drawTexturedSprite(MatrixStack matrices, VertexConsumer buffer, Sprite sprite, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
+        drawTexture(matrices, sprite.getTextureSpecificVertexConsumer(buffer), tint, light, overlay, x, x + width, y, y + height, depth, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+    }
+
+    public static void drawTexture(MatrixStack matrices, VertexConsumer buffer, int tint,  int light, int overlay, float x, float width, float y, float height, float depth) {
+        drawTexture(matrices, buffer, tint, light, overlay, x, x + width, y, y + height, depth);
+    }
+
+    public static void drawTexture(MatrixStack matrices, VertexConsumer buffer, int tint, int light, int overlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
         var positionMatrix = matrices.peek().getPositionMatrix();
         buffer.vertex(positionMatrix, x1, y1, z).texture(u1, v1).color(tint).overlay(overlay).light(light).normal(0, 1, 0);
         buffer.vertex(positionMatrix, x1, y2, z).texture(u1, v2).color(tint).overlay(overlay).light(light).normal(0, 1, 0);

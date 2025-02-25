@@ -3,6 +3,7 @@ package falseresync.wizcraft.client.render.world;
 import falseresync.lib.math.*;
 import falseresync.wizcraft.client.render.*;
 import falseresync.wizcraft.common.*;
+import falseresync.wizcraft.common.data.attachment.*;
 import falseresync.wizcraft.common.data.component.*;
 import falseresync.wizcraft.common.item.*;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
@@ -26,6 +27,10 @@ public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities 
     @Override
     public void afterEntities(WorldRenderContext context) {
         var player = MinecraftClient.getInstance().player;
+        if (!player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)) {
+            return;
+        }
+
         var wandStack = player.getMainHandStack();
         if (!wandStack.isIn(WizcraftItemTags.WANDS)) {
             return;

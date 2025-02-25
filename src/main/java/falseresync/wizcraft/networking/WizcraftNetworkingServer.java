@@ -1,11 +1,9 @@
 package falseresync.wizcraft.networking;
 
-
-import falseresync.wizcraft.common.item.WizcraftItemTags;
-import falseresync.wizcraft.common.item.WizcraftItems;
-import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.ItemStack;
+import falseresync.wizcraft.common.item.*;
+import falseresync.wizcraft.networking.c2s.*;
+import net.fabricmc.fabric.api.networking.v1.*;
+import net.minecraft.item.*;
 
 public class WizcraftNetworkingServer {
     public static void registerReceivers() {

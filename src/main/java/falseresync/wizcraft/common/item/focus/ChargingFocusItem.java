@@ -21,9 +21,7 @@ public class ChargingFocusItem extends FocusItem {
     @Override
     public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
         if (user instanceof ServerPlayerEntity player) {
-            if (!world.isNight()
-                    || world.getRainGradient(1) > 0.75
-                    || world.getLightLevel(LightType.SKY, user.getBlockPos()) < world.getMaxLightLevel() * 0.5) {
+            if (Wizcraft.getChargeManager().calculateEnvironmentCoefficient(world, player) <= 0.25f) {
                 WizcraftReports.WAND_CANNOT_CHARGE.sendTo(player);
                 return TypedActionResult.fail(wandStack);
             }
@@ -59,8 +57,9 @@ public class ChargingFocusItem extends FocusItem {
     @Override
     public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user) {
         wandStack.remove(WizcraftComponents.CHARGING_FOCUS_PROGRESS);
-        Wizcraft.getChargeManager().chargeWand(wandStack, 40, user instanceof PlayerEntity player ? player : null);
         if (user instanceof ServerPlayerEntity player) {
+            var amount = (int) (30 * Wizcraft.getChargeManager().calculateEnvironmentCoefficient(world, player));
+            Wizcraft.getChargeManager().chargeWand(wandStack, amount, player);
             focusStack.damage(1, player, EquipmentSlot.MAINHAND);
             WizcraftReports.WAND_SUCCESSFULLY_CHARGED.sendAround((ServerWorld) world, player.getBlockPos(), player);
         }

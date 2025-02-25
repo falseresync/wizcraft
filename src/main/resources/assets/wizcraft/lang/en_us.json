@@ -32,7 +32,7 @@
   "tooltip.wizcraft.wand.setup_anchor": "Use while sneaking to setup an anchor",
   "tooltip.wizcraft.wand.has_anchor": "Anchored in %s at %s",
 
-  "hud.wizcraft.wand.cannot_charge": "Can only charge from starry skies",
+  "hud.wizcraft.wand.cannot_charge": "Can only charge from clear skies",
   "hud.wizcraft.wand.already_charged": "Already fully charged",
   "hud.wizcraft.wand.successfully_charged": "Charged!",
   "hud.wizcraft.wand.no_focuses": "No other focus to pick",

@@ -1,11 +1,9 @@
 package falseresync.wizcraft.networking;
 
-import falseresync.wizcraft.client.BlockPatternTip;
-import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPacket;
-import falseresync.wizcraft.networking.s2c.TriggerMultiplayerReportS2CPacket;
-import falseresync.wizcraft.networking.s2c.TriggerReportS2CPacket;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.world.ClientWorld;
+import falseresync.wizcraft.client.*;
+import falseresync.wizcraft.networking.s2c.*;
+import net.fabricmc.fabric.api.client.networking.v1.*;
+import net.minecraft.client.world.*;
 
 public class WizcraftNetworkingClient {
     public static void registerReceivers() {

@@ -1,10 +1,8 @@
 package falseresync.wizcraft.networking;
 
-import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
-import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPacket;
-import falseresync.wizcraft.networking.s2c.TriggerMultiplayerReportS2CPacket;
-import falseresync.wizcraft.networking.s2c.TriggerReportS2CPacket;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import falseresync.wizcraft.networking.c2s.*;
+import falseresync.wizcraft.networking.s2c.*;
+import net.fabricmc.fabric.api.networking.v1.*;
 
 public class WizcraftNetworking {
     public static void registerPackets() {

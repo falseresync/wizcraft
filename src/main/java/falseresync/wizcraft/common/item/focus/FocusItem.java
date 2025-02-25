@@ -27,8 +27,8 @@ public abstract class FocusItem extends Item {
 
     @Override
     public void postProcessComponents(ItemStack stack) {
-        if (!stack.contains(WizcraftComponents.FOCUS_STACK_UUID)) {
-            stack.set(WizcraftComponents.FOCUS_STACK_UUID, UUID.randomUUID());
+        if (!stack.contains(WizcraftComponents.UUID)) {
+            stack.set(WizcraftComponents.UUID, UUID.randomUUID());
         }
     }
 

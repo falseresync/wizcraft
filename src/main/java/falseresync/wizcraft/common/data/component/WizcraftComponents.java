@@ -22,6 +22,8 @@ public class WizcraftComponents {
             ComponentType.<InventoryComponent>builder().codec(InventoryComponent.CODEC).packetCodec(InventoryComponent.PACKET_CODEC).build();
     public static final @RegistryObject ComponentType<Integer> INVENTORY_SIZE =
             ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
+    public static final @RegistryObject ComponentType<UUID> UUID =
+            ComponentType.<UUID>builder().codec(Uuids.INT_STREAM_CODEC).packetCodec(Uuids.PACKET_CODEC).build();
 
     // Wand
     public static final @RegistryObject ComponentType<ItemStack> EQUIPPED_FOCUS_ITEM =
@@ -41,8 +43,6 @@ public class WizcraftComponents {
             ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
 
     // Focuses
-    public static final @RegistryObject ComponentType<UUID> FOCUS_STACK_UUID =
-            ComponentType.<UUID>builder().codec(Uuids.INT_STREAM_CODEC).packetCodec(Uuids.PACKET_CODEC).build();
     public static final @RegistryObject ComponentType<Integer> FOCUS_PLATING =
             ComponentType.<Integer>builder().codec(Codecs.rangedInt(0, FocusPlating.values().length - 1)).packetCodec(PacketCodecs.INTEGER).build();
     public static final @RegistryObject ComponentType<Integer> CHARGING_FOCUS_PROGRESS =

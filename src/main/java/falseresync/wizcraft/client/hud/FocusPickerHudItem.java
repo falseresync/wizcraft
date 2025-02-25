@@ -34,7 +34,7 @@ public class FocusPickerHudItem implements HudItem {
     private static final Comparator<ItemStack> FOCUS_ORDERING = Comparator
             .<ItemStack>comparingInt(stack -> ((FocusItem) stack.getItem()).getRawId())
             .thenComparingInt(stack -> stack.getOrDefault(WizcraftComponents.FOCUS_PLATING, -1))
-            .thenComparing(stack -> stack.getOrDefault(WizcraftComponents.FOCUS_STACK_UUID, UUID.randomUUID()));
+            .thenComparing(stack -> stack.getOrDefault(WizcraftComponents.UUID, UUID.randomUUID()));
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
     private final LinkedList<ItemStack> focuses = new LinkedList<>();
@@ -238,11 +238,12 @@ public class FocusPickerHudItem implements HudItem {
         focuses.sort(FOCUS_ORDERING);
         // Scroll to the currently picked focus
         while (!Objects.equals(
-                newFocuses.getFirst().get(WizcraftComponents.FOCUS_STACK_UUID),
-                focuses.getFirst().get(WizcraftComponents.FOCUS_STACK_UUID))
+                newFocuses.getFirst().get(WizcraftComponents.UUID),
+                focuses.getFirst().get(WizcraftComponents.UUID))
         ) {
             focuses.addLast(focuses.removeFirst());
         }
+        getCurrentlyPicked();
     }
 
     public void pickNext() {

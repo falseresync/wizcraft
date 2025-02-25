@@ -1,6 +1,7 @@
 package falseresync.wizcraft.client;
 
 import dev.emi.trinkets.api.event.*;
+import dev.emi.trinkets.payload.*;
 import falseresync.wizcraft.client.hud.*;
 import falseresync.wizcraft.common.data.attachment.*;
 import falseresync.wizcraft.common.data.component.*;

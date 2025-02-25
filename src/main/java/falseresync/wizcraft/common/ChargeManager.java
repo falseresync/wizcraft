@@ -108,6 +108,16 @@ public class ChargeManager {
             return;
         }
 
+        var usageCoefficient = ItemStack.areEqual(player.getMainHandStack(), wandStack) ? 1f : 0.25f;
+        var passiveChargingThreshold = Math.clamp(0.005f * calculateEnvironmentCoefficient(world, player) * config.coefficient * usageCoefficient, 0, 0.1f);
+
+        // At most 10% of the time, i.e. up to 2 times per second
+        if (world.random.nextFloat() < passiveChargingThreshold) {
+            Wizcraft.getChargeManager().chargeWand(wandStack, 1, player);
+        }
+    }
+
+    public float calculateEnvironmentCoefficient(World world, PlayerEntity player) {
         var environmentCoefficient = 1f;
         var worldType = world.getRegistryKey();
         if (worldType == World.NETHER) {
@@ -116,16 +126,10 @@ public class ChargeManager {
             environmentCoefficient *= 3f;
         } else {
             environmentCoefficient *= world.isNight() ? 1 : 0.5f;
-            environmentCoefficient *= 1 - world.getRainGradient(1);
+            environmentCoefficient *= world.getBiome(player.getBlockPos()).value().hasPrecipitation() ? 1 - world.getRainGradient(1) : 1;
             environmentCoefficient *= world.getLightLevel(LightType.SKY, player.getBlockPos()) / (world.getMaxLightLevel() * 0.5f);
         }
-
-        var usageCoefficient = ItemStack.areEqual(player.getMainHandStack(), wandStack) ? 1f : 0.25f;
-
-        // At most 10% of the time, i.e. up to 2 times per second
-        if (world.random.nextFloat() < Math.clamp(0.005f * environmentCoefficient * config.coefficient * usageCoefficient, 0, 0.1f)) {
-            Wizcraft.getChargeManager().chargeWand(wandStack, 1, player);
-        }
+        return environmentCoefficient;
     }
 
     @FunctionalInterface

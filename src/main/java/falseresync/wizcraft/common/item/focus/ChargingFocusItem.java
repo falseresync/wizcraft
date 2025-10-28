@@ -39,7 +39,7 @@ public class ChargingFocusItem extends FocusItem {
 
             user.setCurrentHand(user.getActiveHand());
             wandStack.set(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0);
-            return TypedActionResult.success(wandStack);
+            return TypedActionResult.consume(wandStack);
         }
         return super.focusUse(wandStack, focusStack, world, user, hand);
     }

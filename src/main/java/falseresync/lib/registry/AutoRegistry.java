@@ -1,5 +1,6 @@
 package falseresync.lib.registry;
 
+import falseresync.lib.logging.BetterLogger;
 import net.minecraft.registry.*;
 import net.minecraft.util.*;
 import org.slf4j.*;
@@ -25,9 +26,9 @@ import java.lang.reflect.*;
  */
 public class AutoRegistry {
     private final String modId;
-    private final Logger logger;
+    private final BetterLogger logger;
 
-    public AutoRegistry(String modId, Logger logger) {
+    public AutoRegistry(String modId, BetterLogger logger) {
         this.modId = modId;
         this.logger = logger;
     }
@@ -44,8 +45,15 @@ public class AutoRegistry {
      * @implNote help
      */
     public <T> AutoRegistry link(Registry<T> registry, Class<?>... holderClasses) {
+        int classesNoFound = holderClasses.length;
+        int classesNoRegistered = 0;
+        int fieldsNoFound = 0;
+        int fieldsNoRegistered = 0;
         for (var holderClass : holderClasses) {
-            for (var field : holderClass.getDeclaredFields()) {
+            var fields = holderClass.getDeclaredFields();
+            var fieldsNoCurrentlyFound = fields.length;
+            var fieldsNoCurrentlyRegistered = 0;
+            for (var field : fields) {
                 var modifiers = field.getModifiers();
                 var annotations = field.getAnnotationsByType(RegistryObject.class);
                 if (!Modifier.isStatic(modifiers) || !Modifier.isPublic(modifiers) || annotations.length == 0) {
@@ -61,13 +69,30 @@ public class AutoRegistry {
 
                     //noinspection unchecked
                     Registry.register(registry, Identifier.of(modId, field.getName().toLowerCase()), (T) registryObject);
+                    fieldsNoCurrentlyRegistered += 1;
                 } catch (IllegalAccessException e) {
                     throw new InaccessibleObjectException("Couldn't read a @RegistryObject field: %s at %s".formatted(field.getName(), holderClass.getCanonicalName()));
                 } catch (ClassCastException e) {
                     throw new IllegalArgumentException("A @RegistryObject field's type doesn't match the provided registry: %s at %s".formatted(field.getName(), holderClass.getCanonicalName()));
                 }
             }
+
+            if (fieldsNoCurrentlyFound > 0) {
+                fieldsNoFound += fieldsNoCurrentlyFound;
+                if (fieldsNoCurrentlyRegistered > 0) {
+                    fieldsNoRegistered += fieldsNoCurrentlyRegistered;
+                    classesNoRegistered += 1;
+                } else {
+                    logger.warn("Found a class with no valid @RegistryObjects: %s".formatted(holderClass.getCanonicalName()));
+                }
+            } else {
+                logger.warn("Found a class without any fields: %s".formatted(holderClass.getCanonicalName()));
+            }
         }
+        if (classesNoRegistered == 0) {
+            logger.warn("Nothing got registered into %s because there are no holder classes with valid @RegistryObject fields".formatted(registry.getKey()));
+        }
+        logger.debug("Registered %s valid @RegistryObjects into registry %s from %s holder classes with %s fields".formatted(fieldsNoRegistered, registry.getKey(), classesNoFound, fieldsNoFound));
         return this;
     }
 }

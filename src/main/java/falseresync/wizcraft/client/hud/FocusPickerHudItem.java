@@ -1,23 +1,25 @@
 package falseresync.wizcraft.client.hud;
 
-import com.mojang.blaze3d.systems.*;
-import falseresync.lib.client.*;
-import falseresync.lib.math.*;
-import falseresync.wizcraft.client.*;
+import com.mojang.blaze3d.systems.RenderSystem;
+import falseresync.lib.client.BetterDrawContext;
+import falseresync.lib.math.Easing;
+import falseresync.wizcraft.client.WizcraftClient;
 import falseresync.wizcraft.common.data.WizcraftComponents;
-import falseresync.wizcraft.common.item.focus.*;
-import net.minecraft.client.*;
-import net.minecraft.client.font.*;
-import net.minecraft.client.render.*;
-import net.minecraft.component.*;
-import net.minecraft.item.*;
-import net.minecraft.util.*;
-import org.joml.*;
+import falseresync.wizcraft.common.item.focus.FocusItem;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+import org.joml.Matrix4f;
 
-import java.lang.Math;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.UUID;
 
-import static falseresync.wizcraft.common.Wizcraft.*;
+import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class FocusPickerHudItem implements HudItem {
     protected static final Identifier SELECTION_TEX = wid("textures/hud/wand/focus_picker_selection.png");

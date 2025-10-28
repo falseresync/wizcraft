@@ -1,10 +1,11 @@
 package falseresync.wizcraft.client.hud;
 
-import falseresync.lib.client.*;
-import net.fabricmc.api.*;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.*;
-import net.fabricmc.fabric.api.client.rendering.v1.*;
-import net.minecraft.client.*;
+import falseresync.lib.client.BetterDrawContext;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
 public class WizcraftHud {

@@ -1,21 +1,27 @@
 package falseresync.wizcraft.client;
 
-import dev.emi.trinkets.api.event.*;
-import falseresync.wizcraft.client.hud.*;
+import dev.emi.trinkets.api.event.TrinketDropCallback;
+import dev.emi.trinkets.api.event.TrinketEquipCallback;
+import dev.emi.trinkets.api.event.TrinketUnequipCallback;
+import falseresync.wizcraft.client.hud.ChargeDisplayHudItem;
+import falseresync.wizcraft.client.hud.FocusPickerHudItem;
 import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.data.WizcraftComponents;
-import falseresync.wizcraft.common.item.*;
-import falseresync.wizcraft.networking.c2s.*;
-import net.fabricmc.fabric.api.client.networking.v1.*;
-import net.minecraft.client.*;
-import net.minecraft.client.network.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.text.*;
-import org.jetbrains.annotations.*;
+import falseresync.wizcraft.common.item.WizcraftItemTags;
+import falseresync.wizcraft.common.item.WizcraftItems;
+import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
+import falseresync.wizcraft.networking.c2s.WandFocusDestination;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 public class ToolManager {
     private final ChargeDisplayHudItem chargeDisplay;

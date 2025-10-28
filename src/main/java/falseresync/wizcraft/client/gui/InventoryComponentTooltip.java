@@ -1,11 +1,11 @@
 package falseresync.wizcraft.client.gui;
 
 import falseresync.wizcraft.common.data.InventoryComponent;
-import net.minecraft.client.font.*;
-import net.minecraft.client.gui.*;
-import net.minecraft.client.gui.tooltip.*;
-import net.minecraft.item.*;
-import net.minecraft.util.*;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
 public class InventoryComponentTooltip implements TooltipComponent {
     private static final Identifier BACKGROUND_TEXTURE = Identifier.ofVanilla("container/bundle/background");

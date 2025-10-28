@@ -1,18 +1,18 @@
 package falseresync.wizcraft.client.hud;
 
-import com.mojang.blaze3d.systems.*;
-import falseresync.lib.client.*;
-import falseresync.lib.math.*;
+import com.mojang.blaze3d.systems.RenderSystem;
+import falseresync.lib.client.BetterDrawContext;
+import falseresync.lib.math.Easing;
 import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.data.WizcraftComponents;
-import net.minecraft.client.*;
-import net.minecraft.client.font.*;
-import net.minecraft.client.render.*;
-import net.minecraft.item.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 
-import static falseresync.wizcraft.common.Wizcraft.*;
+import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class ChargeDisplayHudItem implements HudItem {
     protected static final Identifier BAR_TEX = wid("textures/hud/wand/charge_bar.png");

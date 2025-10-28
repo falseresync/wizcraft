@@ -1,5 +1,6 @@
 package falseresync.wizcraft.common;
 
+import falseresync.lib.logging.BetterLogger;
 import falseresync.lib.registry.AutoRegistry;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
@@ -29,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 public class Wizcraft implements ModInitializer {
     public static final String MOD_ID = "wizcraft";
-    public static final Logger LOGGER = LoggerFactory.getLogger("Wizcraft");
+    public static final BetterLogger LOGGER = new BetterLogger(LoggerFactory.getLogger(MOD_ID), "Wizcraft");
     private static ChargeManager chargeManager;
     private static WizcraftConfig config;
 

@@ -1,14 +1,18 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.entity.*;
-import net.minecraft.entity.*;
-import net.minecraft.entity.mob.*;
-import net.minecraft.server.world.*;
-import net.minecraft.util.*;
+import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.common.WizcraftUtil;
+import falseresync.wizcraft.common.entity.WizcraftEntityTags;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.random.Random;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class TransmutationFocusBehavior {
     private static final Random OFFSETS_RANDOM = Random.createLocal();

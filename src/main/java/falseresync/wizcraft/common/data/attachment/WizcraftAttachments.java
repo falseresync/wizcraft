@@ -13,6 +13,9 @@ public class WizcraftAttachments {
     public static final AttachmentType<Boolean> HAS_TRUESEER_GOGGLES = AttachmentRegistry.create(
             wid("has_trueseer_goggles"),
             builder -> builder.syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.targetOnly()).persistent(Codec.BOOL));
+    public static final AttachmentType<Boolean> THUNDERLESS_LIGHTNING = AttachmentRegistry.create(
+            wid("thunderless_lightning"),
+            builder -> builder.syncWith(PacketCodecs.BOOL, AttachmentSyncPredicate.all()));
     public static final AttachmentType<Integer> ENERGY_VEIL_NETWORK_ID = AttachmentRegistry.create(
             wid("energy_veil_id"),
             builder -> builder.syncWith(PacketCodecs.INTEGER, AttachmentSyncPredicate.all()));

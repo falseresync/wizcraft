@@ -18,6 +18,8 @@ public class WizcraftComponents {
             ComponentType.<ItemBarComponent>builder().codec(ItemBarComponent.CODEC).packetCodec(ItemBarComponent.PACKET_CODEC).build();
     public static final @RegistryObject ComponentType<Boolean> IN_USE =
             ComponentType.<Boolean>builder().codec(Codec.BOOL).packetCodec(PacketCodecs.BOOL).build();
+    public static final @RegistryObject ComponentType<Boolean> TOOLTIP_OVERRIDDEN =
+            ComponentType.<Boolean>builder().codec(Codec.BOOL).packetCodec(PacketCodecs.BOOL).build();
     public static final @RegistryObject ComponentType<InventoryComponent> INVENTORY =
             ComponentType.<InventoryComponent>builder().codec(InventoryComponent.CODEC).packetCodec(InventoryComponent.PACKET_CODEC).build();
     public static final @RegistryObject ComponentType<Integer> INVENTORY_SIZE =
@@ -49,6 +51,10 @@ public class WizcraftComponents {
             ComponentType.<Integer>builder().codec(Codecs.NONNEGATIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
     public static final @RegistryObject ComponentType<GlobalPos> WARP_FOCUS_ANCHOR =
             ComponentType.<GlobalPos>builder().codec(GlobalPos.CODEC).packetCodec(GlobalPos.PACKET_CODEC).build();
+    public static final @RegistryObject ComponentType<GlobalPos> WARP_FOCUS_PERSISTENT_ANCHOR =
+            ComponentType.<GlobalPos>builder().codec(GlobalPos.CODEC).packetCodec(GlobalPos.PACKET_CODEC).build();
+    public static final @RegistryObject ComponentType<Boolean> WARP_FOCUS_BLOCK_ONLY_MODE =
+            ComponentType.<Boolean>builder().codec(Codec.BOOL).packetCodec(PacketCodecs.BOOL).build();
     public static final @RegistryObject ComponentType<UUID> ENERGY_VEIL_UUID =
             ComponentType.<UUID>builder().codec(Uuids.INT_STREAM_CODEC).packetCodec(Uuids.PACKET_CODEC).build();
 }

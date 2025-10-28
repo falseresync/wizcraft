@@ -3,7 +3,6 @@
   "package": "falseresync.wizcraft.common.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "LightningEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

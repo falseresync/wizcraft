@@ -1,17 +1,25 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.data.component.*;
-import falseresync.wizcraft.networking.report.*;
-import net.minecraft.entity.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.server.network.*;
-import net.minecraft.server.world.*;
-import net.minecraft.util.*;
-import net.minecraft.util.hit.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
+import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.common.WizcraftSounds;
+import falseresync.wizcraft.common.WizcraftUtil;
+import falseresync.wizcraft.common.data.component.WizcraftComponents;
+import falseresync.wizcraft.common.item.WizcraftItems;
+import falseresync.wizcraft.common.Reports;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.world.World;
 
 public class ChargingFocusItem extends FocusItem {
     public ChargingFocusItem(Settings settings) {
@@ -21,19 +29,16 @@ public class ChargingFocusItem extends FocusItem {
     @Override
     public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
         if (user instanceof ServerPlayerEntity player) {
-            if (Wizcraft.getChargeManager().calculateEnvironmentCoefficient(world, player) <= 0.25f) {
-                WizcraftReports.WAND_CANNOT_CHARGE.sendTo(player);
-                return TypedActionResult.fail(wandStack);
-            }
-
-            if (user.raycast(WizcraftUtil.findViewDistance(world) * 16, 0, true).getType()
-                    != HitResult.Type.MISS) {
-                WizcraftReports.WAND_CANNOT_CHARGE.sendTo(player);
+            if (Wizcraft.getChargeManager().calculateEnvironmentCoefficient(world, player) <= 0.25f
+                    || user.raycast(WizcraftUtil.findViewDistance(world) * 16, 0, true).getType() != HitResult.Type.MISS) {
+                player.playSoundToPlayer(SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                player.sendMessage(Text.translatable("hud.wizcraft.wand.cannot_charge"), true);
                 return TypedActionResult.fail(wandStack);
             }
 
             if (Wizcraft.getChargeManager().cannotAddAnyCharge(wandStack, player)) {
-                WizcraftReports.WAND_ALREADY_FULLY_CHARGED.sendTo(player);
+                player.playSoundToPlayer(SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                player.sendMessage(Text.translatable("hud.wizcraft.wand.already_charged"), true);
                 return TypedActionResult.pass(wandStack);
             }
 
@@ -61,7 +66,15 @@ public class ChargingFocusItem extends FocusItem {
             var amount = (int) (30 * Wizcraft.getChargeManager().calculateEnvironmentCoefficient(world, player));
             Wizcraft.getChargeManager().chargeWand(wandStack, amount, player);
             focusStack.damage(1, player, EquipmentSlot.MAINHAND);
-            WizcraftReports.WAND_SUCCESSFULLY_CHARGED.sendAround((ServerWorld) world, player.getBlockPos(), player);
+
+            player.playSound(WizcraftSounds.SUCCESSFULLY_CHARGED);
+            player.sendMessage(Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)), true);
+            var rotation = player.getRotationVec(1);
+            var orthogonalDistance = 1;
+            var sourcePos = player.getEyePos()
+                    .add(player.getHandPosOffset(WizcraftItems.WAND))
+                    .add(rotation.x * orthogonalDistance, -0.25, rotation.z * orthogonalDistance);
+            Reports.addSparkles(world, sourcePos);
         }
         return wandStack;
     }

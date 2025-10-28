@@ -1,25 +1,33 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.data.attachment.*;
-import falseresync.wizcraft.common.data.component.*;
-import falseresync.wizcraft.common.entity.*;
-import falseresync.wizcraft.common.world.*;
-import falseresync.wizcraft.networking.report.*;
-import io.wispforest.owo.ui.core.*;
-import net.minecraft.entity.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.particle.*;
-import net.minecraft.registry.*;
-import net.minecraft.server.network.*;
-import net.minecraft.server.world.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
+import falseresync.wizcraft.common.Reports;
+import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.common.WizcraftSounds;
+import falseresync.wizcraft.common.data.attachment.WizcraftAttachments;
+import falseresync.wizcraft.common.data.component.ItemBarComponent;
+import falseresync.wizcraft.common.data.component.WizcraftComponents;
+import falseresync.wizcraft.common.entity.EnergyVeilEntity;
+import falseresync.wizcraft.common.world.WizcraftWorld;
+import io.wispforest.owo.ui.core.Color;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.Optional;
 
 public class EnergyVeilFocusItem extends FocusItem {
     public static final int MAX_USE_TIME = 200;
@@ -51,7 +59,7 @@ public class EnergyVeilFocusItem extends FocusItem {
                 && !user.hasAttached(WizcraftAttachments.ENERGY_VEIL_NETWORK_ID)) {
             if (Wizcraft.getChargeManager().tryExpendWandCharge(wandStack, STARTING_COST, user)) {
                 var veil = new EnergyVeilEntity(user, wandStack, world);
-                veil.setVeilRadius(2);
+                veil.setRadius(2);
                 world.spawnEntity(veil);
                 wandStack.set(WizcraftComponents.ENERGY_VEIL_UUID, veil.getUuid());
                 wandStack.set(WizcraftComponents.IN_USE, true);
@@ -59,7 +67,7 @@ public class EnergyVeilFocusItem extends FocusItem {
                 return TypedActionResult.success(wandStack);
             }
 
-            WizcraftReports.WAND_INSUFFICIENT_CHARGE.sendTo(player);
+            Reports.insufficientCharge(player);
             return TypedActionResult.fail(wandStack);
         }
         return TypedActionResult.pass(wandStack);
@@ -81,7 +89,8 @@ public class EnergyVeilFocusItem extends FocusItem {
                 }
                 veil.incrementLifeExpectancy(2);
                 var maxUseTicks = focusGetMaxUseTime(wandStack, focusStack, user);
-                wandStack.set(WizcraftComponents.ITEM_BAR,
+                wandStack.set(
+                        WizcraftComponents.ITEM_BAR,
                         new ItemBarComponent(Math.clamp(Math.round((maxUseTicks - remainingUseTicks) * 13f / maxUseTicks), 0, 13), CYAN_ARGB));
 
                 if (world.random.nextFloat() < 0.01f) {

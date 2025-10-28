@@ -1,12 +1,21 @@
-package falseresync.wizcraft.networking.report;
+package falseresync.wizcraft.common;
 
+import net.minecraft.entity.player.*;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.*;
+import net.minecraft.text.*;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ReportUtils {
+public class Reports {
+    public static void insufficientCharge(PlayerEntity player) {
+        player.playSoundToPlayer(SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS, 1f, 1f);
+        player.sendMessage(Text.translatable("hud.wizcraft.wand.insufficient_charge").formatted(Formatting.DARK_RED), true);
+    }
+
     public static void addSparkles(World world, Vec3d pos) {
         addParticle(world, ParticleTypes.FIREWORK, pos, 5, 10);
     }

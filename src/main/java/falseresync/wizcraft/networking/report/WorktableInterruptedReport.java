@@ -1,5 +1,6 @@
 package falseresync.wizcraft.networking.report;
 
+import falseresync.wizcraft.common.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -15,7 +16,7 @@ public class WorktableInterruptedReport implements MultiplayerReport {
     @Override
     public void executeOnServer(ServerWorld world, BlockPos pos, @Nullable ServerPlayerEntity source) {
         world.playSound(null, pos, SoundEvents.ENTITY_HORSE_BREATHE, SoundCategory.BLOCKS, 1f, 1f);
-        ReportUtils.addSmoke(world, pos.toCenterPos().add(0, 0.75, 0));
+        Reports.addSmoke(world, pos.toCenterPos().add(0, 0.75, 0));
     }
 
     @Override

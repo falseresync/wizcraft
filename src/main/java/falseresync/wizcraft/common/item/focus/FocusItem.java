@@ -1,18 +1,27 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.data.component.*;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.*;
-import net.minecraft.registry.*;
-import net.minecraft.text.*;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
+import falseresync.wizcraft.common.data.component.ItemBarComponent;
+import falseresync.wizcraft.common.data.component.WizcraftComponents;
+import net.minecraft.component.ComponentType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.Util;
+import net.minecraft.world.World;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Function;
 
 public abstract class FocusItem extends Item {
     private final Function<Item, Integer> rawIdGetter = Util.memoize(Registries.ITEM::getRawIdOrThrow);
@@ -30,6 +39,10 @@ public abstract class FocusItem extends Item {
         if (!stack.contains(WizcraftComponents.UUID)) {
             stack.set(WizcraftComponents.UUID, UUID.randomUUID());
         }
+    }
+
+    protected final <T> void transferComponent(ItemStack sourceStack, ItemStack targetStack, ComponentType<T> componentType) {
+        targetStack.set(componentType, sourceStack.remove(componentType));
     }
 
     public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack, PlayerEntity user) {

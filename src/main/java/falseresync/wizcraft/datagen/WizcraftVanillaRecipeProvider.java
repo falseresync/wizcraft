@@ -1,7 +1,7 @@
 package falseresync.wizcraft.datagen;
 
 import falseresync.wizcraft.common.block.WizcraftBlocks;
-import falseresync.wizcraft.common.data.component.WizcraftComponents;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.common.item.focus.FocusPlating;
 import falseresync.wizcraft.datagen.recipe.CustomSmithingTransformRecipeJsonBuilder;

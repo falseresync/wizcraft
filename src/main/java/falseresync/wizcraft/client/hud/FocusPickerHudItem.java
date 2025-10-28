@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.*;
 import falseresync.lib.client.*;
 import falseresync.lib.math.*;
 import falseresync.wizcraft.client.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.item.focus.*;
 import net.minecraft.client.*;
 import net.minecraft.client.font.*;

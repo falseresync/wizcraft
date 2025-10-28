@@ -3,7 +3,7 @@ package falseresync.wizcraft.client.render.blockentity;
 import falseresync.wizcraft.client.render.*;
 import falseresync.wizcraft.common.*;
 import falseresync.wizcraft.common.blockentity.*;
-import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.data.WizcraftAttachments;
 import net.minecraft.client.*;
 import net.minecraft.client.font.*;
 import net.minecraft.client.render.*;

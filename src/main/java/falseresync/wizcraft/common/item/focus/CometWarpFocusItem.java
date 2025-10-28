@@ -3,7 +3,7 @@ package falseresync.wizcraft.common.item.focus;
 import falseresync.wizcraft.common.Reports;
 import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.WizcraftSounds;
-import falseresync.wizcraft.common.data.component.WizcraftComponents;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.component.DataComponentTypes;

@@ -1,4 +1,4 @@
-package falseresync.wizcraft.common.data.component;
+package falseresync.wizcraft.common.data;
 
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;

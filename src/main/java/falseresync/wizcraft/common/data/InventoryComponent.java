@@ -1,4 +1,4 @@
-package falseresync.wizcraft.common.data.component;
+package falseresync.wizcraft.common.data;
 
 import com.google.common.collect.*;
 import com.mojang.serialization.*;

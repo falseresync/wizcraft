@@ -7,7 +7,7 @@ import falseresync.wizcraft.client.render.trinket.*;
 import falseresync.wizcraft.client.render.world.*;
 import falseresync.wizcraft.common.block.*;
 import falseresync.wizcraft.common.blockentity.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.entity.*;
 import falseresync.wizcraft.common.item.*;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.*;

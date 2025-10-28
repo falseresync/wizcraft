@@ -1,6 +1,6 @@
 package falseresync.wizcraft.client.gui;
 
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.InventoryComponent;
 import net.minecraft.client.font.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.tooltip.*;

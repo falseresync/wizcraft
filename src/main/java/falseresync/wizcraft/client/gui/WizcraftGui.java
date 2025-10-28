@@ -1,6 +1,6 @@
 package falseresync.wizcraft.client.gui;
 
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.InventoryComponent;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 
 public class WizcraftGui {

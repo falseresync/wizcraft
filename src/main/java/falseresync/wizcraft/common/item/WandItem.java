@@ -2,7 +2,7 @@ package falseresync.wizcraft.common.item;
 
 import falseresync.wizcraft.client.*;
 import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.item.focus.*;
 import net.fabricmc.fabric.api.client.keybinding.v1.*;
 import net.minecraft.block.*;

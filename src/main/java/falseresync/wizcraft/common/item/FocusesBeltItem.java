@@ -1,7 +1,8 @@
 package falseresync.wizcraft.common.item;
 
 import dev.emi.trinkets.api.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.InventoryComponentProvider;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
 import net.minecraft.item.tooltip.*;

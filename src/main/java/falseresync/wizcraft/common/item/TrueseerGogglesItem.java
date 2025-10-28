@@ -1,7 +1,7 @@
 package falseresync.wizcraft.common.item;
 
 import dev.emi.trinkets.api.*;
-import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.data.WizcraftAttachments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;

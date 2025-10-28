@@ -2,7 +2,7 @@ package falseresync.wizcraft.client.render.entity;
 
 import falseresync.lib.math.*;
 import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.data.attachment.*;
+import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.entity.*;
 import net.minecraft.client.*;
 import net.minecraft.client.network.*;

@@ -1,7 +1,7 @@
 package falseresync.wizcraft.common.item.focus;
 
-import falseresync.wizcraft.common.data.component.ItemBarComponent;
-import falseresync.wizcraft.common.data.component.WizcraftComponents;
+import falseresync.wizcraft.common.data.ItemBarComponent;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

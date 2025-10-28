@@ -1,4 +1,4 @@
-package falseresync.wizcraft.common.data.attachment;
+package falseresync.wizcraft.common.data;
 
 import com.mojang.serialization.*;
 import net.fabricmc.fabric.api.attachment.v1.*;

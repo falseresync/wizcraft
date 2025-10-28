@@ -2,8 +2,8 @@ package falseresync.wizcraft.common.entity;
 
 import com.google.common.base.*;
 import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.data.attachment.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.WizcraftAttachments;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.item.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.*;

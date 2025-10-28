@@ -2,8 +2,8 @@ package falseresync.wizcraft.common;
 
 import com.google.common.base.*;
 import falseresync.wizcraft.common.config.*;
-import falseresync.wizcraft.common.data.attachment.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.WizcraftAttachments;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import net.fabricmc.fabric.api.event.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;

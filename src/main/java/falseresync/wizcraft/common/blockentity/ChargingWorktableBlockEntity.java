@@ -1,7 +1,7 @@
 package falseresync.wizcraft.common.blockentity;
 
 import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.item.*;
 import net.fabricmc.fabric.api.transfer.v1.item.*;
 import net.minecraft.block.*;

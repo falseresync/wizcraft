@@ -3,7 +3,7 @@ package falseresync.wizcraft.common.item.focus;
 import falseresync.wizcraft.common.Reports;
 import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.WizcraftUtil;
-import falseresync.wizcraft.common.data.attachment.WizcraftAttachments;
+import falseresync.wizcraft.common.data.WizcraftAttachments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;

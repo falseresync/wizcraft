@@ -1,10 +1,9 @@
 package falseresync.wizcraft.client;
 
 import dev.emi.trinkets.api.event.*;
-import dev.emi.trinkets.payload.*;
 import falseresync.wizcraft.client.hud.*;
-import falseresync.wizcraft.common.data.attachment.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.WizcraftAttachments;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.item.*;
 import falseresync.wizcraft.networking.c2s.*;
 import net.fabricmc.fabric.api.client.networking.v1.*;

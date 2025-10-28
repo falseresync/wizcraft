@@ -1,7 +1,7 @@
 package falseresync.wizcraft.common.item;
 
-import falseresync.wizcraft.common.data.attachment.*;
-import falseresync.wizcraft.common.data.component.*;
+import falseresync.wizcraft.common.data.WizcraftAttachments;
+import falseresync.wizcraft.common.data.WizcraftComponents;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;

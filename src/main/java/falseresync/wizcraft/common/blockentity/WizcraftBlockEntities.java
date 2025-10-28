@@ -1,8 +1,8 @@
 package falseresync.wizcraft.common.blockentity;
 
-import falseresync.lib.registry.*;
-import falseresync.wizcraft.common.block.*;
-import net.minecraft.block.entity.*;
+import falseresync.lib.registry.RegistryObject;
+import falseresync.wizcraft.common.block.WizcraftBlocks;
+import net.minecraft.block.entity.BlockEntityType;
 
 public class WizcraftBlockEntities {
     public static final @RegistryObject BlockEntityType<CrucibleBlockEntity> CRUCIBLE =

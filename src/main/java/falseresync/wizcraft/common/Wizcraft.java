@@ -1,24 +1,31 @@
 package falseresync.wizcraft.common;
 
-import falseresync.lib.registry.*;
-import falseresync.wizcraft.common.block.*;
-import falseresync.wizcraft.common.blockentity.*;
-import falseresync.wizcraft.common.config.*;
+import falseresync.lib.registry.AutoRegistry;
+import falseresync.wizcraft.common.block.WizcraftBlocks;
+import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
+import falseresync.wizcraft.common.config.WizcraftConfig;
 import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.data.WizcraftComponents;
-import falseresync.wizcraft.common.entity.*;
-import falseresync.wizcraft.common.item.*;
-import falseresync.wizcraft.common.item.focus.*;
-import falseresync.wizcraft.common.recipe.*;
-import falseresync.wizcraft.networking.*;
-import me.shedaniel.autoconfig.*;
-import me.shedaniel.autoconfig.serializer.*;
-import net.fabricmc.api.*;
-import net.fabricmc.fabric.api.networking.v1.*;
-import net.minecraft.item.*;
-import net.minecraft.registry.*;
-import net.minecraft.util.*;
-import org.slf4j.*;
+import falseresync.wizcraft.common.entity.WizcraftEntities;
+import falseresync.wizcraft.common.item.ActivatorItem;
+import falseresync.wizcraft.common.item.WizcraftItemGroups;
+import falseresync.wizcraft.common.item.WizcraftItemTags;
+import falseresync.wizcraft.common.item.WizcraftItems;
+import falseresync.wizcraft.common.item.focus.TransmutationFocusBehavior;
+import falseresync.wizcraft.common.recipe.WizcraftCustomIngredients;
+import falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
+import falseresync.wizcraft.common.recipe.WizcraftRecipes;
+import falseresync.wizcraft.networking.WizcraftNetworking;
+import falseresync.wizcraft.networking.WizcraftNetworkingServer;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Wizcraft implements ModInitializer {
     public static final String MOD_ID = "wizcraft";
@@ -53,7 +60,6 @@ public class Wizcraft implements ModInitializer {
                 .link(Registries.ITEM_GROUP, WizcraftItemGroups.class)
                 .link(Registries.DATA_COMPONENT_TYPE, WizcraftComponents.class)
                 .link(Registries.ENTITY_TYPE, WizcraftEntities.class)
-                .link(WizcraftReports.REGISTRY, WizcraftReports.class)
                 .link(Registries.RECIPE_TYPE, WizcraftRecipes.class)
                 .link(Registries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class)
                 .link(Registries.PARTICLE_TYPE, WizcraftParticleTypes.class);

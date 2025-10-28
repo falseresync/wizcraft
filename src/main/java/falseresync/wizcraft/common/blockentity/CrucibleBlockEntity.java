@@ -1,22 +1,30 @@
 package falseresync.wizcraft.common.blockentity;
 
-import falseresync.wizcraft.common.recipe.*;
-import falseresync.wizcraft.networking.report.*;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.*;
-import net.minecraft.entity.*;
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
-import net.minecraft.network.listener.*;
-import net.minecraft.network.packet.*;
-import net.minecraft.network.packet.s2c.play.*;
-import net.minecraft.recipe.*;
-import net.minecraft.registry.*;
-import net.minecraft.server.world.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
-import org.jetbrains.annotations.*;
+import falseresync.wizcraft.common.Reports;
+import falseresync.wizcraft.common.recipe.CrucibleRecipe;
+import falseresync.wizcraft.common.recipe.SimpleInventoryRecipeInput;
+import falseresync.wizcraft.common.recipe.WizcraftRecipes;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
+import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 
 public class CrucibleBlockEntity extends BlockEntity {
@@ -43,21 +51,29 @@ public class CrucibleBlockEntity extends BlockEntity {
             if (inventory.containsAny(contained -> ItemStack.areItemsAndComponentsEqual(contained, stack) && contained.getCount() + stack.getCount() > max) || stack.getCount() > max) {
                 inventory.removeItem(stack.getItem(), max);
                 inventory.addStack(stack.copyWithCount(stack.getCount() - max));
-                // TODO: bad effects
-                WizcraftReports.WORKTABLE_INTERRUPTED.sendAround((ServerWorld) world, pos, null);
+                onInterrupted(crucible, world, pos);
             } else if (!inventory.addStack(stack.copy()).isEmpty()) {
                 inventory.removeStack(0);
                 inventory.setStack(0, inventory.getStackInSlot(1));
                 inventory.setStack(1, inventory.getStackInSlot(2));
                 inventory.setStack(2, inventory.getStackInSlot(3));
                 inventory.setStack(3, inventory.getStackInSlot(4));
-                // TODO: bad effects
-                WizcraftReports.WORKTABLE_INTERRUPTED.sendAround((ServerWorld) world, pos, null);
+                onInterrupted(crucible, world, pos);
             }
             entity.discard();
         });
 
         world.getRecipeManager().getFirstMatch(WizcraftRecipes.CRUCIBLE, crucible.inventory, world).ifPresent(crucible::craft);
+    }
+
+    private static void onInterrupted(CrucibleBlockEntity crucible, World world, BlockPos pos) {
+        // TODO: bad effects
+        world.playSound(null, pos, SoundEvents.ENTITY_HORSE_BREATHE, SoundCategory.BLOCKS, 1f, 1f);
+        Reports.addSmoke(world, pos.toCenterPos().add(0, 0.75, 0));
+        var stopSoundPacket = new StopSoundS2CPacket(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value().getId(), SoundCategory.BLOCKS);
+        for (var player : PlayerLookup.tracking(crucible)) {
+            player.networkHandler.sendPacket(stopSoundPacket);
+        }
     }
 
     public SimpleInventory getInventory() {

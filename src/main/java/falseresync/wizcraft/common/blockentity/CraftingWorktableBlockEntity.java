@@ -1,29 +1,42 @@
 package falseresync.wizcraft.common.blockentity;
 
-import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.recipe.*;
-import falseresync.wizcraft.networking.report.*;
-import net.fabricmc.fabric.api.transfer.v1.item.*;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
-import net.minecraft.network.listener.*;
-import net.minecraft.network.packet.*;
-import net.minecraft.network.packet.s2c.play.*;
-import net.minecraft.recipe.*;
-import net.minecraft.registry.*;
-import net.minecraft.server.network.*;
-import net.minecraft.server.world.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
-import org.jetbrains.annotations.*;
+import falseresync.wizcraft.common.CommonKeys;
+import falseresync.wizcraft.common.WizcraftSounds;
+import falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
+import falseresync.wizcraft.common.recipe.SimpleInventoryRecipeInput;
+import falseresync.wizcraft.common.recipe.WizcraftRecipes;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
+import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     public static final int IDLE_SEARCH_COOLDOWN = 5;
@@ -67,7 +80,8 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         searchPedestals(world, pos);
         if (pedestals.size() < 4) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                WizcraftReports.WORKTABLE_INCOMPLETE.sendTo(serverPlayer);
+                player.playSoundToPlayer(SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 1f, 1f);
+                player.sendMessage(Text.translatable("hud.wizcraft.worktable.incomplete_worktable"), true);
             }
             return;
         }
@@ -89,7 +103,8 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     }
 
     public Progress getProgress() {
-        return new Progress(currentlyCrafted,
+        return new Progress(
+                currentlyCrafted,
                 remainingCraftingTime,
                 craftingTime - remainingCraftingTime,
                 1 - (float) remainingCraftingTime / craftingTime);
@@ -171,7 +186,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
             if (world.getBlockEntity(pedestalPos) instanceof LensingPedestalBlockEntity pedestal) {
                 if (!pedestal.isLinkedTo(this)) {
                     world.breakBlock(pos, true);
-                    WizcraftReports.WORKTABLE_CANNOT_PLACE.sendAround((ServerWorld) world, pos, null);
+                    world.playSound(null, pos, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.BLOCKS, 1, 1);
                 } else {
                     pedestals.add(pedestal);
                     pedestal.linkTo(this);
@@ -195,14 +210,14 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         remainingCraftingTime = recipeEntry.value().getCraftingTime();
         markDirty();
 
-        WizcraftReports.WORKTABLE_CRAFTING.sendAround((ServerWorld) world, pos, null);
+        world.playSound(null, pos, SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value(), SoundCategory.BLOCKS, 1f, 1f);
     }
 
     protected void interruptCrafting() {
         if (world == null || world.isClient()) return;
 
         reset();
-        WizcraftReports.WORKTABLE_INTERRUPTED.sendAround((ServerWorld) world, pos, null);
+        onInterrupted(this, world, pos);
     }
 
     protected void finishCrafting() {
@@ -215,8 +230,13 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         }
 
         reset();
-        WizcraftReports.WORKTABLE_SUCCESS.sendAround((ServerWorld) world, pos, null);
+        world.playSound(null, pos, WizcraftSounds.WORKTABLE_SUCCESS, SoundCategory.BLOCKS, 1f, 1f);
+        var stopSoundPacket = new StopSoundS2CPacket(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value().getId(), SoundCategory.BLOCKS);
+        for (var player : PlayerLookup.tracking(this)) {
+            player.networkHandler.sendPacket(stopSoundPacket);
+        }
     }
+
 
     protected void initStaticRecipeData(World world, LensedWorktableRecipe recipe) {
         currentRecipe = recipe;

@@ -24,8 +24,9 @@ import static falseresync.wizcraft.common.Wizcraft.wid;
 public class FocusPickerHudItem implements HudItem {
     protected static final Identifier SELECTION_TEX = wid("textures/hud/wand/focus_picker_selection.png");
     private static final int MARGIN = 2;
-    private static final int SEL_TEX_W = 22;
-    private static final int SEL_TEX_H = 22;
+    private static final int WIDGET_W = 22;
+    private static final int WIDGET_H = 22;
+    private static final int TEX_SIZE = 22;
     private static final int ITEM_W = 16;
     private static final int ITEM_H = 16;
     private static final int TEXT_H = 8;
@@ -36,7 +37,7 @@ public class FocusPickerHudItem implements HudItem {
     private static final Comparator<ItemStack> FOCUS_ORDERING = Comparator
             .<ItemStack>comparingInt(stack -> ((FocusItem) stack.getItem()).getRawId())
             .thenComparingInt(stack -> stack.getOrDefault(WizcraftComponents.FOCUS_PLATING, -1))
-            .thenComparing(stack -> stack.getOrDefault(WizcraftComponents.UUID, UUID.randomUUID()));
+            .thenComparingLong(stack -> stack.getOrDefault(WizcraftComponents.UUID, UUID.randomUUID()).getMostSignificantBits());
     private final MinecraftClient client;
     private final TextRenderer textRenderer;
     private final LinkedList<ItemStack> focuses = new LinkedList<>();
@@ -60,8 +61,7 @@ public class FocusPickerHudItem implements HudItem {
             baseOpacity = getAnimatedBaseOpacity();
             var yOffsetPerItem = ITEM_H + MARGIN;
             var yOffset = (Math.min(focuses.size(), 3) - 1) * yOffsetPerItem;
-            var widgetW = SEL_TEX_W;
-            var widgetH = SEL_TEX_H + yOffset;
+            var widgetH = WIDGET_H + yOffset;
 
             var chargeDisplay = WizcraftClient.getHud().getChargeDisplay();
             var x = 4 + (chargeDisplay.isVisible() ? chargeDisplay.getWidth() : 0);
@@ -70,17 +70,15 @@ public class FocusPickerHudItem implements HudItem {
             RenderSystem.enableBlend();
             context.setShaderColor(1, 1, 1, baseOpacity);
 
-            var selTexX = x;
-            var selTexY = y + yOffset;
-            context.drawSquare(SELECTION_TEX, selTexX, selTexY, 22);
+            context.drawSquare(SELECTION_TEX, x, y + yOffset, 22, TEX_SIZE);
 
-            var itemX = x + widgetW / 2 - ITEM_W / 2;
+            var itemX = x + WIDGET_W / 2 - ITEM_W / 2;
 
             if (animatingItems) {
                 var item1 = addGlintIfNecessary(focuses.peekLast());
-                int item1Y = y + SEL_TEX_H / 2 - ITEM_H / 2 + yOffset;
+                int item1Y = y + WIDGET_H / 2 - ITEM_H / 2 + yOffset;
                 float item1Scale = (float) Easing.easeOutCirc((double) (remainingItemsAnimationTicks) / ITEMS_ANIMATION_DURATION);
-                float item1Translation = (float) (SEL_TEX_H * Easing.easeInSine((double) (ITEMS_ANIMATION_DURATION - remainingItemsAnimationTicks) / ITEMS_ANIMATION_DURATION));
+                float item1Translation = (float) (WIDGET_H * Easing.easeInSine((double) (ITEMS_ANIMATION_DURATION - remainingItemsAnimationTicks) / ITEMS_ANIMATION_DURATION));
                 float item1Opacity = baseOpacity * remainingItemsAnimationTicks / ITEMS_ANIMATION_DURATION;
                 paintItem(context, item1, itemX, item1Y, item1Scale, item1Translation, item1Opacity, false);
 
@@ -106,7 +104,7 @@ public class FocusPickerHudItem implements HudItem {
                 }
             } else {
                 var item1 = addGlintIfNecessary(focuses.getFirst());
-                var item1Y = y + SEL_TEX_H / 2 - ITEM_H / 2 + yOffset;
+                var item1Y = y + WIDGET_H / 2 - ITEM_H / 2 + yOffset;
                 paintItem(context, item1, itemX, item1Y, 1f, 0f, baseOpacity, false);
 
                 if (focuses.size() > 1) {

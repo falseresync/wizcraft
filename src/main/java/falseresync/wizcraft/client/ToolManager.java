@@ -9,7 +9,7 @@ import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.item.WizcraftItemTags;
 import falseresync.wizcraft.common.item.WizcraftItems;
-import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPacket;
+import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPayload;
 import falseresync.wizcraft.networking.c2s.WandFocusDestination;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -127,10 +127,10 @@ public class ToolManager {
                         .map(WizcraftItems.FOCUSES_BELT::getOrCreateInventoryComponent)
                         .map(component -> component.getSlotWithStack(picked))
                         .orElse(-1);
-                ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(WandFocusDestination.FOCUSES_BELT, slot));
+                ClientPlayNetworking.send(new ChangeWandFocusC2SPayload(WandFocusDestination.FOCUSES_BELT, slot));
             } else {
                 var slot = inventory.getSlotWithStack(picked);
-                ClientPlayNetworking.send(new ChangeWandFocusC2SPacket(WandFocusDestination.PLAYER_INVENTORY, slot));
+                ClientPlayNetworking.send(new ChangeWandFocusC2SPayload(WandFocusDestination.PLAYER_INVENTORY, slot));
             }
         }
     }

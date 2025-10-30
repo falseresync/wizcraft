@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.networking.v1.*;
 
 public class WizcraftNetworking {
     public static void registerPackets() {
-        PayloadTypeRegistry.playS2C().register(TriggerBlockPatternTipS2CPacket.ID, TriggerBlockPatternTipS2CPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(TriggerBlockPatternTipS2CPayload.ID, TriggerBlockPatternTipS2CPayload.PACKET_CODEC);
 
-        PayloadTypeRegistry.playC2S().register(ChangeWandFocusC2SPacket.ID, ChangeWandFocusC2SPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(ChangeWandFocusC2SPayload.ID, ChangeWandFocusC2SPayload.PACKET_CODEC);
     }
 }

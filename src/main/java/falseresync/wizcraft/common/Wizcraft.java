@@ -17,7 +17,7 @@ import falseresync.wizcraft.common.recipe.WizcraftCustomIngredients;
 import falseresync.wizcraft.common.recipe.WizcraftRecipeSerializers;
 import falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import falseresync.wizcraft.networking.WizcraftNetworking;
-import falseresync.wizcraft.networking.WizcraftNetworkingServer;
+import falseresync.wizcraft.networking.WizcraftServerReceivers;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
@@ -25,7 +25,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Wizcraft implements ModInitializer {
@@ -69,7 +68,7 @@ public class Wizcraft implements ModInitializer {
         WizcraftItemTags.init();
         WizcraftSounds.init();
         WizcraftNetworking.registerPackets();
-        WizcraftNetworkingServer.registerReceivers();
+        WizcraftServerReceivers.register();
 
         chargeManager = new ChargeManager();
 

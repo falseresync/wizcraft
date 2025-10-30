@@ -5,29 +5,29 @@ import falseresync.wizcraft.networking.c2s.*;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.minecraft.item.*;
 
-public class WizcraftNetworkingServer {
-    public static void registerReceivers() {
-        ServerPlayNetworking.registerGlobalReceiver(ChangeWandFocusC2SPacket.ID, WizcraftNetworkingServer::changeWandFocus);
+public class WizcraftServerReceivers {
+    public static void register() {
+        ServerPlayNetworking.registerGlobalReceiver(ChangeWandFocusC2SPayload.ID, WizcraftServerReceivers::changeWandFocus);
     }
 
-    private static void changeWandFocus(ChangeWandFocusC2SPacket packet, ServerPlayNetworking.Context context) {
+    private static void changeWandFocus(ChangeWandFocusC2SPayload payload, ServerPlayNetworking.Context context) {
         var player = context.player();
         var wandStack = player.getMainHandStack();
         if (!wandStack.isIn(WizcraftItemTags.WANDS)) {
             return;
         }
 
-        if (packet.slot() < 0) {
+        if (payload.slot() < 0) {
             return;
         }
 
-        switch (packet.destination()) {
+        switch (payload.destination()) {
             case PLAYER_INVENTORY -> {
-                if (packet.slot() < player.getInventory().size() - 1) {
-                    var newFocusStack = player.getInventory().getStack(packet.slot());
+                if (payload.slot() < player.getInventory().size() - 1) {
+                    var newFocusStack = player.getInventory().getStack(payload.slot());
                     var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, newFocusStack, player);
                     if (exchange.getResult().isAccepted()) {
-                        player.getInventory().setStack(packet.slot(), exchange.getValue());
+                        player.getInventory().setStack(payload.slot(), exchange.getValue());
                     }
                 } else {
                     var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, ItemStack.EMPTY, player);
@@ -42,15 +42,15 @@ public class WizcraftNetworkingServer {
             case FOCUSES_BELT -> {
                 WizcraftItems.FOCUSES_BELT.findTrinketStack(player).ifPresent(beltStack -> {
                     var inventoryComponent = WizcraftItems.FOCUSES_BELT.getOrCreateInventoryComponent(beltStack);
-                    if (packet.slot() > inventoryComponent.size() - 1) {
+                    if (payload.slot() > inventoryComponent.size() - 1) {
                         return;
                     }
 
-                    var picked = inventoryComponent.stacks().get(packet.slot());
+                    var picked = inventoryComponent.stacks().get(payload.slot());
                     var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, picked, player);
                     if (exchange.getResult().isAccepted()) {
                         var inventory = inventoryComponent.toModifiable();
-                        inventory.setStack(packet.slot(), exchange.getValue());
+                        inventory.setStack(payload.slot(), exchange.getValue());
                         inventory.flush(beltStack);
                     }
                 });

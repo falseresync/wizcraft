@@ -34,7 +34,7 @@ public class WizcraftClient implements ClientModInitializer {
         WizcraftRendering.init();
         WizcraftGui.init();
         WizcraftKeybindings.init();
-        WizcraftNetworkingClient.registerReceivers();
+        WizcraftClientReceivers.register();
         ClientPlayerInventoryEvents.init();
         WizcraftLavenderPlugin.init();
 

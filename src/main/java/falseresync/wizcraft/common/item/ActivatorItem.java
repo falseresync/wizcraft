@@ -3,7 +3,7 @@ package falseresync.wizcraft.common.item;
 import falseresync.wizcraft.common.block.WizcraftBlockTags;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import falseresync.wizcraft.common.block.WorktableVariant;
-import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPacket;
+import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPayload;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -76,7 +76,7 @@ public interface ActivatorItem {
                     .max(Comparator.comparingInt(variant -> variant.match().size()));
 //                    .min(Comparator.comparingInt(variant -> variant.match().delta().size()));
             if (leastUncompletedVariant.isPresent()) {
-                ServerPlayNetworking.send(serverPlayer, new TriggerBlockPatternTipS2CPacket(leastUncompletedVariant.get().match().deltaAsBlockPos()));
+                ServerPlayNetworking.send(serverPlayer, new TriggerBlockPatternTipS2CPayload(leastUncompletedVariant.get().match().deltaAsBlockPos()));
                 player.playSoundToPlayer(SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 1f, 1f);
                 player.sendMessage(Text.translatable("hud.wizcraft.worktable.incomplete_worktable"), true);
 

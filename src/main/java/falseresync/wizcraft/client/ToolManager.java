@@ -12,12 +12,12 @@ import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPayload;
 import falseresync.wizcraft.networking.c2s.WandFocusDestination;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -32,7 +32,7 @@ public class ToolManager {
         focusPicker = WizcraftClient.getHud().getFocusPicker();
 
         TrinketEquipCallback.EVENT.register((stack, slot, entity) -> {
-            if (entity instanceof PlayerEntity player) {
+            if (entity instanceof Player player) {
                 var wandStack = scanInventoryForWands(player.getInventory());
                 if (wandStack != null) {
                     setupChargeDisplay(player, wandStack);
@@ -41,14 +41,14 @@ public class ToolManager {
         });
 
         TrinketDropCallback.EVENT.register((rule, stack, ref, entity) -> {
-            if (entity instanceof PlayerEntity player) {
+            if (entity instanceof Player player) {
                 hideChargeDisplayIfShould(player);
             }
             return rule;
         });
 
         TrinketUnequipCallback.EVENT.register((stack, slot, entity) -> {
-            if (entity instanceof PlayerEntity player) {
+            if (entity instanceof Player player) {
                 hideChargeDisplayIfShould(player);
             }
         });
@@ -75,7 +75,7 @@ public class ToolManager {
         });
     }
 
-    public void onKeyPressed(MinecraftClient client, ClientPlayerEntity player) {
+    public void onKeyPressed(Minecraft client, LocalPlayer player) {
         var wandStack = scanInventoryForWands(player.getInventory());
         if (wandStack == null) {
             focusPicker.hide();
@@ -85,30 +85,30 @@ public class ToolManager {
     }
 
     @Nullable
-    private ItemStack scanInventoryForWands(PlayerInventory inventory) {
-        var wandStack = inventory.getMainHandStack();
-        return wandStack.isIn(WizcraftItemTags.WANDS) ? wandStack : null;
+    private ItemStack scanInventoryForWands(Inventory inventory) {
+        var wandStack = inventory.getSelected();
+        return wandStack.is(WizcraftItemTags.WANDS) ? wandStack : null;
     }
 
-    private void setupChargeDisplay(PlayerEntity player, ItemStack wandStack) {
+    private void setupChargeDisplay(Player player, ItemStack wandStack) {
         if (player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)) {
             chargeDisplay.upload(wandStack);
             chargeDisplay.show();
         }
     }
 
-    private void hideChargeDisplayIfShould(PlayerEntity player) {
+    private void hideChargeDisplayIfShould(Player player) {
         if (chargeDisplay.isVisible() && !player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)) {
             chargeDisplay.hide();
         }
     }
 
-    private void scanInventoryAndSetupFocusPicker(PlayerInventory inventory, ItemStack wandStack, boolean shouldPickNext) {
+    private void scanInventoryAndSetupFocusPicker(Inventory inventory, ItemStack wandStack, boolean shouldPickNext) {
         var equipped = wandStack.getOrDefault(WizcraftComponents.EQUIPPED_FOCUS_ITEM, ItemStack.EMPTY);
         var belt = WizcraftItems.FOCUSES_BELT.findTrinketStack(inventory.player);
         var focusStacks = belt
                 .map(it -> WizcraftItems.FOCUSES_BELT.getOrCreateInventoryComponent(it).stacks().stream().filter(stack -> !stack.isEmpty()))
-                .orElseGet(() -> inventory.main.stream().filter(it -> it.isIn(WizcraftItemTags.FOCUSES)))
+                .orElseGet(() -> inventory.items.stream().filter(it -> it.is(WizcraftItemTags.FOCUSES)))
                 .collect(Collectors.toCollection(LinkedList::new));
 
         if (!equipped.isEmpty()) {
@@ -116,7 +116,7 @@ public class ToolManager {
         }
 
         if (focusStacks.isEmpty()) {
-            MinecraftClient.getInstance().inGameHud.setOverlayMessage(Text.translatable("hud.wizcraft.wand.no_focuses"), false);
+            Minecraft.getInstance().gui.setOverlayMessage(Component.translatable("hud.wizcraft.wand.no_focuses"), false);
             return;
         }
 
@@ -129,7 +129,7 @@ public class ToolManager {
                         .orElse(-1);
                 ClientPlayNetworking.send(new ChangeWandFocusC2SPayload(WandFocusDestination.FOCUSES_BELT, slot));
             } else {
-                var slot = inventory.getSlotWithStack(picked);
+                var slot = inventory.findSlotMatchingItem(picked);
                 ClientPlayNetworking.send(new ChangeWandFocusC2SPayload(WandFocusDestination.PLAYER_INVENTORY, slot));
             }
         }
@@ -148,7 +148,7 @@ public class ToolManager {
             focusPicker.show();
 
             var picked = focusPicker.getCurrentlyPicked();
-            return ItemStack.areItemsAndComponentsEqual(equipped, picked) ? null : picked;
+            return ItemStack.isSameItemSameComponents(equipped, picked) ? null : picked;
         }
 
         return null;

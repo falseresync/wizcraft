@@ -1,6 +1,6 @@
 package falseresync.wizcraft.common.data;
 
-import net.minecraft.item.*;
+import net.minecraft.world.item.ItemStack;
 
 public interface InventoryComponentProvider {
     int getDefaultInventorySize();

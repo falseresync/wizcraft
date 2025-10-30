@@ -8,24 +8,26 @@ import falseresync.wizcraft.datagen.recipe.CustomSmithingTransformRecipeJsonBuil
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.advancement.criterion.TickCriterion;
-import net.minecraft.block.Block;
-import net.minecraft.component.ComponentChanges;
-import net.minecraft.data.server.recipe.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
 
 public class WizcraftVanillaRecipeProvider extends FabricRecipeProvider {
-    public WizcraftVanillaRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public WizcraftVanillaRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
@@ -35,110 +37,110 @@ public class WizcraftVanillaRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void generate(RecipeExporter exporter) {
+    public void buildRecipes(RecipeOutput exporter) {
         generateCrafting(exporter);
         generateFocusPlating(exporter);
     }
 
-    private void generateCrafting(RecipeExporter exporter) {
-        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.MORTAR_AND_PESTLE)
-                .input('i', ConventionalItemTags.IRON_NUGGETS)
-                .input('f', Items.FLINT)
-                .input('s', Items.SMOOTH_STONE_SLAB)
+    private void generateCrafting(RecipeOutput exporter) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, WizcraftItems.MORTAR_AND_PESTLE)
+                .define('i', ConventionalItemTags.IRON_NUGGETS)
+                .define('f', Items.FLINT)
+                .define('s', Items.SMOOTH_STONE_SLAB)
                 .pattern("i")
                 .pattern("f")
                 .pattern("s")
-                .criterion("unlock_right_away", TickCriterion.Conditions.createTick())
-                .offerTo(exporter, item(WizcraftItems.MORTAR_AND_PESTLE));
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.GRIMOIRE)
-                .input(ConventionalItemTags.DIAMOND_GEMS)
-                .input(ConventionalItemTags.AMETHYST_GEMS)
-                .input(ConventionalItemTags.REDSTONE_DUSTS)
-                .input(Items.BOOK)
-                .input(WizcraftItems.MORTAR_AND_PESTLE)
-                .criterion("unlock_right_away", TickCriterion.Conditions.createTick())
-                .offerTo(exporter, item(WizcraftItems.GRIMOIRE));
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND_CORE)
-                .input(ConventionalItemTags.DIAMOND_GEMS)
-                .input(ConventionalItemTags.AMETHYST_GEMS)
-                .input(ConventionalItemTags.REDSTONE_DUSTS)
-                .input(Ingredient.ofItems(Items.SLIME_BALL, Items.HONEY_BOTTLE))
-                .input(WizcraftItems.MORTAR_AND_PESTLE)
-                .criterion("has_diamond", conditionsFromTag(ConventionalItemTags.DIAMOND_GEMS))
-                .criterion("has_amethyst", conditionsFromTag(ConventionalItemTags.AMETHYST_GEMS))
-                .offerTo(exporter, item(WizcraftItems.WAND_CORE));
+                .unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+                .save(exporter, item(WizcraftItems.MORTAR_AND_PESTLE));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, WizcraftItems.GRIMOIRE)
+                .requires(ConventionalItemTags.DIAMOND_GEMS)
+                .requires(ConventionalItemTags.AMETHYST_GEMS)
+                .requires(ConventionalItemTags.REDSTONE_DUSTS)
+                .requires(Items.BOOK)
+                .requires(WizcraftItems.MORTAR_AND_PESTLE)
+                .unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+                .save(exporter, item(WizcraftItems.GRIMOIRE));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, WizcraftItems.WAND_CORE)
+                .requires(ConventionalItemTags.DIAMOND_GEMS)
+                .requires(ConventionalItemTags.AMETHYST_GEMS)
+                .requires(ConventionalItemTags.REDSTONE_DUSTS)
+                .requires(Ingredient.of(Items.SLIME_BALL, Items.HONEY_BOTTLE))
+                .requires(WizcraftItems.MORTAR_AND_PESTLE)
+                .unlockedBy("has_diamond", has(ConventionalItemTags.DIAMOND_GEMS))
+                .unlockedBy("has_amethyst", has(ConventionalItemTags.AMETHYST_GEMS))
+                .save(exporter, item(WizcraftItems.WAND_CORE));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.WAND)
-                .input('w', WizcraftItems.WAND_CORE)
-                .input('g', ConventionalItemTags.GOLD_INGOTS)
-                .input('s', WizcraftItems.METALLIZED_STICK)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, WizcraftItems.WAND)
+                .define('w', WizcraftItems.WAND_CORE)
+                .define('g', ConventionalItemTags.GOLD_INGOTS)
+                .define('s', WizcraftItems.METALLIZED_STICK)
                 .pattern("  w")
                 .pattern(" g ")
                 .pattern("s  ")
-                .criterion("has_diamond", conditionsFromTag(ConventionalItemTags.DIAMOND_GEMS))
-                .criterion("has_amethyst", conditionsFromTag(ConventionalItemTags.AMETHYST_GEMS))
-                .offerTo(exporter, item(WizcraftItems.WAND));
-        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.TRUESEER_GOGGLES)
-                .input('g', ConventionalItemTags.GOLD_NUGGETS)
-                .input('h', Items.CHAINMAIL_HELMET)
-                .input('p', Items.PHANTOM_MEMBRANE)
-                .input('c', ConventionalItemTags.PRISMARINE_GEMS)
+                .unlockedBy("has_diamond", has(ConventionalItemTags.DIAMOND_GEMS))
+                .unlockedBy("has_amethyst", has(ConventionalItemTags.AMETHYST_GEMS))
+                .save(exporter, item(WizcraftItems.WAND));
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, WizcraftItems.TRUESEER_GOGGLES)
+                .define('g', ConventionalItemTags.GOLD_NUGGETS)
+                .define('h', Items.CHAINMAIL_HELMET)
+                .define('p', Items.PHANTOM_MEMBRANE)
+                .define('c', ConventionalItemTags.PRISMARINE_GEMS)
                 .pattern("g g")
                 .pattern("php")
                 .pattern("c c")
-                .criterion("has_phantom_membrane", conditionsFromItem(Items.PHANTOM_MEMBRANE))
-                .criterion("has_prismarine", conditionsFromTag(ConventionalItemTags.PRISMARINE_GEMS))
-                .offerTo(exporter, item(WizcraftItems.TRUESEER_GOGGLES));
-        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, WizcraftItems.FOCUSES_BELT)
-                .input('l', ConventionalItemTags.LEATHERS)
-                .input('t', Items.TURTLE_HELMET)
+                .unlockedBy("has_phantom_membrane", has(Items.PHANTOM_MEMBRANE))
+                .unlockedBy("has_prismarine", has(ConventionalItemTags.PRISMARINE_GEMS))
+                .save(exporter, item(WizcraftItems.TRUESEER_GOGGLES));
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, WizcraftItems.FOCUSES_BELT)
+                .define('l', ConventionalItemTags.LEATHERS)
+                .define('t', Items.TURTLE_HELMET)
                 .pattern("ltl")
                 .pattern("l l")
                 .pattern("lll")
-                .criterion("has_turtle_shell", conditionsFromItem(Items.TURTLE_HELMET))
-                .offerTo(exporter, item(WizcraftItems.FOCUSES_BELT));
+                .unlockedBy("has_turtle_shell", has(Items.TURTLE_HELMET))
+                .save(exporter, item(WizcraftItems.FOCUSES_BELT));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.WORKTABLE)
-                .input('g', ConventionalItemTags.GOLD_INGOTS)
-                .input('l', ConventionalItemTags.LAPIS_GEMS)
-                .input('p', ItemTags.PLANKS)
-                .input('s', ItemTags.WOODEN_SLABS)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.WORKTABLE)
+                .define('g', ConventionalItemTags.GOLD_INGOTS)
+                .define('l', ConventionalItemTags.LAPIS_GEMS)
+                .define('p', ItemTags.PLANKS)
+                .define('s', ItemTags.WOODEN_SLABS)
                 .pattern("glg")
                 .pattern(" p ")
                 .pattern("sss")
-                .criterion("has_gold", conditionsFromTag(ConventionalItemTags.GOLD_INGOTS))
-                .offerTo(exporter, block(WizcraftBlocks.DUMMY_WORKTABLE));
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.LENSING_PEDESTAL)
-                .input('l', WizcraftItems.LENS)
-                .input('b', ItemTags.STONE_BRICKS)
+                .unlockedBy("has_gold", has(ConventionalItemTags.GOLD_INGOTS))
+                .save(exporter, block(WizcraftBlocks.DUMMY_WORKTABLE));
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, WizcraftItems.LENSING_PEDESTAL)
+                .define('l', WizcraftItems.LENS)
+                .define('b', ItemTags.STONE_BRICKS)
                 .pattern("l")
                 .pattern("b")
                 .pattern("b")
-                .criterion("has_lens", conditionsFromItem(WizcraftItems.LENS))
-                .offerTo(exporter, block(WizcraftBlocks.LENSING_PEDESTAL));
+                .unlockedBy("has_lens", has(WizcraftItems.LENS))
+                .save(exporter, block(WizcraftBlocks.LENSING_PEDESTAL));
     }
 
-    private void generateFocusPlating(RecipeExporter exporter) {
-        generateFocusPlating(exporter, FocusPlating.IRON, Ingredient.fromTag(ConventionalItemTags.IRON_INGOTS));
-        generateFocusPlating(exporter, FocusPlating.GOLD, Ingredient.fromTag(ConventionalItemTags.GOLD_INGOTS));
-        generateFocusPlating(exporter, FocusPlating.COPPER, Ingredient.fromTag(ConventionalItemTags.COPPER_INGOTS));
+    private void generateFocusPlating(RecipeOutput exporter) {
+        generateFocusPlating(exporter, FocusPlating.IRON, Ingredient.of(ConventionalItemTags.IRON_INGOTS));
+        generateFocusPlating(exporter, FocusPlating.GOLD, Ingredient.of(ConventionalItemTags.GOLD_INGOTS));
+        generateFocusPlating(exporter, FocusPlating.COPPER, Ingredient.of(ConventionalItemTags.COPPER_INGOTS));
     }
 
-    private void generateFocusPlating(RecipeExporter exporter, FocusPlating plating, Ingredient ingredient) {
-        var platingComponents = ComponentChanges.builder().add(WizcraftComponents.FOCUS_PLATING, plating.index).build();
+    private void generateFocusPlating(RecipeOutput exporter, FocusPlating plating, Ingredient ingredient) {
+        var platingComponents = DataComponentPatch.builder().set(WizcraftComponents.FOCUS_PLATING, plating.index).build();
         for (var item : WizcraftItemTagProvider.FOCUSES) {
             var stack = new ItemStack(item);
-            stack.applyChanges(platingComponents);
-            new CustomSmithingTransformRecipeJsonBuilder(Ingredient.EMPTY, Ingredient.ofItems(item), ingredient, stack)
+            stack.applyComponentsAndValidate(platingComponents);
+            new CustomSmithingTransformRecipeJsonBuilder(Ingredient.EMPTY, Ingredient.of(item), ingredient, stack)
                     .offerTo(exporter, plating);
         }
     }
 
-    private Identifier block(Block block) {
-        return Registries.BLOCK.getId(block);
+    private ResourceLocation block(Block block) {
+        return BuiltInRegistries.BLOCK.getKey(block);
     }
 
-    private Identifier item(Item item) {
-        return Registries.ITEM.getId(item);
+    private ResourceLocation item(Item item) {
+        return BuiltInRegistries.ITEM.getKey(item);
     }
 }

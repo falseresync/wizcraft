@@ -1,7 +1,8 @@
 package falseresync.lib.math;
 
-import org.apache.commons.lang3.tuple.*;
-import org.joml.*;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class VectorMath {
     /**

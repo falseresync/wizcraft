@@ -1,11 +1,11 @@
 package falseresync.lib.registry;
 
 import falseresync.lib.logging.BetterLogger;
-import net.minecraft.registry.*;
-import net.minecraft.util.*;
-import org.slf4j.*;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InaccessibleObjectException;
+import java.lang.reflect.Modifier;
 
 /**
  * <h2>Usage</h2>
@@ -68,7 +68,7 @@ public class AutoRegistry {
                     }
 
                     //noinspection unchecked
-                    Registry.register(registry, Identifier.of(modId, field.getName().toLowerCase()), (T) registryObject);
+                    Registry.register(registry, ResourceLocation.fromNamespaceAndPath(modId, field.getName().toLowerCase()), (T) registryObject);
                     fieldsNoCurrentlyRegistered += 1;
                 } catch (IllegalAccessException e) {
                     throw new InaccessibleObjectException("Couldn't read a @RegistryObject field: %s at %s".formatted(field.getName(), holderClass.getCanonicalName()));
@@ -90,9 +90,9 @@ public class AutoRegistry {
             }
         }
         if (classesNoRegistered == 0) {
-            logger.warn("Nothing got registered into %s because there are no holder classes with valid @RegistryObject fields".formatted(registry.getKey()));
+            logger.warn("Nothing got registered into %s because there are no holder classes with valid @RegistryObject fields".formatted(registry.key()));
         }
-        logger.debug("Registered %s valid @RegistryObjects into registry %s from %s holder classes with %s fields".formatted(fieldsNoRegistered, registry.getKey(), classesNoFound, fieldsNoFound));
+        logger.debug("Registered %s valid @RegistryObjects into registry %s from %s holder classes with %s fields".formatted(fieldsNoRegistered, registry.key(), classesNoFound, fieldsNoFound));
         return this;
     }
 }

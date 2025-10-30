@@ -5,19 +5,19 @@ import falseresync.lib.client.BetterDrawContext;
 import falseresync.lib.math.Easing;
 import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.data.WizcraftComponents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.ColorHelper;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.item.ItemStack;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class ChargeDisplayHudItem implements HudItem {
-    protected static final Identifier BAR_TEX = wid("textures/hud/wand/charge_bar.png");
-    protected static final Identifier OVERLAY_TEX = wid("textures/hud/wand/charge_bar_overlay.png");
-    protected static final Identifier SHELL_TEX = wid("textures/hud/wand/charge_shell.png");
+    protected static final ResourceLocation BAR_TEX = wid("textures/hud/wand/charge_bar.png");
+    protected static final ResourceLocation OVERLAY_TEX = wid("textures/hud/wand/charge_bar_overlay.png");
+    protected static final ResourceLocation SHELL_TEX = wid("textures/hud/wand/charge_shell.png");
     private static final int WIDGET_W = 16;
     private static final int WIDGET_H = 64;
     private static final int TEX_W = 16;
@@ -31,8 +31,8 @@ public class ChargeDisplayHudItem implements HudItem {
     private static final int ANIMATION_DURATION = 10;
     private static final int SHELL_NO_CHARGE_TINT = 0xAA_FF_FF_FF;
     private static final int SHELL_FULL_CHARGE_TINT = 0xFF_00_BF_FF;
-    private final MinecraftClient client;
-    private final TextRenderer textRenderer;
+    private final Minecraft client;
+    private final Font textRenderer;
     private int currentCharge = 0;
     private int maxCharge = 0;
     private int chargeInShells = -1;
@@ -42,28 +42,28 @@ public class ChargeDisplayHudItem implements HudItem {
     private boolean animating = false;
     private int remainingAnimationTicks = 0;
 
-    public ChargeDisplayHudItem(MinecraftClient client, TextRenderer textRenderer) {
+    public ChargeDisplayHudItem(Minecraft client, Font textRenderer) {
         this.client = client;
         this.textRenderer = textRenderer;
     }
 
     @Override
-    public void render(BetterDrawContext context, RenderTickCounter tickCounter) {
+    public void render(BetterDrawContext context, DeltaTracker tickCounter) {
         if (isVisible() || animating) {
             float opacity = getAnimatedOpacity();
             float x = getAnimatedX();
-            float y = context.getScaledWindowHeight() / 2f - TEX_H / 2f;
+            float y = context.guiHeight() / 2f - TEX_H / 2f;
 
             RenderSystem.enableBlend();
-            context.setShaderColor(1, 1, 1, opacity);
+            context.setColor(1, 1, 1, opacity);
 
             if (maxChargeInShells >= 0) {
-                var tint = ColorHelper.Argb.lerp((float) chargeInShells / maxChargeInShells, SHELL_NO_CHARGE_TINT, SHELL_FULL_CHARGE_TINT);
-                context.setShaderColor(
-                        ColorHelper.Argb.getRed(tint) / 255f, ColorHelper.Argb.getGreen(tint) / 255f,
-                        ColorHelper.Argb.getBlue(tint) / 255f, ColorHelper.Argb.getAlpha(tint) / 255f * opacity);
+                var tint = FastColor.ARGB32.lerp((float) chargeInShells / maxChargeInShells, SHELL_NO_CHARGE_TINT, SHELL_FULL_CHARGE_TINT);
+                context.setColor(
+                        FastColor.ARGB32.red(tint) / 255f, FastColor.ARGB32.green(tint) / 255f,
+                        FastColor.ARGB32.blue(tint) / 255f, FastColor.ARGB32.alpha(tint) / 255f * opacity);
                 context.drawNonDiscreteRect(SHELL_TEX, x, y - SHELL_H, SHELL_W, SHELL_H);
-                context.setShaderColor(1, 1, 1, opacity);
+                context.setColor(1, 1, 1, opacity);
             }
 
             context.drawNonDiscreteRect(BAR_TEX, x, y, TEX_W, TEX_H);

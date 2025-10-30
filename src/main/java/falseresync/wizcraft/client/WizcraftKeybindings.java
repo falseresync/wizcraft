@@ -1,17 +1,18 @@
 package falseresync.wizcraft.client;
 
-import net.fabricmc.api.*;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.*;
-import net.fabricmc.fabric.api.client.keybinding.v1.*;
-import net.minecraft.client.option.*;
-import net.minecraft.client.util.*;
-import org.lwjgl.glfw.*;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.KeyMapping;
+import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public final class WizcraftKeybindings {
-    public static final KeyBinding TOOL_CONTROL = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyMapping TOOL_CONTROL = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.wizcraft.tool_control",
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_LEFT_ALT,
             "keyCategory.wizcraft"
     ));
@@ -22,7 +23,7 @@ public final class WizcraftKeybindings {
                 return;
             }
 
-            while (TOOL_CONTROL.wasPressed()) {
+            while (TOOL_CONTROL.consumeClick()) {
                 WizcraftClient.getToolManager().onKeyPressed(client, client.player);
             }
         });

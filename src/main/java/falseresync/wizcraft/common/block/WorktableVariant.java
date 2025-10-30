@@ -1,19 +1,22 @@
 package falseresync.wizcraft.common.block;
 
-import falseresync.lib.blockpattern.*;
-import falseresync.wizcraft.common.blockentity.*;
-import net.minecraft.server.network.*;
-import net.minecraft.server.world.*;
-import net.minecraft.util.math.*;
+import falseresync.lib.blockpattern.BetterBlockPattern;
+import falseresync.wizcraft.common.blockentity.WorktableBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public record WorktableVariant<T extends WorktableBlockEntity>(
         Supplier<WorktableBlock<T>> block,
         Supplier<BetterBlockPattern> pattern,
-        BiPredicate<ServerWorld, ServerPlayerEntity> preconditions
+        BiPredicate<ServerLevel, ServerPlayer> preconditions
 ) {
     private static final List<WorktableVariant<?>> UNBAKED_VARIANTS = new ArrayList<>();
     private static final List<Baked<?>> BAKED_VARIANTS = new ArrayList<>();
@@ -32,11 +35,11 @@ public record WorktableVariant<T extends WorktableBlockEntity>(
         return BAKED_VARIANTS;
     }
 
-    public static List<Baked<?>> getForPlayer(ServerWorld world, ServerPlayerEntity player) {
+    public static List<Baked<?>> getForPlayer(ServerLevel world, ServerPlayer player) {
         return getAll().stream().filter(variant -> variant.preconditions.test(world, player)).toList();
     }
 
-    public static List<Matched<?>> getForPlayerAndSearchAround(ServerWorld world, ServerPlayerEntity player, BlockPos startingPos) {
+    public static List<Matched<?>> getForPlayerAndSearchAround(ServerLevel world, ServerPlayer player, BlockPos startingPos) {
         return getForPlayer(world, player)
                 .stream()
                 .map(baked -> new Matched<>(baked.block, baked.pattern.searchAround(world, startingPos)))
@@ -46,7 +49,7 @@ public record WorktableVariant<T extends WorktableBlockEntity>(
     public record Baked<T extends WorktableBlockEntity>(
             WorktableBlock<T> block,
             BetterBlockPattern pattern,
-            BiPredicate<ServerWorld, ServerPlayerEntity> preconditions
+            BiPredicate<ServerLevel, ServerPlayer> preconditions
     ) {}
 
     public record Matched<T extends WorktableBlockEntity>(

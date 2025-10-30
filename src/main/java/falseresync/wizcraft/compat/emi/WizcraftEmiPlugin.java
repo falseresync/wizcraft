@@ -9,13 +9,13 @@ import falseresync.wizcraft.common.item.WizcraftItems;
 import falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import falseresync.wizcraft.compat.emi.recipe.CrucibleEmiRecipe;
 import falseresync.wizcraft.compat.emi.recipe.LensedWorktableEmiRecipe;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftEmiPlugin implements EmiPlugin {
-    public static final Identifier EMI_ATLAS = wid("textures/block/worktable_top.png");
+    public static final ResourceLocation EMI_ATLAS = wid("textures/block/worktable_top.png");
 
     public static final EmiStack WORKSTATION_WORKTABLE = EmiStack.of(WizcraftItems.WORKTABLE);
     public static final EmiStack WORKSTATION_CRUCIBLE = EmiStack.of(Items.CAULDRON);
@@ -34,10 +34,10 @@ public class WizcraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(CATEGORY_CRUCIBLE, WORKSTATION_CRUCIBLE);
 
         var recipeManager = registry.getRecipeManager();
-        for (var recipeEntry : recipeManager.listAllOfType(WizcraftRecipes.LENSED_WORKTABLE)) {
+        for (var recipeEntry : recipeManager.getAllRecipesFor(WizcraftRecipes.LENSED_WORKTABLE)) {
             registry.addRecipe(new LensedWorktableEmiRecipe(recipeEntry));
         }
-        for (var recipeEntry : recipeManager.listAllOfType(WizcraftRecipes.CRUCIBLE)) {
+        for (var recipeEntry : recipeManager.getAllRecipesFor(WizcraftRecipes.CRUCIBLE)) {
             registry.addRecipe(new CrucibleEmiRecipe(recipeEntry));
         }
     }

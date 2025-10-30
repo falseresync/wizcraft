@@ -1,31 +1,33 @@
 package falseresync.wizcraft.client.render.blockentity;
 
-import falseresync.wizcraft.client.render.*;
-import falseresync.wizcraft.common.blockentity.*;
-import net.fabricmc.api.*;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.*;
-import net.minecraft.client.render.item.*;
-import net.minecraft.client.util.math.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import falseresync.wizcraft.client.render.RenderingUtil;
+import falseresync.wizcraft.common.blockentity.LensingPedestalBlockEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 
 @Environment(EnvType.CLIENT)
 public class LensingPedestalRenderer implements BlockEntityRenderer<LensingPedestalBlockEntity> {
     protected final ItemRenderer itemRenderer;
 
-    public LensingPedestalRenderer(BlockEntityRendererFactory.Context ctx) {
+    public LensingPedestalRenderer(BlockEntityRendererProvider.Context ctx) {
         this.itemRenderer = ctx.getItemRenderer();
     }
 
     @Override
-    public void render(LensingPedestalBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        var world = entity.getWorld();
+    public void render(LensingPedestalBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+        var world = entity.getLevel();
         var stack = entity.getHeldStackCopy();
         if (entity.isLinked() || stack.isEmpty() || world == null) return;
 
-        matrices.push();
+        matrices.pushPose();
 
-        RenderingUtil.levitateItemAboveBlock(world, entity.getPos(), tickDelta, stack, this.itemRenderer, matrices, vertexConsumers);
+        RenderingUtil.levitateItemAboveBlock(world, entity.getBlockPos(), tickDelta, stack, this.itemRenderer, matrices, vertexConsumers);
 
-        matrices.pop();
+        matrices.popPose();
     }
 }

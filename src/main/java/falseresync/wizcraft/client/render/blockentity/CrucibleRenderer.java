@@ -1,37 +1,39 @@
 package falseresync.wizcraft.client.render.blockentity;
 
-import falseresync.wizcraft.client.render.*;
-import falseresync.wizcraft.common.*;
-import falseresync.wizcraft.common.blockentity.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import falseresync.wizcraft.client.render.RenderingUtil;
+import falseresync.wizcraft.common.Wizcraft;
+import falseresync.wizcraft.common.blockentity.CrucibleBlockEntity;
 import falseresync.wizcraft.common.data.WizcraftAttachments;
-import net.minecraft.client.*;
-import net.minecraft.client.font.*;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.*;
-import net.minecraft.client.render.item.*;
-import net.minecraft.client.render.model.json.*;
-import net.minecraft.client.util.math.*;
-import net.minecraft.fluid.*;
-import net.minecraft.util.math.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.level.material.Fluids;
 
 public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
     private final ItemRenderer itemRenderer;
-    private final TextRenderer textRenderer;
-    private final MinecraftClient client;
+    private final Font textRenderer;
+    private final Minecraft client;
 
-    public CrucibleRenderer(BlockEntityRendererFactory.Context ctx) {
+    public CrucibleRenderer(BlockEntityRendererProvider.Context ctx) {
         itemRenderer = ctx.getItemRenderer();
-        textRenderer = ctx.getTextRenderer();
-        client = MinecraftClient.getInstance();
+        textRenderer = ctx.getFont();
+        client = Minecraft.getInstance();
     }
 
     @Override
-    public void render(CrucibleBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(CrucibleBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         if (client.player != null
                 && client.player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)
-                && client.player.getPos().isInRange(entity.getPos().toCenterPos(), Wizcraft.getConfig().trueseerGogglesDisplayRange)) {
-            var stacks = entity.getInventory().getHeldStacks();
-            matrices.push();
+                && client.player.position().closerThan(entity.getBlockPos().getCenter(), Wizcraft.getConfig().trueseerGogglesDisplayRange)) {
+            var stacks = entity.getInventory().getItems();
+            matrices.pushPose();
             matrices.translate(0.5, 1.25, 0.5);
             for (int i = 0; i < stacks.size(); i++) {
                 var stack = stacks.get(i);
@@ -39,35 +41,35 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
                     continue;
                 }
 
-                matrices.push();
+                matrices.pushPose();
                 matrices.translate(0.1, 0.5 * i, 0);
-                matrices.multiply(client.gameRenderer.getCamera().getRotation());
+                matrices.mulPose(client.gameRenderer.getMainCamera().rotation());
 
-                matrices.push();
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+                matrices.pushPose();
+                matrices.mulPose(Axis.XP.rotationDegrees(180));
                 var textScale = 0.5f /* block sizing [-0.5,0.5] */ * 1 / 9f /* text sizing [1,9] */ * 0.3f /* actual scale */;
                 matrices.scale(textScale, textScale, textScale);
-                textRenderer.draw(
+                textRenderer.drawInBatch(
                         stack.getCount() + "", 16, -4, 0xFF_FF_FF, true,
-                        matrices.peek().getPositionMatrix(), vertexConsumers,
-                        TextRenderer.TextLayerType.SEE_THROUGH, 0, light);
-                matrices.pop();
+                        matrices.last().pose(), vertexConsumers,
+                        Font.DisplayMode.SEE_THROUGH, 0, light);
+                matrices.popPose();
 
                 matrices.scale(0.4f, 0.4f, 0.4f);
-                itemRenderer.renderItem(stack, ModelTransformationMode.GUI, light, overlay, matrices, vertexConsumers, client.world, 0);
+                itemRenderer.renderStatic(stack, ItemDisplayContext.GUI, light, overlay, matrices, vertexConsumers, client.level, 0);
 
-                matrices.pop();
+                matrices.popPose();
             }
-            matrices.pop();
+            matrices.popPose();
         }
 
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0, 1, 0);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
+        matrices.mulPose(Axis.XP.rotationDegrees(90));
         RenderingUtil.drawFluid(
-                matrices, vertexConsumers.getBuffer(RenderLayer.getTranslucent()),
-                entity.getWorld(), entity.getPos(), Fluids.WATER, Fluids.WATER.getDefaultState(), true,
+                matrices, vertexConsumers.getBuffer(RenderType.translucent()),
+                entity.getLevel(), entity.getBlockPos(), Fluids.WATER, Fluids.WATER.defaultFluidState(), true,
                 light, overlay, 0.125f, 0.75f, 0.125f, 0.75f, 0.125f);
-        matrices.pop();
+        matrices.popPose();
     }
 }

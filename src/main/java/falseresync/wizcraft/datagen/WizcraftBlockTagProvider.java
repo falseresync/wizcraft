@@ -4,24 +4,24 @@ import falseresync.wizcraft.common.block.WizcraftBlockTags;
 import falseresync.wizcraft.common.block.WizcraftBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
 public class WizcraftBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-    public WizcraftBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public WizcraftBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup arg) {
-        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+    protected void addTags(HolderLookup.Provider arg) {
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
                 .add(WizcraftBlocks.DUMMY_WORKTABLE)
                 .add(WizcraftBlocks.CRAFTING_WORKTABLE)
                 .add(WizcraftBlocks.CHARGING_WORKTABLE);
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(WizcraftBlocks.CRUCIBLE)
                 .add(WizcraftBlocks.LENS)
                 .add(WizcraftBlocks.DUMMY_WORKTABLE)

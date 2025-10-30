@@ -1,21 +1,21 @@
 package falseresync.wizcraft.datagen.recipe;
 
 import falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 
 public class LensedWorktableRecipeJsonBuilder {
     private final Item result;
     private final Ingredient worktableInput;
-    private final DefaultedList<Ingredient> pedestalInputs = DefaultedList.of();
+    private final NonNullList<Ingredient> pedestalInputs = NonNullList.create();
 
-    public LensedWorktableRecipeJsonBuilder(ItemConvertible result, Ingredient worktableInput) {
+    public LensedWorktableRecipeJsonBuilder(ItemLike result, Ingredient worktableInput) {
         this.result = result.asItem();
         this.worktableInput = worktableInput;
     }
@@ -25,7 +25,7 @@ public class LensedWorktableRecipeJsonBuilder {
         return this;
     }
 
-    public void offerTo(RecipeExporter exporter, Identifier id) {
+    public void offerTo(RecipeOutput exporter, ResourceLocation id) {
         if (pedestalInputs.isEmpty()) {
             throw new IllegalStateException("A Lensed worktable recipe should contain at least one pedestal input");
         }
@@ -33,7 +33,7 @@ public class LensedWorktableRecipeJsonBuilder {
         exporter.accept(id, recipe, null);
     }
 
-    public void offerTo(RecipeExporter exporter) {
-        offerTo(exporter, Registries.ITEM.getId(result).withPrefixedPath("lensed_worktable/"));
+    public void offerTo(RecipeOutput exporter) {
+        offerTo(exporter, BuiltInRegistries.ITEM.getKey(result).withPrefix("lensed_worktable/"));
     }
 }

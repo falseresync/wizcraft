@@ -7,15 +7,15 @@ import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPayload;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.Comparator;
 
@@ -23,52 +23,40 @@ public interface ActivatorItem {
     Object2ObjectMap<Block, ActivationBehavior> ANY_BEHAVIORS = new Object2ObjectArrayMap<>();
     Object2ObjectMap<Block, ActivationBehavior> WAND_BEHAVIORS = new Object2ObjectArrayMap<>();
 
-    default ActionResult activateBlock(Object2ObjectMap<Block, ActivationBehavior> behaviors, ItemUsageContext context) {
-        var world = context.getWorld();
-        var pos = context.getBlockPos();
-        var state = world.getBlockState(pos);
-        var behavior = behaviors.get(state.getBlock());
-        if (behavior != null) {
-            return behavior.activateBlock(context);
-        }
-
-        return ActionResult.PASS;
-    }
-
     static void registerBehaviors() {
         ANY_BEHAVIORS.put(Blocks.WATER_CAULDRON, context -> {
             var player = context.getPlayer();
-            if (player == null || player.isSpectator()) return ActionResult.PASS;
+            if (player == null || player.isSpectator()) return InteractionResult.PASS;
 
-            var world = context.getWorld();
-            var pos = context.getBlockPos();
-            if (world.getBlockState(pos.down()).isIn(WizcraftBlockTags.CRUCIBLE_HEAT_SOURCES)) {
-                if (world.isClient) return ActionResult.CONSUME;
+            var world = context.getLevel();
+            var pos = context.getClickedPos();
+            if (world.getBlockState(pos.below()).is(WizcraftBlockTags.CRUCIBLE_HEAT_SOURCES)) {
+                if (world.isClientSide) return InteractionResult.CONSUME;
 
-                world.setBlockState(pos, WizcraftBlocks.CRUCIBLE.getDefaultState(), Block.NOTIFY_ALL);
-                return ActionResult.SUCCESS;
+                world.setBlock(pos, WizcraftBlocks.CRUCIBLE.defaultBlockState(), Block.UPDATE_ALL);
+                return InteractionResult.SUCCESS;
             } else {
-                return ActionResult.FAIL;
+                return InteractionResult.FAIL;
             }
         });
 
         WAND_BEHAVIORS.putAll(ANY_BEHAVIORS);
         WAND_BEHAVIORS.put(WizcraftBlocks.DUMMY_WORKTABLE, context -> {
             var player = context.getPlayer();
-            if (player == null || player.isSpectator()) return ActionResult.PASS;
+            if (player == null || player.isSpectator()) return InteractionResult.PASS;
 
-            var world = context.getWorld();
-            if (world.isClient) return ActionResult.CONSUME;
+            var world = context.getLevel();
+            if (world.isClientSide) return InteractionResult.CONSUME;
 
-            var pos = context.getBlockPos();
-            var serverPlayer = (ServerPlayerEntity) player;
-            var matchedVariants = WorktableVariant.getForPlayerAndSearchAround((ServerWorld) world, serverPlayer, pos);
+            var pos = context.getClickedPos();
+            var serverPlayer = (ServerPlayer) player;
+            var matchedVariants = WorktableVariant.getForPlayerAndSearchAround((ServerLevel) world, serverPlayer, pos);
             var fullyCompletedVariant = matchedVariants.stream()
                     .filter(variant -> variant.match().isCompleted())
                     .findFirst();
             if (fullyCompletedVariant.isPresent()) {
-                world.setBlockState(pos, fullyCompletedVariant.get().block().getDefaultState());
-                return ActionResult.SUCCESS;
+                world.setBlockAndUpdate(pos, fullyCompletedVariant.get().block().defaultBlockState());
+                return InteractionResult.SUCCESS;
             }
 
             var leastUncompletedVariant = matchedVariants.stream()
@@ -77,18 +65,30 @@ public interface ActivatorItem {
 //                    .min(Comparator.comparingInt(variant -> variant.match().delta().size()));
             if (leastUncompletedVariant.isPresent()) {
                 ServerPlayNetworking.send(serverPlayer, new TriggerBlockPatternTipS2CPayload(leastUncompletedVariant.get().match().deltaAsBlockPos()));
-                player.playSoundToPlayer(SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 1f, 1f);
-                player.sendMessage(Text.translatable("hud.wizcraft.worktable.incomplete_worktable"), true);
+                player.playNotifySound(SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1f, 1f);
+                player.displayClientMessage(Component.translatable("hud.wizcraft.worktable.incomplete_worktable"), true);
 
-                return ActionResult.FAIL;
+                return InteractionResult.FAIL;
             }
 
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
         });
+    }
+
+    default InteractionResult activateBlock(Object2ObjectMap<Block, ActivationBehavior> behaviors, UseOnContext context) {
+        var world = context.getLevel();
+        var pos = context.getClickedPos();
+        var state = world.getBlockState(pos);
+        var behavior = behaviors.get(state.getBlock());
+        if (behavior != null) {
+            return behavior.activateBlock(context);
+        }
+
+        return InteractionResult.PASS;
     }
 
     @FunctionalInterface
     interface ActivationBehavior {
-        ActionResult activateBlock(ItemUsageContext context);
+        InteractionResult activateBlock(UseOnContext context);
     }
 }

@@ -8,9 +8,19 @@ import falseresync.wizcraft.common.item.focus.FocusItem;
 import falseresync.wizcraft.common.item.focus.FocusPlating;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.block.Block;
-import net.minecraft.data.client.*;
-import net.minecraft.util.Identifier;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.data.models.blockstates.Variant;
+import net.minecraft.data.models.blockstates.VariantProperties;
+import net.minecraft.data.models.model.ModelLocationUtils;
+import net.minecraft.data.models.model.ModelTemplate;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.data.models.model.TextureMapping;
+import net.minecraft.data.models.model.TextureSlot;
+import net.minecraft.data.models.model.TexturedModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 import java.util.Map;
 import java.util.Optional;
@@ -18,18 +28,44 @@ import java.util.Optional;
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftModelProvider extends FabricModelProvider {
-    public static final TextureKey KEY_OVERLAY = TextureKey.of("overlay");
-    public static final Model MODEL_TEMPLATE_WORKTABLE =
-            new Model(Optional.of(wid("block/template_worktable")), Optional.empty(), KEY_OVERLAY);
-    public static final TexturedModel.Factory WORKTABLE =
-            TexturedModel.makeFactory(block -> new TextureMap().put(KEY_OVERLAY, TextureMap.getSubId(block, "_overlay")), MODEL_TEMPLATE_WORKTABLE);
+    public static final TextureSlot KEY_OVERLAY = TextureSlot.create("overlay");
+    public static final ModelTemplate MODEL_TEMPLATE_WORKTABLE =
+            new ModelTemplate(Optional.of(wid("block/template_worktable")), Optional.empty(), KEY_OVERLAY);
+    public static final TexturedModel.Provider WORKTABLE =
+            TexturedModel.createDefault(block -> new TextureMapping().put(KEY_OVERLAY, TextureMapping.getBlockTexture(block, "_overlay")), MODEL_TEMPLATE_WORKTABLE);
 
     public WizcraftModelProvider(FabricDataOutput output) {
         super(output);
     }
 
+    private static void addWorktableVariant(BlockModelGenerators blockStateModelGenerator, Block block) {
+        blockStateModelGenerator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(
+                        block,
+                        Variant.variant().with(
+                                VariantProperties.MODEL,
+                                WORKTABLE.create(block, blockStateModelGenerator.modelOutput))));
+    }
+
+    private static void addSimpleBlockWithoutItem(BlockModelGenerators blockStateModelGenerator, Block block) {
+        var blockModelId = ModelLocationUtils.getModelLocation(block);
+        blockStateModelGenerator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(
+                        block,
+                        Variant.variant().with(VariantProperties.MODEL, blockModelId)));
+        blockStateModelGenerator.skipAutoItemBlock(block);
+    }
+
+    private static void addSimpleBlock(BlockModelGenerators blockStateModelGenerator, Block block) {
+        var blockModelId = ModelLocationUtils.getModelLocation(block);
+        blockStateModelGenerator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(
+                        block,
+                        Variant.variant().with(VariantProperties.MODEL, blockModelId)));
+    }
+
     @Override
-    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+    public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
         addSimpleBlock(blockStateModelGenerator, WizcraftBlocks.CRUCIBLE);
 
         addSimpleBlockWithoutItem(blockStateModelGenerator, WizcraftBlocks.LENS);
@@ -40,42 +76,16 @@ public class WizcraftModelProvider extends FabricModelProvider {
         addWorktableVariant(blockStateModelGenerator, WizcraftBlocks.CHARGING_WORKTABLE);
     }
 
-    private static void addWorktableVariant(BlockStateModelGenerator blockStateModelGenerator, Block block) {
-        blockStateModelGenerator.blockStateCollector.accept(
-                VariantsBlockStateSupplier.create(
-                        block,
-                        BlockStateVariant.create().put(
-                                VariantSettings.MODEL,
-                                WORKTABLE.upload(block, blockStateModelGenerator.modelCollector))));
-    }
-
-    private static void addSimpleBlockWithoutItem(BlockStateModelGenerator blockStateModelGenerator, Block block) {
-        var blockModelId = ModelIds.getBlockModelId(block);
-        blockStateModelGenerator.blockStateCollector.accept(
-                VariantsBlockStateSupplier.create(
-                        block,
-                        BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId)));
-        blockStateModelGenerator.excludeFromSimpleItemModelGeneration(block);
-    }
-
-    private static void addSimpleBlock(BlockStateModelGenerator blockStateModelGenerator, Block block) {
-        var blockModelId = ModelIds.getBlockModelId(block);
-        blockStateModelGenerator.blockStateCollector.accept(
-                VariantsBlockStateSupplier.create(
-                        block,
-                        BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId)));
-    }
-
     @Override
-    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-        itemModelGenerator.register(WizcraftItems.GRIMOIRE, Models.GENERATED);
+    public void generateItemModels(ItemModelGenerators itemModelGenerator) {
+        itemModelGenerator.generateFlatItem(WizcraftItems.GRIMOIRE, ModelTemplates.FLAT_ITEM);
 
-        itemModelGenerator.register(WizcraftItems.MORTAR_AND_PESTLE, Models.GENERATED);
+        itemModelGenerator.generateFlatItem(WizcraftItems.MORTAR_AND_PESTLE, ModelTemplates.FLAT_ITEM);
 
-        itemModelGenerator.register(WizcraftItems.WAND_CORE, Models.GENERATED);
-        itemModelGenerator.register(WizcraftItems.METALLIZED_STICK, Models.GENERATED);
+        itemModelGenerator.generateFlatItem(WizcraftItems.WAND_CORE, ModelTemplates.FLAT_ITEM);
+        itemModelGenerator.generateFlatItem(WizcraftItems.METALLIZED_STICK, ModelTemplates.FLAT_ITEM);
 
-        itemModelGenerator.register(WizcraftItems.WAND, Models.HANDHELD_ROD);
+        itemModelGenerator.generateFlatItem(WizcraftItems.WAND, ModelTemplates.FLAT_HANDHELD_ROD_ITEM);
 
         registerFocus(WizcraftItems.CHARGING_FOCUS, itemModelGenerator);
         registerFocus(WizcraftItems.STARSHOOTER_FOCUS, itemModelGenerator);
@@ -83,13 +93,13 @@ public class WizcraftModelProvider extends FabricModelProvider {
         registerFocus(WizcraftItems.COMET_WARP_FOCUS, itemModelGenerator);
         registerFocus(WizcraftItems.ENERGY_VEIL_FOCUS, itemModelGenerator);
 
-        itemModelGenerator.register(WizcraftItems.TRUESEER_GOGGLES, Models.GENERATED);
-        itemModelGenerator.register(WizcraftItems.FOCUSES_BELT, Models.GENERATED);
-        itemModelGenerator.register(WizcraftItems.CHARGE_SHELL, Models.GENERATED);
+        itemModelGenerator.generateFlatItem(WizcraftItems.TRUESEER_GOGGLES, ModelTemplates.FLAT_ITEM);
+        itemModelGenerator.generateFlatItem(WizcraftItems.FOCUSES_BELT, ModelTemplates.FLAT_ITEM);
+        itemModelGenerator.generateFlatItem(WizcraftItems.CHARGE_SHELL, ModelTemplates.FLAT_ITEM);
     }
 
-    private JsonObject createFocusJson(Identifier id, Map<TextureKey, Identifier> textures) {
-        var model = Models.GENERATED_TWO_LAYERS.createJson(id, textures);
+    private JsonObject createFocusJson(ResourceLocation id, Map<TextureSlot, ResourceLocation> textures) {
+        var model = ModelTemplates.TWO_LAYERED_ITEM.createBaseTemplate(id, textures);
         var overrides = new JsonArray();
 
         for (var plating : FocusPlating.values()) {
@@ -105,16 +115,16 @@ public class WizcraftModelProvider extends FabricModelProvider {
         return model;
     }
 
-    private void registerFocus(FocusItem focus, ItemModelGenerator generator) {
-        Identifier modelId = ModelIds.getItemModelId(focus);
-        Identifier textureId = TextureMap.getId(focus);
-        Models.GENERATED.upload(modelId, TextureMap.layer0(textureId), generator.writer, this::createFocusJson);
+    private void registerFocus(FocusItem focus, ItemModelGenerators generator) {
+        ResourceLocation modelId = ModelLocationUtils.getModelLocation(focus);
+        ResourceLocation textureId = TextureMapping.getItemTexture(focus);
+        ModelTemplates.FLAT_ITEM.create(modelId, TextureMapping.layer0(textureId), generator.output, this::createFocusJson);
 
         for (var plating : FocusPlating.values()) {
-            Models.GENERATED_TWO_LAYERS.upload(
+            ModelTemplates.TWO_LAYERED_ITEM.create(
                     DatagenUtil.suffixPlating(modelId, plating),
-                    TextureMap.layered(textureId, DatagenUtil.suffixPlating(wid("item/focus"), plating)),
-                    generator.writer);
+                    TextureMapping.layered(textureId, DatagenUtil.suffixPlating(wid("item/focus"), plating)),
+                    generator.output);
         }
     }
 }

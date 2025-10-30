@@ -1,38 +1,38 @@
 package falseresync.wizcraft.common.item;
 
-import falseresync.lib.registry.*;
-import net.fabricmc.fabric.api.itemgroup.v1.*;
-import net.minecraft.item.*;
-import net.minecraft.text.*;
+import falseresync.lib.registry.RegistryObject;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
 
 public class WizcraftItemGroups {
-    public static final @RegistryObject ItemGroup GENERAL = FabricItemGroup.builder()
-            .icon(WizcraftItems.WAND::getDefaultStack)
-            .displayName(Text.translatable("itemGroup.wizcraft"))
-            .entries((displayContext, entries) -> {
-                entries.add(WizcraftItems.GRIMOIRE);
+    public static final @RegistryObject CreativeModeTab GENERAL = FabricItemGroup.builder()
+            .icon(WizcraftItems.WAND::getDefaultInstance)
+            .title(Component.translatable("itemGroup.wizcraft"))
+            .displayItems((displayContext, entries) -> {
+                entries.accept(WizcraftItems.GRIMOIRE);
 
-                entries.add(WizcraftItems.MORTAR_AND_PESTLE);
+                entries.accept(WizcraftItems.MORTAR_AND_PESTLE);
 
-                entries.add(WizcraftItems.METALLIZED_STICK);
-                entries.add(WizcraftItems.WAND_CORE);
+                entries.accept(WizcraftItems.METALLIZED_STICK);
+                entries.accept(WizcraftItems.WAND_CORE);
 
-                entries.add(WizcraftItems.WAND);
+                entries.accept(WizcraftItems.WAND);
 
-                entries.add(WizcraftItems.STARSHOOTER_FOCUS);
-                entries.add(WizcraftItems.CHARGING_FOCUS);
-                entries.add(WizcraftItems.LIGHTNING_FOCUS);
-                entries.add(WizcraftItems.COMET_WARP_FOCUS);
-                entries.add(WizcraftItems.ENERGY_VEIL_FOCUS);
+                entries.accept(WizcraftItems.STARSHOOTER_FOCUS);
+                entries.accept(WizcraftItems.CHARGING_FOCUS);
+                entries.accept(WizcraftItems.LIGHTNING_FOCUS);
+                entries.accept(WizcraftItems.COMET_WARP_FOCUS);
+                entries.accept(WizcraftItems.ENERGY_VEIL_FOCUS);
 
-                entries.add(WizcraftItems.TRUESEER_GOGGLES);
-                entries.add(WizcraftItems.FOCUSES_BELT);
-                entries.add(WizcraftItems.CHARGE_SHELL);
+                entries.accept(WizcraftItems.TRUESEER_GOGGLES);
+                entries.accept(WizcraftItems.FOCUSES_BELT);
+                entries.accept(WizcraftItems.CHARGE_SHELL);
 
-                entries.add(WizcraftItems.CRUCIBLE);
-                entries.add(WizcraftItems.LENS);
-                entries.add(WizcraftItems.WORKTABLE);
-                entries.add(WizcraftItems.LENSING_PEDESTAL);
+                entries.accept(WizcraftItems.CRUCIBLE);
+                entries.accept(WizcraftItems.LENS);
+                entries.accept(WizcraftItems.WORKTABLE);
+                entries.accept(WizcraftItems.LENSING_PEDESTAL);
             })
             .build();
 }

@@ -1,15 +1,17 @@
 package falseresync.wizcraft.client;
 
-import falseresync.wizcraft.client.gui.*;
-import falseresync.wizcraft.client.hud.*;
-import falseresync.wizcraft.client.particle.*;
-import falseresync.wizcraft.client.render.*;
-import falseresync.wizcraft.common.config.*;
-import falseresync.wizcraft.compat.lavender.*;
-import falseresync.wizcraft.networking.*;
-import me.shedaniel.autoconfig.*;
-import net.fabricmc.api.*;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.*;
+import falseresync.wizcraft.client.gui.WizcraftGui;
+import falseresync.wizcraft.client.hud.WizcraftHud;
+import falseresync.wizcraft.client.particle.WizcraftParticleFactories;
+import falseresync.wizcraft.client.render.WizcraftRendering;
+import falseresync.wizcraft.common.config.TranslatableEnum;
+import falseresync.wizcraft.common.config.TranslatableEnumGuiProvider;
+import falseresync.wizcraft.common.config.WizcraftConfig;
+import falseresync.wizcraft.compat.lavender.WizcraftLavenderPlugin;
+import falseresync.wizcraft.networking.WizcraftClientReceivers;
+import me.shedaniel.autoconfig.AutoConfig;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 
 public class WizcraftClient implements ClientModInitializer {
     private static WizcraftHud hud;

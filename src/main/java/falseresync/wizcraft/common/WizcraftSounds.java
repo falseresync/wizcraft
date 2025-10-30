@@ -1,9 +1,10 @@
 package falseresync.wizcraft.common;
 
-import net.minecraft.registry.*;
-import net.minecraft.sound.*;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.sounds.SoundEvent;
 
-import static falseresync.wizcraft.common.Wizcraft.*;
+import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class WizcraftSounds {
     public static final SoundEvent WORKTABLE_SUCCESS = r("block.worktable.success");
@@ -13,7 +14,7 @@ public class WizcraftSounds {
 
     private static SoundEvent r(String id) {
         var fullId = wid(id);
-        return Registry.register(Registries.SOUND_EVENT, fullId, SoundEvent.of(fullId));
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, fullId, SoundEvent.createVariableRangeEvent(fullId));
     }
 
     public static void init() {

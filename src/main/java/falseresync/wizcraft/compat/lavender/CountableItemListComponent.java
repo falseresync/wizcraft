@@ -2,13 +2,10 @@ package falseresync.wizcraft.compat.lavender;
 
 import com.google.common.collect.ImmutableList;
 import falseresync.wizcraft.common.recipe.CountableIngredient;
-import io.wispforest.lavender.md.ItemListComponent;
 import io.wispforest.owo.ui.component.ItemComponent;
 import io.wispforest.owo.ui.core.Insets;
-import io.wispforest.owo.ui.core.OwoUIDrawContext;
-import io.wispforest.owo.ui.core.Sizing;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -47,7 +44,7 @@ public class CountableItemListComponent extends ItemComponent {
     }
 
     public CountableItemListComponent ingredient(Ingredient ingredient) {
-        items = ImmutableList.copyOf(ingredient.getMatchingStacks());
+        items = ImmutableList.copyOf(ingredient.getItems());
         updateForItems();
 
         return this;

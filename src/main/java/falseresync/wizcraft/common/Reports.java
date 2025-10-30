@@ -1,46 +1,48 @@
 package falseresync.wizcraft.common;
 
-import net.minecraft.entity.player.*;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.*;
-import net.minecraft.text.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class Reports {
-    public static void insufficientCharge(PlayerEntity player) {
-        player.playSoundToPlayer(SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS, 1f, 1f);
-        player.sendMessage(Text.translatable("hud.wizcraft.wand.insufficient_charge").formatted(Formatting.DARK_RED), true);
+    public static void insufficientCharge(Player player) {
+        player.playNotifySound(SoundEvents.LEVER_CLICK, SoundSource.PLAYERS, 1f, 1f);
+        player.displayClientMessage(Component.translatable("hud.wizcraft.wand.insufficient_charge").withStyle(ChatFormatting.DARK_RED), true);
     }
 
-    public static void playSoundToEveryone(PlayerEntity player, SoundEvent sound) {
-        player.playSound(sound);
-        player.playSoundToPlayer(sound, SoundCategory.PLAYERS, 1f, 1f);
+    public static void playSoundToEveryone(Player player, SoundEvent sound) {
+        player.makeSound(sound);
+        player.playNotifySound(sound, SoundSource.PLAYERS, 1f, 1f);
     }
 
-    public static void addSparkles(World world, Vec3d pos) {
+    public static void addSparkles(Level world, Vec3 pos) {
         addParticle(world, ParticleTypes.FIREWORK, pos, 5, 10);
     }
 
-    public static void addSmoke(World world, Vec3d pos) {
+    public static void addSmoke(Level world, Vec3 pos) {
         addParticle(world, ParticleTypes.WHITE_SMOKE, pos, 5, 10);
     }
 
-    public static void addParticle(World world, ParticleEffect parameters, Vec3d pos, int minAmount, int maxAmount) {
+    public static void addParticle(Level world, ParticleOptions parameters, Vec3 pos, int minAmount, int maxAmount) {
         var random = world.getRandom();
-        if (world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(
+        if (world instanceof ServerLevel serverWorld) {
+            serverWorld.sendParticles(
                     parameters, pos.x, pos.y, pos.z,
-                    random.nextBetween(minAmount, maxAmount),
+                    random.nextIntBetweenInclusive(minAmount, maxAmount),
                     (random.nextFloat() - 0.5) / 2,
                     random.nextFloat() / 2,
                     (random.nextFloat() - 0.5) / 2,
                     0.15);
         } else {
-            for (int i = 0; i < random.nextBetween(minAmount, maxAmount); i++) {
+            for (int i = 0; i < random.nextIntBetweenInclusive(minAmount, maxAmount); i++) {
                 world.addParticle(
                         parameters, pos.x, pos.y, pos.z,
                         (random.nextFloat() - 0.5) / 2,

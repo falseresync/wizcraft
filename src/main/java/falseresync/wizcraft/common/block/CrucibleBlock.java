@@ -1,63 +1,71 @@
 package falseresync.wizcraft.common.block;
 
-import com.mojang.serialization.*;
-import falseresync.wizcraft.common.blockentity.*;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.*;
-import net.minecraft.util.function.*;
-import net.minecraft.util.math.*;
-import net.minecraft.util.shape.*;
-import net.minecraft.world.*;
-import org.jetbrains.annotations.*;
+import com.mojang.serialization.MapCodec;
+import falseresync.wizcraft.common.blockentity.CrucibleBlockEntity;
+import falseresync.wizcraft.common.blockentity.WizcraftBlockEntities;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-public class CrucibleBlock extends BlockWithEntity {
-    public static final MapCodec<CrucibleBlock> CODEC = createCodec(CrucibleBlock::new);
-    private static final VoxelShape RAYCAST_SHAPE = createCuboidShape(2.0, 4.0, 2.0, 14.0, 16.0, 14.0);
-    protected static final VoxelShape OUTLINE_SHAPE = VoxelShapes.combineAndSimplify(
-            VoxelShapes.fullCube(),
-            VoxelShapes.union(
-                    createCuboidShape(0.0, 0.0, 4.0, 16.0, 3.0, 12.0),
-                    createCuboidShape(4.0, 0.0, 0.0, 12.0, 3.0, 16.0),
-                    createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0),
+public class CrucibleBlock extends BaseEntityBlock {
+    public static final MapCodec<CrucibleBlock> CODEC = simpleCodec(CrucibleBlock::new);
+    private static final VoxelShape RAYCAST_SHAPE = box(2.0, 4.0, 2.0, 14.0, 16.0, 14.0);
+    protected static final VoxelShape OUTLINE_SHAPE = Shapes.join(
+            Shapes.block(),
+            Shapes.or(
+                    box(0.0, 0.0, 4.0, 16.0, 3.0, 12.0),
+                    box(4.0, 0.0, 0.0, 12.0, 3.0, 16.0),
+                    box(2.0, 0.0, 2.0, 14.0, 3.0, 14.0),
                     RAYCAST_SHAPE
             ),
-            BooleanBiFunction.ONLY_FIRST
+            BooleanOp.ONLY_FIRST
     );
 
-    public CrucibleBlock(Settings settings) {
+    public CrucibleBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    protected MapCodec<CrucibleBlock> getCodec() {
+    protected MapCodec<CrucibleBlock> codec() {
         return CODEC;
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new CrucibleBlockEntity(pos, state);
     }
 
     @Override
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, WizcraftBlockEntities.CRUCIBLE, CrucibleBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, WizcraftBlockEntities.CRUCIBLE, CrucibleBlockEntity::tick);
     }
 
 
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return OUTLINE_SHAPE;
     }
 
     @Override
-    protected VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
+    protected VoxelShape getInteractionShape(BlockState state, BlockGetter world, BlockPos pos) {
         return RAYCAST_SHAPE;
     }
 
     @Override
-    protected BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 }

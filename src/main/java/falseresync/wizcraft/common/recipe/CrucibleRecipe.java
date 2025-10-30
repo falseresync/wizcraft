@@ -1,28 +1,33 @@
 package falseresync.wizcraft.common.recipe;
 
-import com.mojang.serialization.*;
-import com.mojang.serialization.codecs.*;
-import it.unimi.dsi.fastutil.ints.*;
-import net.minecraft.item.*;
-import net.minecraft.network.*;
-import net.minecraft.network.codec.*;
-import net.minecraft.recipe.*;
-import net.minecraft.recipe.input.*;
-import net.minecraft.registry.*;
-import net.minecraft.util.collection.*;
-import net.minecraft.world.*;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
-public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredients) implements Recipe<RecipeInput> {
+public record CrucibleRecipe(ItemStack result, NonNullList<Ingredient> ingredients) implements Recipe<RecipeInput> {
     @Override
-    public boolean matches(RecipeInput input, World world) {
-        var inputStacksCount = input.getSize();
+    public boolean matches(RecipeInput input, Level world) {
+        var inputStacksCount = input.size();
         if (inputStacksCount < ingredients.size()) {
             return false;
         }
 
         int nonEmptySize = 0;
         for (int i = 0; i < inputStacksCount; i++) {
-            nonEmptySize += input.getStackInSlot(i).isEmpty() ? 0 : 1;
+            nonEmptySize += input.getItem(i).isEmpty() ? 0 : 1;
         }
         if (nonEmptySize < ingredients.size()) {
             return false;
@@ -34,7 +39,7 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
                 if (matchedSlots.contains(i)) {
                     continue;
                 }
-                if (ingredient.test(input.getStackInSlot(i))) {
+                if (ingredient.test(input.getItem(i))) {
                     matchedSlots.add(i);
                     break;
                 }
@@ -44,22 +49,22 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
     }
 
     @Override
-    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return getResult(lookup);
+    public ItemStack assemble(RecipeInput input, HolderLookup.Provider lookup) {
+        return getResultItem(lookup);
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= ingredients.size();
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
         return result.copy();
     }
 
     @Override
-    public boolean isIgnoredInRecipeBook() {
+    public boolean isSpecial() {
         return true;
     }
 
@@ -74,20 +79,20 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
     }
 
     @Override
-    public DefaultedList<Ingredient> getIngredients() {
+    public NonNullList<Ingredient> getIngredients() {
         return ingredients;
     }
 
     public static class Serializer implements RecipeSerializer<CrucibleRecipe> {
-        public static final PacketCodec<RegistryByteBuf, CrucibleRecipe> PACKET_CODEC = PacketCodec.tuple(
-                ItemStack.PACKET_CODEC, CrucibleRecipe::result,
-                PacketCodecs.collection(DefaultedList::ofSize, Ingredient.PACKET_CODEC), CrucibleRecipe::ingredients,
+        public static final StreamCodec<RegistryFriendlyByteBuf, CrucibleRecipe> PACKET_CODEC = StreamCodec.composite(
+                ItemStack.STREAM_CODEC, CrucibleRecipe::result,
+                ByteBufCodecs.collection(NonNullList::createWithCapacity, Ingredient.CONTENTS_STREAM_CODEC), CrucibleRecipe::ingredients,
                 CrucibleRecipe::new
         );
         private static final MapCodec<CrucibleRecipe> CODEC = RecordCodecBuilder.mapCodec(
                 instance -> instance.group(
-                                ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(CrucibleRecipe::result),
-                                Ingredient.DISALLOW_EMPTY_CODEC
+                                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(CrucibleRecipe::result),
+                                Ingredient.CODEC_NONEMPTY
                                         .listOf()
                                         .fieldOf("ingredients")
                                         .flatXmap(
@@ -98,7 +103,7 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
                                                     } else if (nonEmptyIngredients.length > 5) {
                                                         return DataResult.error(() -> "Too many ingredients crucible recipe");
                                                     } else {
-                                                        return DataResult.success(DefaultedList.copyOf(Ingredient.EMPTY, nonEmptyIngredients));
+                                                        return DataResult.success(NonNullList.of(Ingredient.EMPTY, nonEmptyIngredients));
                                                     }
                                                 },
                                                 DataResult::success
@@ -114,7 +119,7 @@ public record CrucibleRecipe(ItemStack result, DefaultedList<Ingredient> ingredi
         }
 
         @Override
-        public PacketCodec<RegistryByteBuf, CrucibleRecipe> packetCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, CrucibleRecipe> streamCodec() {
             return PACKET_CODEC;
         }
     }

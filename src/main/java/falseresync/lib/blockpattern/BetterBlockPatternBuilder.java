@@ -1,14 +1,17 @@
 package falseresync.lib.blockpattern;
 
-import com.google.common.base.*;
-import net.minecraft.block.pattern.*;
+import com.google.common.base.Preconditions;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class BetterBlockPatternBuilder {
     protected final List<String[]> layers = new ArrayList<>();
-    protected final Map<Character, Predicate<CachedBlockPosition>> keys = new HashMap<>();
+    protected final Map<Character, Predicate<BlockInWorld>> keys = new HashMap<>();
     protected int width = 0;
     protected int depth = 0;
     protected boolean preserveUp = false;
@@ -41,7 +44,7 @@ public class BetterBlockPatternBuilder {
         return this;
     }
 
-    public BetterBlockPatternBuilder where(char key, Predicate<CachedBlockPosition> value) {
+    public BetterBlockPatternBuilder where(char key, Predicate<BlockInWorld> value) {
         keys.put(key, value);
         return this;
     }
@@ -60,12 +63,12 @@ public class BetterBlockPatternBuilder {
         return new BetterBlockPattern(bakePredicates(), preserveUp);
     }
 
-    protected Predicate<CachedBlockPosition>[][][] bakePredicates() {
+    protected Predicate<BlockInWorld>[][][] bakePredicates() {
         validate();
         var sizeY = sidewaysLayers ? depth : layers.size();
         var sizeZ = sidewaysLayers ? layers.size() : depth;
         @SuppressWarnings("unchecked")
-        var predicates = (Predicate<CachedBlockPosition>[][][]) new Predicate[width][sizeY][sizeZ];
+        var predicates = (Predicate<BlockInWorld>[][][]) new Predicate[width][sizeY][sizeZ];
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < layers.size(); y++) {

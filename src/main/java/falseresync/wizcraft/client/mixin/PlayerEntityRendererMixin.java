@@ -1,32 +1,37 @@
 package falseresync.wizcraft.client.mixin;
 
-import falseresync.wizcraft.client.render.entity.*;
-import net.minecraft.client.network.*;
-import net.minecraft.client.render.entity.*;
-import net.minecraft.client.render.entity.model.*;
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.*;
+import falseresync.wizcraft.client.render.entity.EnergyVeilFeatureRenderer;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = PlayerEntityRenderer.class)
-public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> implements EnergyVeilFeatureRenderer.Accessor {
+@Mixin(value = PlayerRenderer.class)
+public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> implements EnergyVeilFeatureRenderer.Accessor {
     @Mutable
     @Unique
-    public EnergyVeilFeatureRenderer<AbstractClientPlayerEntity> energyVeilFeatureRenderer;
+    public EnergyVeilFeatureRenderer<AbstractClientPlayer> energyVeilFeatureRenderer;
 
-    public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
+    public PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel<AbstractClientPlayer> model, float shadowRadius) {
         super(ctx, model, shadowRadius);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void wizcraft$init(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo ci) {
-        energyVeilFeatureRenderer = new EnergyVeilFeatureRenderer<>(this, ctx.getModelLoader());
-        addFeature(energyVeilFeatureRenderer);
+    public void wizcraft$init(EntityRendererProvider.Context ctx, boolean slim, CallbackInfo ci) {
+        energyVeilFeatureRenderer = new EnergyVeilFeatureRenderer<>(this, ctx.getModelSet());
+        addLayer(energyVeilFeatureRenderer);
     }
 
     @Override
     @Unique
-    public EnergyVeilFeatureRenderer<AbstractClientPlayerEntity> wizcraft$getEnergyVeilRenderer() {
+    public EnergyVeilFeatureRenderer<AbstractClientPlayer> wizcraft$getEnergyVeilRenderer() {
         return energyVeilFeatureRenderer;
     }
 }

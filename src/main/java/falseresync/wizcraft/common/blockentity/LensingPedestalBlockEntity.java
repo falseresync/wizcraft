@@ -2,28 +2,28 @@ package falseresync.wizcraft.common.blockentity;
 
 import falseresync.wizcraft.common.CommonKeys;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public class LensingPedestalBlockEntity extends BlockEntity {
-    protected final SimpleInventory inventory = new SimpleInventory(1) {
+    protected final SimpleContainer inventory = new SimpleContainer(1) {
         @Override
-        public int getMaxCountPerStack() {
+        public int getMaxStackSize() {
             return 1;
         }
     };
@@ -32,18 +32,18 @@ public class LensingPedestalBlockEntity extends BlockEntity {
 
     public LensingPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(WizcraftBlockEntities.LENSING_PEDESTAL, pos, state);
-        inventory.addListener(sender -> markDirty());
+        inventory.addListener(sender -> setChanged());
     }
 
     // PUBLIC INTERFACE
 
     public void onCrafted(ItemStack remainder) {
-        inventory.setStack(0, remainder);
+        inventory.setItem(0, remainder);
     }
 
     public void linkTo(@Nullable BlockEntity controller) {
-        linkedTo = controller != null ? controller.getPos() : null;
-        markDirty();
+        linkedTo = controller != null ? controller.getBlockPos() : null;
+        setChanged();
     }
 
     public boolean isLinked() {
@@ -51,14 +51,14 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     }
 
     public boolean isLinkedTo(BlockEntity controller) {
-        return !isLinked() || controller.getPos().equals(linkedTo);
+        return !isLinked() || controller.getBlockPos().equals(linkedTo);
     }
 
     public ItemStack getHeldStackCopy() {
-        return inventory.getStack(0).copy();
+        return inventory.getItem(0).copy();
     }
 
-    public SimpleInventory getInventory() {
+    public SimpleContainer getInventory() {
         return inventory;
     }
 
@@ -69,48 +69,48 @@ public class LensingPedestalBlockEntity extends BlockEntity {
     // DATA-SAVING INTERNALS
 
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (world != null) {
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-            Optional.ofNullable(linkedTo).map(world::getBlockEntity).ifPresent(BlockEntity::markDirty);
+    public void setChanged() {
+        super.setChanged();
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            Optional.ofNullable(linkedTo).map(level::getBlockEntity).ifPresent(BlockEntity::setChanged);
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
 
-        Inventories.writeNbt(nbt, inventory.getHeldStacks(), registryLookup);
+        ContainerHelper.saveAllItems(nbt, inventory.getItems(), registryLookup);
 
         if (linkedTo != null) {
-            nbt.put(CommonKeys.LINKED_TO, NbtHelper.fromBlockPos(linkedTo));
+            nbt.put(CommonKeys.LINKED_TO, NbtUtils.writeBlockPos(linkedTo));
         } else {
             nbt.remove(CommonKeys.LINKED_TO);
         }
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
 
-        inventory.getHeldStacks().clear();
-        Inventories.readNbt(nbt, inventory.getHeldStacks(), registryLookup);
+        inventory.getItems().clear();
+        ContainerHelper.loadAllItems(nbt, inventory.getItems(), registryLookup);
 
         linkedTo = null;
-        if (nbt.contains(CommonKeys.LINKED_TO, NbtElement.COMPOUND_TYPE)) {
-            NbtHelper.toBlockPos(nbt, CommonKeys.LINKED_TO).ifPresent(it -> linkedTo = it);
+        if (nbt.contains(CommonKeys.LINKED_TO, Tag.TAG_COMPOUND)) {
+            NbtUtils.readBlockPos(nbt, CommonKeys.LINKED_TO).ifPresent(it -> linkedTo = it);
         }
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 }

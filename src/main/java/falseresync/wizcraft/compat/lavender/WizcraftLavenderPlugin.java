@@ -13,9 +13,9 @@ import io.wispforest.owo.ui.parsing.UIModelLoader;
 import io.wispforest.owo.ui.parsing.UIParsing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -26,10 +26,10 @@ import static falseresync.wizcraft.common.Wizcraft.wid;
 
 @Environment(EnvType.CLIENT)
 public class WizcraftLavenderPlugin {
-    public static final Identifier CRUCIBLE_TEX = wid("textures/gui/recipe/crucible.png");
-    public static final Identifier ARROW_TEX = wid("textures/gui/recipe/arrow_right.png");
+    public static final ResourceLocation CRUCIBLE_TEX = wid("textures/gui/recipe/crucible.png");
+    public static final ResourceLocation ARROW_TEX = wid("textures/gui/recipe/arrow_right.png");
 
-    public static final Identifier GRIMOIRE_ID = wid("grimoire");
+    public static final ResourceLocation GRIMOIRE_ID = wid("grimoire");
 
     public static void init() {
         UIParsing.registerFactory(wid("countable-item-list"), element -> new CountableItemListComponent());
@@ -41,7 +41,7 @@ public class WizcraftLavenderPlugin {
 
         LavenderBookScreen.registerRecipePreviewBuilder(GRIMOIRE_ID, WizcraftRecipes.CRUCIBLE, new RecipeFeature.RecipePreviewBuilder<>() {
             @Override
-            public @NotNull Component buildRecipePreview(BookCompiler.ComponentSource componentSource, RecipeEntry<CrucibleRecipe> recipeEntry) {
+            public @NotNull Component buildRecipePreview(BookCompiler.ComponentSource componentSource, RecipeHolder<CrucibleRecipe> recipeEntry) {
                 var recipe = recipeEntry.value();
                 var recipeComponent = componentSource.template(UIModelLoader.get(GRIMOIRE_ID), ParentComponent.class, "crucible-recipe", params);
 
@@ -73,7 +73,6 @@ public class WizcraftLavenderPlugin {
             }
         });
     }
-
 
 
 }

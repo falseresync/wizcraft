@@ -22,9 +22,9 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.LoggerFactory;
 
 public class Wizcraft implements ModInitializer {
@@ -33,12 +33,12 @@ public class Wizcraft implements ModInitializer {
     private static ChargeManager chargeManager;
     private static WizcraftConfig config;
 
-    public static Identifier id(String id) {
-        return Identifier.of(id);
+    public static ResourceLocation id(String id) {
+        return ResourceLocation.parse(id);
     }
 
-    public static Identifier wid(String path) {
-        return Identifier.of(MOD_ID, path);
+    public static ResourceLocation wid(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
     public static ChargeManager getChargeManager() {
@@ -56,13 +56,13 @@ public class Wizcraft implements ModInitializer {
         WizcraftBlocks.init();
         WizcraftItems.init();
         new AutoRegistry(MOD_ID, LOGGER)
-                .link(Registries.BLOCK_ENTITY_TYPE, WizcraftBlockEntities.class)
-                .link(Registries.ITEM_GROUP, WizcraftItemGroups.class)
-                .link(Registries.DATA_COMPONENT_TYPE, WizcraftComponents.class)
-                .link(Registries.ENTITY_TYPE, WizcraftEntities.class)
-                .link(Registries.RECIPE_TYPE, WizcraftRecipes.class)
-                .link(Registries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class)
-                .link(Registries.PARTICLE_TYPE, WizcraftParticleTypes.class);
+                .link(BuiltInRegistries.BLOCK_ENTITY_TYPE, WizcraftBlockEntities.class)
+                .link(BuiltInRegistries.CREATIVE_MODE_TAB, WizcraftItemGroups.class)
+                .link(BuiltInRegistries.DATA_COMPONENT_TYPE, WizcraftComponents.class)
+                .link(BuiltInRegistries.ENTITY_TYPE, WizcraftEntities.class)
+                .link(BuiltInRegistries.RECIPE_TYPE, WizcraftRecipes.class)
+                .link(BuiltInRegistries.RECIPE_SERIALIZER, WizcraftRecipeSerializers.class)
+                .link(BuiltInRegistries.PARTICLE_TYPE, WizcraftParticleTypes.class);
         WizcraftCustomIngredients.init();
         WizcraftAttachments.init();
         WizcraftItemTags.init();
@@ -77,7 +77,7 @@ public class Wizcraft implements ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             if (!handler.player.hasAttached(WizcraftAttachments.INTRODUCED_TO_WIZCRAFT)) {
-                handler.player.getInventory().offerOrDrop(new ItemStack(WizcraftItems.GRIMOIRE));
+                handler.player.getInventory().placeItemBackInInventory(new ItemStack(WizcraftItems.GRIMOIRE));
                 handler.player.setAttached(WizcraftAttachments.INTRODUCED_TO_WIZCRAFT, true);
             }
         });

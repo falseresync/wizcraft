@@ -1,9 +1,9 @@
 package falseresync.wizcraft.networking;
 
-import falseresync.wizcraft.client.*;
-import falseresync.wizcraft.networking.s2c.*;
-import net.fabricmc.fabric.api.client.networking.v1.*;
-import net.minecraft.client.world.*;
+import falseresync.wizcraft.client.BlockPatternTip;
+import falseresync.wizcraft.networking.s2c.TriggerBlockPatternTipS2CPayload;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.multiplayer.ClientLevel;
 
 public class WizcraftClientReceivers {
     public static void register() {
@@ -11,6 +11,6 @@ public class WizcraftClientReceivers {
     }
 
     private static void triggerBlockPatternTip(TriggerBlockPatternTipS2CPayload payload, ClientPlayNetworking.Context context) {
-        BlockPatternTip.spawnCompletionTipParticles(context.player(), (ClientWorld) context.player().getWorld(), payload.missingBlocks());
+        BlockPatternTip.spawnCompletionTipParticles(context.player(), (ClientLevel) context.player().level(), payload.missingBlocks());
     }
 }

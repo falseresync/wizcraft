@@ -1,21 +1,21 @@
 package falseresync.wizcraft.common.recipe;
 
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
-import net.minecraft.recipe.input.*;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 
-public class SimpleInventoryRecipeInput extends SimpleInventory implements RecipeInput {
+public class SimpleInventoryRecipeInput extends SimpleContainer implements RecipeInput {
     public SimpleInventoryRecipeInput(int size) {
         super(size);
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
-        return getStack(slot);
+    public ItemStack getItem(int slot) {
+        return super.getItem(slot);
     }
 
     @Override
-    public int getSize() {
-        return size();
+    public int size() {
+        return getContainerSize();
     }
 }

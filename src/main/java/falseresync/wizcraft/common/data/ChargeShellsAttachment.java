@@ -1,30 +1,33 @@
 package falseresync.wizcraft.common.data;
 
-import com.google.common.base.*;
-import com.mojang.serialization.*;
-import com.mojang.serialization.codecs.*;
-import it.unimi.dsi.fastutil.ints.*;
-import net.minecraft.network.*;
-import net.minecraft.network.codec.*;
-import net.minecraft.util.dynamic.*;
-import org.jetbrains.annotations.*;
+import com.google.common.base.Preconditions;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntImmutableList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
+import org.jetbrains.annotations.Nullable;
 
 public record ChargeShellsAttachment(int currentCharge, IntList shells, int maxCharge) {
     public static final int MAX_SHELLS = 3;
     public static final int MAX_CHARGE = 1000;
 
     public static final Codec<ChargeShellsAttachment> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codecs.NONNEGATIVE_INT.fieldOf("currentCharge").forGetter(ChargeShellsAttachment::currentCharge),
-            Codecs.NONNEGATIVE_INT.sizeLimitedListOf(MAX_SHELLS)
+            ExtraCodecs.NON_NEGATIVE_INT.fieldOf("currentCharge").forGetter(ChargeShellsAttachment::currentCharge),
+            ExtraCodecs.NON_NEGATIVE_INT.sizeLimitedListOf(MAX_SHELLS)
                     .xmap(it -> (IntList) new IntImmutableList(it), it -> it)
                     .fieldOf("shells").forGetter(ChargeShellsAttachment::shells),
-            Codecs.rangedInt(0, MAX_CHARGE).fieldOf("maxCharge").forGetter(ChargeShellsAttachment::maxCharge)
+            ExtraCodecs.intRange(0, MAX_CHARGE).fieldOf("maxCharge").forGetter(ChargeShellsAttachment::maxCharge)
     ).apply(instance, ChargeShellsAttachment::new));
 
-    public static final PacketCodec<RegistryByteBuf, ChargeShellsAttachment> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.INTEGER, ChargeShellsAttachment::currentCharge,
-            PacketCodecs.collection(IntArrayList::new, PacketCodecs.INTEGER, MAX_SHELLS), ChargeShellsAttachment::shells,
-            PacketCodecs.INTEGER, ChargeShellsAttachment::maxCharge,
+    public static final StreamCodec<RegistryFriendlyByteBuf, ChargeShellsAttachment> PACKET_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, ChargeShellsAttachment::currentCharge,
+            ByteBufCodecs.collection(IntArrayList::new, ByteBufCodecs.INT, MAX_SHELLS), ChargeShellsAttachment::shells,
+            ByteBufCodecs.INT, ChargeShellsAttachment::maxCharge,
             ChargeShellsAttachment::new
     );
 

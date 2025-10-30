@@ -2,31 +2,31 @@ package falseresync.wizcraft.common.item.focus;
 
 import falseresync.wizcraft.common.data.ItemBarComponent;
 import falseresync.wizcraft.common.data.WizcraftComponents;
-import net.minecraft.component.ComponentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.Util;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
 public abstract class FocusItem extends Item {
-    private final Function<Item, Integer> rawIdGetter = Util.memoize(Registries.ITEM::getRawIdOrThrow);
+    private final Function<Item, Integer> rawIdGetter = Util.memoize(BuiltInRegistries.ITEM::getIdOrThrow);
 
-    public FocusItem(Settings settings) {
+    public FocusItem(Properties settings) {
         super(settings);
     }
 
@@ -35,45 +35,45 @@ public abstract class FocusItem extends Item {
     }
 
     @Override
-    public void postProcessComponents(ItemStack stack) {
-        if (!stack.contains(WizcraftComponents.UUID)) {
+    public void verifyComponentsAfterLoad(ItemStack stack) {
+        if (!stack.has(WizcraftComponents.UUID)) {
             stack.set(WizcraftComponents.UUID, UUID.randomUUID());
         }
     }
 
-    protected final <T> void transferComponent(ItemStack sourceStack, ItemStack targetStack, ComponentType<T> componentType) {
+    protected final <T> void transferComponent(ItemStack sourceStack, ItemStack targetStack, DataComponentType<T> componentType) {
         targetStack.set(componentType, sourceStack.remove(componentType));
     }
 
-    public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack, PlayerEntity user) {
+    public void focusOnEquipped(ItemStack wandStack, ItemStack focusStack, Player user) {
     }
 
-    public void focusOnUnequipped(ItemStack wandStack, ItemStack focusStack, PlayerEntity user) {
+    public void focusOnUnequipped(ItemStack wandStack, ItemStack focusStack, Player user) {
     }
 
-    public TypedActionResult<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, World world, PlayerEntity user, Hand hand) {
-        return TypedActionResult.pass(wandStack);
+    public InteractionResultHolder<ItemStack> focusUse(ItemStack wandStack, ItemStack focusStack, Level world, Player user, InteractionHand hand) {
+        return InteractionResultHolder.pass(wandStack);
     }
 
-    public ActionResult focusUseOnBlock(ItemStack wandStack, ItemStack focusStack, ItemUsageContext context) {
-        return ActionResult.PASS;
+    public InteractionResult focusUseOnBlock(ItemStack wandStack, ItemStack focusStack, UseOnContext context) {
+        return InteractionResult.PASS;
     }
 
-    public ActionResult focusUseOnEntity(ItemStack wandStack, ItemStack focusStack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        return ActionResult.PASS;
+    public InteractionResult focusUseOnEntity(ItemStack wandStack, ItemStack focusStack, Player user, LivingEntity entity, InteractionHand hand) {
+        return InteractionResult.PASS;
     }
 
-    public void focusUsageTick(World world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
+    public void focusUsageTick(Level world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
     }
 
-    public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user) {
+    public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user) {
         return wandStack;
     }
 
-    public void focusOnStoppedUsing(ItemStack wandStack, ItemStack focusStack, World world, LivingEntity user, int remainingUseTicks) {
+    public void focusOnStoppedUsing(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user, int remainingUseTicks) {
     }
 
-    public void focusInventoryTick(ItemStack wandStack, ItemStack focusStack, World world, Entity entity, int slot, boolean selected) {
+    public void focusInventoryTick(ItemStack wandStack, ItemStack focusStack, Level world, Entity entity, int slot, boolean selected) {
     }
 
     public boolean focusIsUsedOnRelease(ItemStack wandStack, ItemStack focusStack) {
@@ -89,7 +89,7 @@ public abstract class FocusItem extends Item {
     }
 
     public boolean focusIsItemBarVisible(ItemStack wandStack, ItemStack focusStack) {
-        return wandStack.contains(WizcraftComponents.ITEM_BAR);
+        return wandStack.has(WizcraftComponents.ITEM_BAR);
     }
 
     public int focusGetItemBarStep(ItemStack wandStack, ItemStack focusStack) {
@@ -104,6 +104,6 @@ public abstract class FocusItem extends Item {
         return false;
     }
 
-    public void focusAppendTooltip(ItemStack wandStack, ItemStack focusStack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    public void focusAppendTooltip(ItemStack wandStack, ItemStack focusStack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
     }
 }

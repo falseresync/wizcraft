@@ -1,21 +1,21 @@
 package falseresync.wizcraft.common.item;
 
-import io.wispforest.lavender.book.*;
-import net.minecraft.item.*;
-import net.minecraft.util.*;
+import io.wispforest.lavender.book.LavenderBookItem;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
 
-import static falseresync.wizcraft.common.Wizcraft.*;
+import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public class GrimoireItem extends LavenderBookItem implements ActivatorItem {
-    protected GrimoireItem(Settings settings) {
+    protected GrimoireItem(Properties settings) {
         super(settings, wid("grimoire"));
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         var activationResult = activateBlock(ANY_BEHAVIORS, context);
-        if (activationResult.isAccepted()) return activationResult;
+        if (activationResult.consumesAction()) return activationResult;
 
-        return super.useOnBlock(context);
+        return super.useOn(context);
     }
 }

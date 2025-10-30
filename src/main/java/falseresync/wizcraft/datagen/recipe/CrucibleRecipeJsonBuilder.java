@@ -1,20 +1,20 @@
 package falseresync.wizcraft.datagen.recipe;
 
 import falseresync.wizcraft.common.recipe.CrucibleRecipe;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 
 public class CrucibleRecipeJsonBuilder {
     private final Item result;
-    private final DefaultedList<Ingredient> ingredients = DefaultedList.of();
+    private final NonNullList<Ingredient> ingredients = NonNullList.create();
 
-    public CrucibleRecipeJsonBuilder(ItemConvertible result) {
+    public CrucibleRecipeJsonBuilder(ItemLike result) {
         this.result = result.asItem();
     }
 
@@ -23,7 +23,7 @@ public class CrucibleRecipeJsonBuilder {
         return this;
     }
 
-    public void offerTo(RecipeExporter exporter, Identifier id) {
+    public void offerTo(RecipeOutput exporter, ResourceLocation id) {
         if (ingredients.isEmpty()) {
             throw new IllegalStateException("A Crucible recipe should contain at least one input");
         }
@@ -31,7 +31,7 @@ public class CrucibleRecipeJsonBuilder {
         exporter.accept(id, recipe, null);
     }
 
-    public void offerTo(RecipeExporter exporter) {
-        offerTo(exporter, Registries.ITEM.getId(result).withPrefixedPath("crucible/"));
+    public void offerTo(RecipeOutput exporter) {
+        offerTo(exporter, BuiltInRegistries.ITEM.getKey(result).withPrefix("crucible/"));
     }
 }

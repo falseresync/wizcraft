@@ -1,42 +1,44 @@
 package falseresync.wizcraft.common;
 
-import net.fabricmc.fabric.api.transfer.v1.item.*;
-import net.fabricmc.fabric.api.transfer.v1.storage.*;
-import net.fabricmc.fabric.api.transfer.v1.transaction.*;
-import net.minecraft.client.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.registry.entry.*;
-import net.minecraft.registry.tag.*;
-import net.minecraft.server.world.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.*;
-import org.jetbrains.annotations.*;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class WizcraftUtil {
-    private static final Function<World, Integer> memo$findViewDistance = Util.memoize((World world) -> world.isClient()
-            ? MinecraftClient.getInstance().options.getClampedViewDistance()
-            : ((ServerWorld) world).getChunkManager().chunkLoadingManager.watchDistance);
+    private static final Function<Level, Integer> memo$findViewDistance = Util.memoize((Level world) -> world.isClientSide()
+            ? Minecraft.getInstance().options.getEffectiveRenderDistance()
+            : ((ServerLevel) world).getChunkSource().chunkMap.serverViewDistance);
 
-    public static <T> Optional<T> nextRandomEntry(ServerWorld world, TagKey<T> tag, Random random) {
-        return world.getRegistryManager()
-                .getOptional(tag.registry())
-                .map(registry -> registry.getOrCreateEntryList(tag))
-                .flatMap(entries -> entries.getRandom(random).map(RegistryEntry::value));
+    public static <T> Optional<T> nextRandomEntry(ServerLevel world, TagKey<T> tag, RandomSource random) {
+        return world.registryAccess()
+                .registry(tag.registry())
+                .map(registry -> registry.getOrCreateTag(tag))
+                .flatMap(entries -> entries.getRandomElement(random).map(Holder::value));
     }
 
     /**
      * @return memoized(!) view distance
      */
-    public static int findViewDistance(World world) {
+    public static int findViewDistance(Level world) {
         return memo$findViewDistance.apply(world);
     }
 
-    public static long exchangeStackInSlotWithHand(PlayerEntity player, Hand hand, InventoryStorage storage, int slot, int maxAmount, @Nullable TransactionContext transaction) {
-        var playerStack = player.getStackInHand(hand);
+    public static long exchangeStackInSlotWithHand(Player player, InteractionHand hand, InventoryStorage storage, int slot, int maxAmount, @Nullable TransactionContext transaction) {
+        var playerStack = player.getItemInHand(hand);
         var storedVariant = storage.getSlot(slot).getResource();
 
         if (storedVariant.isBlank() && !playerStack.isEmpty()) {

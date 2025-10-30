@@ -1,48 +1,50 @@
 package falseresync.wizcraft.common.blockentity;
 
 import falseresync.wizcraft.common.Reports;
-import falseresync.wizcraft.common.item.*;
+import falseresync.wizcraft.common.item.WizcraftItemTags;
+import falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.transfer.v1.item.*;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
-import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class WorktableBlockEntity extends BlockEntity {
     public WorktableBlockEntity(BlockEntityType<? extends WorktableBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
-    protected static void onInterrupted(WorktableBlockEntity worktable, World world, BlockPos pos) {
+    protected static void onInterrupted(WorktableBlockEntity worktable, Level world, BlockPos pos) {
         // TODO: bad effects
-        world.playSound(null, pos, SoundEvents.ENTITY_HORSE_BREATHE, SoundCategory.BLOCKS, 1f, 1f);
-        Reports.addSmoke(world, pos.toCenterPos().add(0, 0.75, 0));
-        var stopSoundPacket = new StopSoundS2CPacket(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value().getId(), SoundCategory.BLOCKS);
+        world.playSound(null, pos, SoundEvents.HORSE_BREATHE, SoundSource.BLOCKS, 1f, 1f);
+        Reports.addSmoke(world, pos.getCenter().add(0, 0.75, 0));
+        var stopSoundPacket = new ClientboundStopSoundPacket(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value().getLocation(), SoundSource.BLOCKS);
         for (var player : PlayerLookup.tracking(worktable)) {
-            player.networkHandler.sendPacket(stopSoundPacket);
+            player.connection.send(stopSoundPacket);
         }
     }
 
-    public abstract SimpleInventory getInventory();
+    public abstract SimpleContainer getInventory();
 
     public abstract InventoryStorage getStorage();
 
-    public abstract void activate(PlayerEntity player);
+    public abstract void activate(Player player);
 
-    public abstract void remove(World world, BlockPos pos);
+    public abstract void remove(Level world, BlockPos pos);
 
     public boolean shouldExchangeFor(ItemStack stack) {
-        return !stack.isOf(WizcraftItems.WAND);
+        return !stack.is(WizcraftItems.WAND);
     }
 
     public boolean canBeActivatedBy(ItemStack stack) {
-        return stack.isIn(WizcraftItemTags.WANDS);
+        return stack.is(WizcraftItemTags.WANDS);
     }
 }

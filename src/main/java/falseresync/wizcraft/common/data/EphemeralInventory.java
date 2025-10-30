@@ -1,9 +1,10 @@
 package falseresync.wizcraft.common.data;
 
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
+import net.minecraft.world.ContainerListener;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
 
-public class EphemeralInventory extends SimpleInventory {
+public class EphemeralInventory extends SimpleContainer {
     private final InventoryComponent backingComponent;
 
     public EphemeralInventory(InventoryComponent backingComponent) {
@@ -12,7 +13,7 @@ public class EphemeralInventory extends SimpleInventory {
     }
 
     public InventoryComponent toImmutable() {
-        return new InventoryComponent(heldStacks, backingComponent.size());
+        return new InventoryComponent(items, backingComponent.size());
     }
 
     public void flush(ItemStack stack) {
@@ -20,7 +21,7 @@ public class EphemeralInventory extends SimpleInventory {
     }
 
     @Override
-    public void addListener(InventoryChangedListener listener) {
+    public void addListener(ContainerListener listener) {
         throw new UnsupportedOperationException();
     }
 }

@@ -7,30 +7,30 @@ import falseresync.wizcraft.common.recipe.SimpleInventoryRecipeInput;
 import falseresync.wizcraft.common.recipe.WizcraftRecipes;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -42,16 +42,16 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     public static final int IDLE_SEARCH_COOLDOWN = 5;
     protected final List<LensingPedestalBlockEntity> pedestals = new ArrayList<>();
     protected final List<BlockPos> nonEmptyPedestalPositions = new ArrayList<>();
-    protected final SimpleInventory inventory = new SimpleInventory(1) {
+    protected final SimpleContainer inventory = new SimpleContainer(1) {
         @Override
-        public int getMaxCountPerStack() {
+        public int getMaxStackSize() {
             return 1;
         }
     };
     protected final InventoryStorage storage = InventoryStorage.of(inventory, null);
     protected final SimpleInventoryRecipeInput virtualCombinedInventory = new SimpleInventoryRecipeInput(5) {
         @Override
-        public int getMaxCountPerStack() {
+        public int getMaxStackSize() {
             return 1;
         }
     };
@@ -59,41 +59,41 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     protected int remainingCraftingTime = 0;
     protected int craftingTime = 0;
     protected ItemStack currentlyCrafted = ItemStack.EMPTY;
-    protected @Nullable Identifier currentRecipeId;
+    protected @Nullable ResourceLocation currentRecipeId;
     protected @Nullable LensedWorktableRecipe currentRecipe;
 
     public CraftingWorktableBlockEntity(BlockPos pos, BlockState state) {
         super(WizcraftBlockEntities.CRAFTING_WORKTABLE, pos, state);
-        inventory.addListener(sender -> markDirty());
+        inventory.addListener(sender -> setChanged());
     }
 
     // PUBLIC INTERFACE
 
-    public static void tick(World world, BlockPos pos, BlockState state, CraftingWorktableBlockEntity worktable) {
+    public static void tick(Level world, BlockPos pos, BlockState state, CraftingWorktableBlockEntity worktable) {
         worktable.tick(world, pos, state);
     }
 
     @Override
-    public void activate(@Nullable PlayerEntity player) {
-        if (world == null || world.isClient()) return;
+    public void activate(@Nullable Player player) {
+        if (level == null || level.isClientSide()) return;
 
-        searchPedestals(world, pos);
+        searchPedestals(level, worldPosition);
         if (pedestals.size() < 4) {
-            if (player instanceof ServerPlayerEntity serverPlayer) {
-                player.playSoundToPlayer(SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 1f, 1f);
-                player.sendMessage(Text.translatable("hud.wizcraft.worktable.incomplete_worktable"), true);
+            if (player instanceof ServerPlayer serverPlayer) {
+                player.playNotifySound(SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1f, 1f);
+                player.displayClientMessage(Component.translatable("hud.wizcraft.worktable.incomplete_worktable"), true);
             }
             return;
         }
 
         updateVirtualCombinedInventory();
-        world.getRecipeManager()
-                .getFirstMatch(WizcraftRecipes.LENSED_WORKTABLE, virtualCombinedInventory, world)
+        level.getRecipeManager()
+                .getRecipeFor(WizcraftRecipes.LENSED_WORKTABLE, virtualCombinedInventory, level)
                 .ifPresent(this::beginCrafting);
     }
 
     @Override
-    public void remove(World world, BlockPos pos) {
+    public void remove(Level world, BlockPos pos) {
         searchPedestals(world, pos);
         pedestals.forEach(pedestal -> pedestal.linkTo(null));
     }
@@ -111,11 +111,11 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     }
 
     public ItemStack getHeldStackCopy() {
-        return inventory.getStack(0).copy();
+        return inventory.getItem(0).copy();
     }
 
     @Override
-    public SimpleInventory getInventory() {
+    public SimpleContainer getInventory() {
         return inventory;
     }
 
@@ -126,17 +126,17 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         return storage;
     }
 
-    protected void tick(World world, BlockPos pos, BlockState state) {
+    protected void tick(Level world, BlockPos pos, BlockState state) {
         if (currentRecipe == null && currentRecipeId != null) {
             updateVirtualCombinedInventory();
-            world.getRecipeManager().get(currentRecipeId)
+            world.getRecipeManager().byKey(currentRecipeId)
                     .flatMap(entry -> entry.value() instanceof LensedWorktableRecipe recipe
                             ? Optional.of(recipe)
                             : Optional.empty())
                     .ifPresentOrElse(recipe -> initStaticRecipeData(world, recipe), this::reset);
         }
 
-        if (world.isClient) return;
+        if (world.isClientSide) return;
 
         if (currentRecipe != null) {
             tickCrafting(world, pos, currentRecipe);
@@ -146,10 +146,10 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         tickIdle(world, pos);
     }
 
-    protected void tickCrafting(World world, BlockPos pos, LensedWorktableRecipe recipe) {
+    protected void tickCrafting(Level world, BlockPos pos, LensedWorktableRecipe recipe) {
         remainingCraftingTime -= 1;
         searchPedestals(world, pos);
-        markDirty();
+        setChanged();
         if (pedestals.size() < 4) {
             interruptCrafting();
             return;
@@ -167,7 +167,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         }
     }
 
-    protected void tickIdle(World world, BlockPos pos) {
+    protected void tickIdle(Level world, BlockPos pos) {
         if (remainingIdleSearchCooldown > 0) {
             remainingIdleSearchCooldown -= 1;
             return;
@@ -179,14 +179,14 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
 
     // DATA-MUTATING INTERNALS
 
-    protected void searchPedestals(World world, BlockPos pos) {
+    protected void searchPedestals(Level world, BlockPos pos) {
         pedestals.clear();
 
         for (var pedestalPos : List.of(pos.north(2), pos.west(2), pos.south(2), pos.east(2))) {
             if (world.getBlockEntity(pedestalPos) instanceof LensingPedestalBlockEntity pedestal) {
                 if (!pedestal.isLinkedTo(this)) {
-                    world.breakBlock(pos, true);
-                    world.playSound(null, pos, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.BLOCKS, 1, 1);
+                    world.destroyBlock(pos, true);
+                    world.playSound(null, pos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 1, 1);
                 } else {
                     pedestals.add(pedestal);
                     pedestal.linkTo(this);
@@ -196,56 +196,56 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     }
 
     protected void updateVirtualCombinedInventory() {
-        virtualCombinedInventory.setStack(0, inventory.getStack(0).copy());
+        virtualCombinedInventory.setItem(0, inventory.getItem(0).copy());
         for (int i = 0; i < pedestals.size(); i++) {
-            virtualCombinedInventory.setStack(i + 1, pedestals.get(i).getHeldStackCopy());
+            virtualCombinedInventory.setItem(i + 1, pedestals.get(i).getHeldStackCopy());
         }
     }
 
-    protected void beginCrafting(RecipeEntry<LensedWorktableRecipe> recipeEntry) {
-        if (world == null || world.isClient()) return;
+    protected void beginCrafting(RecipeHolder<LensedWorktableRecipe> recipeEntry) {
+        if (level == null || level.isClientSide()) return;
 
         currentRecipeId = recipeEntry.id();
-        initStaticRecipeData(world, recipeEntry.value());
+        initStaticRecipeData(level, recipeEntry.value());
         remainingCraftingTime = recipeEntry.value().getCraftingTime();
-        markDirty();
+        setChanged();
 
-        world.playSound(null, pos, SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value(), SoundCategory.BLOCKS, 1f, 1f);
+        level.playSound(null, worldPosition, SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value(), SoundSource.BLOCKS, 1f, 1f);
     }
 
     protected void interruptCrafting() {
-        if (world == null || world.isClient()) return;
+        if (level == null || level.isClientSide()) return;
 
         reset();
-        onInterrupted(this, world, pos);
+        onInterrupted(this, level, worldPosition);
     }
 
     protected void finishCrafting() {
-        if (world == null || world.isClient() || currentRecipe == null) return;
+        if (level == null || level.isClientSide() || currentRecipe == null) return;
 
-        inventory.setStack(0, currentRecipe.craft(virtualCombinedInventory, world.getRegistryManager()));
-        var remainders = currentRecipe.getRemainder(virtualCombinedInventory);
+        inventory.setItem(0, currentRecipe.assemble(virtualCombinedInventory, level.registryAccess()));
+        var remainders = currentRecipe.getRemainingItems(virtualCombinedInventory);
         for (int i = 0; i < pedestals.size(); i++) {
             pedestals.get(i).onCrafted(remainders.get(i + 1));
         }
 
         reset();
-        world.playSound(null, pos, WizcraftSounds.WORKTABLE_SUCCESS, SoundCategory.BLOCKS, 1f, 1f);
-        var stopSoundPacket = new StopSoundS2CPacket(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value().getId(), SoundCategory.BLOCKS);
+        level.playSound(null, worldPosition, WizcraftSounds.WORKTABLE_SUCCESS, SoundSource.BLOCKS, 1f, 1f);
+        var stopSoundPacket = new ClientboundStopSoundPacket(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP.value().getLocation(), SoundSource.BLOCKS);
         for (var player : PlayerLookup.tracking(this)) {
-            player.networkHandler.sendPacket(stopSoundPacket);
+            player.connection.send(stopSoundPacket);
         }
     }
 
 
-    protected void initStaticRecipeData(World world, LensedWorktableRecipe recipe) {
+    protected void initStaticRecipeData(Level world, LensedWorktableRecipe recipe) {
         currentRecipe = recipe;
         craftingTime = recipe.getCraftingTime();
-        currentlyCrafted = currentRecipe.craft(virtualCombinedInventory, world.getRegistryManager());
+        currentlyCrafted = currentRecipe.assemble(virtualCombinedInventory, world.registryAccess());
     }
 
     protected void reset() {
-        virtualCombinedInventory.clear();
+        virtualCombinedInventory.clearContent();
         currentRecipeId = null;
         currentRecipe = null;
         craftingTime = 0;
@@ -253,36 +253,36 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         remainingCraftingTime = 0;
         remainingIdleSearchCooldown = 0;
 
-        markDirty();
+        setChanged();
     }
 
     // DATA-SAVING INTERNALS
 
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (world != null) {
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+    public void setChanged() {
+        super.setChanged();
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
 
-        Inventories.writeNbt(nbt, inventory.getHeldStacks(), registryLookup);
+        ContainerHelper.saveAllItems(nbt, inventory.getItems(), registryLookup);
 
         if (!pedestals.isEmpty()) {
             var nbtList = pedestals.stream()
                     .filter(pedestal -> !pedestal.getHeldStackCopy().isEmpty())
-                    .map(BlockEntity::getPos)
-                    .map(NbtHelper::fromBlockPos)
+                    .map(BlockEntity::getBlockPos)
+                    .map(NbtUtils::writeBlockPos)
                     .map(it -> {
-                        var tag = new NbtCompound();
+                        var tag = new CompoundTag();
                         tag.put("pedestal", it);
                         return tag;
                     })
-                    .collect(Collectors.toCollection(NbtList::new));
+                    .collect(Collectors.toCollection(ListTag::new));
             nbt.put(CommonKeys.NON_EMPTY_PEDESTALS, nbtList);
         } else {
             nbt.remove(CommonKeys.NON_EMPTY_PEDESTALS);
@@ -302,40 +302,40 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
 
-        inventory.getHeldStacks().clear();
-        Inventories.readNbt(nbt, inventory.getHeldStacks(), registryLookup);
+        inventory.getItems().clear();
+        ContainerHelper.loadAllItems(nbt, inventory.getItems(), registryLookup);
 
         nonEmptyPedestalPositions.clear();
-        if (nbt.contains(CommonKeys.NON_EMPTY_PEDESTALS, NbtElement.LIST_TYPE)) {
-            var nbtList = nbt.getList(CommonKeys.NON_EMPTY_PEDESTALS, NbtElement.COMPOUND_TYPE);
+        if (nbt.contains(CommonKeys.NON_EMPTY_PEDESTALS, Tag.TAG_LIST)) {
+            var nbtList = nbt.getList(CommonKeys.NON_EMPTY_PEDESTALS, Tag.TAG_COMPOUND);
             for (int i = 0; i < nbtList.size(); i++) {
-                NbtHelper.toBlockPos(nbtList.getCompound(i), "pedestal").ifPresent(nonEmptyPedestalPositions::add);
+                NbtUtils.readBlockPos(nbtList.getCompound(i), "pedestal").ifPresent(nonEmptyPedestalPositions::add);
             }
         }
 
         currentRecipeId = null;
-        if (nbt.contains(CommonKeys.CURRENT_RECIPE, NbtElement.STRING_TYPE)) {
-            currentRecipeId = Identifier.tryParse(nbt.getString(CommonKeys.CURRENT_RECIPE));
+        if (nbt.contains(CommonKeys.CURRENT_RECIPE, Tag.TAG_STRING)) {
+            currentRecipeId = ResourceLocation.tryParse(nbt.getString(CommonKeys.CURRENT_RECIPE));
         }
 
         remainingCraftingTime = 0;
-        if (nbt.contains(CommonKeys.REMAINING_CRAFTING_TIME, NbtElement.INT_TYPE)) {
+        if (nbt.contains(CommonKeys.REMAINING_CRAFTING_TIME, Tag.TAG_INT)) {
             remainingCraftingTime = nbt.getInt(CommonKeys.REMAINING_CRAFTING_TIME);
         }
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     // OTHER

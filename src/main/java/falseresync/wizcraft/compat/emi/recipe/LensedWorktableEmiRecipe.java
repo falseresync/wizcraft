@@ -8,8 +8,8 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import falseresync.wizcraft.common.recipe.LensedWorktableRecipe;
 import falseresync.wizcraft.compat.emi.WizcraftEmiPlugin;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -24,14 +24,14 @@ public class LensedWorktableEmiRecipe implements EmiRecipe {
             wid("textures/gui/recipe/arrow_right.png"),
             0, 0, 16, 16, 16, 16, 16, 16);
 
-    protected final RecipeEntry<LensedWorktableRecipe> backingRecipe;
-    protected final Identifier id;
+    protected final RecipeHolder<LensedWorktableRecipe> backingRecipe;
+    protected final ResourceLocation id;
     protected final EmiStack result;
     protected final EmiIngredient worktableInput;
     protected final List<EmiIngredient> pedestalInputs;
     protected final List<EmiIngredient> allInputs;
 
-    public LensedWorktableEmiRecipe(RecipeEntry<LensedWorktableRecipe> recipeEntry) {
+    public LensedWorktableEmiRecipe(RecipeHolder<LensedWorktableRecipe> recipeEntry) {
         this.backingRecipe = recipeEntry;
         this.id = recipeEntry.id();
         var recipe = recipeEntry.value();
@@ -48,7 +48,7 @@ public class LensedWorktableEmiRecipe implements EmiRecipe {
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return this.id;
     }
 
@@ -108,7 +108,7 @@ public class LensedWorktableEmiRecipe implements EmiRecipe {
 
     @Nullable
     @Override
-    public RecipeEntry<LensedWorktableRecipe> getBackingRecipe() {
+    public RecipeHolder<LensedWorktableRecipe> getBackingRecipe() {
         return backingRecipe;
     }
 }

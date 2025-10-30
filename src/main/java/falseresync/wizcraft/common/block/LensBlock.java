@@ -1,40 +1,43 @@
 package falseresync.wizcraft.common.block;
 
-import com.mojang.serialization.*;
-import falseresync.wizcraft.common.blockentity.*;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.*;
-import net.minecraft.util.math.*;
-import net.minecraft.util.shape.*;
-import net.minecraft.world.*;
-import org.jetbrains.annotations.*;
+import com.mojang.serialization.MapCodec;
+import falseresync.wizcraft.common.blockentity.LensBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-public class LensBlock extends BlockWithEntity {
-    public static final MapCodec<LensBlock> CODEC = createCodec(LensBlock::new);
-    public static final VoxelShape SHAPE = createCuboidShape(3, 1, 3, 13, 15, 13);
+public class LensBlock extends BaseEntityBlock {
+    public static final MapCodec<LensBlock> CODEC = simpleCodec(LensBlock::new);
+    public static final VoxelShape SHAPE = box(3, 1, 3, 13, 15, 13);
 
-    public LensBlock(Settings settings) {
+    public LensBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    protected MapCodec<LensBlock> getCodec() {
+    protected MapCodec<LensBlock> codec() {
         return CODEC;
     }
 
     @Override
-    protected BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new LensBlockEntity(pos, state);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 }

@@ -5,18 +5,18 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 @Environment(EnvType.CLIENT)
 public class WizcraftHud {
-    private final MinecraftClient client;
+    private final Minecraft client;
     private final FocusPickerHudItem focusPicker;
     private final ChargeDisplayHudItem chargeDisplay;
 
-    public WizcraftHud(MinecraftClient client) {
+    public WizcraftHud(Minecraft client) {
         this.client = client;
-        focusPicker = new FocusPickerHudItem(client, client.textRenderer);
-        chargeDisplay = new ChargeDisplayHudItem(client, client.textRenderer);
+        focusPicker = new FocusPickerHudItem(client, client.font);
+        chargeDisplay = new ChargeDisplayHudItem(client, client.font);
         initEventListeners();
     }
 

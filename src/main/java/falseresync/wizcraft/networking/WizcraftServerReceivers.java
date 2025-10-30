@@ -1,9 +1,10 @@
 package falseresync.wizcraft.networking;
 
-import falseresync.wizcraft.common.item.*;
-import falseresync.wizcraft.networking.c2s.*;
-import net.fabricmc.fabric.api.networking.v1.*;
-import net.minecraft.item.*;
+import falseresync.wizcraft.common.item.WizcraftItemTags;
+import falseresync.wizcraft.common.item.WizcraftItems;
+import falseresync.wizcraft.networking.c2s.ChangeWandFocusC2SPayload;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.world.item.ItemStack;
 
 public class WizcraftServerReceivers {
     public static void register() {
@@ -12,8 +13,8 @@ public class WizcraftServerReceivers {
 
     private static void changeWandFocus(ChangeWandFocusC2SPayload payload, ServerPlayNetworking.Context context) {
         var player = context.player();
-        var wandStack = player.getMainHandStack();
-        if (!wandStack.isIn(WizcraftItemTags.WANDS)) {
+        var wandStack = player.getMainHandItem();
+        if (!wandStack.is(WizcraftItemTags.WANDS)) {
             return;
         }
 
@@ -23,16 +24,16 @@ public class WizcraftServerReceivers {
 
         switch (payload.destination()) {
             case PLAYER_INVENTORY -> {
-                if (payload.slot() < player.getInventory().size() - 1) {
-                    var newFocusStack = player.getInventory().getStack(payload.slot());
+                if (payload.slot() < player.getInventory().getContainerSize() - 1) {
+                    var newFocusStack = player.getInventory().getItem(payload.slot());
                     var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, newFocusStack, player);
-                    if (exchange.getResult().isAccepted()) {
-                        player.getInventory().setStack(payload.slot(), exchange.getValue());
+                    if (exchange.getResult().consumesAction()) {
+                        player.getInventory().setItem(payload.slot(), exchange.getObject());
                     }
                 } else {
                     var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, ItemStack.EMPTY, player);
-                    if (exchange.getResult().isAccepted()) {
-                        player.getInventory().offerOrDrop(exchange.getValue());
+                    if (exchange.getResult().consumesAction()) {
+                        player.getInventory().placeItemBackInInventory(exchange.getObject());
                     }
                 }
             }
@@ -48,9 +49,9 @@ public class WizcraftServerReceivers {
 
                     var picked = inventoryComponent.stacks().get(payload.slot());
                     var exchange = WizcraftItems.WAND.exchangeFocuses(wandStack, picked, player);
-                    if (exchange.getResult().isAccepted()) {
+                    if (exchange.getResult().consumesAction()) {
                         var inventory = inventoryComponent.toModifiable();
-                        inventory.setStack(payload.slot(), exchange.getValue());
+                        inventory.setItem(payload.slot(), exchange.getObject());
                         inventory.flush(beltStack);
                     }
                 });

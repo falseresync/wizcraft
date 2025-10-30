@@ -1,52 +1,54 @@
 package falseresync.wizcraft.common.item;
 
-import dev.emi.trinkets.api.*;
+import dev.emi.trinkets.api.TrinketItem;
+import dev.emi.trinkets.api.TrinketsApi;
 import falseresync.wizcraft.common.data.InventoryComponentProvider;
 import falseresync.wizcraft.common.data.WizcraftComponents;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.*;
-import net.minecraft.screen.slot.*;
-import net.minecraft.util.*;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
-import java.util.*;
+import java.util.Optional;
 
 public class FocusesBeltItem extends TrinketItem implements InventoryComponentProvider {
     public static final int INVENTORY_SIZE = 12;
 
-    public FocusesBeltItem(Settings settings) {
+    public FocusesBeltItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
-        if (clickType == ClickType.RIGHT) {
-            var remainder = exchangeStack(stack, slot.getStack());
-            if (remainder.getResult().isAccepted()) {
-                slot.setStack(remainder.getValue());
+    public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction clickType, Player player) {
+        if (clickType == ClickAction.SECONDARY) {
+            var remainder = exchangeStack(stack, slot.getItem());
+            if (remainder.getResult().consumesAction()) {
+                slot.setByPlayer(remainder.getObject());
                 return true;
             }
         }
-        return super.onStackClicked(stack, slot, clickType, player);
+        return super.overrideStackedOnOther(stack, slot, clickType, player);
     }
 
-    public Optional<ItemStack> findTrinketStack(PlayerEntity player) {
+    public Optional<ItemStack> findTrinketStack(Player player) {
         return TrinketsApi.getTrinketComponent(player)
                 .map(trinketComponent -> trinketComponent.getEquipped(WizcraftItems.FOCUSES_BELT))
-                .flatMap(equipped -> equipped.isEmpty() ? Optional.empty() : Optional.of(equipped.getFirst().getRight()));
+                .flatMap(equipped -> equipped.isEmpty() ? Optional.empty() : Optional.of(equipped.getFirst().getB()));
     }
 
-    public TypedActionResult<ItemStack> exchangeStack(ItemStack beltStack, ItemStack stackInSlot) {
+    public InteractionResultHolder<ItemStack> exchangeStack(ItemStack beltStack, ItemStack stackInSlot) {
         var inventory = getOrCreateInventoryComponent(beltStack).toModifiable();
         var remainder = ItemStack.EMPTY;
         var dirty = false;
-        if (stackInSlot.isIn(WizcraftItemTags.FOCUSES)) {
-            remainder = inventory.addStack(stackInSlot);
+        if (stackInSlot.is(WizcraftItemTags.FOCUSES)) {
+            remainder = inventory.addItem(stackInSlot);
             dirty = true;
         } else if (stackInSlot.isEmpty()) {
-            for (int i = 0; i < inventory.size(); i++) {
-                if (!inventory.getStack(i).isEmpty()) {
-                    remainder = inventory.removeStack(i);
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                if (!inventory.getItem(i).isEmpty()) {
+                    remainder = inventory.removeItemNoUpdate(i);
                     dirty = true;
                     break;
                 }
@@ -54,13 +56,13 @@ public class FocusesBeltItem extends TrinketItem implements InventoryComponentPr
         }
         if (dirty) {
             inventory.flush(beltStack);
-            return TypedActionResult.success(remainder);
+            return InteractionResultHolder.success(remainder);
         }
-        return TypedActionResult.fail(remainder);
+        return InteractionResultHolder.fail(remainder);
     }
 
     @Override
-    public Optional<TooltipData> getTooltipData(ItemStack stack) {
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         return Optional.ofNullable(stack.get(WizcraftComponents.INVENTORY));
     }
 

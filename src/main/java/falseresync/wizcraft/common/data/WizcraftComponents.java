@@ -1,60 +1,62 @@
 package falseresync.wizcraft.common.data;
 
-import com.mojang.serialization.*;
-import falseresync.lib.registry.*;
-import falseresync.wizcraft.common.item.focus.*;
-import net.minecraft.component.*;
-import net.minecraft.item.*;
-import net.minecraft.network.codec.*;
-import net.minecraft.util.*;
-import net.minecraft.util.dynamic.*;
-import net.minecraft.util.math.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import falseresync.lib.registry.RegistryObject;
+import falseresync.wizcraft.common.item.focus.FocusItem;
+import falseresync.wizcraft.common.item.focus.FocusPlating;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.ItemStack;
 
-import java.util.*;
+import java.util.UUID;
 
 public class WizcraftComponents {
     // Generic
-    public static final @RegistryObject ComponentType<ItemBarComponent> ITEM_BAR =
-            ComponentType.<ItemBarComponent>builder().codec(ItemBarComponent.CODEC).packetCodec(ItemBarComponent.PACKET_CODEC).build();
-    public static final @RegistryObject ComponentType<Boolean> IN_USE =
-            ComponentType.<Boolean>builder().codec(Codec.BOOL).packetCodec(PacketCodecs.BOOL).build();
-    public static final @RegistryObject ComponentType<Boolean> TOOLTIP_OVERRIDDEN =
-            ComponentType.<Boolean>builder().codec(Codec.BOOL).packetCodec(PacketCodecs.BOOL).build();
-    public static final @RegistryObject ComponentType<InventoryComponent> INVENTORY =
-            ComponentType.<InventoryComponent>builder().codec(InventoryComponent.CODEC).packetCodec(InventoryComponent.PACKET_CODEC).build();
-    public static final @RegistryObject ComponentType<Integer> INVENTORY_SIZE =
-            ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
-    public static final @RegistryObject ComponentType<UUID> UUID =
-            ComponentType.<UUID>builder().codec(Uuids.INT_STREAM_CODEC).packetCodec(Uuids.PACKET_CODEC).build();
+    public static final @RegistryObject DataComponentType<ItemBarComponent> ITEM_BAR =
+            DataComponentType.<ItemBarComponent>builder().persistent(ItemBarComponent.CODEC).networkSynchronized(ItemBarComponent.PACKET_CODEC).build();
+    public static final @RegistryObject DataComponentType<Boolean> IN_USE =
+            DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build();
+    public static final @RegistryObject DataComponentType<Boolean> TOOLTIP_OVERRIDDEN =
+            DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build();
+    public static final @RegistryObject DataComponentType<InventoryComponent> INVENTORY =
+            DataComponentType.<InventoryComponent>builder().persistent(InventoryComponent.CODEC).networkSynchronized(InventoryComponent.PACKET_CODEC).build();
+    public static final @RegistryObject DataComponentType<Integer> INVENTORY_SIZE =
+            DataComponentType.<Integer>builder().persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.INT).build();
+    public static final @RegistryObject DataComponentType<UUID> UUID =
+            DataComponentType.<UUID>builder().persistent(UUIDUtil.CODEC).networkSynchronized(UUIDUtil.STREAM_CODEC).build();
 
     // Wand
-    public static final @RegistryObject ComponentType<ItemStack> EQUIPPED_FOCUS_ITEM =
-            ComponentType.<ItemStack>builder()
-                    .codec(ItemStack.CODEC.validate(stack -> stack.getItem() instanceof FocusItem
+    public static final @RegistryObject DataComponentType<ItemStack> EQUIPPED_FOCUS_ITEM =
+            DataComponentType.<ItemStack>builder()
+                    .persistent(ItemStack.CODEC.validate(stack -> stack.getItem() instanceof FocusItem
                             ? DataResult.success(stack)
                             : DataResult.error(() -> "Only FocusItems are allowed")))
-                    .packetCodec(ItemStack.PACKET_CODEC)
+                    .networkSynchronized(ItemStack.STREAM_CODEC)
                     .build();
-    public static final @RegistryObject ComponentType<Integer> WAND_CHARGE =
-            ComponentType.<Integer>builder().codec(Codecs.NONNEGATIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
-    public static final @RegistryObject ComponentType<Integer> WAND_MAX_CHARGE =
-            ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
-    public static final @RegistryObject ComponentType<Integer> SHELL_CAPACITY =
-            ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
-    public static final @RegistryObject ComponentType<Integer> CHARGE_DEFICIT =
-            ComponentType.<Integer>builder().codec(Codecs.POSITIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
+    public static final @RegistryObject DataComponentType<Integer> WAND_CHARGE =
+            DataComponentType.<Integer>builder().persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.INT).build();
+    public static final @RegistryObject DataComponentType<Integer> WAND_MAX_CHARGE =
+            DataComponentType.<Integer>builder().persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.INT).build();
+    public static final @RegistryObject DataComponentType<Integer> SHELL_CAPACITY =
+            DataComponentType.<Integer>builder().persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.INT).build();
+    public static final @RegistryObject DataComponentType<Integer> CHARGE_DEFICIT =
+            DataComponentType.<Integer>builder().persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.INT).build();
 
     // Focuses
-    public static final @RegistryObject ComponentType<Integer> FOCUS_PLATING =
-            ComponentType.<Integer>builder().codec(Codecs.rangedInt(0, FocusPlating.values().length - 1)).packetCodec(PacketCodecs.INTEGER).build();
-    public static final @RegistryObject ComponentType<Integer> CHARGING_FOCUS_PROGRESS =
-            ComponentType.<Integer>builder().codec(Codecs.NONNEGATIVE_INT).packetCodec(PacketCodecs.INTEGER).build();
-    public static final @RegistryObject ComponentType<GlobalPos> WARP_FOCUS_ANCHOR =
-            ComponentType.<GlobalPos>builder().codec(GlobalPos.CODEC).packetCodec(GlobalPos.PACKET_CODEC).build();
-    public static final @RegistryObject ComponentType<GlobalPos> WARP_FOCUS_PERSISTENT_ANCHOR =
-            ComponentType.<GlobalPos>builder().codec(GlobalPos.CODEC).packetCodec(GlobalPos.PACKET_CODEC).build();
-    public static final @RegistryObject ComponentType<Boolean> WARP_FOCUS_BLOCK_ONLY_MODE =
-            ComponentType.<Boolean>builder().codec(Codec.BOOL).packetCodec(PacketCodecs.BOOL).build();
-    public static final @RegistryObject ComponentType<UUID> ENERGY_VEIL_UUID =
-            ComponentType.<UUID>builder().codec(Uuids.INT_STREAM_CODEC).packetCodec(Uuids.PACKET_CODEC).build();
+    public static final @RegistryObject DataComponentType<Integer> FOCUS_PLATING =
+            DataComponentType.<Integer>builder().persistent(ExtraCodecs.intRange(0, FocusPlating.values().length - 1)).networkSynchronized(ByteBufCodecs.INT).build();
+    public static final @RegistryObject DataComponentType<Integer> CHARGING_FOCUS_PROGRESS =
+            DataComponentType.<Integer>builder().persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.INT).build();
+    public static final @RegistryObject DataComponentType<GlobalPos> WARP_FOCUS_ANCHOR =
+            DataComponentType.<GlobalPos>builder().persistent(GlobalPos.CODEC).networkSynchronized(GlobalPos.STREAM_CODEC).build();
+    public static final @RegistryObject DataComponentType<GlobalPos> WARP_FOCUS_PERSISTENT_ANCHOR =
+            DataComponentType.<GlobalPos>builder().persistent(GlobalPos.CODEC).networkSynchronized(GlobalPos.STREAM_CODEC).build();
+    public static final @RegistryObject DataComponentType<Boolean> WARP_FOCUS_BLOCK_ONLY_MODE =
+            DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build();
+    public static final @RegistryObject DataComponentType<UUID> ENERGY_VEIL_UUID =
+            DataComponentType.<UUID>builder().persistent(UUIDUtil.CODEC).networkSynchronized(UUIDUtil.STREAM_CODEC).build();
 }

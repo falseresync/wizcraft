@@ -1,17 +1,22 @@
 package falseresync.wizcraft.common.recipe;
 
-import com.mojang.serialization.*;
-import com.mojang.serialization.codecs.*;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.*;
-import net.minecraft.item.*;
-import net.minecraft.network.*;
-import net.minecraft.network.codec.*;
-import net.minecraft.recipe.*;
-import net.minecraft.util.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
-import static falseresync.wizcraft.common.Wizcraft.*;
+import static falseresync.wizcraft.common.Wizcraft.wid;
 
 public record CountableIngredient(Ingredient vanilla, int count) implements CustomIngredient {
     @Override
@@ -21,7 +26,7 @@ public record CountableIngredient(Ingredient vanilla, int count) implements Cust
 
     @Override
     public List<ItemStack> getMatchingStacks() {
-        return Arrays.asList(vanilla.getMatchingStacks());
+        return Arrays.asList(vanilla.getItems());
     }
 
     @Override
@@ -35,9 +40,9 @@ public record CountableIngredient(Ingredient vanilla, int count) implements Cust
     }
 
     public static class Serializer implements CustomIngredientSerializer<CountableIngredient> {
-        public static final Identifier ID = wid("countable_ingredient");
+        public static final ResourceLocation ID = wid("countable_ingredient");
         public static final MapCodec<CountableIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("vanilla").forGetter(CountableIngredient::vanilla),
+                Ingredient.CODEC_NONEMPTY.fieldOf("vanilla").forGetter(CountableIngredient::vanilla),
                 Codec.INT.optionalFieldOf("count", 1).validate(amount -> {
                     if (amount < 1) {
                         return DataResult.error(() -> "A count of ingredient must not be lower than 1");
@@ -48,14 +53,14 @@ public record CountableIngredient(Ingredient vanilla, int count) implements Cust
                     }
                 }).forGetter(CountableIngredient::count)
         ).apply(instance, CountableIngredient::new));
-        public static final PacketCodec<RegistryByteBuf, CountableIngredient> PACKET_CODEC = PacketCodec.tuple(
-                Ingredient.PACKET_CODEC, CountableIngredient::vanilla,
-                PacketCodecs.INTEGER, CountableIngredient::count,
+        public static final StreamCodec<RegistryFriendlyByteBuf, CountableIngredient> PACKET_CODEC = StreamCodec.composite(
+                Ingredient.CONTENTS_STREAM_CODEC, CountableIngredient::vanilla,
+                ByteBufCodecs.INT, CountableIngredient::count,
                 CountableIngredient::new
         );
 
         @Override
-        public Identifier getIdentifier() {
+        public ResourceLocation getIdentifier() {
             return ID;
         }
 
@@ -65,7 +70,7 @@ public record CountableIngredient(Ingredient vanilla, int count) implements Cust
         }
 
         @Override
-        public PacketCodec<RegistryByteBuf, CountableIngredient> getPacketCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, CountableIngredient> getPacketCodec() {
             return PACKET_CODEC;
         }
     }

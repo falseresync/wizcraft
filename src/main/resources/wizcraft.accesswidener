@@ -1,10 +1,10 @@
 accessWidener v2 named
 
-accessible method net/minecraft/client/particle/GlowParticle <init> (Lnet/minecraft/client/world/ClientWorld;DDDDDDLnet/minecraft/client/particle/SpriteProvider;)V
-accessible field net/minecraft/client/particle/Particle velocityX D
-accessible field net/minecraft/client/particle/Particle velocityY D
-accessible field net/minecraft/client/particle/Particle velocityZ D
-accessible field net/minecraft/server/world/ServerChunkLoadingManager watchDistance I
-accessible method net/minecraft/data/client/Models block (Ljava/lang/String;[Lnet/minecraft/data/client/TextureKey;)Lnet/minecraft/data/client/Model;
-accessible method net/minecraft/client/render/entity/LivingEntityRenderer getAnimationProgress (Lnet/minecraft/entity/LivingEntity;F)F
-accessible field net/minecraft/client/item/ModelPredicateProviderRegistry GLOBAL Ljava/util/Map;
+accessible method net/minecraft/client/particle/GlowParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/client/particle/SpriteSet;)V
+accessible field net/minecraft/client/particle/Particle xd D
+accessible field net/minecraft/client/particle/Particle yd D
+accessible field net/minecraft/client/particle/Particle zd D
+accessible field net/minecraft/server/level/ChunkMap serverViewDistance I
+accessible method net/minecraft/data/models/model/ModelTemplates create (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
+accessible method net/minecraft/client/renderer/entity/LivingEntityRenderer getBob (Lnet/minecraft/world/entity/LivingEntity;F)F
+accessible field net/minecraft/client/renderer/item/ItemProperties GENERIC_PROPERTIES Ljava/util/Map;

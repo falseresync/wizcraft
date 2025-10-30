@@ -1,56 +1,71 @@
 package falseresync.wizcraft.common.entity;
 
-import com.google.common.base.*;
-import falseresync.wizcraft.common.*;
+import com.google.common.base.Preconditions;
+import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.data.WizcraftComponents;
-import falseresync.wizcraft.common.item.*;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.*;
-import net.minecraft.entity.decoration.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.entity.projectile.*;
-import net.minecraft.entity.vehicle.*;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
-import net.minecraft.predicate.entity.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
-import org.jetbrains.annotations.*;
+import falseresync.wizcraft.common.item.WizcraftItemTags;
+import net.minecraft.Util;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.entity.decoration.BlockAttachedEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-public class EnergyVeilEntity extends Entity implements Ownable {
+public class EnergyVeilEntity extends Entity implements TraceableEntity {
     public static final float SCREENS_OFFSET = 0.25f;
     public static final int MINIMAL_LIFE_EXPECTANCY = 20;
-    private static final TrackedData<Float> RADIUS = DataTracker.registerData(EnergyVeilEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final EntityDataAccessor<Float> RADIUS = SynchedEntityData.defineId(EnergyVeilEntity.class, EntityDataSerializers.FLOAT);
     public AnimationState slideAnimationState = new AnimationState();
     private int lifeExpectancy;
     @Nullable
-    private PlayerEntity owner;
+    private Player owner;
     @Nullable
     private ItemStack controllingStack;
 
-    public EnergyVeilEntity(EntityType<?> type, World world) {
+    public EnergyVeilEntity(EntityType<?> type, Level world) {
         super(type, world);
     }
 
-    public EnergyVeilEntity(@Nullable PlayerEntity owner, @Nullable ItemStack controllingStack, World world) {
+    public EnergyVeilEntity(@Nullable Player owner, @Nullable ItemStack controllingStack, Level world) {
         this(WizcraftEntities.ENERGY_VEIL, world);
-        Preconditions.checkArgument(controllingStack == null || owner != null,
+        Preconditions.checkArgument(
+                controllingStack == null || owner != null,
                 "Owner must not be null if a controlling stack is present");
-        Preconditions.checkArgument(controllingStack == null || controllingStack.isIn(WizcraftItemTags.WANDS),
+        Preconditions.checkArgument(
+                controllingStack == null || controllingStack.is(WizcraftItemTags.WANDS),
                 "A controlling stack must be a wand");
         this.owner = owner;
         this.controllingStack = controllingStack;
 
-        age = 0;
+        tickCount = 0;
         lifeExpectancy = MINIMAL_LIFE_EXPECTANCY;
-        noClip = true;
-        movementMultiplier = new Vec3d(1, 1, 1);
+        noPhysics = true;
+        stuckSpeedMultiplier = new Vec3(1, 1, 1);
         setNoGravity(true);
 
         if (owner != null) {
-            setPosition(owner.getPos());
+            setPos(owner.position());
         }
         alignWithOwner();
     }
@@ -61,25 +76,25 @@ public class EnergyVeilEntity extends Entity implements Ownable {
 
     public void alignWithOwner() {
         if (owner == null) return;
-        setVelocity(owner.getPos().subtract(getPos()));
+        setDeltaMovement(owner.position().subtract(position()));
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        builder.add(RADIUS, 1.0F);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(RADIUS, 1.0F);
     }
 
     @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
-        super.onTrackedDataSet(data);
+    public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
+        super.onSyncedDataUpdated(data);
         if (RADIUS.equals(data)) {
-            setBoundingBox(calculateBoundingBox());
+            setBoundingBox(makeBoundingBox());
         }
         if (owner != null) {
             owner.setAttached(WizcraftAttachments.ENERGY_VEIL_NETWORK_ID, getId());
         }
-        if (getEntityWorld().isClient()) {
-            slideAnimationState.startIfNotRunning(age);
+        if (getCommandSenderWorld().isClientSide()) {
+            slideAnimationState.startIfStopped(tickCount);
         }
     }
 
@@ -87,12 +102,12 @@ public class EnergyVeilEntity extends Entity implements Ownable {
     public void tick() {
         super.tick();
         alignWithOwner();
-        move(MovementType.SELF, getVelocity());
+        move(MoverType.SELF, getDeltaMovement());
 
-        if (!getWorld().isClient) {
+        if (!level().isClientSide) {
             repelOutsiders();
 
-            if (age >= lifeExpectancy) {
+            if (tickCount >= lifeExpectancy) {
                 if (owner != null) {
                     owner.removeAttached(WizcraftAttachments.ENERGY_VEIL_NETWORK_ID);
                     if (controllingStack != null) {
@@ -105,12 +120,12 @@ public class EnergyVeilEntity extends Entity implements Ownable {
     }
 
     private void repelOutsiders() {
-        var entities = getWorld().getOtherEntities(this, getBoundingBox(), EntityPredicates.EXCEPT_SPECTATOR
+        var entities = level().getEntities(this, getBoundingBox(), EntitySelector.NO_SPECTATORS
                 .and(it -> !it.equals(owner))
                 .and(it -> !isOwnedByOwner(it))
-                .and(it -> !it.getType().isIn(WizcraftEntityTags.PASSES_THROUGH_ENERGY_VEIL))
-                .and(it -> !(it instanceof VehicleEntity vehicle && !vehicle.hasPassengers()))
-                .and(it -> !(it instanceof DisplayEntity || it instanceof BlockAttachedEntity))
+                .and(it -> !it.getType().is(WizcraftEntityTags.PASSES_THROUGH_ENERGY_VEIL))
+                .and(it -> !(it instanceof VehicleEntity vehicle && !vehicle.isVehicle()))
+                .and(it -> !(it instanceof Display || it instanceof BlockAttachedEntity))
                 .and(it -> !isComingFromAboveOrBelow(it))
                 .and(it -> !isInside(it)));
         for (Entity entity : entities) {
@@ -119,15 +134,15 @@ public class EnergyVeilEntity extends Entity implements Ownable {
                 // if it's 0 - they point orthogonally, and if it's positive - more or less in the same direction
                 // compare the entity velocity and the entity-to-veil-center vectors
                 // if they point to the same direction - repel the incoming entity
-                var entityToOwner = entity.getPos().relativize(getPos());
-                var velocity = entity.getVelocity();
-                if (velocity.dotProduct(entityToOwner) >= 0) {
+                var entityToOwner = entity.position().vectorTo(position());
+                var velocity = entity.getDeltaMovement();
+                if (velocity.dot(entityToOwner) >= 0) {
                     // Deflect projectiles and fast-moving entities, push any other
-                    if (velocity.lengthSquared() >= 0.75 || entity instanceof ProjectileEntity) {
-                        entity.setVelocity(entity.getVelocity().negate().multiply(0.5));
-                        entity.velocityDirty = true;
+                    if (velocity.lengthSqr() >= 0.75 || entity instanceof Projectile) {
+                        entity.setDeltaMovement(entity.getDeltaMovement().reverse().scale(0.5));
+                        entity.hasImpulse = true;
                     } else {
-                        entity.move(MovementType.PISTON, entityToOwner.negate().multiply(1.5));
+                        entity.move(MoverType.PISTON, entityToOwner.reverse().scale(1.5));
                     }
                 }
             }
@@ -135,7 +150,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
     }
 
     private boolean isOwnedByOwner(Entity entity) {
-        return entity instanceof Ownable ownable && owner != null && owner.equals(ownable.getOwner());
+        return entity instanceof TraceableEntity ownable && owner != null && owner.equals(ownable.getOwner());
     }
 
     private boolean isComingFromAboveOrBelow(Entity entity) {
@@ -143,25 +158,25 @@ public class EnergyVeilEntity extends Entity implements Ownable {
     }
 
     private boolean isInside(Entity entity) {
-        return entity.getPos().squaredDistanceTo(getPos()) <= Math.pow(getVeilVisibleRadius(), 2);
+        return entity.position().distanceToSqr(position()) <= Math.pow(getVeilVisibleRadius(), 2);
     }
 
     private boolean isOnTheEdge(Entity entity) {
-        return entity.getPos().squaredDistanceTo(getPos()) <= Math.pow(getRadius(), 2);
+        return entity.position().distanceToSqr(position()) <= Math.pow(getRadius(), 2);
     }
 
     @Override
-    public boolean canAvoidTraps() {
+    public boolean isIgnoringBlockTriggers() {
         return true;
     }
 
     public final float getRadius() {
-        return dataTracker.get(RADIUS);
+        return entityData.get(RADIUS);
     }
 
     public final void setRadius(float radius) {
         Preconditions.checkArgument(radius >= 2 && radius <= 4, "Veil radius cannot be smaller than 2 or greater than 4");
-        dataTracker.set(RADIUS, radius);
+        entityData.set(RADIUS, radius);
     }
 
     public final float getVeilVisibleRadius() {
@@ -170,7 +185,7 @@ public class EnergyVeilEntity extends Entity implements Ownable {
 
     @Nullable
     @Override
-    public PlayerEntity getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
@@ -179,36 +194,36 @@ public class EnergyVeilEntity extends Entity implements Ownable {
     }
 
     private EntityDimensions getDimensions() {
-        return EntityDimensions.changing(getRadius() * 2, getRadius() * 2);
+        return EntityDimensions.scalable(getRadius() * 2, getRadius() * 2);
     }
 
     @Override
-    public EntityDimensions getDimensions(EntityPose pose) {
+    public EntityDimensions getDimensions(Pose pose) {
         return getDimensions();
     }
 
     @Override
-    protected Box calculateBoundingBox() {
-        return getDimensions().getBoxAt(getPos());
+    protected AABB makeBoundingBox() {
+        return getDimensions().makeBoundingBox(position());
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-        if (nbt.contains("radius", NbtElement.FLOAT_TYPE)) {
+    protected void readAdditionalSaveData(CompoundTag nbt) {
+        if (nbt.contains("radius", Tag.TAG_FLOAT)) {
             setRadius(nbt.getFloat("radius"));
         }
-        if (nbt.contains("age", NbtElement.INT_TYPE)) {
-            age = nbt.getInt("age");
+        if (nbt.contains("age", Tag.TAG_INT)) {
+            tickCount = nbt.getInt("age");
         }
-        if (nbt.contains("life_expectancy", NbtElement.INT_TYPE)) {
+        if (nbt.contains("life_expectancy", Tag.TAG_INT)) {
             lifeExpectancy = nbt.getInt("life_expectancy");
         }
         if (nbt.contains("owner")) {
-            Uuids.INT_STREAM_CODEC.decode(NbtOps.INSTANCE, nbt.get("owner"))
-                    .resultOrPartial(Util.addPrefix("Could not decode a Player UUID of ", Wizcraft.LOGGER::error))
-                    .ifPresent(pair -> owner = getEntityWorld().getPlayerByUuid(uuid));
+            UUIDUtil.CODEC.decode(NbtOps.INSTANCE, nbt.get("owner"))
+                    .resultOrPartial(Util.prefix("Could not decode a Player UUID of ", Wizcraft.LOGGER::error))
+                    .ifPresent(pair -> owner = getCommandSenderWorld().getPlayerByUUID(uuid));
             if (owner != null && nbt.contains("controlling_stack")) {
-                controllingStack = owner.getInventory().getStack(nbt.getInt("controlling_stack"));
+                controllingStack = owner.getInventory().getItem(nbt.getInt("controlling_stack"));
                 if (controllingStack.isEmpty()) {
                     controllingStack = null;
                 }
@@ -217,14 +232,14 @@ public class EnergyVeilEntity extends Entity implements Ownable {
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putFloat("radius", getRadius());
-        nbt.putInt("age", age);
+        nbt.putInt("age", tickCount);
         nbt.putInt("life_expectancy", getLifeExpectancy());
         if (owner != null) {
-            Uuids.INT_STREAM_CODEC.encodeStart(NbtOps.INSTANCE, owner.getUuid()).ifSuccess(it -> nbt.put("owner", it));
+            UUIDUtil.CODEC.encodeStart(NbtOps.INSTANCE, owner.getUUID()).ifSuccess(it -> nbt.put("owner", it));
             if (controllingStack != null) {
-                var slot = owner.getInventory().getSlotWithStack(controllingStack);
+                var slot = owner.getInventory().findSlotMatchingItem(controllingStack);
                 if (slot >= 0) {
                     nbt.putInt("controlling_stack", slot);
                 } else {

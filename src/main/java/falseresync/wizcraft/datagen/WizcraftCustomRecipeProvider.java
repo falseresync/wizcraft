@@ -7,15 +7,15 @@ import falseresync.wizcraft.datagen.recipe.LensedWorktableRecipeJsonBuilder;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.concurrent.CompletableFuture;
 
 public class WizcraftCustomRecipeProvider extends FabricRecipeProvider {
-    public WizcraftCustomRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public WizcraftCustomRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
@@ -25,56 +25,56 @@ public class WizcraftCustomRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void generate(RecipeExporter exporter) {
+    public void buildRecipes(RecipeOutput exporter) {
         generateLensedWorktable(exporter);
         generateCrucible(exporter);
     }
 
-    private void generateLensedWorktable(RecipeExporter exporter) {
-        new LensedWorktableRecipeJsonBuilder(WizcraftItems.STARSHOOTER_FOCUS, Ingredient.ofItems(Items.COPPER_BLOCK))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.GOLD_INGOTS))
-                .pedestalInput(Ingredient.ofItems(Items.FIRE_CHARGE))
+    private void generateLensedWorktable(RecipeOutput exporter) {
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.STARSHOOTER_FOCUS, Ingredient.of(Items.COPPER_BLOCK))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.GOLD_INGOTS))
+                .pedestalInput(Ingredient.of(Items.FIRE_CHARGE))
                 .offerTo(exporter);
-        new LensedWorktableRecipeJsonBuilder(WizcraftItems.CHARGING_FOCUS, Ingredient.ofItems(Items.AMETHYST_BLOCK))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.PRISMARINE_GEMS))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.DIAMOND_GEMS))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.PRISMARINE_GEMS))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.DIAMOND_GEMS))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.CHARGING_FOCUS, Ingredient.of(Items.AMETHYST_BLOCK))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.PRISMARINE_GEMS))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.DIAMOND_GEMS))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.PRISMARINE_GEMS))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.DIAMOND_GEMS))
                 .offerTo(exporter);
-        new LensedWorktableRecipeJsonBuilder(WizcraftItems.LIGHTNING_FOCUS, Ingredient.ofItems(Items.DIAMOND_BLOCK))
-                .pedestalInput(Ingredient.ofItems(Items.LIGHTNING_ROD))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.IRON_INGOTS))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.LIGHTNING_FOCUS, Ingredient.of(Items.DIAMOND_BLOCK))
+                .pedestalInput(Ingredient.of(Items.LIGHTNING_ROD))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.IRON_INGOTS))
                 .offerTo(exporter);
-        new LensedWorktableRecipeJsonBuilder(WizcraftItems.COMET_WARP_FOCUS, Ingredient.ofItems(Items.SLIME_BLOCK))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.ENDER_PEARLS))
-                .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.ENDER_PEARLS))
-                .pedestalInput(Ingredient.ofItems(Items.CHORUS_FRUIT))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.COMET_WARP_FOCUS, Ingredient.of(Items.SLIME_BLOCK))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.ENDER_PEARLS))
+                .pedestalInput(Ingredient.of(Items.CHORUS_FRUIT))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.ENDER_PEARLS))
+                .pedestalInput(Ingredient.of(Items.CHORUS_FRUIT))
                 .offerTo(exporter);
-        new LensedWorktableRecipeJsonBuilder(WizcraftItems.ENERGY_VEIL_FOCUS, Ingredient.ofItems(Items.DIAMOND_BLOCK))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.SHIELD_TOOLS))
-                .pedestalInput(Ingredient.ofItems(Items.PHANTOM_MEMBRANE))
-                .pedestalInput(Ingredient.fromTag(ConventionalItemTags.SHIELD_TOOLS))
-                .pedestalInput(Ingredient.ofItems(Items.PHANTOM_MEMBRANE))
+        new LensedWorktableRecipeJsonBuilder(WizcraftItems.ENERGY_VEIL_FOCUS, Ingredient.of(Items.DIAMOND_BLOCK))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.SHIELD_TOOLS))
+                .pedestalInput(Ingredient.of(Items.PHANTOM_MEMBRANE))
+                .pedestalInput(Ingredient.of(ConventionalItemTags.SHIELD_TOOLS))
+                .pedestalInput(Ingredient.of(Items.PHANTOM_MEMBRANE))
                 .offerTo(exporter);
     }
 
-    private void generateCrucible(RecipeExporter exporter) {
+    private void generateCrucible(RecipeOutput exporter) {
         new CrucibleRecipeJsonBuilder(WizcraftItems.METALLIZED_STICK)
-                .input(Ingredient.ofItems(Items.STICK))
-                .input(Ingredient.fromTag(ConventionalItemTags.COPPER_INGOTS))
+                .input(Ingredient.of(Items.STICK))
+                .input(Ingredient.of(ConventionalItemTags.COPPER_INGOTS))
                 .offerTo(exporter);
         new CrucibleRecipeJsonBuilder(WizcraftItems.LENS)
-                .input(new CountableIngredient(Ingredient.fromTag(ConventionalItemTags.DIAMOND_GEMS), 2).toVanilla())
-                .input(new CountableIngredient(Ingredient.fromTag(ConventionalItemTags.AMETHYST_GEMS), 6).toVanilla())
-                .input(Ingredient.fromTag(ConventionalItemTags.GLASS_BLOCKS_COLORLESS))
+                .input(new CountableIngredient(Ingredient.of(ConventionalItemTags.DIAMOND_GEMS), 2).toVanilla())
+                .input(new CountableIngredient(Ingredient.of(ConventionalItemTags.AMETHYST_GEMS), 6).toVanilla())
+                .input(Ingredient.of(ConventionalItemTags.GLASS_BLOCKS_COLORLESS))
                 .offerTo(exporter);
         new CrucibleRecipeJsonBuilder(WizcraftItems.CHARGE_SHELL)
-                .input(Ingredient.fromTag(ConventionalItemTags.DIAMOND_GEMS))
-                .input(Ingredient.fromTag(ConventionalItemTags.AMETHYST_GEMS))
-                .input(Ingredient.fromTag(ConventionalItemTags.REDSTONE_DUSTS))
-                .input(Ingredient.ofItems(Items.GHAST_TEAR))
-                .input(Ingredient.ofItems(Items.NAUTILUS_SHELL))
+                .input(Ingredient.of(ConventionalItemTags.DIAMOND_GEMS))
+                .input(Ingredient.of(ConventionalItemTags.AMETHYST_GEMS))
+                .input(Ingredient.of(ConventionalItemTags.REDSTONE_DUSTS))
+                .input(Ingredient.of(Items.GHAST_TEAR))
+                .input(Ingredient.of(Items.NAUTILUS_SHELL))
                 .offerTo(exporter);
     }
 }

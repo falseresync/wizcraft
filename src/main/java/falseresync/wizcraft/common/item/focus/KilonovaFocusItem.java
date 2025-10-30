@@ -1,7 +1,7 @@
 package falseresync.wizcraft.common.item.focus;
 
 public class KilonovaFocusItem extends FocusItem {
-    public KilonovaFocusItem(Settings settings) {
+    public KilonovaFocusItem(Properties settings) {
         super(settings);
     }
 

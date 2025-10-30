@@ -5,26 +5,26 @@ import falseresync.wizcraft.common.Wizcraft;
 import falseresync.wizcraft.common.data.WizcraftComponents;
 import falseresync.wizcraft.common.item.WizcraftItems;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
-    protected final SimpleInventory inventory = new SimpleInventory(1) {
+    protected final SimpleContainer inventory = new SimpleContainer(1) {
         @Override
-        public int getMaxCountPerStack() {
+        public int getMaxStackSize() {
             return 1;
         }
     };
@@ -33,15 +33,15 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
 
     public ChargingWorktableBlockEntity(BlockPos pos, BlockState state) {
         super(WizcraftBlockEntities.CHARGING_WORKTABLE, pos, state);
-        inventory.addListener(sender -> markDirty());
+        inventory.addListener(sender -> setChanged());
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, ChargingWorktableBlockEntity worktable) {
+    public static void tick(Level world, BlockPos pos, BlockState state, ChargingWorktableBlockEntity worktable) {
         worktable.tick(world, pos, state);
     }
 
     @Override
-    public SimpleInventory getInventory() {
+    public SimpleContainer getInventory() {
         return inventory;
     }
 
@@ -51,7 +51,7 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
     }
 
     public ItemStack getHeldStackCopy() {
-        return inventory.getStack(0).copy();
+        return inventory.getItem(0).copy();
     }
 
     public boolean isCharging() {
@@ -59,30 +59,30 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
     }
 
     @Override
-    public void activate(PlayerEntity player) {
+    public void activate(Player player) {
 
     }
 
     @Override
     public boolean shouldExchangeFor(ItemStack stack) {
-        return stack.isOf(WizcraftItems.WAND) || stack.isEmpty();
+        return stack.is(WizcraftItems.WAND) || stack.isEmpty();
     }
 
     @Override
-    public void remove(World world, BlockPos pos) {
+    public void remove(Level world, BlockPos pos) {
 
     }
 
-    protected void tick(World world, BlockPos pos, BlockState state) {
-        if (world.isClient()) {
+    protected void tick(Level world, BlockPos pos, BlockState state) {
+        if (world.isClientSide()) {
             return;
         }
 
-        var heldStack = inventory.getStack(0);
-        if (!heldStack.isOf(WizcraftItems.WAND)) {
+        var heldStack = inventory.getItem(0);
+        if (!heldStack.is(WizcraftItems.WAND)) {
             if (charging) {
                 charging = false;
-                markDirty();
+                setChanged();
             }
             return;
         }
@@ -90,55 +90,55 @@ public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
         if (Wizcraft.getChargeManager().isWandFullyCharged(heldStack)) return;
 
         if (world.isNight() && world.random.nextFloat() < 0.25 || world.random.nextFloat() < 0.0625) {
-            heldStack.apply(WizcraftComponents.WAND_CHARGE, 0, current -> current + 1);
+            heldStack.update(WizcraftComponents.WAND_CHARGE, 0, current -> current + 1);
 
             var isFullyCharged = Wizcraft.getChargeManager().isWandFullyCharged(heldStack);
             if (charging && isFullyCharged || !charging && !isFullyCharged) {
                 charging = !charging;
-                markDirty();
+                setChanged();
             }
         }
     }
 
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (world != null) {
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-            world.getBlockEntity(pos.up(2), WizcraftBlockEntities.LENS).ifPresent(lens -> lens.setOn(charging));
+    public void setChanged() {
+        super.setChanged();
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            level.getBlockEntity(worldPosition.above(2), WizcraftBlockEntities.LENS).ifPresent(lens -> lens.setOn(charging));
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
 
-        Inventories.writeNbt(nbt, inventory.getHeldStacks(), registryLookup);
+        ContainerHelper.saveAllItems(nbt, inventory.getItems(), registryLookup);
 
         nbt.putBoolean(CommonKeys.CHARGING, charging);
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
 
-        inventory.getHeldStacks().clear();
-        Inventories.readNbt(nbt, inventory.getHeldStacks(), registryLookup);
+        inventory.getItems().clear();
+        ContainerHelper.loadAllItems(nbt, inventory.getItems(), registryLookup);
 
         charging = false;
-        if (nbt.contains(CommonKeys.CHARGING, NbtElement.BYTE_TYPE)) {
+        if (nbt.contains(CommonKeys.CHARGING, Tag.TAG_BYTE)) {
             charging = nbt.getBoolean(CommonKeys.CHARGING);
         }
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 }

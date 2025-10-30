@@ -67,7 +67,7 @@ public class ChargingFocusItem extends FocusItem {
             Wizcraft.getChargeManager().chargeWand(wandStack, amount, player);
             focusStack.damage(1, player, EquipmentSlot.MAINHAND);
 
-            player.playSound(WizcraftSounds.SUCCESSFULLY_CHARGED);
+            Reports.playSoundToEveryone(player, WizcraftSounds.SUCCESSFULLY_CHARGED);
             player.sendMessage(Text.translatable("hud.wizcraft.wand.successfully_charged").styled(style -> style.withColor(Formatting.GOLD)), true);
             var rotation = player.getRotationVec(1);
             var orthogonalDistance = 1;

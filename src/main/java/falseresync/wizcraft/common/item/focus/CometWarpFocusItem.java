@@ -153,7 +153,7 @@ public class CometWarpFocusItem extends FocusItem {
                     return TypedActionResult.fail(wandStack);
                 }
 
-                player.playSound(WizcraftSounds.COMET_WARP_ANCHOR_PLACED);
+                Reports.playSoundToEveryone(player, WizcraftSounds.COMET_WARP_ANCHOR_PLACED);
                 wandStack.set(WizcraftComponents.WARP_FOCUS_ANCHOR, GlobalPos.create(world.getRegistryKey(), user.getBlockPos()));
                 if (world.random.nextFloat() < 0.1f) {
                     focusStack.damage(1, player, EquipmentSlot.MAINHAND);
@@ -191,7 +191,7 @@ public class CometWarpFocusItem extends FocusItem {
                     return TypedActionResult.fail(wandStack);
                 }
 
-                player.playSound(SoundEvents.ENTITY_PLAYER_TELEPORT);
+                Reports.playSoundToEveryone(player, SoundEvents.ENTITY_PLAYER_TELEPORT);
                 user.teleportTo(new TeleportTarget(destination, anchor.pos().toCenterPos(), Vec3d.ZERO, user.getYaw(), user.getPitch(), TeleportTarget.NO_OP));
                 if (!persistent) {
                     wandStack.remove(WizcraftComponents.WARP_FOCUS_ANCHOR);

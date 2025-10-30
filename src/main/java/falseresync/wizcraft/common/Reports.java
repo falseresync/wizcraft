@@ -16,6 +16,11 @@ public class Reports {
         player.sendMessage(Text.translatable("hud.wizcraft.wand.insufficient_charge").formatted(Formatting.DARK_RED), true);
     }
 
+    public static void playSoundToEveryone(PlayerEntity player, SoundEvent sound) {
+        player.playSound(sound);
+        player.playSoundToPlayer(sound, SoundCategory.PLAYERS, 1f, 1f);
+    }
+
     public static void addSparkles(World world, Vec3d pos) {
         addParticle(world, ParticleTypes.FIREWORK, pos, 5, 10);
     }

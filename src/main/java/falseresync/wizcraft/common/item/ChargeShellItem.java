@@ -1,5 +1,6 @@
 package falseresync.wizcraft.common.item;
 
+import falseresync.wizcraft.common.Reports;
 import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.data.WizcraftComponents;
 import net.minecraft.entity.*;
@@ -9,6 +10,8 @@ import net.minecraft.server.network.*;
 import net.minecraft.sound.*;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
+
+import java.util.Random;
 
 public class ChargeShellItem extends Item {
     public static final int DEFAULT_CAPACITY = 100;
@@ -45,7 +48,7 @@ public class ChargeShellItem extends Item {
             var chargeShells = player.getAttachedOrCreate(WizcraftAttachments.CHARGE_SHELLS).withShell(capacity);
             if (chargeShells != null) {
                 player.setAttached(WizcraftAttachments.CHARGE_SHELLS, chargeShells);
-                player.playSound(SoundEvents.ITEM_TRIDENT_RETURN);
+                Reports.playSoundToEveryone(player, SoundEvents.ITEM_TRIDENT_RETURN);
                 return ItemStack.EMPTY;
             }
         }

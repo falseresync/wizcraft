@@ -55,55 +55,55 @@ public abstract class FocusItem extends Item {
         return InteractionResultHolder.pass(wandStack);
     }
 
-    public InteractionResult focusUseOnBlock(ItemStack wandStack, ItemStack focusStack, UseOnContext context) {
+    public InteractionResult focusUseOn(ItemStack wandStack, ItemStack focusStack, UseOnContext context) {
         return InteractionResult.PASS;
     }
 
-    public InteractionResult focusUseOnEntity(ItemStack wandStack, ItemStack focusStack, Player user, LivingEntity entity, InteractionHand hand) {
+    public InteractionResult focusInteractLivingEntity(ItemStack wandStack, ItemStack focusStack, Player user, LivingEntity entity, InteractionHand hand) {
         return InteractionResult.PASS;
     }
 
-    public void focusUsageTick(Level world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
+    public void focusOnUseTick(Level world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
     }
 
-    public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user) {
+    public ItemStack focusFinishUsingItem(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user) {
         return wandStack;
     }
 
-    public void focusOnStoppedUsing(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user, int remainingUseTicks) {
+    public void focusReleaseUsing(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user, int remainingUseTicks) {
     }
 
     public void focusInventoryTick(ItemStack wandStack, ItemStack focusStack, Level world, Entity entity, int slot, boolean selected) {
     }
 
-    public boolean focusIsUsedOnRelease(ItemStack wandStack, ItemStack focusStack) {
+    public boolean focusUseOnRelease(ItemStack wandStack, ItemStack focusStack) {
         return false;
     }
 
-    public int focusGetMaxUseTime(ItemStack wandStack, ItemStack focusStack, LivingEntity user) {
+    public int focusGetUseDuration(ItemStack wandStack, ItemStack focusStack, LivingEntity user) {
         return 0;
     }
 
-    public float focusGetBonusAttackDamage(ItemStack wandStack, ItemStack focusStack, Entity target, float baseAttackDamage, DamageSource damageSource) {
+    public float focusGetAttackDamageBonus(ItemStack wandStack, ItemStack focusStack, Entity target, float baseAttackDamage, DamageSource damageSource) {
         return 0F;
     }
 
-    public boolean focusIsItemBarVisible(ItemStack wandStack, ItemStack focusStack) {
+    public boolean focusIsBarVisible(ItemStack wandStack, ItemStack focusStack) {
         return wandStack.has(WizcraftComponents.ITEM_BAR);
     }
 
-    public int focusGetItemBarStep(ItemStack wandStack, ItemStack focusStack) {
+    public int focusGetBarWidth(ItemStack wandStack, ItemStack focusStack) {
         return wandStack.getOrDefault(WizcraftComponents.ITEM_BAR, ItemBarComponent.DEFAULT).step();
     }
 
-    public int focusGetItemBarColor(ItemStack wandStack, ItemStack focusStack) {
+    public int focusGetBarColor(ItemStack wandStack, ItemStack focusStack) {
         return wandStack.getOrDefault(WizcraftComponents.ITEM_BAR, ItemBarComponent.DEFAULT).color();
     }
 
-    public boolean focusHasGlint(ItemStack wandStack, ItemStack focusStack) {
+    public boolean focusIsFoil(ItemStack wandStack, ItemStack focusStack) {
         return false;
     }
 
-    public void focusAppendTooltip(ItemStack wandStack, ItemStack focusStack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+    public void focusAppendHoverText(ItemStack wandStack, ItemStack focusStack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
     }
 }

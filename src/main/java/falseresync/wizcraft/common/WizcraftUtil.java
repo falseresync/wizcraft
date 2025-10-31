@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -19,12 +20,12 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class WizcraftUtil {
-    private static final Function<Level, Integer> memo$findViewDistance = Util.memoize((Level world) -> world.isClientSide()
+    private static final Function<Level, Integer> memo$findViewDistance = Util.memoize((Level level) -> level.isClientSide()
             ? Minecraft.getInstance().options.getEffectiveRenderDistance()
-            : ((ServerLevel) world).getChunkSource().chunkMap.serverViewDistance);
+            : ((ServerLevel) level).getChunkSource().chunkMap.serverViewDistance);
 
-    public static <T> Optional<T> nextRandomEntry(ServerLevel world, TagKey<T> tag, RandomSource random) {
-        return world.registryAccess()
+    public static <T> Optional<T> nextRandomEntry(ServerLevel level, TagKey<T> tag, RandomSource random) {
+        return level.registryAccess()
                 .registry(tag.registry())
                 .map(registry -> registry.getOrCreateTag(tag))
                 .flatMap(entries -> entries.getRandomElement(random).map(Holder::value));
@@ -50,5 +51,9 @@ public class WizcraftUtil {
         }
 
         return 0;
+    }
+
+    public static BlockPos fuzzyPos(RandomSource random, int radius, BlockPos pos) {
+        return pos.offset(random.nextInt(radius) - radius, 0, random.nextInt(radius) - radius);
     }
 }

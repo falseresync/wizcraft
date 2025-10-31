@@ -93,7 +93,7 @@ public class CometWarpFocusItem extends FocusItem {
     }
 
     @Override
-    public InteractionResult focusUseOnBlock(ItemStack wandStack, ItemStack focusStack, UseOnContext context) {
+    public InteractionResult focusUseOn(ItemStack wandStack, ItemStack focusStack, UseOnContext context) {
         var world = context.getLevel();
         var player = context.getPlayer();
         if (player == null) {
@@ -132,7 +132,7 @@ public class CometWarpFocusItem extends FocusItem {
             return InteractionResult.FAIL;
         }
 
-        return super.focusUseOnBlock(wandStack, focusStack, context);
+        return super.focusUseOn(wandStack, focusStack, context);
     }
 
     @Override
@@ -205,12 +205,12 @@ public class CometWarpFocusItem extends FocusItem {
     }
 
     @Override
-    public boolean focusHasGlint(ItemStack wandStack, ItemStack focusStack) {
+    public boolean focusIsFoil(ItemStack wandStack, ItemStack focusStack) {
         return isFoil(wandStack);
     }
 
     @Override
-    public void focusAppendTooltip(ItemStack wandStack, ItemStack focusStack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+    public void focusAppendHoverText(ItemStack wandStack, ItemStack focusStack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         appendTooltip$internal(wandStack, focusStack, context, tooltip, type, true);
     }
 

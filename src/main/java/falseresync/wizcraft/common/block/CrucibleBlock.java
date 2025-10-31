@@ -21,14 +21,14 @@ import javax.annotation.Nullable;
 
 public class CrucibleBlock extends BaseEntityBlock {
     public static final MapCodec<CrucibleBlock> CODEC = simpleCodec(CrucibleBlock::new);
-    private static final VoxelShape RAYCAST_SHAPE = box(2.0, 4.0, 2.0, 14.0, 16.0, 14.0);
-    protected static final VoxelShape OUTLINE_SHAPE = Shapes.join(
+    private static final VoxelShape INTERACTION_SHAPE = box(2.0, 4.0, 2.0, 14.0, 16.0, 14.0);
+    protected static final VoxelShape SHAPE = Shapes.join(
             Shapes.block(),
             Shapes.or(
                     box(0.0, 0.0, 4.0, 16.0, 3.0, 12.0),
                     box(4.0, 0.0, 0.0, 12.0, 3.0, 16.0),
                     box(2.0, 0.0, 2.0, 14.0, 3.0, 14.0),
-                    RAYCAST_SHAPE
+                    INTERACTION_SHAPE
             ),
             BooleanOp.ONLY_FIRST
     );
@@ -57,12 +57,12 @@ public class CrucibleBlock extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return OUTLINE_SHAPE;
+        return SHAPE;
     }
 
     @Override
     protected VoxelShape getInteractionShape(BlockState state, BlockGetter world, BlockPos pos) {
-        return RAYCAST_SHAPE;
+        return INTERACTION_SHAPE;
     }
 
     @Override

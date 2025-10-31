@@ -50,17 +50,17 @@ public class ChargingFocusItem extends FocusItem {
     }
 
     @Override
-    public void focusUsageTick(Level world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
+    public void focusOnUseTick(Level world, LivingEntity user, ItemStack wandStack, ItemStack focusStack, int remainingUseTicks) {
         wandStack.update(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0, current -> current + 1);
     }
 
     @Override
-    public void focusOnStoppedUsing(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user, int remainingUseTicks) {
+    public void focusReleaseUsing(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user, int remainingUseTicks) {
         wandStack.remove(WizcraftComponents.CHARGING_FOCUS_PROGRESS);
     }
 
     @Override
-    public ItemStack focusFinishUsing(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user) {
+    public ItemStack focusFinishUsingItem(ItemStack wandStack, ItemStack focusStack, Level world, LivingEntity user) {
         wandStack.remove(WizcraftComponents.CHARGING_FOCUS_PROGRESS);
         if (user instanceof ServerPlayer player) {
             var amount = (int) (30 * Wizcraft.getChargeManager().calculateEnvironmentCoefficient(world, player));
@@ -80,22 +80,22 @@ public class ChargingFocusItem extends FocusItem {
     }
 
     @Override
-    public int focusGetMaxUseTime(ItemStack wandStack, ItemStack focusStack, LivingEntity user) {
+    public int focusGetUseDuration(ItemStack wandStack, ItemStack focusStack, LivingEntity user) {
         return 50;
     }
 
     @Override
-    public boolean focusIsItemBarVisible(ItemStack wandStack, ItemStack focusStack) {
+    public boolean focusIsBarVisible(ItemStack wandStack, ItemStack focusStack) {
         return wandStack.getOrDefault(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0) > 0;
     }
 
     @Override
-    public int focusGetItemBarStep(ItemStack wandStack, ItemStack focusStack) {
-        return Math.round(wandStack.getOrDefault(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0) * 13f / focusGetMaxUseTime(wandStack, focusStack, null));
+    public int focusGetBarWidth(ItemStack wandStack, ItemStack focusStack) {
+        return Math.round(wandStack.getOrDefault(WizcraftComponents.CHARGING_FOCUS_PROGRESS, 0) * 13f / focusGetUseDuration(wandStack, focusStack, null));
     }
 
     @Override
-    public int focusGetItemBarColor(ItemStack wandStack, ItemStack focusStack) {
+    public int focusGetBarColor(ItemStack wandStack, ItemStack focusStack) {
         return FastColor.ARGB32.color(0, 115, 190, 211);
     }
 }

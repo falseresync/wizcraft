@@ -11,18 +11,20 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SuppressWarnings("NotNullFieldNotInitialized")
 public class WorktableBuilder<B extends WorktableBlockEntity> {
     protected Supplier<BlockEntityType<B>> type;
     @Nullable
     protected BlockEntityTicker<B> ticker;
     protected Supplier<BetterBlockPattern> pattern;
+    @Nullable
     protected BiPredicate<ServerLevel, ServerPlayer> preconditions;
 
     public WorktableBuilder<B> type(Supplier<BlockEntityType<B>> type) {
@@ -51,7 +53,7 @@ public class WorktableBuilder<B extends WorktableBlockEntity> {
         preconditions = preconditions == null ? (world, player) -> true : preconditions;
 
         return settings -> new WorktableBlock<>(settings) {
-            private WorktableVariant<B> VARIANT;
+            private final WorktableVariant<B> VARIANT = new WorktableVariant<>(() -> this, pattern, preconditions);
 
             @Override
             public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -61,14 +63,12 @@ public class WorktableBuilder<B extends WorktableBlockEntity> {
             @Override
             @Nullable
             public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+                //noinspection DataFlowIssue
                 return createTickerHelper(type, WorktableBuilder.this.type.get(), ticker);
             }
 
             @Override
             public WorktableVariant<B> getVariant() {
-                if (VARIANT == null) {
-                    VARIANT = new WorktableVariant<>(() -> this, pattern, preconditions);
-                }
                 return VARIANT;
             }
         };

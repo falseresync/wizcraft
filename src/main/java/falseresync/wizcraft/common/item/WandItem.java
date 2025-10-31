@@ -88,7 +88,7 @@ public class WandItem extends Item implements ActivatorItem {
         var wandStack = context.getItemInHand();
         var focusStack = getEquipped(wandStack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusUseOnBlock(wandStack, focusStack, context);
+            return focusItem.focusUseOn(wandStack, focusStack, context);
         }
 
         return super.useOn(context);
@@ -99,49 +99,49 @@ public class WandItem extends Item implements ActivatorItem {
         var wandStack = user.getItemInHand(hand);
         var focusStack = getEquipped(wandStack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusUseOnEntity(wandStack, focusStack, user, entity, hand);
+            return focusItem.focusInteractLivingEntity(wandStack, focusStack, user, entity, hand);
         }
 
         return super.interactLivingEntity(stack, user, entity, hand);
     }
 
     @Override
-    public void onUseTick(Level world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+    public void onUseTick(Level level, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            focusItem.focusUsageTick(world, user, stack, focusStack, remainingUseTicks);
+            focusItem.focusOnUseTick(level, user, stack, focusStack, remainingUseTicks);
             return;
         }
 
-        super.onUseTick(world, user, stack, remainingUseTicks);
+        super.onUseTick(level, user, stack, remainingUseTicks);
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity user) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusFinishUsing(stack, focusStack, world, user);
+            return focusItem.focusFinishUsingItem(stack, focusStack, level, user);
         }
 
-        return super.finishUsingItem(stack, world, user);
+        return super.finishUsingItem(stack, level, user);
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks) {
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity user, int remainingUseTicks) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            focusItem.focusOnStoppedUsing(stack, focusStack, world, user, remainingUseTicks);
+            focusItem.focusReleaseUsing(stack, focusStack, level, user, remainingUseTicks);
         }
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            focusItem.focusInventoryTick(stack, focusStack, world, entity, slot, selected);
+            focusItem.focusInventoryTick(stack, focusStack, level, entity, slot, selected);
         }
         if (entity instanceof ServerPlayer player) {
-            Wizcraft.getChargeManager().tryChargeWandPassively(stack, world, player);
+            Wizcraft.getChargeManager().tryChargeWandPassively(stack, level, player);
         }
     }
 
@@ -152,7 +152,7 @@ public class WandItem extends Item implements ActivatorItem {
     public boolean useOnRelease(ItemStack stack) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusIsUsedOnRelease(stack, focusStack);
+            return focusItem.focusUseOnRelease(stack, focusStack);
         }
 
         return super.useOnRelease(stack);
@@ -167,7 +167,7 @@ public class WandItem extends Item implements ActivatorItem {
     public int getUseDuration(ItemStack stack, LivingEntity user) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusGetMaxUseTime(stack, focusStack, user);
+            return focusItem.focusGetUseDuration(stack, focusStack, user);
         }
 
         return super.getUseDuration(stack, user);
@@ -179,7 +179,7 @@ public class WandItem extends Item implements ActivatorItem {
         if (weaponStack != null && weaponStack.getItem() instanceof WandItem) {
             var focusStack = getEquipped(weaponStack);
             if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-                return focusItem.focusGetBonusAttackDamage(weaponStack, focusStack, target, baseAttackDamage, damageSource);
+                return focusItem.focusGetAttackDamageBonus(weaponStack, focusStack, target, baseAttackDamage, damageSource);
             }
         }
 
@@ -192,7 +192,7 @@ public class WandItem extends Item implements ActivatorItem {
     public boolean isBarVisible(ItemStack stack) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusIsItemBarVisible(stack, focusStack);
+            return focusItem.focusIsBarVisible(stack, focusStack);
         }
 
         return super.isBarVisible(stack);
@@ -202,7 +202,7 @@ public class WandItem extends Item implements ActivatorItem {
     public int getBarWidth(ItemStack stack) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusGetItemBarStep(stack, focusStack);
+            return focusItem.focusGetBarWidth(stack, focusStack);
         }
 
         return super.getBarWidth(stack);
@@ -212,7 +212,7 @@ public class WandItem extends Item implements ActivatorItem {
     public int getBarColor(ItemStack stack) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusGetItemBarColor(stack, focusStack);
+            return focusItem.focusGetBarColor(stack, focusStack);
         }
 
         return super.getBarColor(stack);
@@ -222,7 +222,7 @@ public class WandItem extends Item implements ActivatorItem {
     public boolean isFoil(ItemStack stack) {
         var focusStack = getEquipped(stack);
         if (!focusStack.isEmpty() && focusStack.getItem() instanceof FocusItem focusItem) {
-            return focusItem.focusHasGlint(stack, focusStack);
+            return focusItem.focusIsFoil(stack, focusStack);
         }
 
         return super.isFoil(stack);
@@ -235,7 +235,7 @@ public class WandItem extends Item implements ActivatorItem {
             tooltip.add(Component
                     .translatable("tooltip.wizcraft.wand.active_focus", focusStack.getHoverName())
                     .withStyle(style -> style.withColor(ChatFormatting.GRAY)));
-            focusItem.focusAppendTooltip(stack, focusStack, context, tooltip, type);
+            focusItem.focusAppendHoverText(stack, focusStack, context, tooltip, type);
         }
         tooltip.add(Component
                 .translatable("tooltip.wizcraft.wand.change_focus", KeyBindingHelper.getBoundKeyOf(WizcraftKeybindings.TOOL_CONTROL).getDisplayName())

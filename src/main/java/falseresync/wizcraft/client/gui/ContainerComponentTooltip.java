@@ -1,21 +1,21 @@
 package falseresync.wizcraft.client.gui;
 
-import falseresync.wizcraft.common.data.InventoryComponent;
+import falseresync.wizcraft.common.data.ContainerComponent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public class InventoryComponentTooltip implements ClientTooltipComponent {
+public class ContainerComponentTooltip implements ClientTooltipComponent {
     private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.withDefaultNamespace("container/bundle/background");
     private static final int BOTTOM_MARGIN = 4;
     private static final int WIDTH_PER_COLUMN = 18;
     private static final int HEIGHT_PER_ROW = 20;
-    private final InventoryComponent inventoryComponent;
+    private final ContainerComponent containerComponent;
 
-    public InventoryComponentTooltip(InventoryComponent inventoryComponent) {
-        this.inventoryComponent = inventoryComponent;
+    public ContainerComponentTooltip(ContainerComponent containerComponent) {
+        this.containerComponent = containerComponent;
     }
 
     @Override
@@ -53,10 +53,10 @@ public class InventoryComponentTooltip implements ClientTooltipComponent {
     }
 
     private void drawSlot(int x, int y, int index, GuiGraphics context, Font textRenderer) {
-        if (index >= inventoryComponent.size()) {
+        if (index >= containerComponent.size()) {
             drawSprite(context, x, y, SlotSprite.SLOT);
         } else {
-            ItemStack itemStack = inventoryComponent.stacks().get(index);
+            ItemStack itemStack = containerComponent.stacks().get(index);
             drawSprite(context, x, y, SlotSprite.SLOT);
             context.renderItem(itemStack, x + 1, y + 1, index);
             context.renderItemDecorations(textRenderer, itemStack, x + 1, y + 1);
@@ -68,11 +68,11 @@ public class InventoryComponentTooltip implements ClientTooltipComponent {
     }
 
     private int getColumns() {
-        return Math.max(2, (int) Math.ceil(Math.sqrt((double) inventoryComponent.size() + 1.0)));
+        return Math.max(2, (int) Math.ceil(Math.sqrt((double) containerComponent.size() + 1.0)));
     }
 
     private int getRows() {
-        return (int) Math.ceil((double) inventoryComponent.size() / (double) getColumns());
+        return (int) Math.ceil((double) containerComponent.size() / (double) getColumns());
     }
 
     enum SlotSprite {

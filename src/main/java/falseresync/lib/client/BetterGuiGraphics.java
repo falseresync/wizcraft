@@ -12,8 +12,8 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-public class BetterDrawContext extends GuiGraphics {
-    public BetterDrawContext(Minecraft client, GuiGraphics context) {
+public class BetterGuiGraphics extends GuiGraphics {
+    public BetterGuiGraphics(Minecraft client, GuiGraphics context) {
         super(client, context.bufferSource());
     }
 

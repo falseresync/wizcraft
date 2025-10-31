@@ -22,17 +22,17 @@ public class ChargingWorktableRenderer implements BlockEntityRenderer<ChargingWo
     }
 
     @Override
-    public void render(ChargingWorktableBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+    public void render(ChargingWorktableBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         var world = entity.getLevel();
         var stack = entity.getHeldStackCopy();
         if (stack.isEmpty() || world == null) return;
 
-        matrices.pushPose();
+        poseStack.pushPose();
 
         RenderingUtil.levitateItemAboveBlock(
-                world, entity.getBlockPos(), tickDelta, stack,
+                world, entity.getBlockPos(), partialTick, stack,
                 entity.isCharging() ? ItemDisplayContext.THIRD_PERSON_RIGHT_HAND : ItemDisplayContext.FIXED,
-                this.itemRenderer, matrices, vertexConsumers);
+                this.itemRenderer, poseStack, bufferSource);
 
         if (entity.isCharging() && world.random.nextFloat() < Wizcraft.getConfig().animationParticlesAmount.modifier) {
             var itemPos = entity.getBlockPos().getCenter().add(0, -0.5, 0);
@@ -41,6 +41,6 @@ public class ChargingWorktableRenderer implements BlockEntityRenderer<ChargingWo
             RenderingUtil.addParticle(world, WizcraftParticleTypes.CHARGING, particlePos, particleVelocity);
         }
 
-        matrices.popPose();
+        poseStack.popPose();
     }
 }

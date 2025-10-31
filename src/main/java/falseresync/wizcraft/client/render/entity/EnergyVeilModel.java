@@ -56,14 +56,14 @@ public class EnergyVeilModel extends HierarchicalModel<Player> {
     }
 
     @Override
-    public void prepareMobModel(Player entity, float limbAngle, float limbDistance, float tickDelta) {
+    public void prepareMobModel(Player entity, float limbAngle, float limbDistance, float partialTick) {
         throw new UnsupportedOperationException();
     }
 
-    public void animateModel(EnergyVeilEntity veil, float limbAngle, float limbDistance, float tickDelta) {
+    public void animateModel(EnergyVeilEntity veil, float limbAngle, float limbDistance, float partialTick) {
         if (Wizcraft.getConfig().animationQuality == WizcraftConfig.AnimationQuality.DEFAULT) {
             root().getAllParts().forEach(ModelPart::resetPose);
-            animate(veil.slideAnimationState, EnergyVeilAnimations.SLIDE.get(), veil.tickCount + tickDelta);
+            animate(veil.slideAnimationState, EnergyVeilAnimations.SLIDE.get(), veil.tickCount + partialTick);
         }
     }
 }

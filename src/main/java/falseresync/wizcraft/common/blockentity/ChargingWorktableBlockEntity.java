@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class ChargingWorktableBlockEntity extends WorktableBlockEntity {
     protected final SimpleContainer inventory = new SimpleContainer(1) {

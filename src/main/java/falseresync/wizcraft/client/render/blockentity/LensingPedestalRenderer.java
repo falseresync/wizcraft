@@ -19,15 +19,15 @@ public class LensingPedestalRenderer implements BlockEntityRenderer<LensingPedes
     }
 
     @Override
-    public void render(LensingPedestalBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+    public void render(LensingPedestalBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         var world = entity.getLevel();
         var stack = entity.getHeldStackCopy();
         if (entity.isLinked() || stack.isEmpty() || world == null) return;
 
-        matrices.pushPose();
+        poseStack.pushPose();
 
-        RenderingUtil.levitateItemAboveBlock(world, entity.getBlockPos(), tickDelta, stack, this.itemRenderer, matrices, vertexConsumers);
+        RenderingUtil.levitateItemAboveBlock(world, entity.getBlockPos(), partialTick, stack, this.itemRenderer, poseStack, bufferSource);
 
-        matrices.popPose();
+        poseStack.popPose();
     }
 }

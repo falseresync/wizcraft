@@ -10,7 +10,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public record ChargeShellsAttachment(int currentCharge, IntList shells, int maxCharge) {
     public static final int MAX_SHELLS = 3;

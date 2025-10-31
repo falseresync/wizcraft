@@ -40,21 +40,21 @@ public class LensRenderer implements BlockEntityRenderer<LensBlockEntity> {
     }
 
     @Override
-    public void render(LensBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+    public void render(LensBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         if (entity.isOn()) {
-            matrices.pushPose();
-            matrices.translate(0, Math.sin((entity.getLevel().getGameTime() + tickDelta) / 16) / 16, 0);
-            model.render(matrices, ON_TEX.buffer(vertexConsumers, RenderType::entityTranslucentEmissive), light, overlay);
-            matrices.popPose();
+            poseStack.pushPose();
+            poseStack.translate(0, Math.sin((entity.getLevel().getGameTime() + partialTick) / 16) / 16, 0);
+            model.render(poseStack, ON_TEX.buffer(bufferSource, RenderType::entityTranslucentEmissive), packedLight, packedOverlay);
+            poseStack.popPose();
         } else {
-            model.render(matrices, OFF_TEX.buffer(vertexConsumers, RenderType::entityTranslucentEmissive), light, overlay);
+            model.render(poseStack, OFF_TEX.buffer(bufferSource, RenderType::entityTranslucentEmissive), packedLight, packedOverlay);
         }
     }
 
     public static class ItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
         @Override
-        public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
-            model.render(matrices, ON_TEX.buffer(vertexConsumers, RenderType::entityTranslucentEmissive), light, overlay);
+        public void render(ItemStack stack, ItemDisplayContext mode, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+            model.render(poseStack, ON_TEX.buffer(bufferSource, RenderType::entityTranslucentEmissive), packedLight, packedOverlay);
         }
     }
 }

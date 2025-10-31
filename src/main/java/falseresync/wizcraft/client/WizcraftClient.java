@@ -2,7 +2,7 @@ package falseresync.wizcraft.client;
 
 import falseresync.wizcraft.client.gui.WizcraftGui;
 import falseresync.wizcraft.client.hud.WizcraftHud;
-import falseresync.wizcraft.client.particle.WizcraftParticleFactories;
+import falseresync.wizcraft.client.particle.WizcraftParticleProvider;
 import falseresync.wizcraft.client.render.WizcraftRendering;
 import falseresync.wizcraft.common.config.TranslatableEnum;
 import falseresync.wizcraft.common.config.TranslatableEnumGuiProvider;
@@ -32,12 +32,12 @@ public class WizcraftClient implements ClientModInitializer {
                 field -> field.getType().isEnum() && field.isAnnotationPresent(TranslatableEnum.class)
         );
 
-        WizcraftParticleFactories.init();
+        WizcraftParticleProvider.init();
         WizcraftRendering.init();
         WizcraftGui.init();
         WizcraftKeybindings.init();
         WizcraftClientReceivers.register();
-        ClientPlayerInventoryEvents.init();
+        ClientInventoryEvents.init();
         WizcraftLavenderPlugin.init();
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {

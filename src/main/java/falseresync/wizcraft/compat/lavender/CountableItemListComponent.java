@@ -6,7 +6,7 @@ import io.wispforest.owo.ui.component.ItemComponent;
 import io.wispforest.owo.ui.core.Insets;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @see io.wispforest.lavender.md.ItemListComponent

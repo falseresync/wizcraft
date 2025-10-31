@@ -24,16 +24,16 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
-public class HeldItemRendererMixin {
+public class ItemInHandRendererMixin {
     private @Shadow @Final EntityRenderDispatcher entityRenderDispatcher;
 
     @Inject(method = "renderArmWithItem", at = @At("TAIL"))
-    public void wizcraft$renderFirstPersonItem$energyVeil(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
+    public void wizcraft$renderFirstPersonItem$energyVeil(AbstractClientPlayer player, float partialTick, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack poseStack, MultiBufferSource bufferSource, int light, CallbackInfo ci) {
         var renderer = (PlayerRenderer) entityRenderDispatcher.getRenderer(player);
-        var animationProgress = renderer.getBob(player, tickDelta);
+        var animationProgress = renderer.getBob(player, partialTick);
         ((EnergyVeilFeatureRenderer.Accessor) renderer)
                 .wizcraft$getEnergyVeilRenderer()
-                .renderInFirstPerson(matrices, vertexConsumers, light, player, tickDelta, animationProgress);
+                .renderInFirstPerson(poseStack, bufferSource, light, player, partialTick, animationProgress);
     }
 
     @WrapOperation(
@@ -47,24 +47,24 @@ public class HeldItemRendererMixin {
                     target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V",
                     ordinal = 0))
     public void wizcraft$renderFirstPersonItem$customUseAction(ItemInHandRenderer instance,
-                                                               PoseStack matrices,
+                                                               PoseStack poseStack,
                                                                HumanoidArm arm,
                                                                float equipProgress,
                                                                Operation<Void> original,
                                                                @Local(argsOnly = true) AbstractClientPlayer player,
-                                                               @Local(argsOnly = true, ordinal = 0) float tickDelta,
+                                                               @Local(argsOnly = true, ordinal = 0) float partialTick,
                                                                @Local(argsOnly = true, ordinal = 1) float pitch,
                                                                @Local(argsOnly = true) InteractionHand hand,
                                                                @Local(argsOnly = true, ordinal = 2) float swingProgress,
                                                                @Local(argsOnly = true) ItemStack stack,
-                                                               @Local(argsOnly = true) MultiBufferSource vertexConsumers,
+                                                               @Local(argsOnly = true) MultiBufferSource bufferSource,
                                                                @Local(argsOnly = true) int light) {
         if (stack.is(WizcraftItems.WAND) && WizcraftItems.WAND.getEquipped(stack).is(WizcraftItems.CHARGING_FOCUS)) {
             ChargingFocusUseAction.applyFirstPersonTransformation(new ChargingFocusUseAction.HeldItemRendererContext(
-                    player, stack, hand, arm, pitch, swingProgress, equipProgress, matrices, vertexConsumers, tickDelta, light
+                    player, stack, hand, arm, pitch, swingProgress, equipProgress, poseStack, bufferSource, partialTick, light
             ));
         } else {
-            original.call(instance, matrices, arm, equipProgress);
+            original.call(instance, poseStack, arm, equipProgress);
         }
     }
 }

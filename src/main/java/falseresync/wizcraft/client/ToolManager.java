@@ -18,7 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.stream.Collectors;
@@ -53,7 +53,7 @@ public class ToolManager {
             }
         });
 
-        ClientPlayerInventoryEvents.SELECTED_SLOT_CHANGED.register((inventory, lastSelectedSlot) -> {
+        ClientInventoryEvents.SELECTED_SLOT_CHANGED.register((inventory, lastSelectedSlot) -> {
             var wandStack = scanInventoryForWands(inventory);
             if (wandStack != null) {
                 setupChargeDisplay(inventory.player, wandStack);
@@ -63,7 +63,7 @@ public class ToolManager {
             }
         });
 
-        ClientPlayerInventoryEvents.CONTENTS_CHANGED.register(inventory -> {
+        ClientInventoryEvents.CONTENTS_CHANGED.register(inventory -> {
             var wandStack = scanInventoryForWands(inventory);
             if (wandStack != null) {
                 setupChargeDisplay(inventory.player, wandStack);

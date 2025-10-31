@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ClientPlayerInventoryEvents {
+public class ClientInventoryEvents {
     public static final Event<ContentsChanged> CONTENTS_CHANGED = EventFactory.createArrayBacked(
             ContentsChanged.class,
             listeners -> inventory -> {

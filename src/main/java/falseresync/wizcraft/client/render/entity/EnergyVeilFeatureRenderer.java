@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Optional;
 
@@ -38,50 +38,50 @@ public class EnergyVeilFeatureRenderer<T extends Player> extends RenderLayer<T, 
     }
 
     @Override
-    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, T entity, float limbAngle, float limbDistance, float partialTick, float animationProgress, float headYaw, float headPitch) {
         var veil = findVeil(entity);
         if (veil == null) return;
 
-        matrices.pushPose();
-        var buffer = vertexConsumers.getBuffer(renderLayer);
-        model.animateModel(veil, limbAngle, limbDistance, tickDelta);
+        poseStack.pushPose();
+        var buffer = bufferSource.getBuffer(renderLayer);
+        model.animateModel(veil, limbAngle, limbDistance, partialTick);
 
         for (int i = 0; i < 4; i++) {
-            matrices.pushPose();
-            matrices.mulPose(Axis.YP.rotationDegrees(i * 45));
-            matrices.translate(-veil.getVeilVisibleRadius(), -1, 0);
-            model.renderToBuffer(matrices, buffer, light, OverlayTexture.NO_OVERLAY);
-            matrices.translate(veil.getVeilVisibleRadius() * 2, 0, 0);
-            model.renderToBuffer(matrices, buffer, light, OverlayTexture.NO_OVERLAY);
-            matrices.popPose();
+            poseStack.pushPose();
+            poseStack.mulPose(Axis.YP.rotationDegrees(i * 45));
+            poseStack.translate(-veil.getVeilVisibleRadius(), -1, 0);
+            model.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY);
+            poseStack.translate(veil.getVeilVisibleRadius() * 2, 0, 0);
+            model.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY);
+            poseStack.popPose();
         }
-        matrices.popPose();
+        poseStack.popPose();
     }
 
-    public void renderInFirstPerson(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float tickDelta, float animationProgress) {
+    public void renderInFirstPerson(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, T entity, float partialTick, float animationProgress) {
         var veil = findVeil(entity);
         if (veil == null) return;
 
-        matrices.pushPose();
-        matrices.setIdentity();
+        poseStack.pushPose();
+        poseStack.setIdentity();
 
-        var buffer = vertexConsumers.getBuffer(renderLayer);
-        model.animateModel(veil, 0, 0, tickDelta);
+        var buffer = bufferSource.getBuffer(renderLayer);
+        model.animateModel(veil, 0, 0, partialTick);
 
         var rotation = Minecraft.getInstance().gameRenderer.getMainCamera().rotation();
         var direction = Direction.UP.step();
         var swingAndTwist = VectorMath.swingTwistDecomposition(rotation, direction);
-        matrices.mulPose(swingAndTwist.getRight());
+        poseStack.mulPose(swingAndTwist.getRight());
 
         for (int i = 0; i < 3; i++) {
-            matrices.pushPose();
-            matrices.mulPose(Axis.YP.rotationDegrees(45 + i * 45));
-            matrices.translate(veil.getVeilVisibleRadius(), -1, 0);
-            model.renderToBuffer(matrices, buffer, light, OverlayTexture.NO_OVERLAY, ((int) (0x44 / Wizcraft.getConfig().fullscreenEffectsTransparency.modifier)) << 24 | 0x00_FF_FF_FF);
-            matrices.popPose();
+            poseStack.pushPose();
+            poseStack.mulPose(Axis.YP.rotationDegrees(45 + i * 45));
+            poseStack.translate(veil.getVeilVisibleRadius(), -1, 0);
+            model.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, ((int) (0x44 / Wizcraft.getConfig().fullscreenEffectsTransparency.modifier)) << 24 | 0x00_FF_FF_FF);
+            poseStack.popPose();
         }
 
-        matrices.popPose();
+        poseStack.popPose();
     }
 
     @Nullable

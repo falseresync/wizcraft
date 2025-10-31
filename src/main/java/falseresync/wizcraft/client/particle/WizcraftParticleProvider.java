@@ -6,9 +6,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 
 @Environment(EnvType.CLIENT)
-public class WizcraftParticleFactories {
+public class WizcraftParticleProvider {
     public static void init() {
-        ParticleFactoryRegistry.getInstance().register(WizcraftParticleTypes.SPAGHETTIFICATION, SpaghettificationParticle.getFactory());
-        ParticleFactoryRegistry.getInstance().register(WizcraftParticleTypes.CHARGING, ChargingParticleFactory::new);
+        ParticleFactoryRegistry.getInstance().register(WizcraftParticleTypes.SPAGHETTIFICATION, SpaghettificationParticle.makeProvider());
+        ParticleFactoryRegistry.getInstance().register(WizcraftParticleTypes.CHARGING, ChargingParticleProvider::new);
     }
 }

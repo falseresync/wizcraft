@@ -1,7 +1,7 @@
 package falseresync.wizcraft.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import falseresync.lib.client.BetterDrawContext;
+import falseresync.lib.client.BetterGuiGraphics;
 import falseresync.lib.math.Easing;
 import falseresync.wizcraft.client.WizcraftClient;
 import falseresync.wizcraft.common.data.WizcraftComponents;
@@ -56,7 +56,7 @@ public class FocusPickerHudItem implements HudItem {
     }
 
     @Override
-    public void render(BetterDrawContext context, DeltaTracker tickCounter) {
+    public void render(BetterGuiGraphics context, DeltaTracker tickCounter) {
         if (isVisible() || animatingParent) {
             baseOpacity = getAnimatedBaseOpacity();
             var yOffsetPerItem = ITEM_H + MARGIN;
@@ -133,11 +133,11 @@ public class FocusPickerHudItem implements HudItem {
         return stackWithGlint == null ? stack : stackWithGlint;
     }
 
-    protected void paintItem(BetterDrawContext context, ItemStack stack, int x, int y, float scale, float translation, float opacity, boolean shouldTint) {
-        var matrices = context.pose();
-        matrices.pushPose();
-        matrices.mulPose(new Matrix4f().scaleAround(scale, scale, 1f, x + ITEM_W / 2f, y + ITEM_H / 2f, 0));
-        matrices.translate(0, translation, 0);
+    protected void paintItem(BetterGuiGraphics context, ItemStack stack, int x, int y, float scale, float translation, float opacity, boolean shouldTint) {
+        var poseStack = context.pose();
+        poseStack.pushPose();
+        poseStack.mulPose(new Matrix4f().scaleAround(scale, scale, 1f, x + ITEM_W / 2f, y + ITEM_H / 2f, 0));
+        poseStack.translate(0, translation, 0);
         if (shouldTint) {
             context.setColor(161 / 255f, 158 / 255f, 170 / 255f, opacity);
         } else {
@@ -148,7 +148,7 @@ public class FocusPickerHudItem implements HudItem {
         context.renderItemDecorations(textRenderer, stack, x, y);
 
         context.setColor(1, 1, 1, baseOpacity);
-        matrices.popPose();
+        poseStack.popPose();
     }
 
     private float getAnimatedBaseOpacity() {

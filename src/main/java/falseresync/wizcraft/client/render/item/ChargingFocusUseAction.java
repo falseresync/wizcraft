@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 public class ChargingFocusUseAction {
     public static void applyFirstPersonTransformation(HeldItemRendererContext context) {
         int i = context.arm == HumanoidArm.RIGHT ? 1 : -1;
-        context.matrices.translate((float) i * 0.56F, -0.72F + context.equipProgress * -0.6F, -0.72F);
+        context.poseStack.translate((float) i * 0.56F, -0.72F + context.equipProgress * -0.6F, -0.72F);
     }
 
     public static void positionArm(BipedEntityModelContext context) {
@@ -40,10 +40,10 @@ public class ChargingFocusUseAction {
             float pitch,
             float swingProgress,
             float equipProgress,
-            PoseStack matrices,
-            MultiBufferSource vertexConsumers,
-            float tickDelta,
-            int light
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            float partialTick,
+            int packedLight
     ) {
     }
 

@@ -6,10 +6,10 @@
     "defaultRequire": 1
   },
   "client": [
-    "BipedEntityModelMixin",
-    "ClientPlayerInteractionManagerMixin",
-    "ClientPlayNetworkHandlerMixin",
-    "HeldItemRendererMixin",
-    "PlayerEntityRendererMixin"
+    "HumanoidModelMixin",
+    "MultiPlayerGameModeMixin",
+    "ClientPacketListenerMixin",
+    "ItemInHandRendererMixin",
+    "PlayerRendererMixin"
   ]
 }

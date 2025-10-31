@@ -1,6 +1,6 @@
 package falseresync.wizcraft.client.mixin;
 
-import falseresync.wizcraft.client.ClientPlayerInventoryEvents;
+import falseresync.wizcraft.client.ClientInventoryEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import org.spongepowered.asm.mixin.Final;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MultiPlayerGameMode.class)
-public class ClientPlayerInteractionManagerMixin {
+public class MultiPlayerGameModeMixin {
     @Final
     @Shadow
     private Minecraft minecraft;
@@ -25,7 +25,7 @@ public class ClientPlayerInteractionManagerMixin {
             return;
         }
         if (carriedIndex != minecraft.player.getInventory().selected) {
-            ClientPlayerInventoryEvents.SELECTED_SLOT_CHANGED.invoker().onChanged(minecraft.player.getInventory(), carriedIndex);
+            ClientInventoryEvents.SELECTED_SLOT_CHANGED.invoker().onChanged(minecraft.player.getInventory(), carriedIndex);
         }
     }
 }

@@ -9,7 +9,7 @@ public interface InventoryComponentProvider {
         return stack.getOrDefault(WizcraftComponents.INVENTORY_SIZE, getDefaultInventorySize());
     }
 
-    default InventoryComponent getOrCreateInventoryComponent(ItemStack stack) {
-        return stack.getOrDefault(WizcraftComponents.INVENTORY, InventoryComponent.createDefault(getInventorySize(stack)));
+    default ContainerComponent getOrCreateInventoryComponent(ItemStack stack) {
+        return stack.getOrDefault(WizcraftComponents.INVENTORY, ContainerComponent.createDefault(getInventorySize(stack)));
     }
 }

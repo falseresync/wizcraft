@@ -12,23 +12,23 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public record InventoryComponent(ImmutableList<ItemStack> stacks, int size) implements TooltipComponent {
-    public static final Codec<InventoryComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Slot.CODEC.listOf().xmap(InventoryComponent::fromSlots, InventoryComponent::toSlots)
-                    .fieldOf("slots").forGetter(InventoryComponent::stacks),
-            Codec.INT.fieldOf("size").forGetter(InventoryComponent::size)
-    ).apply(instance, InventoryComponent::createRespectingSize));
-    public static final StreamCodec<RegistryFriendlyByteBuf, InventoryComponent> PACKET_CODEC = StreamCodec.composite(
-            ItemStack.OPTIONAL_LIST_STREAM_CODEC, InventoryComponent::stacks,
-            ByteBufCodecs.INT, InventoryComponent::size,
-            InventoryComponent::new
+public record ContainerComponent(ImmutableList<ItemStack> stacks, int size) implements TooltipComponent {
+    public static final Codec<ContainerComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Slot.CODEC.listOf().xmap(ContainerComponent::fromSlots, ContainerComponent::toSlots)
+                    .fieldOf("slots").forGetter(ContainerComponent::stacks),
+            Codec.INT.fieldOf("size").forGetter(ContainerComponent::size)
+    ).apply(instance, ContainerComponent::createRespectingSize));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ContainerComponent> PACKET_CODEC = StreamCodec.composite(
+            ItemStack.OPTIONAL_LIST_STREAM_CODEC, ContainerComponent::stacks,
+            ByteBufCodecs.INT, ContainerComponent::size,
+            ContainerComponent::new
     );
 
-    public InventoryComponent(List<ItemStack> stacks, int size) {
+    public ContainerComponent(List<ItemStack> stacks, int size) {
         this(ImmutableList.copyOf(stacks), size);
     }
 
-    private static InventoryComponent createRespectingSize(List<ItemStack> stacks, int size) {
+    private static ContainerComponent createRespectingSize(List<ItemStack> stacks, int size) {
         if (size > stacks.size()) {
             var builder = ImmutableList.<ItemStack>builder();
             builder.addAll(stacks);
@@ -36,14 +36,14 @@ public record InventoryComponent(ImmutableList<ItemStack> stacks, int size) impl
                 builder.add(ItemStack.EMPTY);
             }
 
-            return new InventoryComponent(builder.build(), size);
+            return new ContainerComponent(builder.build(), size);
         }
 
-        return new InventoryComponent(stacks, size);
+        return new ContainerComponent(stacks, size);
     }
 
-    public static InventoryComponent createDefault(int size) {
-        return new InventoryComponent(NonNullList.withSize(size, ItemStack.EMPTY), size);
+    public static ContainerComponent createDefault(int size) {
+        return new ContainerComponent(NonNullList.withSize(size, ItemStack.EMPTY), size);
     }
 
     public static List<ItemStack> fromSlots(List<Slot> slots) {
@@ -87,7 +87,7 @@ public record InventoryComponent(ImmutableList<ItemStack> stacks, int size) impl
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (obj instanceof InventoryComponent that) {
+        if (obj instanceof ContainerComponent that) {
             return this.stacks.size() == that.stacks.size() && ItemStack.listMatches(this.stacks, that.stacks);
         } else {
             return false;

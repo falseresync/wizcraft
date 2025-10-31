@@ -1,7 +1,7 @@
 package falseresync.wizcraft.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import falseresync.lib.client.BetterDrawContext;
+import falseresync.lib.client.BetterGuiGraphics;
 import falseresync.lib.math.Easing;
 import falseresync.wizcraft.common.data.WizcraftAttachments;
 import falseresync.wizcraft.common.data.WizcraftComponents;
@@ -48,7 +48,7 @@ public class ChargeDisplayHudItem implements HudItem {
     }
 
     @Override
-    public void render(BetterDrawContext context, DeltaTracker tickCounter) {
+    public void render(BetterGuiGraphics context, DeltaTracker tickCounter) {
         if (isVisible() || animating) {
             float opacity = getAnimatedOpacity();
             float x = getAnimatedX();

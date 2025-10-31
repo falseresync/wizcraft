@@ -11,11 +11,11 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class BlockPatternTip {
-    public static void spawnCompletionTipParticles(LocalPlayer player, ClientLevel world, List<BlockPos> missingBlocks) {
+    public static void spawnCompletionTipParticles(LocalPlayer player, ClientLevel level, List<BlockPos> missingBlocks) {
         for (var missingBlock : missingBlocks) {
             var pos = missingBlock.getCenter();
-            for (double i = 0; i < world.random.nextIntBetweenInclusive(5, 10); i++) {
-                world.addParticle(ParticleTypes.GLOW, pos.x(), pos.y() - i / 5, pos.z(), 0, 0, 0);
+            for (double i = 0; i < level.random.nextIntBetweenInclusive(5, 10); i++) {
+                level.addParticle(ParticleTypes.GLOW, pos.x(), pos.y() - i / 5, pos.z(), 0, 0, 0);
             }
         }
     }

@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -33,42 +33,42 @@ public class RenderingUtil {
         return new Vec3(value, value, value);
     }
 
-    public static void levitateItemAboveBlock(Level world, BlockPos pos, float tickDelta, ItemStack stack, ItemRenderer itemRenderer, PoseStack matrices, MultiBufferSource vertexConsumers) {
-        levitateItemAboveBlock(world, pos, Vec3.ZERO, RenderingUtil.UNIT_VEC3D, tickDelta, stack, itemRenderer, matrices, vertexConsumers);
+    public static void levitateItemAboveBlock(Level world, BlockPos pos, float partialTick, ItemStack stack, ItemRenderer itemRenderer, PoseStack poseStack, MultiBufferSource bufferSource) {
+        levitateItemAboveBlock(world, pos, Vec3.ZERO, RenderingUtil.UNIT_VEC3D, partialTick, stack, itemRenderer, poseStack, bufferSource);
     }
 
-    public static void levitateItemAboveBlock(Level world, BlockPos pos, float tickDelta, ItemStack stack, ItemDisplayContext mode, ItemRenderer itemRenderer, PoseStack matrices, MultiBufferSource vertexConsumers) {
-        levitateItemAboveBlock(world, pos, Vec3.ZERO, RenderingUtil.UNIT_VEC3D, tickDelta, stack, mode, itemRenderer, matrices, vertexConsumers);
+    public static void levitateItemAboveBlock(Level world, BlockPos pos, float partialTick, ItemStack stack, ItemDisplayContext mode, ItemRenderer itemRenderer, PoseStack poseStack, MultiBufferSource bufferSource) {
+        levitateItemAboveBlock(world, pos, Vec3.ZERO, RenderingUtil.UNIT_VEC3D, partialTick, stack, mode, itemRenderer, poseStack, bufferSource);
     }
 
-    public static void levitateItemAboveBlock(Level world, BlockPos pos, Vec3 translation, Vec3 scale, float tickDelta, ItemStack stack, ItemRenderer itemRenderer, PoseStack matrices, MultiBufferSource vertexConsumers) {
-        levitateItemAboveBlock(world, pos, translation, scale, tickDelta, stack, ItemDisplayContext.FIXED, itemRenderer, matrices, vertexConsumers);
+    public static void levitateItemAboveBlock(Level world, BlockPos pos, Vec3 translation, Vec3 scale, float partialTick, ItemStack stack, ItemRenderer itemRenderer, PoseStack poseStack, MultiBufferSource bufferSource) {
+        levitateItemAboveBlock(world, pos, translation, scale, partialTick, stack, ItemDisplayContext.FIXED, itemRenderer, poseStack, bufferSource);
     }
 
-    public static void levitateItemAboveBlock(Level world, BlockPos pos, Vec3 translation, Vec3 scale, float tickDelta, ItemStack stack, ItemDisplayContext mode, ItemRenderer itemRenderer, PoseStack matrices, MultiBufferSource vertexConsumers) {
+    public static void levitateItemAboveBlock(Level world, BlockPos pos, Vec3 translation, Vec3 scale, float partialTick, ItemStack stack, ItemDisplayContext mode, ItemRenderer itemRenderer, PoseStack poseStack, MultiBufferSource bufferSource) {
         if (stack.isEmpty()) return;
 
         switch (Wizcraft.getConfig().animationQuality) {
             case DEFAULT -> {
-                matrices.pushPose();
+                poseStack.pushPose();
 
-                var offset = Mth.sin((world.getGameTime() + tickDelta) / 16) / 16;
-                matrices.translate(0.5 + translation.x, 1.25 + offset + translation.y, 0.5 + translation.z);
-                matrices.mulPose(Axis.YP.rotationDegrees(world.getGameTime() + tickDelta));
+                var offset = Mth.sin((world.getGameTime() + partialTick) / 16) / 16;
+                poseStack.translate(0.5 + translation.x, 1.25 + offset + translation.y, 0.5 + translation.z);
+                poseStack.mulPose(Axis.YP.rotationDegrees(world.getGameTime() + partialTick));
 
                 scale = scale.scale(stack.getItem() instanceof BlockItem ? 0.75 : 0.5);
-                matrices.scale((float) scale.x, (float) scale.y, (float) scale.z);
+                poseStack.scale((float) scale.x, (float) scale.y, (float) scale.z);
 
                 var lightAbove = LevelRenderer.getLightColor(world, pos.above());
-                itemRenderer.renderStatic(stack, mode, lightAbove, OverlayTexture.NO_OVERLAY, matrices, vertexConsumers, world, 0);
+                itemRenderer.renderStatic(stack, mode, lightAbove, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, world, 0);
 
-                matrices.popPose();
+                poseStack.popPose();
             }
             case FAST -> {
-                matrices.pushPose();
+                poseStack.pushPose();
                 var lightAbove = LevelRenderer.getLightColor(world, pos.above());
-                itemRenderer.renderStatic(stack, mode, lightAbove, OverlayTexture.NO_OVERLAY, matrices, vertexConsumers, world, 0);
-                matrices.popPose();
+                itemRenderer.renderStatic(stack, mode, lightAbove, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, world, 0);
+                poseStack.popPose();
             }
         }
     }
@@ -79,33 +79,33 @@ public class RenderingUtil {
         }
     }
 
-    public static void drawFluid(PoseStack matrices, VertexConsumer buffer, BlockAndTintGetter view, BlockPos pos, Fluid fluid, FluidState state, boolean still, int light, int overlay, float x, float width, float y, float height, float depth) {
+    public static void drawFluid(PoseStack poseStack, VertexConsumer buffer, BlockAndTintGetter view, BlockPos pos, Fluid fluid, FluidState state, boolean still, int light, int overlay, float x, float width, float y, float height, float depth) {
         var handler = Objects.requireNonNull(FluidRenderHandlerRegistry.INSTANCE.get(fluid));
         var sprites = handler.getFluidSprites(view, pos, state);
         var tint = handler.getFluidColor(view, pos, state);
-        drawTexturedSprite(matrices, buffer, still ? sprites[0] : sprites[1], Color.ofRgb(tint).argb(), light, overlay, x, width, y, height, depth);
+        drawTexturedSprite(poseStack, buffer, still ? sprites[0] : sprites[1], Color.ofRgb(tint).argb(), light, overlay, x, width, y, height, depth);
     }
 
     /**
      * Use when RenderLayer requires a texture input (e.g. entity_* ones)
      */
-    public static void drawSprite(PoseStack matrices, VertexConsumer buffer, TextureAtlasSprite sprite, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
-        drawTexture(matrices, buffer, tint, light, overlay, x, x + width, y, y + height, depth, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1());
+    public static void drawSprite(PoseStack poseStack, VertexConsumer buffer, TextureAtlasSprite sprite, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
+        drawTexture(poseStack, buffer, tint, light, overlay, x, x + width, y, y + height, depth, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1());
     }
 
     /**
      * Use when RenderLayer doesn't require a texture input (e.g. cutout or translucent)
      */
-    public static void drawTexturedSprite(PoseStack matrices, VertexConsumer buffer, TextureAtlasSprite sprite, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
-        drawTexture(matrices, sprite.wrap(buffer), tint, light, overlay, x, x + width, y, y + height, depth, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1());
+    public static void drawTexturedSprite(PoseStack poseStack, VertexConsumer buffer, TextureAtlasSprite sprite, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
+        drawTexture(poseStack, sprite.wrap(buffer), tint, light, overlay, x, x + width, y, y + height, depth, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1());
     }
 
-    public static void drawTexture(PoseStack matrices, VertexConsumer buffer, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
-        drawTexture(matrices, buffer, tint, light, overlay, x, x + width, y, y + height, depth);
+    public static void drawTexture(PoseStack poseStack, VertexConsumer buffer, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
+        drawTexture(poseStack, buffer, tint, light, overlay, x, x + width, y, y + height, depth);
     }
 
-    public static void drawTexture(PoseStack matrices, VertexConsumer buffer, int tint, int light, int overlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
-        var positionMatrix = matrices.last().pose();
+    public static void drawTexture(PoseStack poseStack, VertexConsumer buffer, int tint, int light, int overlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {
+        var positionMatrix = poseStack.last().pose();
         buffer.addVertex(positionMatrix, x1, y1, z).setUv(u1, v1).setColor(tint).setOverlay(overlay).setLight(light).setNormal(0, 1, 0);
         buffer.addVertex(positionMatrix, x1, y2, z).setUv(u1, v2).setColor(tint).setOverlay(overlay).setLight(light).setNormal(0, 1, 0);
         buffer.addVertex(positionMatrix, x2, y2, z).setUv(u2, v2).setColor(tint).setOverlay(overlay).setLight(light).setNormal(0, 1, 0);

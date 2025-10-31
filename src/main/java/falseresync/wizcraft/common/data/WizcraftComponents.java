@@ -22,8 +22,8 @@ public class WizcraftComponents {
             DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build();
     public static final @RegistryObject DataComponentType<Boolean> TOOLTIP_OVERRIDDEN =
             DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build();
-    public static final @RegistryObject DataComponentType<InventoryComponent> INVENTORY =
-            DataComponentType.<InventoryComponent>builder().persistent(InventoryComponent.CODEC).networkSynchronized(InventoryComponent.PACKET_CODEC).build();
+    public static final @RegistryObject DataComponentType<ContainerComponent> INVENTORY =
+            DataComponentType.<ContainerComponent>builder().persistent(ContainerComponent.CODEC).networkSynchronized(ContainerComponent.PACKET_CODEC).build();
     public static final @RegistryObject DataComponentType<Integer> INVENTORY_SIZE =
             DataComponentType.<Integer>builder().persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.INT).build();
     public static final @RegistryObject DataComponentType<UUID> UUID =

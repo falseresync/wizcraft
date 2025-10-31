@@ -21,7 +21,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,47 +36,47 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
         this.itemRenderer = ctx.getItemRenderer();
     }
 
-    protected static void animateCraftingProgress(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, List<RenderingData> pedestals, Level world, ItemRenderer itemRenderer, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers) {
-        var random = world.getRandom();
+    protected static void animateCraftingProgress(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, List<RenderingData> pedestals, Level level, ItemRenderer itemRenderer, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource) {
+        var random = level.getRandom();
 
         // Stop early because particles live some time
         if (progress.remainingCraftingTime() > 10) {
             for (var pedestal : pedestals) {
-                addParticleBeam(worktable, progress, pedestal, world, tickDelta);
+                addParticleBeam(worktable, progress, pedestal, level, partialTick);
             }
         }
 
         // Stop early and start a bit later to create an effect that particles start to swirl
         if (progress.remainingCraftingTime() > 10 && progress.passedCraftingTime() > 5) {
             for (var pedestal : pedestals) {
-                addParticleHurricane(worktable, progress, pedestal, world, tickDelta);
+                addParticleHurricane(worktable, progress, pedestal, level, partialTick);
             }
         }
 
         // Disintegrate the pedestal items
         for (var pedestal : pedestals) {
-            addDisintegrationParticles(world, random, pedestal, progress);
+            addDisintegrationParticles(level, random, pedestal, progress);
         }
 
         // Disintegrate the worktable item near the end as well
         if (progress.remainingCraftingTime() < 40) {
-            addDisintegrationParticles(world, random, worktable, progress);
+            addDisintegrationParticles(level, random, worktable, progress);
 
             // Increase amount of worktable item disintegration particles
             if (progress.remainingCraftingTime() < 10) {
-                addDisintegrationParticles(world, random, worktable, progress);
+                addDisintegrationParticles(level, random, worktable, progress);
             }
         }
 
         // Render items until the very end (they'll be too small then anyway
         if (progress.remainingCraftingTime() > 5) {
-            levitateItems(worktable, progress.value(), pedestals, world, itemRenderer, tickDelta, matrices, vertexConsumers);
+            levitateItems(worktable, progress.value(), pedestals, level, itemRenderer, partialTick, poseStack, bufferSource);
         }
 
         // Start to render the resulting item
         if (progress.remainingCraftingTime() < 30 && !progress.currentlyCrafted().isEmpty()) {
             var scale = getSymmetricVec3d(getCraftingResultScaleForProgress(progress.value()));
-            RenderingUtil.levitateItemAboveBlock(world, worktable.pos, Vec3.ZERO, scale, tickDelta, progress.currentlyCrafted(), itemRenderer, matrices, vertexConsumers);
+            RenderingUtil.levitateItemAboveBlock(level, worktable.pos, Vec3.ZERO, scale, partialTick, progress.currentlyCrafted(), itemRenderer, poseStack, bufferSource);
         }
     }
 
@@ -84,13 +84,13 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
         return -1 / (19 * p - 20);
     }
 
-    protected static void levitateItems(RenderingData worktable, float craftingProgress, List<RenderingData> pedestals, Level world, ItemRenderer itemRenderer, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers) {
+    protected static void levitateItems(RenderingData worktable, float craftingProgress, List<RenderingData> pedestals, Level level, ItemRenderer itemRenderer, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource) {
         var scale = getSymmetricVec3d(1 - craftingProgress);
-        RenderingUtil.levitateItemAboveBlock(world, worktable.pos, Vec3.ZERO, scale, tickDelta, worktable.stack, itemRenderer, matrices, vertexConsumers);
+        RenderingUtil.levitateItemAboveBlock(level, worktable.pos, Vec3.ZERO, scale, partialTick, worktable.stack, itemRenderer, poseStack, bufferSource);
 
         for (var pedestal : pedestals) {
             var translation = worktable.above.vectorTo(pedestal.above);
-            RenderingUtil.levitateItemAboveBlock(world, pedestal.pos, translation, scale, tickDelta, pedestal.stack, itemRenderer, matrices, vertexConsumers);
+            RenderingUtil.levitateItemAboveBlock(level, pedestal.pos, translation, scale, partialTick, pedestal.stack, itemRenderer, poseStack, bufferSource);
         }
     }
 
@@ -99,15 +99,15 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
         return 0.2 * (-0.4 - 1.05 / (1 * (1.1 * Math.log10(-2 * p + 2.0) + 1 * (2 * p - 2))));
     }
 
-    protected static void addParticleBeam(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, RenderingData pedestal, Level world, float tickDelta) {
+    protected static void addParticleBeam(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, RenderingData pedestal, Level level, float partialTick) {
         if (pedestal.stack.isEmpty()) return;
 
-        if (world.random.nextFloat() < Wizcraft.getConfig().animationParticlesAmount.modifier) {
-            var temporalOffset = Math.abs(Mth.sin((progress.remainingCraftingTime() + tickDelta)));
+        if (level.random.nextFloat() < Wizcraft.getConfig().animationParticlesAmount.modifier) {
+            var temporalOffset = Math.abs(Mth.sin((progress.remainingCraftingTime() + partialTick)));
             var path = pedestal.above.vectorTo(worktable.above);
             var pos = pedestal.above.add(path.scale(Math.min(0.6, temporalOffset * progress.value())));
             var velocity = path.normalize().scale(getVelocityForProgress(progress.value()));
-            RenderingUtil.addParticle(world, pedestal.particle, pos, velocity);
+            RenderingUtil.addParticle(level, pedestal.particleOptions, pos, velocity);
         }
     }
 
@@ -116,10 +116,10 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
         return 1.75 * (-4.3 / (3.6 * p - 6.35) - 1.85 * p + 0.3);
     }
 
-    protected static void addParticleHurricane(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, RenderingData pedestal, Level world, float tickDelta) {
+    protected static void addParticleHurricane(RenderingData worktable, CraftingWorktableBlockEntity.Progress progress, RenderingData pedestal, Level level, float partialTick) {
         if (pedestal.stack.isEmpty()) return;
 
-        var temporalOffset = Math.abs(Mth.sin((progress.remainingCraftingTime() + tickDelta)));
+        var temporalOffset = Math.abs(Mth.sin((progress.remainingCraftingTime() + partialTick)));
         for (int i = 0; i < (1 - progress.value()) * 3 * Wizcraft.getConfig().animationParticlesAmount.modifier; i++) {
             var theta = 2f * Mth.PI * temporalOffset + i * temporalOffset;
             var r = getRadiusForProgress(progress.value());
@@ -129,25 +129,25 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
             // Vector tangent to a circle https://stackoverflow.com/q/40710168
             var velocity = new Vec3(hz, 0, -hx).normalize().scale(getVelocityForProgress(progress.value()));
             var randomizedPos = pos.add(
-                    (hx / 16) * world.random.nextFloat(),
-                    (world.random.nextGaussian() - 0.5) / 16,
-                    (hz / 16) * world.random.nextFloat());
-            RenderingUtil.addParticle(world, pedestal.particle, randomizedPos, velocity);
+                    (hx / 16) * level.random.nextFloat(),
+                    (level.random.nextGaussian() - 0.5) / 16,
+                    (hz / 16) * level.random.nextFloat());
+            RenderingUtil.addParticle(level, pedestal.particleOptions, randomizedPos, velocity);
         }
     }
 
-    protected static void addDisintegrationParticles(Level world, RandomSource random, RenderingData renderingData, CraftingWorktableBlockEntity.Progress progress) {
+    protected static void addDisintegrationParticles(Level level, RandomSource random, RenderingData renderingData, CraftingWorktableBlockEntity.Progress progress) {
         if (renderingData.stack.isEmpty()) return;
 
         var velocity = new Vec3((random.nextFloat() - 0.5) / 8, random.nextGaussian() / 16, (random.nextFloat() - 0.5) / 8);
         var amount = progress.value() * 10 * Wizcraft.getConfig().animationParticlesAmount.modifier * (renderingData.stack.getItem() instanceof BlockItem ? 3 : 1);
         for (int i = 0; i < amount; i++) {
-            RenderingUtil.addParticle(world, renderingData.particle, renderingData.above, velocity);
+            RenderingUtil.addParticle(level, renderingData.particleOptions, renderingData.above, velocity);
         }
     }
 
     @Override
-    public void render(CraftingWorktableBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+    public void render(CraftingWorktableBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         var world = blockEntity.getLevel();
         if (world == null) return;
 
@@ -161,19 +161,19 @@ public class CraftingWorktableRenderer implements BlockEntityRenderer<CraftingWo
 
         if (pedestals.isEmpty() && worktable.stack.isEmpty()) return;
 
-        matrices.pushPose();
+        poseStack.pushPose();
 
         if (progress.remainingCraftingTime() > 0) {
-            animateCraftingProgress(worktable, progress, pedestals, world, itemRenderer, tickDelta, matrices, vertexConsumers);
+            animateCraftingProgress(worktable, progress, pedestals, world, itemRenderer, partialTick, poseStack, bufferSource);
         } else {
-            levitateItems(worktable, 0, pedestals, world, itemRenderer, tickDelta, matrices, vertexConsumers);
+            levitateItems(worktable, 0, pedestals, world, itemRenderer, partialTick, poseStack, bufferSource);
         }
 
-        matrices.popPose();
+        poseStack.popPose();
     }
 
     public record RenderingData(BlockPos pos, Vec3 center, Vec3 above, ItemStack stack,
-                                @Nullable ParticleOptions particle) {
+                                @Nullable ParticleOptions particleOptions) {
         private RenderingData(BlockPos pos, ItemStack stack) {
             this(pos, pos.getCenter(), pos.getCenter().add(0, 0.75, 0), stack, stack.isEmpty() ? null : new ItemParticleOption(WizcraftParticleTypes.SPAGHETTIFICATION, stack));
         }

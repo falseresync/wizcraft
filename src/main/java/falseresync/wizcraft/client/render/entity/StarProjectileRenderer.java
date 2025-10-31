@@ -45,21 +45,21 @@ public class StarProjectileRenderer extends EntityRenderer<StarProjectileEntity>
     }
 
     @Override
-    public void render(StarProjectileEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
-        matrices.pushPose();
+    public void render(StarProjectileEntity entity, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        poseStack.pushPose();
 
-        var entry = matrices.last();
+        var entry = poseStack.last();
         var pm = entry.pose();
-        var buffer = vertexConsumers.getBuffer(renderLayer);
+        var buffer = bufferSource.getBuffer(renderLayer);
 
-        matrices.mulPose(entityRenderDispatcher.cameraOrientation());
-        matrices.translate(-0.5f, 0, 0);
-        matrices.scale(0.75f, 0.75f, 0.75f);
+        poseStack.mulPose(entityRenderDispatcher.cameraOrientation());
+        poseStack.translate(-0.5f, 0, 0);
+        poseStack.scale(0.75f, 0.75f, 0.75f);
         vertices(buffer, pm, entry);
 
-        matrices.popPose();
+        poseStack.popPose();
 
-        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+        super.render(entity, yaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
     @Override

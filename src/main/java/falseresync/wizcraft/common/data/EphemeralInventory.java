@@ -5,15 +5,15 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
 public class EphemeralInventory extends SimpleContainer {
-    private final InventoryComponent backingComponent;
+    private final ContainerComponent backingComponent;
 
-    public EphemeralInventory(InventoryComponent backingComponent) {
+    public EphemeralInventory(ContainerComponent backingComponent) {
         super(backingComponent.stacks().toArray(new ItemStack[backingComponent.size()]));
         this.backingComponent = backingComponent;
     }
 
-    public InventoryComponent toImmutable() {
-        return new InventoryComponent(items, backingComponent.size());
+    public ContainerComponent toImmutable() {
+        return new ContainerComponent(items, backingComponent.size());
     }
 
     public void flush(ItemStack stack) {

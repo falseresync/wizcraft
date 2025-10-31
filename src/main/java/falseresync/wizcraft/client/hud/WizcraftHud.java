@@ -1,6 +1,6 @@
 package falseresync.wizcraft.client.hud;
 
-import falseresync.lib.client.BetterDrawContext;
+import falseresync.lib.client.BetterGuiGraphics;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -22,7 +22,7 @@ public class WizcraftHud {
 
     private void initEventListeners() {
         HudRenderCallback.EVENT.register((vanillaContext, tickCounter) -> {
-            var context = new BetterDrawContext(client, vanillaContext);
+            var context = new BetterGuiGraphics(client, vanillaContext);
             focusPicker.render(context, tickCounter);
             chargeDisplay.render(context, tickCounter);
         });

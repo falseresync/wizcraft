@@ -29,34 +29,34 @@ public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities 
     private static final int TINT_BASE = Color.ofHsv(0f, 0f, 1, 0.5f).argb();
     private static final int TINT_CROWN = Color.WHITE.argb();
 
-    private static void drawBase(WorldRenderContext context, PoseStack matrices, VertexConsumer buffer, int light, int overlay) {
-        matrices.pushPose();
-        matrices.mulPose(Axis.XP.rotationDegrees(90));
+    private static void drawBase(WorldRenderContext context, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay) {
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.XP.rotationDegrees(90));
 
         var rotation = (context.world().getGameTime() + context.tickCounter().getGameTimeDeltaPartialTick(true)) / 20;
         var perPanelAdjustment = new Matrix4f()
                 .rotateAround(Axis.ZP.rotationDegrees(30), 0.5f, 0.5f, 0)
                 .translate(0, 0, -0.02f);
 
-        drawBasePart(matrices, buffer, light, overlay, rotation, Axis.ZP, -0.01f, perPanelAdjustment);
-        drawBasePart(matrices, buffer, light, overlay, rotation, Axis.ZN, -0.02f, perPanelAdjustment);
+        drawBasePart(poseStack, buffer, packedLight, packedOverlay, rotation, Axis.ZP, -0.01f, perPanelAdjustment);
+        drawBasePart(poseStack, buffer, packedLight, packedOverlay, rotation, Axis.ZN, -0.02f, perPanelAdjustment);
 
-        matrices.popPose();
+        poseStack.popPose();
     }
 
-    private static void drawBasePart(PoseStack matrices, VertexConsumer buffer, int light, int overlay, float rotation, Axis rotationAxis, float initialOffset, Matrix4f perPanelAdjustment) {
-        matrices.pushPose();
+    private static void drawBasePart(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float rotation, Axis rotationAxis, float initialOffset, Matrix4f perPanelAdjustment) {
+        poseStack.pushPose();
 
-        matrices.mulPose(new Matrix4f().rotateAround(rotationAxis.rotation(rotation), 0.5f, 0.5f, 0));
-        RenderingUtil.drawTexture(matrices, buffer, TINT_BASE, light, overlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
+        poseStack.mulPose(new Matrix4f().rotateAround(rotationAxis.rotation(rotation), 0.5f, 0.5f, 0));
+        RenderingUtil.drawTexture(poseStack, buffer, TINT_BASE, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
 
-        matrices.mulPose(perPanelAdjustment);
-        RenderingUtil.drawTexture(matrices, buffer, TINT_BASE, light, overlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
+        poseStack.mulPose(perPanelAdjustment);
+        RenderingUtil.drawTexture(poseStack, buffer, TINT_BASE, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
 
-        matrices.mulPose(perPanelAdjustment);
-        RenderingUtil.drawTexture(matrices, buffer, TINT_BASE, light, overlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
+        poseStack.mulPose(perPanelAdjustment);
+        RenderingUtil.drawTexture(poseStack, buffer, TINT_BASE, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
 
-        matrices.popPose();
+        poseStack.popPose();
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -80,37 +80,37 @@ public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities 
             return;
         }
 
-        var matrices = context.matrixStack();
+        var poseStack = context.matrixStack();
         var light = LevelRenderer.getLightColor(context.world(), anchor.pos().above());
         var overlay = OverlayTexture.NO_OVERLAY;
 
-        matrices.pushPose();
+        poseStack.pushPose();
 
         // Adjust location
         var translation = context.camera().getPosition().vectorTo(Vec3.atLowerCornerOf(anchor.pos()));
-        matrices.translate(translation.x, translation.y, translation.z);
+        poseStack.translate(translation.x, translation.y, translation.z);
 
         var buffer = context.consumers().getBuffer(BASE_LAYER);
-        drawBase(context, matrices, buffer, light, overlay);
+        drawBase(context, poseStack, buffer, light, overlay);
 
-        matrices.pushPose();
+        poseStack.pushPose();
         var adjustment = new Matrix4f()
                 .rotateAround(Axis.XP.rotationDegrees(180), 0, 0.5f, 0)
                 .translate(0, 0.25f, -1)
                 .scaleAround(0.5f, 0.5f, 0.5f, 0.5f);
-        matrices.mulPose(adjustment);
+        poseStack.mulPose(adjustment);
 
         var perPanelAdjustment = new Matrix4f()
                 .rotateAround(Axis.YP.rotationDegrees(60), 0.5f, 0, 0.5f);
         var sprite = CROWN_TEX.sprite();
         var crownBuffer = CROWN_TEX.buffer(context.consumers(), RenderType::entityTranslucentEmissive);
         for (int i = 0; i < 6; i++) {
-            matrices.mulPose(perPanelAdjustment);
-            RenderingUtil.drawSprite(matrices, crownBuffer, sprite, TINT_BASE, light, overlay, 0, 1, 0, 1, -0.365f);
+            poseStack.mulPose(perPanelAdjustment);
+            RenderingUtil.drawSprite(poseStack, crownBuffer, sprite, TINT_BASE, light, overlay, 0, 1, 0, 1, -0.365f);
         }
 
-        matrices.popPose();
+        poseStack.popPose();
 
-        matrices.popPose();
+        poseStack.popPose();
     }
 }

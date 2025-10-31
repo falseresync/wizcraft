@@ -19,21 +19,21 @@ public class SpaghettificationParticle extends TextureSheetParticle {
     private final float sampleU;
     private final float sampleV;
 
-    protected SpaghettificationParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, ItemStack stack) {
-        super(world, x, y, z, 0, 0, 0);
-        this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(stack, world, null, 0).getParticleIcon());
-        this.xd = velocityX;
-        this.yd = velocityY;
-        this.zd = velocityZ;
+    protected SpaghettificationParticle(ClientLevel level, double x, double y, double z, double xd, double yd, double zd, ItemStack stack) {
+        super(level, x, y, z, 0, 0, 0);
+        this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0).getParticleIcon());
+        this.xd = xd;
+        this.yd = yd;
+        this.zd = zd;
         this.lifetime = 5;
         this.hasPhysics = false;
         this.gravity = 0.05f;
         this.quadSize /= 4.0F;
-        this.sampleU = world.random.nextFloat() * 3.0F;
-        this.sampleV = world.random.nextFloat() * 3.0F;
+        this.sampleU = level.random.nextFloat() * 3.0F;
+        this.sampleV = level.random.nextFloat() * 3.0F;
     }
 
-    public static ParticleProvider<ItemParticleOption> getFactory() {
+    public static ParticleProvider<ItemParticleOption> makeProvider() {
         return (particle, world, x, y, z, velocityX, velocityY, velocityZ) ->
                 new SpaghettificationParticle(world, x, y, z, velocityX, velocityY, velocityZ, particle.getItem());
     }

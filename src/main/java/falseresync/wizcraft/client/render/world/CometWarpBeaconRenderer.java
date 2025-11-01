@@ -1,10 +1,8 @@
 package falseresync.wizcraft.client.render.world;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import falseresync.lib.client.BetterGuiGraphics;
 import falseresync.lib.math.Color;
 import falseresync.wizcraft.client.render.RenderingUtil;
 import falseresync.wizcraft.common.Wizcraft;
@@ -14,23 +12,16 @@ import falseresync.wizcraft.common.item.WizcraftItemTags;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
@@ -156,11 +147,11 @@ public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities,
         poseStack.pushPose();
         // Adjust location
         var translation = context.camera().getPosition().vectorTo(Vec3.atLowerCornerOf(anchor.pos()));
-        poseStack.translate(translation.x, translation.y, translation.z);
-        poseStack.rotateAround(context.camera().rotation(), 0.5f, 0.5f, 0.5f);
         var scale = (float) (Mth.fastInvSqrt(Mth.fastInvSqrt(translation.lengthSqr())) / 4f);
-        poseStack.mulPose(new Matrix4f().scaleAround(scale, 0.5f, 0.5f, 0.5f));
-
+        poseStack.mulPose(new Matrix4f()
+                .translate(translation.toVector3f())
+                .rotateAround(context.camera().rotation(), 0.5f, 0.5f, 0.5f)
+                .scaleAround(scale, 0.5f, 0.5f, 0.5f));
         RenderingUtil.drawTexture(poseStack, context.consumers().getBuffer(REMOTE_LAYER), TINT_REMOTE, light, overlay, 0f, 1f, 0f, 1f, 0f, 0, 1f, 0, 1f);
         poseStack.popPose();
     }

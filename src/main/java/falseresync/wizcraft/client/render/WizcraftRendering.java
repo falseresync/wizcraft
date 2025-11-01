@@ -59,7 +59,9 @@ public class WizcraftRendering {
 
         TrinketRendererRegistry.registerRenderer(WizcraftItems.TRUESEER_GOGGLES, new TrueseerGogglesRenderer());
 
-        WorldRenderEvents.AFTER_ENTITIES.register(new CometWarpBeaconRenderer());
+        var cometWarpBeaconRenderer = new CometWarpBeaconRenderer();
+        WorldRenderEvents.AFTER_ENTITIES.register(cometWarpBeaconRenderer);
+        WorldRenderEvents.END.register(cometWarpBeaconRenderer);
 //        LivingEntityFeatureRendererRegistrationCallback.EVENT.register();
     }
 }

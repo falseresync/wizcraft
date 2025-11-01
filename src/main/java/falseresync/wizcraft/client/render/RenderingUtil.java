@@ -101,7 +101,7 @@ public class RenderingUtil {
     }
 
     public static void drawTexture(PoseStack poseStack, VertexConsumer buffer, int tint, int light, int overlay, float x, float width, float y, float height, float depth) {
-        drawTexture(poseStack, buffer, tint, light, overlay, x, x + width, y, y + height, depth);
+        drawTexture(poseStack, buffer, tint, light, overlay, x, x + width, y, y + height, depth, 0, 1, 0, 1);
     }
 
     public static void drawTexture(PoseStack poseStack, VertexConsumer buffer, int tint, int light, int overlay, float x1, float x2, float y1, float y2, float z, float u1, float u2, float v1, float v2) {

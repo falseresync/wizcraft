@@ -13,10 +13,10 @@ public class WizcraftHud {
     private final FocusPickerHudItem focusPicker;
     private final ChargeDisplayHudItem chargeDisplay;
 
-    public WizcraftHud(Minecraft client) {
-        this.client = client;
-        focusPicker = new FocusPickerHudItem(client, client.font);
-        chargeDisplay = new ChargeDisplayHudItem(client, client.font);
+    public WizcraftHud(Minecraft minecraft) {
+        this.client = minecraft;
+        focusPicker = new FocusPickerHudItem(minecraft, minecraft.font);
+        chargeDisplay = new ChargeDisplayHudItem(minecraft, minecraft.font);
         initEventListeners();
     }
 

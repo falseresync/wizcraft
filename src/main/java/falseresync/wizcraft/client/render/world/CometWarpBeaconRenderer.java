@@ -1,8 +1,10 @@
 package falseresync.wizcraft.client.render.world;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import falseresync.lib.client.BetterGuiGraphics;
 import falseresync.lib.math.Color;
 import falseresync.wizcraft.client.render.RenderingUtil;
 import falseresync.wizcraft.common.Wizcraft;
@@ -12,22 +14,32 @@ import falseresync.wizcraft.common.item.WizcraftItemTags;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import static falseresync.wizcraft.common.Wizcraft.wid;
 
-public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities {
+public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities, WorldRenderEvents.End {
     private static final RenderType BASE_LAYER = RenderType.entityTranslucentEmissive(wid("textures/world/comet_warp_beacon.png"));
+    private static final RenderType REMOTE_LAYER = RenderType.entityTranslucentEmissive(wid("textures/world/comet_warp_beacon_remote.png"));
     private static final Material CROWN_TEX = new Material(TextureAtlas.LOCATION_BLOCKS, wid("world/comet_warp_beacon_crown"));
-    private static final int TINT_BASE = Color.ofHsv(0f, 0f, 1, 0.5f).argb();
-    private static final int TINT_CROWN = Color.WHITE.argb();
+    private static final int TINT_NEARBY = Color.ofHsv(0f, 0f, 1, 0.5f).argb();
+    private static final int TINT_REMOTE = Color.WHITE.argb();
 
     private static void drawBase(WorldRenderContext context, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay) {
         poseStack.pushPose();
@@ -48,13 +60,13 @@ public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities 
         poseStack.pushPose();
 
         poseStack.mulPose(new Matrix4f().rotateAround(rotationAxis.rotation(rotation), 0.5f, 0.5f, 0));
-        RenderingUtil.drawTexture(poseStack, buffer, TINT_BASE, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
+        RenderingUtil.drawTexture(poseStack, buffer, TINT_NEARBY, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
 
         poseStack.mulPose(perPanelAdjustment);
-        RenderingUtil.drawTexture(poseStack, buffer, TINT_BASE, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
+        RenderingUtil.drawTexture(poseStack, buffer, TINT_NEARBY, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
 
         poseStack.mulPose(perPanelAdjustment);
-        RenderingUtil.drawTexture(poseStack, buffer, TINT_BASE, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
+        RenderingUtil.drawTexture(poseStack, buffer, TINT_NEARBY, packedLight, packedOverlay, 0, 1, 0, 1, initialOffset, 0, 0.5f, 0, 0.5f);
 
         poseStack.popPose();
     }
@@ -63,9 +75,7 @@ public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities 
     @Override
     public void afterEntities(WorldRenderContext context) {
         var player = Minecraft.getInstance().player;
-        if (!player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)) {
-            return;
-        }
+        var inGoggles = player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES);
 
         var wandStack = player.getMainHandItem();
         if (!wandStack.is(WizcraftItemTags.WANDS)) {
@@ -73,9 +83,12 @@ public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities 
         }
 
         var anchor = wandStack.get(WizcraftComponents.WARP_FOCUS_ANCHOR);
+        var nearbyRange = inGoggles
+                ? Wizcraft.getConfig().cometWarpBeaconDisplayRange + Wizcraft.getConfig().trueseerGogglesDisplayRange
+                : Wizcraft.getConfig().cometWarpBeaconDisplayRange;
         if (anchor == null
                 || anchor.dimension() != context.world().dimension()
-                || !anchor.pos().closerToCenterThan(player.position(), Wizcraft.getConfig().trueseerGogglesDisplayRange)
+                || !anchor.pos().closerToCenterThan(player.position(), nearbyRange)
                 || !context.frustum().isVisible(AABB.unitCubeFromLowerCorner(anchor.pos().getCenter()))) {
             return;
         }
@@ -106,11 +119,49 @@ public class CometWarpBeaconRenderer implements WorldRenderEvents.AfterEntities 
         var crownBuffer = CROWN_TEX.buffer(context.consumers(), RenderType::entityTranslucentEmissive);
         for (int i = 0; i < 6; i++) {
             poseStack.mulPose(perPanelAdjustment);
-            RenderingUtil.drawSprite(poseStack, crownBuffer, sprite, TINT_BASE, light, overlay, 0, 1, 0, 1, -0.365f);
+            RenderingUtil.drawSprite(poseStack, crownBuffer, sprite, TINT_NEARBY, light, overlay, 0, 1, 0, 1, -0.365f);
         }
 
         poseStack.popPose();
 
+        poseStack.popPose();
+
+    }
+
+    @Override
+    public void onEnd(WorldRenderContext context) {
+        var player = Minecraft.getInstance().player;
+        if (!player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)) {
+            return;
+        }
+
+        var wandStack = player.getMainHandItem();
+        if (!wandStack.is(WizcraftItemTags.WANDS)) {
+            return;
+        }
+
+        var anchor = wandStack.get(WizcraftComponents.WARP_FOCUS_ANCHOR);
+        var remoteRange = Wizcraft.getConfig().trueseerGogglesDisplayRange * 16;
+        if (anchor == null
+                || anchor.dimension() != context.world().dimension()
+                || !anchor.pos().closerToCenterThan(player.position(), remoteRange)
+                || !context.frustum().isVisible(AABB.unitCubeFromLowerCorner(anchor.pos().getCenter()))) {
+            return;
+        }
+
+        var poseStack = context.matrixStack();
+        var light = LightTexture.FULL_BRIGHT;
+        var overlay = OverlayTexture.NO_OVERLAY;
+
+        poseStack.pushPose();
+        // Adjust location
+        var translation = context.camera().getPosition().vectorTo(Vec3.atLowerCornerOf(anchor.pos()));
+        poseStack.translate(translation.x, translation.y, translation.z);
+        poseStack.rotateAround(context.camera().rotation(), 0.5f, 0.5f, 0.5f);
+        var scale = (float) (Mth.fastInvSqrt(Mth.fastInvSqrt(translation.lengthSqr())) / 4f);
+        poseStack.mulPose(new Matrix4f().scaleAround(scale, 0.5f, 0.5f, 0.5f));
+
+        RenderingUtil.drawTexture(poseStack, context.consumers().getBuffer(REMOTE_LAYER), TINT_REMOTE, light, overlay, 0f, 1f, 0f, 1f, 0f, 0, 1f, 0, 1f);
         poseStack.popPose();
     }
 }

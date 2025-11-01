@@ -31,7 +31,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     public void render(CrucibleBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         if (client.player != null
                 && client.player.hasAttached(WizcraftAttachments.HAS_TRUESEER_GOGGLES)
-                && client.player.position().closerThan(entity.getBlockPos().getCenter(), Wizcraft.getConfig().trueseerGogglesDisplayRange)) {
+                && client.player.position().closerThan(entity.getBlockPos().getCenter(), Wizcraft.getConfig().cometWarpBeaconDisplayRange)) {
             var stacks = entity.getInventory().getItems();
             poseStack.pushPose();
             poseStack.translate(0.5, 1.25, 0.5);

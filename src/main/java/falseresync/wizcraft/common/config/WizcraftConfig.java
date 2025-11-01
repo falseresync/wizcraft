@@ -29,6 +29,10 @@ public final class WizcraftConfig implements ConfigData {
     @ConfigEntry.Category("performance")
     @ConfigEntry.BoundedDiscrete(min = 3, max = 32)
     public int trueseerGogglesDisplayRange = 10;
+    
+    @ConfigEntry.Category("performance")
+    @ConfigEntry.BoundedDiscrete(min = 3, max = 32)
+    public int cometWarpBeaconDisplayRange = 10;
 
     @ConfigEntry.Category("performance")
     @TranslatableEnum

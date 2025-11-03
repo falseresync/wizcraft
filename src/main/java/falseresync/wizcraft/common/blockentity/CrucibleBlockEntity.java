@@ -63,7 +63,7 @@ public class CrucibleBlockEntity extends BlockEntity {
             entity.discard();
         });
 
-        world.getRecipeManager().getRecipeFor(WizcraftRecipes.CRUCIBLE, crucible.inventory, world).ifPresent(crucible::craft);
+        world.getRecipeManager().getRecipeFor(WizcraftRecipes.CRUCIBLE, crucible.inventory.recipeInput(), world).ifPresent(crucible::craft);
     }
 
     private static void onInterrupted(CrucibleBlockEntity crucible, Level world, BlockPos pos) {
@@ -83,7 +83,7 @@ public class CrucibleBlockEntity extends BlockEntity {
     public void craft(RecipeHolder<CrucibleRecipe> recipeEntry) {
         if (level == null) return;
 
-        var result = recipeEntry.value().assemble(inventory, level.registryAccess());
+        var result = recipeEntry.value().assemble(inventory.recipeInput(), level.registryAccess());
         inventory.clearContent();
         var entityPos = worldPosition.getCenter().add(0, 1.25, 0);
         var entity = new ItemEntity(level, entityPos.x, entityPos.y, entityPos.z, result, 0, 0, 0);

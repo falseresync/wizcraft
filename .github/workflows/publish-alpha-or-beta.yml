@@ -1,4 +1,4 @@
-name: publish-alpha-or-beta.yml
+name: publish alpha or beta
 on: [ workflow_dispatch ]
 
 jobs:

@@ -88,7 +88,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
 
         updateVirtualCombinedInventory();
         level.getRecipeManager()
-                .getRecipeFor(WizcraftRecipes.LENSED_WORKTABLE, virtualCombinedInventory, level)
+                .getRecipeFor(WizcraftRecipes.LENSED_WORKTABLE, virtualCombinedInventory.recipeInput(), level)
                 .ifPresent(this::beginCrafting);
     }
 
@@ -156,7 +156,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
         }
 
         updateVirtualCombinedInventory();
-        if (!recipe.matches(virtualCombinedInventory, world)) {
+        if (!recipe.matches(virtualCombinedInventory.recipeInput(), world)) {
             interruptCrafting();
             return;
         }
@@ -223,8 +223,8 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     protected void finishCrafting() {
         if (level == null || level.isClientSide() || currentRecipe == null) return;
 
-        inventory.setItem(0, currentRecipe.assemble(virtualCombinedInventory, level.registryAccess()));
-        var remainders = currentRecipe.getRemainingItems(virtualCombinedInventory);
+        inventory.setItem(0, currentRecipe.assemble(virtualCombinedInventory.recipeInput(), level.registryAccess()));
+        var remainders = currentRecipe.getRemainingItems(virtualCombinedInventory.recipeInput());
         for (int i = 0; i < pedestals.size(); i++) {
             pedestals.get(i).onCrafted(remainders.get(i + 1));
         }
@@ -241,7 +241,7 @@ public class CraftingWorktableBlockEntity extends WorktableBlockEntity {
     protected void initStaticRecipeData(Level world, LensedWorktableRecipe recipe) {
         currentRecipe = recipe;
         craftingTime = recipe.getCraftingTime();
-        currentlyCrafted = currentRecipe.assemble(virtualCombinedInventory, world.registryAccess());
+        currentlyCrafted = currentRecipe.assemble(virtualCombinedInventory.recipeInput(), world.registryAccess());
     }
 
     protected void reset() {

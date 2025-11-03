@@ -1,0 +1,22 @@
+name: publish-alpha-or-beta.yml
+on: [ workflow_dispatch ]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+  publish:
+    needs: [ build ]
+    strategy:
+      matrix:
+        java: [ 21 ]
+        os: [ ubuntu-22.04 ]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    steps:
+      - uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          curseforge-version-type: beta
+          java: 21

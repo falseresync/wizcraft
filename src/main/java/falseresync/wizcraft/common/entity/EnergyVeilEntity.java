@@ -19,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.TraceableEntity;
@@ -135,15 +136,18 @@ public class EnergyVeilEntity extends Entity implements TraceableEntity {
                 // compare the entity velocity and the entity-to-veil-center vectors
                 // if they point to the same direction - repel the incoming entity
                 var entityToOwner = entity.position().vectorTo(position());
-                var velocity = entity.getDeltaMovement();
+                var velocity = entity.getKnownMovement();
                 if (velocity.dot(entityToOwner) >= 0) {
                     // Deflect projectiles and fast-moving entities, push any other
                     if (velocity.lengthSqr() >= 0.75 || entity instanceof Projectile) {
-                        entity.setDeltaMovement(entity.getDeltaMovement().reverse().scale(0.5));
+                        entity.setDeltaMovement(velocity.reverse().scale(0.5));
                         entity.hasImpulse = true;
+                    } else if (entity instanceof LivingEntity livingEntity) {
+                        livingEntity.knockback(1, entityToOwner.x, entityToOwner.z);
                     } else {
-                        entity.move(MoverType.PISTON, entityToOwner.reverse().scale(1.5));
+                        entity.move(MoverType.PISTON, entityToOwner.reverse().scale(3));
                     }
+                    entity.hurtMarked = true;
                 }
             }
         }

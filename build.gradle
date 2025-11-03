@@ -82,7 +82,7 @@ dependencies {
 	modLocalRuntime "lol.bai:badpackets:fabric-$badpackets_version"
 
 	modCompileOnly "dev.emi:emi-fabric:$emi_version:api"
-	modLocalRuntime "dev.emi:emi-fabric:$emi_version"
+	modLocalRuntime "maven.modrinth:emi:${emi_version}+fabric"
 
 	modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
 	modLocalRuntime "com.terraformersmc:modmenu:$modmenu_version"

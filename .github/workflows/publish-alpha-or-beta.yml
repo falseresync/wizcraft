@@ -3,7 +3,6 @@ on: [ workflow_dispatch ]
 
 jobs:
   publish:
-    needs: [ build ]
     strategy:
       matrix:
         java: [ 21 ]
